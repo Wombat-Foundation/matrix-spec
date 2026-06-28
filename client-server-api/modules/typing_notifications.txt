@@ -1,0 +1,105 @@
+
+### Typing Notifications
+
+Users may wish to be informed when another user is typing in a room.
+This can be achieved using typing notifications. These are ephemeral
+events, so they do not form part of the
+[Event Graph](/#event-graphs). Typing notifications are scoped
+to a room.
+
+#### Events
+
+### Event `m.typing`
+```typescript
+type m_typing = {
+
+  /**
+  * The fields in this object will vary depending on the type of event. When interacting with the REST API, this is the HTTP body.
+   */
+  content: {};
+
+  /**
+  * The type of event, as defined by [the event type specification](/client-server-api/#types-of-room-events).
+   */
+  type: string;
+};
+```
+
+#### Client behaviour
+
+When a client receives an `m.typing` event, it MUST use the user ID list
+to **REPLACE** its knowledge of every user who is currently typing. The
+reason for this is that the server *does not remember* users who are not
+currently typing as that list gets big quickly. The client should mark
+as not typing any user ID who is not in that list.
+
+It is recommended that clients store a `boolean` indicating whether the
+user is typing or not. Whilst this value is `true` a timer should fire
+periodically every N seconds to send a typing HTTP request. The value of
+N is recommended to be no more than 20-30 seconds. This request should
+be re-sent by the client to continue informing the server the user is
+still typing. As subsequent requests will replace older requests, a
+safety margin of 5 seconds before the expected timeout runs out is
+recommended. When the user stops typing, the state change of the
+`boolean` to `false` should trigger another HTTP request to inform the
+server that the user has stopped typing.
+
+### PUT /rooms/{roomId}/typing/{userId}
+**Summary:** Informs the server that the user has started or stopped typing.
+This tells the server that the user is typing for the next N
+milliseconds where N is the value specified in the `timeout` key.
+Alternatively, if `typing` is `false`, it tells the server that the
+user has stopped typing.
+**Path Parameters:**
+- `userId` (Required): `string /* mx-user-id */` - The user who has started to type.
+- `roomId` (Required): `string /* mx-room-id */` - The room in which the user is typing.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * Whether the user is typing or not. If `false`, the `timeout`
+  * key can be omitted.
+   */
+  typing: boolean;
+
+  /**
+  * The length of time in milliseconds to mark this user as typing.
+   */
+  timeout?: number;
+}
+```
+**Responses:**
+- **200**: The new typing state was set.
+  ```typescript
+  {}
+  ```
+- **429**: This request was rate-limited.
+  ```typescript
+  {
+
+    /**
+    * The M_LIMIT_EXCEEDED error code
+    * @example "M_LIMIT_EXCEEDED"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "Too many requests"
+     */
+    error?: string;
+
+    /**
+    * The amount of time in milliseconds the client should wait
+    * before trying the request again.
+    * @example 2000
+     */
+    retry_after_ms?: number;
+  }
+  ```
+
+#### Security considerations
+
+Clients may not wish to inform everyone in a room that they are typing
+and instead only specific users in the room.

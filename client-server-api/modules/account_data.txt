@@ -1,0 +1,308 @@
+
+### Client Config
+
+Clients can store custom config data for their account on their
+homeserver. This account data will be synced between different devices
+and can persist across installations on a particular device. Users may
+only view the account data for their own account.
+
+The account data may be either global or scoped to a particular room.
+There is no inheritance mechanism here: a given `type` of data missing
+from a room's account data does not fall back to the global account
+data with the same `type`.
+
+#### Events
+
+The client receives the account data as events in the `account_data`
+sections of a [`/sync`](#get_matrixclientv3sync) response.
+
+These events can also be received in a [`/events`](#get_matrixclientv3events) response or in the
+`account_data` section of a room in a `/sync` response. `m.tag` events appearing in
+`/events` will have a `room_id` with the room the tags are for.
+
+#### Client Behaviour
+
+### PUT /user/{userId}/account_data/{type}
+**Summary:** Set some account data for the user.
+Set some account data for the client. This config is only visible to the user
+that set the account data. The config will be available to clients through the
+top-level `account_data` field in the homeserver response to
+[/sync](/client-server-api/#get_matrixclientv3sync).
+**Path Parameters:**
+- `userId` (Required): `string` - The ID of the user to set account data for. The access token must be
+authorised to make requests for this user ID.
+- `type` (Required): `string` - The event type of the account data to set. Custom types should be
+namespaced to avoid clashes.
+**Request Body (JSON):**
+```typescript
+{}
+```
+**Responses:**
+- **200**: The account data was successfully added.
+  ```typescript
+  {}
+  ```
+- **400**: The request body is not a JSON object. Errcode: `M_BAD_JSON`
+or `M_NOT_JSON`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **403**: The access token provided is not authorised to modify this user's account 
+data. Errcode: `M_FORBIDDEN`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **405**: This `type` of account data is controlled by the server; it cannot be
+modified by clients. Errcode: `M_BAD_JSON`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### GET /user/{userId}/account_data/{type}
+**Summary:** Get some account data for the user.
+Get some account data for the client. This config is only visible to the user
+that set the account data.
+**Path Parameters:**
+- `userId` (Required): `string` - The ID of the user to get account data for. The access token must be
+authorised to make requests for this user ID.
+- `type` (Required): `string` - The event type of the account data to get. Custom types should be
+namespaced to avoid clashes.
+**Responses:**
+- **200**: The account data content for the given type.
+  ```typescript
+  {}
+  ```
+- **403**: The access token provided is not authorised to retrieve this user's account 
+data. Errcode: `M_FORBIDDEN`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **404**: No account data has been provided for this user with the given `type`.
+Errcode: `M_NOT_FOUND`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### PUT /user/{userId}/rooms/{roomId}/account_data/{type}
+**Summary:** Set some account data for the user that is specific to a room.
+Set some account data for the client on a given room. This config is only
+visible to the user that set the account data. The config will be delivered to
+clients in the per-room entries via [/sync](/client-server-api/#get_matrixclientv3sync).
+**Path Parameters:**
+- `userId` (Required): `string` - The ID of the user to set account data for. The access token must be
+authorised to make requests for this user ID.
+- `roomId` (Required): `string` - The ID of the room to set account data on.
+- `type` (Required): `string` - The event type of the account data to set. Custom types should be
+namespaced to avoid clashes.
+**Request Body (JSON):**
+```typescript
+{}
+```
+**Responses:**
+- **200**: The account data was successfully added.
+  ```typescript
+  {}
+  ```
+- **400**: The request body is not a JSON object (errcode `M_BAD_JSON` or
+`M_NOT_JSON`), or the given `roomID` is not a valid room ID
+(errcode `M_INVALID_PARAM`).
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **403**: The access token provided is not authorised to modify this user's account 
+data. Errcode: `M_FORBIDDEN`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **405**: This `type` of account data is controlled by the server; it cannot be
+modified by clients. Errcode: `M_BAD_JSON`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### GET /user/{userId}/rooms/{roomId}/account_data/{type}
+**Summary:** Get some account data for the user that is specific to a room.
+Get some account data for the client on a given room. This config is only
+visible to the user that set the account data.
+**Path Parameters:**
+- `userId` (Required): `string` - The ID of the user to get account data for. The access token must be
+authorised to make requests for this user ID.
+- `roomId` (Required): `string` - The ID of the room to get account data for.
+- `type` (Required): `string` - The event type of the account data to get. Custom types should be
+namespaced to avoid clashes.
+**Responses:**
+- **200**: The account data content for the given type.
+  ```typescript
+  {}
+  ```
+- **400**: The given `roomID` is not a valid room ID. Errcode: `M_INVALID_PARAM`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **403**: The access token provided is not authorised to retrieve this user's account 
+data. Errcode: `M_FORBIDDEN`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **404**: No account data has been provided for this user and this room with the 
+given `type`. Errcode: `M_NOT_FOUND`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+#### Server Behaviour
+
+Servers MUST reject setting account data for event types
+that the server manages by using a 405 error response.
+Currently, this only includes [`m.fully_read`](#mfully_read)
+and [`m.push_rules`](#push-rules-events). This applies to
+both global and room-specific account data.
+
+> **Note:** 
+*(Changed in v1.10)* `m.push_rules` was added to the rejection
+list.
+
+Servers must allow clients to read the above event types as normal.

@@ -1,0 +1,5216 @@
+
+
+## API standards
+
+The mandatory baseline for server-server communication in Matrix is
+exchanging JSON objects over HTTPS APIs. More efficient transports may be
+specified in future as optional extensions.
+
+All `POST` and `PUT` endpoints require the requesting server to supply a
+request body containing a (potentially empty) JSON object. Requesting servers
+should supply a `Content-Type` header of `application/json` for all requests
+with JSON bodies, but this is not required.
+
+Similarly, all endpoints in this specification require the destination server
+to return a JSON object.  Servers must include a `Content-Type` header of
+`application/json` for all JSON responses.
+
+All JSON data, in requests or responses, must be encoded using UTF-8.
+
+### TLS
+
+Server-server communication must take place over HTTPS.
+
+The destination server must provide a TLS certificate signed by a known
+Certificate Authority.
+
+Requesting servers are ultimately responsible for determining the trusted Certificate
+Authorities, however are strongly encouraged to rely on the operating system's
+judgement. Servers can offer administrators a means to override the trusted
+authorities list.  Servers can additionally skip the certificate validation for
+a given whitelist of domains or netmasks for the purposes of testing or in
+networks where verification is done elsewhere, such as with `.onion`
+addresses.
+
+Servers should respect SNI when making requests where possible: a SNI should be
+sent for the certificate which is expected, unless that certificate is expected
+to be an IP address in which case SNI is not supported and should not be sent.
+
+Servers are encouraged to make use of the [Certificate
+Transparency](https://www.certificate-transparency.org/) project.
+
+### Unsupported endpoints
+
+If a request for an unsupported (or unknown) endpoint is received then the server
+must respond with a 404 `M_UNRECOGNIZED` error.
+
+Similarly, a 405 `M_UNRECOGNIZED` error is used to denote an unsupported method
+to a known endpoint.
+
+## Server discovery
+
+### Resolving server names
+
+Each Matrix homeserver is identified by a server name consisting of a
+hostname and an optional port, as described by the
+[grammar](/appendices#server-name). Where applicable, a delegated
+server name uses the same grammar.
+
+Server names are resolved to an IP address and port to connect to, and
+have various conditions affecting which certificates and `Host` headers
+to send. The process overall is as follows:
+
+1.  If the hostname is an IP literal, then that IP address should be
+    used, together with the given port number, or 8448 if no port is
+    given. The target server must present a valid certificate for the IP
+    address. The `Host` header in the request should be set to the
+    server name, including the port if the server name included one.
+
+2.  If the hostname is not an IP literal, and the server name includes an
+    explicit port, resolve the hostname to an IP address using CNAME, AAAA or A
+    records.
+    Requests are made to the resolved IP address and given port with a
+    `Host` header of the original server name (with port). The target
+    server must present a valid certificate for the hostname.
+
+3.  If the hostname is not an IP literal, a regular HTTPS request is
+    made to `https://<hostname>/.well-known/matrix/server` (according to
+    [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615)), expecting
+    the schema defined later in this section. 30x redirects should be
+    followed, however redirection loops should be avoided. Responses
+    (successful or otherwise) to the `/.well-known` endpoint should be
+    cached by the requesting server. Servers should respect the cache
+    control headers present on the response, or use a sensible default
+    when headers are not present. The recommended sensible default is 24
+    hours. Servers should additionally impose a maximum cache time for
+    responses: 48 hours is recommended. Errors are recommended to be
+    cached for up to an hour, and servers are encouraged to
+    exponentially back off for repeated failures. The schema of the
+    `/.well-known` request is later in this section. If the response is
+    invalid (bad JSON, missing properties, non-200 response, etc), skip
+    to step 4. If the response is valid, the `m.server` property is
+    parsed as `<delegated_hostname>[:<delegated_port>]` and processed as
+    follows:
+    1.   If `<delegated_hostname>` is an IP literal, then that IP address
+        should be used together with the `<delegated_port>` or 8448 if
+        no port is provided. The target server must present a valid TLS
+        certificate for the IP address. Requests must be made with a
+        `Host` header containing the IP address, including the port if
+        one was provided.
+    2.   If `<delegated_hostname>` is not an IP literal, and
+        `<delegated_port>` is present, an IP address is discovered by
+        looking up CNAME, AAAA or A records for `<delegated_hostname>`.  The
+        resulting IP address is used, alongside the `<delegated_port>`.
+        Requests must be made with a `Host` header of
+        `<delegated_hostname>:<delegated_port>`. The target server must
+        present a valid certificate for `<delegated_hostname>`.
+    3.  *(Added in v1.8)* If `<delegated_hostname>` is not an IP literal and no
+        `<delegated_port>` is present, an SRV record is looked up for
+        `_matrix-fed._tcp.<delegated_hostname>`. This may result in another
+        hostname (to be resolved using AAAA or A records) and port.
+        Requests should be made to the resolved IP address and port with
+        a `Host` header containing the `<delegated_hostname>`. The
+        target server must present a valid certificate for
+        `<delegated_hostname>`.
+    4.  **[Deprecated]** If `<delegated_hostname>` is not an IP literal, no
+        `<delegated_port>` is present, and a `_matrix-fed._tcp.<delegated_hostname>`
+        SRV record was not found, an SRV record is looked up for
+        `_matrix._tcp.<delegated_hostname>`. This may result in another
+        hostname (to be resolved using AAAA or A records) and port.
+        Requests should be made to the resolved IP address and port with
+        a `Host` header containing the `<delegated_hostname>`. The
+        target server must present a valid certificate for
+        `<delegated_hostname>`.
+    5.   If no SRV record is found, an IP address is resolved using CNAME, AAAA
+        or A records. Requests are then made to the resolved IP address
+        and a port of 8448, using a `Host` header of
+        `<delegated_hostname>`. The target server must present a valid
+        certificate for `<delegated_hostname>`.
+
+4.  *(Added in v1.8)* If the `/.well-known` request resulted in an error response, a server is
+    found by resolving an SRV record for `_matrix-fed._tcp.<hostname>`. This may
+    result in a hostname (to be resolved using AAAA or A records) and
+    port. Requests are made to the resolved IP address and port, with a `Host`
+    header of `<hostname>`. The target server must present a valid certificate
+    for `<hostname>`.
+
+5.  **[Deprecated]** If the `/.well-known` request resulted in an error response,
+    and a `_matrix-fed._tcp.<hostname>` SRV record was not found, a server is
+    found by resolving an SRV record for `_matrix._tcp.<hostname>`. This may
+    result in a hostname (to be resolved using AAAA or A records) and
+    port. Requests are made to the resolved IP address and port, with a `Host`
+    header of `<hostname>`. The target server must present a valid certificate
+    for `<hostname>`.
+
+6.  If the `/.well-known` request returned an error response, and
+    no SRV records were found, an IP address is resolved using CNAME, AAAA and A
+    records. Requests are made to the resolved IP address using port
+    8448 and a `Host` header containing the `<hostname>`. The target
+    server must present a valid certificate for `<hostname>`.
+
+> **Note:** 
+The reasons we require `<hostname>` rather than `<delegated_hostname>` for SRV
+delegation are:
+  1. DNS is insecure (not all domains have DNSSEC), so the target of the delegation
+      must prove that it is a valid delegate for `<hostname>` via TLS.
+  2. Consistency with the recommendations in [RFC6125](https://datatracker.ietf.org/doc/html/rfc6125#section-6.2.1)
+     and other applications using SRV records such [XMPP](https://datatracker.ietf.org/doc/html/rfc6120#section-13.7.2.1).
+
+> **Note:** 
+Note that the target of a SRV record may *not* be a CNAME, as
+mandated by [RFC2782](https://www.rfc-editor.org/rfc/rfc2782.html):
+
+> the name MUST NOT be an alias (in the sense of RFC 1034 or RFC 2181)
+
+> **Note:** 
+Steps 3.4 and 5 are deprecated because they use a service name not registered by IANA.
+They may be removed in a future version of the specification. Server admins are encouraged
+to use `.well-known` over any form of SRV records.
+
+The IANA registration for port 8448 and `matrix-fed` can be found [here](https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?search=matrix-fed).
+
+### GET /matrix/server
+**Summary:** Gets information about the delegated server for server-server communication.
+Gets information about the delegated server for server-server communication
+between Matrix homeservers. Servers should follow 30x redirects, carefully
+avoiding redirect loops, and use normal X.509 certificate validation.
+
+> **Note:** 
+This endpoint should be accessed with the hostname of the homeserver's
+[server name](/appendices/#server-name) by making a
+GET request to `https://hostname/.well-known/matrix/server`.
+
+**Responses:**
+- **200**: The delegated server information. The `Content-Type` for this response SHOULD be `application/json`, however servers parsing the response should assume that the body is JSON regardless of type. Failures parsing the JSON or invalid data provided in the resulting parsed JSON should not result in discovery failure - consult the server discovery process for information on how to continue.
+  ```typescript
+  {
+
+    /**
+    * The server name to delegate server-server communications to, with optional
+    * port. The delegated server name uses the same grammar as
+    * [server names in the appendices](/appendices/#server-name).
+     */
+    m.server?: string;
+  }
+  ```
+
+### Server implementation
+
+### GET /version
+**Summary:** Get the implementation name and version of this homeserver.
+Get the implementation name and version of this homeserver.
+**Responses:**
+- **200**: The implementation name and version of this homeserver.
+  ```typescript
+  {
+    server?: {
+
+      /**
+      * Arbitrary name that identify this implementation.
+       */
+      name?: string;
+
+      /**
+      * Version of this implementation. The version format depends on the implementation.
+       */
+      version?: string;
+    };
+  }
+  ```
+
+### Retrieving server keys
+
+> **Note:** 
+There was once a "version 1" of the key exchange. It has been removed
+from the specification due to lack of significance. It may be reviewed
+[from the historical
+draft](https://github.com/matrix-org/matrix-doc/blob/51faf8ed2e4a63d4cfd6d23183698ed169956cc0/specification/server_server_api.rst#232version-1).
+
+Each homeserver publishes its public keys under
+`/_matrix/key/v2/server`. Homeservers query for keys by either
+getting `/_matrix/key/v2/server` directly or by querying an
+intermediate notary server using a
+`/_matrix/key/v2/query/{serverName}` API. Intermediate notary
+servers query the `/_matrix/key/v2/server` API on behalf of
+another server and sign the response with their own key. A server may
+query multiple notary servers to ensure that they all report the same
+public keys.
+
+This approach is borrowed from the [Perspectives
+Project](https://web.archive.org/web/20170702024706/https://perspectives-project.org/),
+but modified to include the NACL keys and to use JSON instead of XML. It
+has the advantage of avoiding a single trust-root since each server is
+free to pick which notary servers they trust and can corroborate the
+keys returned by a given notary server by querying other servers.
+
+#### Publishing Keys
+
+Homeservers publish their signing keys in a JSON object at
+`/_matrix/key/v2/server`. The response contains a list of
+`verify_keys` that are valid for signing federation requests made by the
+homeserver and for signing events. It contains a list of
+`old_verify_keys` which are only valid for signing events.
+
+### GET /server
+**Summary:** Get the homeserver's public key(s)
+Gets the homeserver's published signing keys.
+The homeserver may have any number of active keys and may have a
+number of old keys.
+
+Intermediate notary servers should cache a response for half of its
+lifetime to avoid serving a stale response. Originating servers should
+avoid returning responses that expire in less than an hour to avoid
+repeated requests for a certificate that is about to expire. Requesting
+servers should limit how frequently they query for certificates to
+avoid flooding a server with requests.
+
+If the server fails to respond to this request, intermediate notary
+servers should continue to return the last response they received
+from the server so that the signatures of old events can still be
+checked.
+**Responses:**
+- **200**: The homeserver's keys
+  ```typescript
+  {
+
+    /**
+    * The homeserver's [server name](/appendices/#server-name).
+    * @example "example.org"
+     */
+    server_name: string;
+
+    /**
+    * Public keys of the homeserver for verifying digital signatures.
+    * 
+    * The object's key is the algorithm and version combined (`ed25519` being the
+    * algorithm and `abc123` being the version in the example below). Together,
+    * this forms the Key ID. The version must have characters matching the regular
+    * expression `[a-zA-Z0-9_]`.
+    * @example {"ed25519:abc123": {"key": "VGhpcyBzaG91bGQgYmUgYSByZWFsIGVkMjU1MTkgcGF5bG9hZA"}}
+     */
+    verify_keys: {};
+
+    /**
+    * The public keys that the server used to use and when it stopped using them.
+    * 
+    * The object's key is the algorithm and version combined (`ed25519` being the
+    * algorithm and `0ldK3y` being the version in the example below). Together,
+    * this forms the Key ID. The version must have characters matching the regular
+    * expression `[a-zA-Z0-9_]`.
+    * @example {"ed25519:0ldK3y": {"expired_ts": 1532645052628, "key": "VGhpcyBzaG91bGQgYmUgeW91ciBvbGQga2V5J3MgZWQyNTUxOSBwYXlsb2FkLg"}}
+     */
+    old_verify_keys?: {};
+
+    /**
+    * Digital signatures for this object signed using the `verify_keys`.
+    * 
+    * The signature is calculated using the process described at [Signing JSON](/appendices/#signing-json).
+     */
+    signatures: {};
+
+    /**
+    * POSIX timestamp in milliseconds when the list of valid keys should be refreshed.
+    * This field MUST be ignored in room versions 1, 2, 3, and 4. Keys used beyond this
+    * timestamp MUST be considered invalid, depending on the
+    * [room version specification](/rooms).
+    * 
+    * Servers MUST use the lesser of this field and 7 days into the future when
+    * determining if a key is valid. This is to avoid a situation where an attacker
+    * publishes a key which is valid for a significant amount of time without a way
+    * for the homeserver owner to revoke it.
+    * @example 1052262000000
+     */
+    valid_until_ts: number /* int64 */;
+  }
+  ```
+
+#### Querying Keys Through Another Server
+
+Servers may query another server's keys through a notary server. The
+notary server may be another homeserver. The notary server will retrieve
+keys from the queried servers through use of the
+`/_matrix/key/v2/server` API. The notary server will
+additionally sign the response from the queried server before returning
+the results.
+
+Notary servers can return keys for servers that are offline or having
+issues serving their own keys by using cached responses. Keys can be
+queried from multiple servers to mitigate against DNS spoofing.
+
+### GET /query/{serverName}
+**Summary:** Query for another server's keys
+Query for another server's keys. The receiving (notary) server must
+sign the keys returned by the queried server.
+**Path Parameters:**
+- `serverName` (Required): `string` - The [server name](/appendices/#server-name) to query
+**Query Parameters:**
+- `minimum_valid_until_ts`: `number /* int64 */` - A millisecond POSIX timestamp. The returned keys SHOULD be valid
+until at least this timestamp.
+
+If not supplied, the notary server MUST use the current time.
+**Responses:**
+- **200**: The keys for the server, or an empty array if the server could not be reached
+and no cached keys were available.
+  ```typescript
+  {
+
+    /**
+    * The queried server's keys, signed by the notary server.
+     */
+    server_keys?: Array<{
+
+      /**
+      * The homeserver's [server name](/appendices/#server-name).
+      * @example "example.org"
+       */
+      server_name: string;
+
+      /**
+      * Public keys of the homeserver for verifying digital signatures.
+      * 
+      * The object's key is the algorithm and version combined (`ed25519` being the
+      * algorithm and `abc123` being the version in the example below). Together,
+      * this forms the Key ID. The version must have characters matching the regular
+      * expression `[a-zA-Z0-9_]`.
+      * @example {"ed25519:abc123": {"key": "VGhpcyBzaG91bGQgYmUgYSByZWFsIGVkMjU1MTkgcGF5bG9hZA"}}
+       */
+      verify_keys: {};
+
+      /**
+      * The public keys that the server used to use and when it stopped using them.
+      * 
+      * The object's key is the algorithm and version combined (`ed25519` being the
+      * algorithm and `0ldK3y` being the version in the example below). Together,
+      * this forms the Key ID. The version must have characters matching the regular
+      * expression `[a-zA-Z0-9_]`.
+      * @example {"ed25519:0ldK3y": {"expired_ts": 1532645052628, "key": "VGhpcyBzaG91bGQgYmUgeW91ciBvbGQga2V5J3MgZWQyNTUxOSBwYXlsb2FkLg"}}
+       */
+      old_verify_keys?: {};
+
+      /**
+      * Digital signatures for this object signed using the `verify_keys`.
+      * 
+      * The signature is calculated using the process described at [Signing JSON](/appendices/#signing-json).
+       */
+      signatures: {};
+
+      /**
+      * POSIX timestamp in milliseconds when the list of valid keys should be refreshed.
+      * This field MUST be ignored in room versions 1, 2, 3, and 4. Keys used beyond this
+      * timestamp MUST be considered invalid, depending on the
+      * [room version specification](/rooms).
+      * 
+      * Servers MUST use the lesser of this field and 7 days into the future when
+      * determining if a key is valid. This is to avoid a situation where an attacker
+      * publishes a key which is valid for a significant amount of time without a way
+      * for the homeserver owner to revoke it.
+      * @example 1052262000000
+       */
+      valid_until_ts: number /* int64 */;
+    }>;
+  }
+  ```
+
+### POST /query
+**Summary:** Query for several server's keys
+Query for keys from multiple servers in a batch format. The receiving (notary)
+server must sign the keys returned by the queried servers.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * The query criteria. The outer `string` key on the object is the
+  * server name (eg: `matrix.org`). The inner `string` key is the
+  * Key ID to query for the particular server. If no key IDs are given
+  * to be queried, the notary server should query for all keys. If no
+  * servers are given, the notary server must return an empty `server_keys`
+  * array in the response.
+  * 
+  * The notary server may return multiple keys regardless of the Key IDs
+  * given.
+   */
+  server_keys: {};
+}
+```
+**Responses:**
+- **200**: The keys for the queried servers, signed by the notary server. Servers which
+are offline and have no cached keys will not be included in the result. This
+may result in an empty array.
+  ```typescript
+  {
+
+    /**
+    * The queried server's keys, signed by the notary server.
+     */
+    server_keys?: Array<{
+
+      /**
+      * The homeserver's [server name](/appendices/#server-name).
+      * @example "example.org"
+       */
+      server_name: string;
+
+      /**
+      * Public keys of the homeserver for verifying digital signatures.
+      * 
+      * The object's key is the algorithm and version combined (`ed25519` being the
+      * algorithm and `abc123` being the version in the example below). Together,
+      * this forms the Key ID. The version must have characters matching the regular
+      * expression `[a-zA-Z0-9_]`.
+      * @example {"ed25519:abc123": {"key": "VGhpcyBzaG91bGQgYmUgYSByZWFsIGVkMjU1MTkgcGF5bG9hZA"}}
+       */
+      verify_keys: {};
+
+      /**
+      * The public keys that the server used to use and when it stopped using them.
+      * 
+      * The object's key is the algorithm and version combined (`ed25519` being the
+      * algorithm and `0ldK3y` being the version in the example below). Together,
+      * this forms the Key ID. The version must have characters matching the regular
+      * expression `[a-zA-Z0-9_]`.
+      * @example {"ed25519:0ldK3y": {"expired_ts": 1532645052628, "key": "VGhpcyBzaG91bGQgYmUgeW91ciBvbGQga2V5J3MgZWQyNTUxOSBwYXlsb2FkLg"}}
+       */
+      old_verify_keys?: {};
+
+      /**
+      * Digital signatures for this object signed using the `verify_keys`.
+      * 
+      * The signature is calculated using the process described at [Signing JSON](/appendices/#signing-json).
+       */
+      signatures: {};
+
+      /**
+      * POSIX timestamp in milliseconds when the list of valid keys should be refreshed.
+      * This field MUST be ignored in room versions 1, 2, 3, and 4. Keys used beyond this
+      * timestamp MUST be considered invalid, depending on the
+      * [room version specification](/rooms).
+      * 
+      * Servers MUST use the lesser of this field and 7 days into the future when
+      * determining if a key is valid. This is to avoid a situation where an attacker
+      * publishes a key which is valid for a significant amount of time without a way
+      * for the homeserver owner to revoke it.
+      * @example 1052262000000
+       */
+      valid_until_ts: number /* int64 */;
+    }>;
+  }
+  ```
+
+## Authentication
+
+### Request Authentication
+
+Every HTTP request made by a homeserver is authenticated using public
+key digital signatures. The request method, target and body are signed
+by wrapping them in a JSON object and signing it using the [JSON signing
+algorithm](/appendices#signing-json). The resulting signatures are added
+as an `Authorization` header with an auth scheme of `X-Matrix`. Note that
+the target field should include the full path starting with `/_matrix/...`,
+including the `?` and any query parameters if present, but should not
+include the leading `https:`, nor the destination server's hostname.
+
+Step 1 sign JSON:
+
+```nohighlight
+{
+    "method": "POST",
+    "uri": "/target",
+    "origin": "origin.hs.example.com",
+    "destination": "destination.hs.example.com",
+    "content": <JSON-parsed request body>,
+    "signatures": {
+        "origin.hs.example.com": {
+            "ed25519:key1": "ABCDEF..."
+        }
+    }
+}
+```
+
+The server names in the JSON above are the server names for each
+homeserver involved. Delegation from the [server name resolution
+section](#resolving-server-names) above do not affect these - the server
+names from before delegation would take place are used. This same
+condition applies throughout the request signing process.
+
+Step 2 add `Authorization` header:
+
+    POST /target HTTP/1.1
+    Authorization: X-Matrix origin="origin.hs.example.com",destination="destination.hs.example.com",key="ed25519:key1",sig="ABCDEF..."
+    Content-Type: application/json
+
+    <JSON-encoded request body>
+
+Example python code:
+
+```py
+def authorization_headers(origin_name, origin_signing_key,
+                          destination_name, request_method, request_target,
+                          content=None):
+    request_json = {
+         "method": request_method,
+         "uri": request_target,
+         "origin": origin_name,
+         "destination": destination_name,
+    }
+
+    if content is not None:
+        # Assuming content is already parsed as JSON
+        request_json["content"] = content
+
+    signed_json = sign_json(request_json, origin_name, origin_signing_key)
+
+    authorization_headers = []
+
+    for key, sig in signed_json["signatures"][origin_name].items():
+        authorization_headers.append(bytes(
+            "X-Matrix origin=\"%s\",destination=\"%s\",key=\"%s\",sig=\"%s\"" % (
+                origin_name, destination_name, key, sig,
+            )
+        ))
+
+    return ("Authorization", authorization_headers[0])
+```
+
+The format of the `Authorization` header is given in
+[Section 11.4 of RFC 9110](https://datatracker.ietf.org/doc/html/rfc9110#section-11.4). In
+summary, the header begins with authorisation scheme `X-Matrix`, followed by one
+or more spaces, followed by a comma-separated list of parameters written as
+name=value pairs. Zero or more spaces and tabs around each comma are allowed.
+The names are case insensitive and order does not matter. The
+values must be enclosed in quotes if they contain characters that are not
+allowed in `token`s, as defined in
+[Section 5.6.2 of RFC 9110](https://datatracker.ietf.org/doc/html/rfc9110#section-5.6.2); if a
+value is a valid `token`, it may or may not be enclosed in quotes. Quoted
+values may include backslash-escaped characters. When parsing the header, the
+recipient must unescape the characters. That is, a backslash-character pair is
+replaced by the character that follows the backslash.
+
+For compatibility with older servers, the sender should
+- only include one space after `X-Matrix`,
+- only use lower-case names,
+- avoid using backslashes in parameter values, and
+- avoid including whitespace around the commas between name=value pairs.
+
+For compatibility with older servers, the recipient should allow colons to be
+included in values without requiring the value to be enclosed in quotes.
+
+The authorisation parameters to include are:
+
+- `origin`: the server name of the sending server. This is the same as the
+  `origin` field from JSON described in step 1.
+- `destination`: *(Added in v1.3)* the server name of the receiving
+  server. This is the same as the `destination` field from the JSON described
+  in step 1. For compatibility with older servers, recipients should accept
+  requests without this parameter, but MUST always send it. If this property
+  is included, but the value does not match the receiving server's name, the
+  receiving server must deny the request with an HTTP status code `401
+  Unauthorized`.
+- `key`: the ID, including the algorithm name, of the sending server's key used
+  to sign the request.
+- `signature`: the signature of the JSON as calculated in step 1.
+
+Unknown parameters are ignored.
+
+> **Note:** 
+*(Changed in v1.11)*
+This section used to reference [RFC 7235](https://datatracker.ietf.org/doc/html/rfc7235#section-2.1)
+and [RFC 7230](https://datatracker.ietf.org/doc/html/rfc9110#section-5.6.2), that
+were obsoleted by RFC 9110 without changes to the sections of interest here.
+
+### Response Authentication
+
+Responses are authenticated by the TLS server certificate. A homeserver
+should not send a request until it has authenticated the connected
+server to avoid leaking messages to eavesdroppers.
+
+### Client TLS Certificates
+
+Requests are authenticated at the HTTP layer rather than at the TLS
+layer because HTTP services like Matrix are often deployed behind load
+balancers that handle the TLS and these load balancers make it difficult
+to check TLS client certificates.
+
+A homeserver may provide a TLS client certificate and the receiving
+homeserver may check that the client certificate matches the certificate
+of the origin homeserver.
+
+## Transactions
+
+The transfer of EDUs and PDUs between homeservers is performed by an
+exchange of Transaction messages, which are encoded as JSON objects,
+passed over an HTTP PUT request. A Transaction is meaningful only to the
+pair of homeservers that exchanged it; they are not globally-meaningful.
+
+Transactions are limited in size; they can have at most 50 PDUs and 100
+EDUs.
+
+### PUT /send/{txnId}
+**Summary:** Send a transaction
+Push messages representing live activity to another server. The destination name
+will be set to that of the receiving server itself. Each embedded PDU in the
+transaction body will be processed.
+
+The sending server must wait and retry for a 200 OK response before sending a
+transaction with a different `txnId` to the receiving server.
+
+Note that events have a different format depending on the room version - check
+the [room version specification](/rooms) for precise event formats.
+**Path Parameters:**
+- `txnId` (Required): `string` - The transaction ID.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * The `server_name` of the homeserver sending this transaction.
+  * @example "example.org"
+   */
+  origin: string;
+
+  /**
+  * POSIX timestamp in milliseconds on originating homeserver when this
+  * transaction started.
+  * @example 1532991320875
+   */
+  origin_server_ts: number /* int64 */;
+
+  /**
+  * List of persistent updates to rooms. Must not include more than 50 PDUs. Note that
+  * events have a different format depending on the room version - check the
+  * [room version specification](/rooms) for precise event formats.
+   */
+  pdus: {}[];
+
+  /**
+  * List of ephemeral messages. May be omitted if there are no ephemeral
+  * messages to be sent. Must not include more than 100 EDUs.
+   */
+  edus?: Array<{
+
+    /**
+    * The type of ephemeral message.
+    * @example "m.presence"
+     */
+    edu_type: string;
+
+    /**
+    * The content of the ephemeral message.
+     */
+    content: {};
+  }>;
+}
+```
+**Responses:**
+- **200**: The result of processing the transaction. The server is to use this response even in
+the event of one or more PDUs failing to be processed.
+  ```typescript
+  {
+
+    /**
+    * The PDUs from the original transaction. The string key represents the ID of the
+    * PDU (event) that was processed.
+     */
+    pdus: {};
+  }
+  ```
+
+## PDUs
+
+Each PDU contains a single Room Event which the origin server wants to
+send to the destination.
+
+The `prev_events` field of a PDU identifies the "parents" of the event,
+and thus establishes a partial ordering on events within the room by
+linking them into a Directed Acyclic Graph (DAG). The sending server
+should populate this field with all of the events in the room for which
+it has not yet seen a child - thus demonstrating that the event comes
+after all other known events.
+
+For example, consider a room whose events form the DAG shown below. A
+server creating a new event in this room should populate the new event's
+`prev_events` field with both `E4` and `E6`, since neither event yet has
+a child:
+
+    E1
+    ^
+    |
+    E2 <--- E5
+    ^       ^
+    |       |
+    E3      E6
+    ^
+    |
+    E4
+
+For a full schema of what a PDU looks like, see the [room version
+specification](/rooms).
+
+### Checks performed on receipt of a PDU
+
+Whenever a server receives an event from a remote server, the receiving
+server must ensure that the event:
+
+1.  *(Changed in v1.16)* Is a valid event, otherwise it is dropped. For
+    an event to be valid, it must comply with the event format of that [room version](/rooms).
+    For some room versions, a `room_id` may also be required on the event in order
+    to determine the room version to check the event against. See the event format
+    section of the [room version specifications](/rooms) for details on when it
+    is required.
+2.  Passes signature checks, otherwise it is dropped.
+3.  Passes hash checks, otherwise it is redacted before being processed
+    further.
+4.  Passes authorisation rules based on the event's auth events,
+    otherwise it is rejected.
+5.  Passes authorisation rules based on the state before the event,
+    otherwise it is rejected.
+6.  Passes authorisation rules based on the current state of the room,
+    otherwise it is "soft failed".
+7. *(Added in v1.18)* Is [validated](#validating-policy-server-signatures)
+   by the Policy Server, if the room is [using a Policy Server](#determining-if-a-policy-server-is-enabled-in-a-room),
+   otherwise it is "soft failed".
+
+Further details of these checks, and how to handle failures, are
+described below.
+
+The [Signing Events](#signing-events) section has more information on
+which hashes and signatures are expected on events, and how to calculate
+them.
+
+#### Definitions
+
+Required Power Level
+
+: A given event type has an associated *required power level*. This is given by
+  the current [`m.room.power_levels`](/client-server-api/#mroompower_levels)
+  event. The event type is either listed explicitly in the `events` section or
+  given by either `state_default` or `events_default` depending on if the event
+  is a state event or not.
+
+Invite Level, Kick Level, Ban Level, Redact Level
+
+: The levels given by the `invite`, `kick`, `ban`, and `redact` properties in
+  the current [`m.room.power_levels`](/client-server-api/#mroompower_levels)
+  state. The invite level defaults to 0 if unspecified. The kick level, ban level
+  and redact level each default to 50 if unspecified.
+
+Target User
+
+: For an [`m.room.member`](/client-server-api/#mroommember) state event, the
+  user given by the `state_key` of the event.
+
+> **Note:** 
+Some [room versions](/rooms) accept power level values to be represented as
+strings rather than integers. This is strictly for backwards compatibility.
+A homeserver should take reasonable precautions to prevent users from sending
+new power level events with string values (eg: by rejecting the API request),
+and must never populate the default power levels in a room as string values.
+
+See the [room version specification](/rooms) for more information.
+
+#### Authorisation rules
+
+The rules governing whether an event is authorised depends on a set of
+state. A given event is checked multiple times against different sets of
+state, as specified above. Each room version can have a different
+algorithm for how the rules work, and which rules are applied. For more
+detailed information, please see the [room version
+specification](/rooms).
+
+##### Auth events selection
+
+The `auth_events` field of a PDU identifies the set of events which give
+the sender permission to send the event. The `auth_events` for the
+`m.room.create` event in a room is empty; for other events, it should be
+the following subset of the room state:
+
+- *(Changed in v1.16)* Depending on the [room version](/rooms), the
+  `m.room.create` event.
+
+- The current `m.room.power_levels` event, if any.
+
+- The sender's current `m.room.member` event, if any.
+
+- If type is `m.room.member`:
+
+    - The target's current `m.room.member` event, if any.
+    - If `membership` is `join`, `invite` or `knock`, the current
+      `m.room.join_rules` event, if any.
+    - If membership is `invite` and `content` contains a
+      `third_party_invite` property, the current
+      `m.room.third_party_invite` event with `state_key` matching
+      `content.third_party_invite.signed.token`, if any.
+    - If `membership` is `join`, `content.join_authorised_via_users_server`
+      is present, and the [room version supports restricted rooms](/rooms/#feature-matrix),
+      then the `m.room.member` event with `state_key` matching
+      `content.join_authorised_via_users_server`.
+
+#### Rejection
+
+If an event is rejected it should neither be relayed to clients nor be
+included as a prev event in any new events generated by the server.
+Subsequent events from other servers that reference rejected events
+should be allowed if they still pass the auth rules. The state used in
+the checks should be calculated as normal, except not updating with the
+rejected event where it is a state event.
+
+If an event in an incoming transaction is rejected, this should not
+cause the transaction request to be responded to with an error response.
+
+> **Note:** 
+This means that events may be included in the room DAG even though they
+should be rejected.
+
+> **Note:** 
+This is in contrast to redacted events which can still affect the state
+of the room. For example, a redacted `join` event will still result in
+the user being considered joined.
+
+#### Soft failure
+
+> **Note:** 
+It is important that we prevent users from evading bans (or other power
+restrictions) by creating events which reference old parts of the DAG.
+For example, a banned user could continue to send messages to a room by
+having their server send events which reference the event before they
+were banned. Note that such events are entirely valid, and we cannot
+simply reject them, as it is impossible to distinguish such an event
+from a legitimate one which has been delayed. We must therefore accept
+such events and let them participate in state resolution and the
+federation protocol as normal. However, servers may choose not to send
+such events on to their clients, so that end users won't actually see
+the events.
+
+When this happens it is often fairly obvious to servers, as they can see
+that the new event doesn't actually pass auth based on the "current
+state" (i.e. the resolved state across all forward extremities). While
+the event is technically valid, the server can choose to not notify
+clients about the new event.
+
+This discourages servers from sending events that evade bans etc. in
+this way, as end users won't actually see the events.
+
+When the homeserver receives a new event over federation it should also
+check whether the event passes auth checks based on the current state of
+the room (as well as based on the state at the event). If the event does
+not pass the auth checks based on the *current state* of the room (but
+does pass the auth checks based on the state at that event) it should be
+"soft failed".
+
+When an event is "soft failed" it should not be relayed to the client
+nor be referenced by new events created by the homeserver (i.e. they
+should not be added to the server's list of forward extremities of the
+room). Soft failed events are otherwise handled as usual.
+
+> **Note:** 
+Soft failed events participate in state resolution as normal if further
+events are received which reference it. It is the job of the state
+resolution algorithm to ensure that malicious events cannot be injected
+into the room state via this mechanism.
+
+> **Note:** 
+Because soft failed state events participate in state resolution as
+normal, it is possible for such events to appear in the current state of
+the room. In that case the client should be told about the soft failed
+event in the usual way (e.g. by sending it down in the `state` section
+of a sync response).
+
+> **Note:** 
+A soft failed event should be returned in response to federation
+requests where appropriate (e.g. in `/event/<event_id>`). Note that soft
+failed events are returned in `/backfill` and `/get_missing_events`
+responses only if the requests include events referencing the soft
+failed events.
+
+Example
+
+As an example consider the event graph:
+
+      A
+     /
+    B
+
+where `B` is a ban of a user `X`. If the user `X` tries to set the topic
+by sending an event `C` while evading the ban:
+
+      A
+     / \
+    B   C
+
+servers that receive `C` after `B` should soft fail event `C`, and so
+will neither relay `C` to its clients nor send any events referencing
+`C`.
+
+If later another server sends an event `D` that references both `B` and
+`C` (this can happen if it received `C` before `B`):
+
+      A
+     / \
+    B   C
+     \ /
+      D
+
+then servers will handle `D` as normal. `D` is sent to the servers'
+clients (assuming `D` passes auth checks). The state at `D` may resolve
+to a state that includes `C`, in which case clients should also to be
+told that the state has changed to include `C`. (*Note*: This depends on
+the exact state resolution algorithm used. In the original version of
+the algorithm `C` would be in the resolved state, whereas in latter
+versions the algorithm tries to prioritise the ban over the topic
+change.)
+
+Note that this is essentially equivalent to the situation where one
+server doesn't receive `C` at all, and so asks another server for the
+state of the `C` branch.
+
+Let's go back to the graph before `D` was sent:
+
+      A
+     / \
+    B   C
+
+If all the servers in the room saw `B` before `C` and so soft fail `C`,
+then any new event `D'` will not reference `C`:
+
+      A
+     / \
+    B   C
+    |
+    D'
+
+> **Note:** 
+*(Added in v1.18)*
+Events can also be soft failed if they fail [Policy Server checks](#validating-policy-server-signatures).
+
+#### Retrieving event authorisation information
+
+The homeserver may be missing event authorisation information, or wish
+to check with other servers to ensure it is receiving the correct auth
+chain. These APIs give the homeserver an avenue for getting the
+information it needs.
+
+### GET /event_auth/{roomId}/{eventId}
+**Summary:** Get the auth chain for a given event
+Retrieves the complete auth chain for a given event.
+**Path Parameters:**
+- `roomId` (Required): `string` - The room ID to get the auth chain for.
+- `eventId` (Required): `string` - The event ID to get the auth chain of.
+**Responses:**
+- **200**: The auth chain for the event.
+  ```typescript
+  {
+
+    /**
+    * The [PDUs](/server-server-api/#pdus) forming the auth chain
+    * of the given event. The event format varies depending on the
+    * room version - check the [room version specification](/rooms)
+    * for precise event formats.
+     */
+    auth_chain: {}[];
+  }
+  ```
+
+## EDUs
+
+EDUs, by comparison to PDUs, do not have an ID, a room ID, or a list of
+"previous" IDs. They are intended to be non-persistent data such as user
+presence, typing notifications, etc.
+
+### Definition `edu_with_example`
+```typescript
+type edu_with_example = {
+
+  /**
+  * The type of ephemeral message.
+  * @example "m.presence"
+   */
+  edu_type: string;
+
+  /**
+  * The content of the ephemeral message.
+   */
+  content: {};
+};
+```
+
+## Room State Resolution
+
+The *state* of a room is a map of `(event_type, state_key)` to
+`event_id`. Each room starts with an empty state, and each state event
+which is accepted into the room updates the state of that room.
+
+Where each event has a single `prev_event`, it is clear what the state
+of the room after each event should be. However, when two branches in
+the event graph merge, the state of those branches might differ, so a
+*state resolution* algorithm must be used to determine the resultant
+state.
+
+For example, consider the following event graph (where the oldest event,
+E0, is at the top):
+
+      E0
+      |
+      E1
+     /  \
+    E2  E4
+    |    |
+    E3   |
+     \  /
+      E5
+
+Suppose E3 and E4 are both `m.room.name` events which set the name of
+the room. What should the name of the room be at E5?
+
+The algorithm to be used for state resolution depends on the room
+version. For a description of each room version's algorithm, please see
+the [room version specification](/rooms).
+
+## Backfilling and retrieving missing events
+
+Once a homeserver has joined a room, it receives all the events emitted
+by other homeservers in that room, and is thus aware of the entire
+history of the room from that moment onwards. Since users in that room
+are able to request the history by the `/messages` client API endpoint,
+it's possible that they might step backwards far enough into history
+before the homeserver itself was a member of that room.
+
+To cover this case, the federation API provides a server-to-server
+analog of the `/messages` client API, allowing one homeserver to fetch
+history from another. This is the `/backfill` API.
+
+To request more history, the requesting homeserver picks another
+homeserver that it thinks may have more (most likely this should be a
+homeserver for some of the existing users in the room at the earliest
+point in history it has currently), and makes a `/backfill` request.
+
+Similar to backfilling a room's history, a server may not have all the
+events in the graph. That server may use the `/get_missing_events` API
+to acquire the events it is missing.
+
+### GET /backfill/{roomId}
+**Summary:** Retrieves the events which precede the given event
+Retrieves a sliding-window history of previous PDUs that occurred in the given room.
+Starting from the PDU ID(s) given in the `v` argument, the PDUs given in `v` and
+the PDUs that preceded them are retrieved, up to the total number given by the `limit`.
+**Path Parameters:**
+- `roomId` (Required): `string` - The room ID to backfill.
+**Query Parameters:**
+- `v` (Required): `string[]` - The event IDs to backfill from.
+- `limit` (Required): `number` - The maximum number of PDUs to retrieve, including the given events.
+**Responses:**
+- **200**: A transaction containing the PDUs that preceded the given event(s), including the given
+event(s), up to the given limit.
+
+**Note:**
+Though the PDU definitions require that `prev_events` and `auth_events` be limited
+in number, the response of backfill MUST NOT be validated on these specific restrictions.
+
+Due to historical reasons, it is possible that events which were previously accepted
+would now be rejected by these limitations. The events should be rejected per usual by
+the `/send`, `/get_missing_events`, and remaining endpoints.
+  ```typescript
+  {
+
+    /**
+    * List of persistent updates to rooms. Must not include more than 50 PDUs. Note that
+    * events have a different format depending on the room version - check the
+    * [room version specification](/rooms) for precise event formats.
+     */
+    pdus: {}[];
+
+    /**
+    * The `server_name` of the homeserver sending this transaction.
+    * @example "example.org"
+     */
+    origin: string;
+
+    /**
+    * POSIX timestamp in milliseconds on originating homeserver when this
+    * transaction started.
+    * @example 1532991320875
+     */
+    origin_server_ts: number /* int64 */;
+  }
+  ```
+
+### POST /get_missing_events/{roomId}
+**Summary:** Retrieves events that the sender is missing
+Retrieves previous events that the sender is missing. This is done by doing a breadth-first
+walk of the `prev_events` for the `latest_events`, ignoring any events in `earliest_events`
+and stopping at the `limit`.
+**Path Parameters:**
+- `roomId` (Required): `string` - The room ID to search in.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * The maximum number of events to retrieve. Defaults to 10.
+  * @example 10
+   */
+  limit?: number;
+
+  /**
+  * The minimum depth of events to retrieve. Defaults to 0.
+  * @example 0
+   */
+  min_depth?: number;
+
+  /**
+  * The latest event IDs that the sender already has. These are skipped when retrieving
+  * the previous events of `latest_events`.
+  * @example ["$missing_event:example.org"]
+   */
+  earliest_events: string[];
+
+  /**
+  * The event IDs to retrieve the previous events for.
+  * @example ["$event_that_has_the_missing_event_as_a_previous_event:example.org"]
+   */
+  latest_events: string[];
+}
+```
+**Responses:**
+- **200**: The previous events for `latest_events`, excluding any `earliest_events`, up to the
+provided `limit`.
+  ```typescript
+  {
+
+    /**
+    * The missing events. The event format varies depending on the room version - check
+    * the [room version specification](/rooms) for precise event formats.
+     */
+    events: {}[];
+  }
+  ```
+
+## Retrieving events
+
+In some circumstances, a homeserver may be missing a particular event or
+information about the room which cannot be easily determined from
+backfilling. These APIs provide homeservers with the option of getting
+events and the state of the room at a given point in the timeline.
+
+### GET /state/{roomId}
+**Summary:** Get all the state of a given room
+Retrieves a snapshot of a room's state at a given event.
+**Path Parameters:**
+- `roomId` (Required): `string` - The room ID to get state for.
+**Query Parameters:**
+- `event_id` (Required): `string` - An event ID in the room to retrieve the state at.
+**Responses:**
+- **200**: The fully resolved state for the room, prior to considering any state
+changes induced by the requested event. Includes the authorisation
+chain for the events.
+  ```typescript
+  {
+
+    /**
+    * The full set of authorisation events that make up the state
+    * of the room, and their authorisation events, recursively. Note that
+    * events have a different format depending on the room version -
+    * check the [room version specification](/rooms) for precise event formats.
+     */
+    auth_chain: {}[];
+
+    /**
+    * The fully resolved state of the room at the given event. Note that
+    * events have a different format depending on the room version -
+    * check the [room version specification](/rooms) for precise event formats.
+     */
+    pdus: {}[];
+  }
+  ```
+
+### GET /state_ids/{roomId}
+**Summary:** Get all the state event IDs of a given room
+Retrieves a snapshot of a room's state at a given event, in the form of
+event IDs. This performs the same function as calling `/state/{roomId}`,
+however this returns just the event IDs rather than the full events.
+**Path Parameters:**
+- `roomId` (Required): `string` - The room ID to get state for.
+**Query Parameters:**
+- `event_id` (Required): `string` - An event ID in the room to retrieve the state at.
+**Responses:**
+- **200**: The fully resolved state for the room, prior to considering any state
+changes induced by the requested event. Includes the authorisation
+chain for the events.
+  ```typescript
+  {
+
+    /**
+    * The full set of authorisation events that make up the state
+    * of the room, and their authorisation events, recursively.
+    * @example ["$an_event:example.org"]
+     */
+    auth_chain_ids: string[];
+
+    /**
+    * The fully resolved state of the room at the given event.
+    * @example ["$an_event:example.org"]
+     */
+    pdu_ids: string[];
+  }
+  ```
+- **403**: The requesting host is not in the room, or is excluded from the room via `m.room.server_acl`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **404**: The given `event_id` was not found or the server doesn't know about the state at
+that event to return anything useful.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### GET /event/{eventId}
+**Summary:** Get a single event
+Retrieves a single event.
+**Path Parameters:**
+- `eventId` (Required): `string` - The event ID to get.
+**Responses:**
+- **200**: A transaction containing a single PDU which is the event requested.
+  ```typescript
+  {
+
+    /**
+    * List of persistent updates to rooms. Must not include more than 50 PDUs. Note that
+    * events have a different format depending on the room version - check the
+    * [room version specification](/rooms) for precise event formats.
+     */
+    pdus: {}[];
+
+    /**
+    * The `server_name` of the homeserver sending this transaction.
+    * @example "example.org"
+     */
+    origin: string;
+
+    /**
+    * POSIX timestamp in milliseconds on originating homeserver when this
+    * transaction started.
+    * @example 1532991320875
+     */
+    origin_server_ts: number /* int64 */;
+  }
+  ```
+
+### GET /timestamp_to_event/{roomId}
+**Summary:** Get the closest event ID to the given timestamp
+Get the ID of the event closest to the given timestamp, in the
+direction specified by the `dir` parameter.
+
+This is primarily used when handling the corresponding
+[client-server endpoint](/client-server-api/#get_matrixclientv1roomsroomidtimestamp_to_event)
+when the server does not have all of the room history, and does not
+have an event suitably close to the requested timestamp.
+
+The heuristics for deciding when to ask another homeserver for a closer
+event if your homeserver doesn't have something close, are left up to
+the homeserver implementation, although the heuristics will probably be
+based on whether the closest event is a forward/backward extremity
+indicating it's next to a gap of events which are potentially closer.
+
+A good heuristic for which servers to try first is to sort by servers
+that have been in the room the longest because they're most likely to
+have anything we ask about.
+
+After the local homeserver receives the response, it should determine,
+using the `origin_server_ts` property, whether the returned event is
+closer to the requested timestamp than the closest event that it could
+find locally.  If so, it should try to backfill this event via the
+[`/event/{event_id}`](/server-server-api/#get_matrixfederationv1eventeventid)
+endpoint so that it is available to for a client to query.
+**Path Parameters:**
+- `roomId` (Required): `string` - The ID of the room to search
+**Query Parameters:**
+- `ts` (Required): `number` - The timestamp to search from, as given in milliseconds
+since the Unix epoch.
+- `dir` (Required): `"f" | "b"` - The direction in which to search.  `f` for forwards, `b` for backwards.
+**Responses:**
+- **200**: An event was found matching the search parameters.
+  ```typescript
+  {
+
+    /**
+    * The ID of the event found
+     */
+    event_id: string;
+
+    /**
+    * The event's timestamp, in milliseconds since the Unix epoch.
+     */
+    origin_server_ts: number;
+  }
+  ```
+- **404**: No event was found.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+## Joining Rooms
+
+When a new user wishes to join a room that the user's homeserver already
+knows about, the homeserver can immediately determine if this is
+allowable by inspecting the state of the room. If it is acceptable, it
+can generate, sign, and emit a new `m.room.member` state event adding
+the user into that room. When the homeserver does not yet know about the
+room it cannot do this directly. Instead, it must take a longer
+multi-stage handshaking process by which it first selects a remote
+homeserver which is already participating in that room, and use it to
+assist in the joining process. This is the remote join handshake.
+
+This handshake involves the homeserver of the new member wishing to join
+(referred to here as the "joining" server), the directory server hosting
+the room alias the user is requesting to join with, and a homeserver
+where existing room members are already present (referred to as the
+"resident" server).
+
+In summary, the remote join handshake consists of the joining server
+querying the directory server for information about the room alias;
+receiving a room ID and a list of join candidates. The joining server
+then requests information about the room from one of the residents. It
+uses this information to construct an `m.room.member` event which it
+finally sends to a resident server.
+
+Conceptually these are three different roles of homeserver. In practice
+the directory server is likely to be resident in the room, and so may be
+selected by the joining server to be the assisting resident. Likewise,
+it is likely that the joining server picks the same candidate resident
+for both phases of event construction, though in principle any valid
+candidate may be used at each time. Thus, any join handshake can
+potentially involve anywhere from two to four homeservers, though most
+in practice will use just two.
+
+<!--
+https://textart.io/sequence
+
+object Client JoiningServer DirectoryServer ResidentServer
+Client->JoiningServer: join request
+JoiningServer->DirectoryServer: directory request
+DirectoryServer->JoiningServer: directory response
+JoiningServer->ResidentServer: make_join request
+ResidentServer->JoiningServer: make_join response
+JoiningServer->ResidentServer: send_join request
+ResidentServer->JoiningServer: send_join response
+JoiningServer->Client: join response
+-->
+
+```nohighlight
++---------+          +---------------+            +-----------------+ +-----------------+
+| Client  |          | JoiningServer |            | DirectoryServer | | ResidentServer  |
++---------+          +---------------+            +-----------------+ +-----------------+
+     |                       |                             |                   |
+     | join request          |                             |                   |
+     |---------------------->|                             |                   |
+     |                       |                             |                   |
+     |                       | directory request           |                   |
+     |                       |---------------------------->|                   |
+     |                       |                             |                   |
+     |                       |          directory response |                   |
+     |                       |<----------------------------|                   |
+     |                       |                             |                   |
+     |                       | make_join request           |                   |
+     |                       |------------------------------------------------>|
+     |                       |                             |                   |
+     |                       |                             |make_join response |
+     |                       |<------------------------------------------------|
+     |                       |                             |                   |
+     |                       | send_join request           |                   |
+     |                       |------------------------------------------------>|
+     |                       |                             |                   |
+     |                       |                             |send_join response |
+     |                       |<------------------------------------------------|
+     |                       |                             |                   |
+     |         join response |                             |                   |
+     |<----------------------|                             |                   |
+     |                       |                             |                   |
+```
+
+The first part of the handshake usually involves using the directory
+server to request the room ID and join candidates through the
+[`/query/directory`](/server-server-api/#get_matrixfederationv1querydirectory) API endpoint. In the case of a new user joining a
+room as a result of a received invite, the joining user's homeserver
+could optimise this step away by picking the origin server of that
+invite message as the join candidate. However, the joining server should
+be aware that the origin server of the invite might since have left the
+room, so should be prepared to fall back on the regular join flow if
+this optimisation fails.
+
+Once the joining server has the room ID and the join candidates, it then
+needs to obtain enough information about the room to fill in the
+required fields of the `m.room.member` event. It obtains this by
+selecting a resident from the candidate list, and using the
+`GET /make_join` endpoint. The resident server will then reply with
+enough information for the joining server to fill in the event.
+
+The joining server is expected to add or replace the `origin`,
+`origin_server_ts`, and `event_id` on the templated event received by the
+resident server. The joining server MUST also verify that the `type`, `room_id`,
+`sender`, `state_key` and `content.membership` fields have the expected values.
+This event is then signed by the joining server.
+
+To complete the join handshake, the joining server submits this new event
+to the resident server it used for `GET /make_join`, using the `PUT /send_join`
+endpoint.
+
+The resident homeserver then adds its signature to this event and
+accepts it into the room's event graph. The joining server receives
+the full set of state for the newly-joined room as well as the freshly
+signed membership event. The resident server must also send the event
+to other servers participating in the room.
+
+### GET /make_join/{roomId}/{userId}
+**Summary:** Get information required to make a join event for a room
+Asks the receiving server to return information that the sending
+server will need to prepare a join event to get into the room.
+
+Before signing the returned template and calling `/send_join`,
+the sending server MUST verify that:
+
+* the `room_id` is equal to the `roomId` path parameter.
+* both the `sender` and `state_key` are equal to the `userId` path parameter.
+* the `type` of the event is `m.room.member`.
+* the `membership` field inside `content` is `join`.
+
+In case any of the above checks fail, the response MUST be treated as malformed and
+discarded. The caller MAY try to join through another server.
+**Path Parameters:**
+- `roomId` (Required): `string` - The room ID that is about to be joined.
+- `userId` (Required): `string` - The user ID the join event will be for. This MUST be a user ID on the origin server.
+**Query Parameters:**
+- `ver`: `string[]` - The room versions the sending server has support for. Defaults
+to `[1]`.
+**Responses:**
+- **200**: A template to be used for the rest of the [Joining Rooms](/server-server-api/#joining-rooms) handshake. Note that
+events have a different format depending on the room version - check the
+[room version specification](/rooms) for precise event formats. **The response body
+here describes the common event fields in more detail and may be missing other
+required fields for a PDU.**
+  ```typescript
+  {
+
+    /**
+    * The version of the room where the server is trying to join. If not provided,
+    * the room version is assumed to be either "1" or "2".
+    * @example "2"
+     */
+    room_version?: string;
+
+    /**
+    * An unsigned template event. Note that events have a different format
+    * depending on the room version - check the [room version specification](/rooms)
+    * for precise event formats.
+     */
+    event?: {
+
+      /**
+      * The user ID of the joining member.
+      * @example "@someone:example.org"
+       */
+      sender: string;
+
+      /**
+      * The name of the resident homeserver.
+      * @example "matrix.org"
+       */
+      origin: string;
+
+      /**
+      * A timestamp added by the resident homeserver.
+      * @example 1234567890
+       */
+      origin_server_ts: number /* int64 */;
+
+      /**
+      * The value `m.room.member`.
+      * @example "m.room.member"
+       */
+      type: string;
+
+      /**
+      * The user ID of the joining member.
+      * @example "@someone:example.org"
+       */
+      state_key: string;
+
+      /**
+      * The content of the event.
+      * @example {"membership": "join"}
+       */
+      content: {
+
+        /**
+        * The value `join`.
+        * @example "join"
+         */
+        membership: string;
+
+        /**
+        * Required if the room is [restricted](/client-server-api/#restricted-rooms)
+        * and is joining through one of the conditions available. If the
+        * user is responding to an invite, this is not required.
+        * 
+        * An arbitrary user ID belonging to the resident server in
+        * the room being joined that is able to issue invites to other
+        * users. This is used in later validation of the auth rules for
+        * the `m.room.member` event.
+         */
+        join_authorised_via_users_server?: string;
+      };
+    };
+  }
+  ```
+- **400**: The request is invalid, the room the server is attempting
+to join has a version that is not listed in the `ver`
+parameters, or the server was unable to validate
+[restricted room conditions](/server-server-api/#restricted-rooms).
+
+The error should be passed through to clients so that they
+may give better feedback to users.
+
+New in `v1.2`, the following error conditions might happen:
+
+If the room is [restricted](/client-server-api/#restricted-rooms)
+and none of the conditions can be validated by the server then
+the `errcode` `M_UNABLE_TO_AUTHORISE_JOIN` must be used. This can
+happen if the server does not know about any of the rooms listed
+as conditions, for example.
+
+`M_UNABLE_TO_GRANT_JOIN` is returned to denote that a different
+server should be attempted for the join. This is typically because
+the resident server can see that the joining user satisfies one or
+more conditions, such as in the case of
+[restricted rooms](/client-server-api/#restricted-rooms), but the
+resident server would be unable to meet the auth rules governing
+`join_authorised_via_users_server` on the resulting `m.room.member`
+event.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+
+    /**
+    * The version of the room. Required if the `errcode`
+    * is `M_INCOMPATIBLE_ROOM_VERSION`.
+     */
+    room_version?: string;
+  }
+  ```
+- **403**: The room that the joining server is attempting to join does not permit the user
+to join.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **404**: The room that the joining server is attempting to join is unknown
+to the receiving server.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### PUT /send_join/{roomId}/{eventId}
+**Summary:** Submit a signed join event to a resident server
+Submits a signed join event to the resident server for it
+to accept it into the room's graph. Note that events have
+a different format depending on the room version - check
+the [room version specification](/rooms) for precise event formats.
+**The request and response body here describe the common
+event fields in more detail and may be missing other required
+fields for a PDU.**
+
+The receiving server MUST apply certain validation before accepting the event.
+A specific error code is not mandated, but servers SHOULD return `M_INVALID_PARAM` if:
+
+* The join event fails a [signature check](/server-server-api/#validating-hashes-and-signatures-on-received-events).
+* The event type is not `m.room.member`.
+* The `membership` field inside the event content is not `join`.
+* The event sender is not a user ID on the origin server.
+* The `state_key` is not equal to the `sender`.
+**Path Parameters:**
+- `roomId` (Required): `string` - The room ID that is about to be joined.
+- `eventId` (Required): `string` - The event ID for the join event.
+**Query Parameters:**
+- `omit_members`: `boolean` - If `true`, indicates that that calling server can accept a reduced
+response, in which membership events are omitted from `state` and
+redundant events are omitted from `auth_chain`.
+
+If the room to be joined has no `m.room.name` nor
+`m.room.canonical_alias` events in its current state, the resident
+server should determine the room members who would be included in
+the `m.heroes` property of the room summary as defined in the
+[Client-Server /sync
+response](/client-server-api/#get_matrixclientv3sync). The resident
+server should include these members' membership events in the
+response `state` field, and include the auth chains for these
+membership events in the response `auth_chain` field.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * The user ID of the joining member.
+  * @example "@someone:example.org"
+   */
+  sender: string;
+
+  /**
+  * The name of the joining homeserver.
+  * @example "matrix.org"
+   */
+  origin: string;
+
+  /**
+  * A timestamp added by the joining homeserver.
+  * @example 1234567890
+   */
+  origin_server_ts: number /* int64 */;
+
+  /**
+  * The value `m.room.member`.
+  * @example "m.room.member"
+   */
+  type: string;
+
+  /**
+  * The user ID of the joining member.
+  * @example "@someone:example.org"
+   */
+  state_key: string;
+
+  /**
+  * The content of the event.
+  * @example {"membership": "join"}
+   */
+  content: {
+
+    /**
+    * The value `join`.
+    * @example "join"
+     */
+    membership: string;
+
+    /**
+    * Required if the room is [restricted](/client-server-api/#restricted-rooms)
+    * and is joining through one of the conditions available. If the
+    * user is responding to an invite, this is not required.
+    * 
+    * An arbitrary user ID belonging to the resident server in
+    * the room being joined that is able to issue invites to other
+    * users. This is used in later validation of the auth rules for
+    * the `m.room.member` event.
+    * 
+    * The resident server which owns the provided user ID must have a
+    * valid signature on the event. If the resident server is receiving
+    * the `/send_join` request, the signature must be added before sending
+    * or persisting the event to other servers.
+     */
+    join_authorised_via_users_server?: string;
+  };
+}
+```
+**Responses:**
+- **200**: The join event has been accepted into the room.
+  ```typescript
+  {
+
+    /**
+    * `true` if `m.room.member` events have been omitted from `state`.
+     */
+    members_omitted?: boolean;
+
+    /**
+    * All events in the auth chain for the new join event, as well
+    * as those in the auth chains for any events returned in
+    * `state`.
+    * 
+    * If the `omit_members` query parameter was set to `true`, then
+    * any events that are returned in `state` may be omitted from
+    * `auth_chain`, whether or not membership events are omitted
+    * from `state`.
+    * 
+    * Note that events have a different format depending on the room version - check the
+    * [room version specification](/rooms) for precise event formats.
+     */
+    auth_chain: {}[];
+
+    /**
+    * The resolved current room state prior to the join event.
+    * 
+    * If the request had `omit_members` set to `true`, events of
+    * type `m.room.member` may be omitted from the response to
+    * reduce the size of the response. If this is done,
+    * `members_omitted` must be set to `true`.
+     */
+    state: {}[];
+
+    /**
+    * The membership event sent to other servers by the resident server including a signature
+    * from the resident server. Required if the room is [restricted](/client-server-api/#restricted-rooms)
+    * and the joining user is authorised by one of the conditions.
+     */
+    event?: {};
+
+    /**
+    * **Required** if `members_omitted` is true.
+    * 
+    * A list of the servers active in the room (ie, those with joined members) before the join.
+     */
+    servers_in_room?: string[];
+  }
+  ```
+- **400**: The request is invalid in some way.
+
+The error should be passed through to clients so that they
+may give better feedback to users.
+
+If `M_MISSING_PARAM` or `M_INVALID_PARAM` is returned and the request is associated
+with a Client-Server API request, the Client-Server API request SHOULD fail
+with a 5xx error rather than being passed through.
+
+New in `v1.2`, the following error conditions might happen:
+
+If the room is [restricted](/client-server-api/#restricted-rooms)
+and none of the conditions can be validated by the server then
+the `errcode` `M_UNABLE_TO_AUTHORISE_JOIN` must be used. This can
+happen if the server does not know about any of the rooms listed
+as conditions, for example.
+
+`M_UNABLE_TO_GRANT_JOIN` is returned to denote that a different
+server should be attempted for the join. This is typically because
+the resident server can see that the joining user satisfies one or
+more conditions, such as in the case of
+[restricted rooms](/client-server-api/#restricted-rooms), but the
+resident server would be unable to meet the auth rules governing
+`join_authorised_via_users_server` on the resulting `m.room.member`
+event.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **403**: The room that the joining server is attempting to join does not permit the user
+to join.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### Restricted rooms
+
+Restricted rooms are described in detail in the
+[client-server API](/client-server-api/#restricted-rooms) and are available
+in room versions [which support restricted join rules](/rooms/#feature-matrix).
+
+A resident server processing a request to join a restricted room must
+ensure that the joining server satisfies at least one of the conditions
+specified by `m.room.join_rules`. If no conditions are available, or none
+match the required schema, then the joining server is considered to have
+failed all conditions.
+
+The resident server uses a 400 `M_UNABLE_TO_AUTHORISE_JOIN` error on
+`/make_join` and `/send_join` to denote that the resident server is unable
+to validate any of the conditions, usually because the resident server
+does not have state information about rooms required by the conditions.
+
+The resident server uses a 400 `M_UNABLE_TO_GRANT_JOIN` error on `/make_join`
+and `/send_join` to denote that the joining server should try a different
+server. This is typically because the resident server can see that the
+joining user satisfies one of the conditions, though the resident server
+would be unable to meet the auth rules governing `join_authorised_via_users_server`
+on the resulting `m.room.member` event.
+
+If the joining server fails all conditions then a 403 `M_FORBIDDEN` error
+is used by the resident server.
+
+## Knocking upon a room {#knocking-rooms}
+
+Rooms can permit knocking through the join rules, and if permitted this
+gives users a way to request to join (be invited) to the room. Users who
+knock on a room where the server is already a resident of the room can
+just send the knock event directly without using this process, however
+much like [joining rooms](/server-server-api/#joining-rooms) the server
+must handshake their way into having the knock sent on its behalf.
+
+The handshake is largely the same as the joining rooms handshake, where
+instead of a "joining server" there is a "knocking server", and the APIs
+to be called are different (`/make_knock` and `/send_knock`).
+
+Servers can retract knocks over federation by leaving the room, as described
+below for rejecting invites.
+
+### GET /make_knock/{roomId}/{userId}
+**Summary:** Get information required to make a knock event for a room.
+Asks the receiving server to return information that the sending
+server will need to prepare a knock event for the room.
+
+Before signing the returned template and calling `/send_knock`,
+the sending server MUST verify that:
+
+* the `room_id` is equal to the `roomId` path parameter.
+* both the `sender` and `state_key` are equal to the `userId` path parameter.
+* the `type` of the event is `m.room.member`.
+* the `membership` field inside `content` is `knock`.
+
+In case any of the above checks fail, the response MUST be treated as malformed and
+discarded. The caller MAY try to knock through another server.
+**Path Parameters:**
+- `roomId` (Required): `string` - The room ID that is about to be knocked.
+- `userId` (Required): `string` - The user ID the knock event will be for. This MUST be a user ID on the origin server.
+**Query Parameters:**
+- `ver` (Required): `string[]` - The room versions the sending server has support for.
+**Responses:**
+- **200**: A template to be used for the rest of the [Knocking Rooms](/server-server-api/#knocking-rooms)
+handshake. Note that events have a different format depending on room version - check the
+[room version specification](/rooms) for precise event formats. **The response body
+here describes the common event fields in more detail and may be missing other
+required fields for a PDU.**
+  ```typescript
+  {
+
+    /**
+    * The version of the room where the server is trying to knock.
+    * @example "7"
+     */
+    room_version: string;
+
+    /**
+    * An unsigned template event. Note that events have a different format
+    * depending on the room version - check the [room version specification](/rooms)
+    * for precise event formats.
+     */
+    event: {
+
+      /**
+      * The user ID of the knocking member.
+      * @example "@someone:example.org"
+       */
+      sender: string;
+
+      /**
+      * The name of the resident homeserver.
+      * @example "matrix.org"
+       */
+      origin: string;
+
+      /**
+      * A timestamp added by the resident homeserver.
+      * @example 1234567890
+       */
+      origin_server_ts: number /* int64 */;
+
+      /**
+      * The value `m.room.member`.
+      * @example "m.room.member"
+       */
+      type: string;
+
+      /**
+      * The user ID of the knocking member.
+      * @example "@someone:example.org"
+       */
+      state_key: string;
+
+      /**
+      * The content of the event.
+      * @example {"membership": "knock"}
+       */
+      content: {
+
+        /**
+        * The value `knock`.
+        * @example "knock"
+         */
+        membership: string;
+      };
+    };
+  }
+  ```
+- **400**: The request is invalid or the room the server is attempting
+to knock upon has a version that is not listed in the `ver`
+parameters.
+
+The error should be passed through to clients so that they
+may give better feedback to users.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+
+    /**
+    * The version of the room. Required if the `errcode`
+    * is `M_INCOMPATIBLE_ROOM_VERSION`.
+     */
+    room_version?: string;
+  }
+  ```
+- **403**: The knocking server or user is not permitted to knock on the room, such as when the
+server/user is banned or the room is not set up for receiving knocks.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **404**: The room that the knocking server is attempting to knock upon is unknown
+to the receiving server.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### PUT /send_knock/{roomId}/{eventId}
+**Summary:** Submit a signed knock event to a resident server.
+Submits a signed knock event to the resident server for it to
+accept into the room's graph. Note that events have
+a different format depending on the room version - check
+the [room version specification](/rooms) for precise event formats.
+**The request and response body here describe the common
+event fields in more detail and may be missing other required
+fields for a PDU.**
+
+The receiving server MUST apply certain validation before accepting the event.
+A specific error code is not mandated, but servers SHOULD return `M_INVALID_PARAM` if:
+
+* The knock event fails a [signature check](/server-server-api/#validating-hashes-and-signatures-on-received-events).
+* The event type is not `m.room.member`.
+* The `membership` field inside the event content is not `knock`.
+* The event sender is not a user ID on the origin server.
+* The `state_key` is not equal to the `sender`.
+**Path Parameters:**
+- `roomId` (Required): `string` - The room ID that is about to be knocked upon.
+- `eventId` (Required): `string` - The event ID for the knock event.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * The user ID of the knocking member.
+  * @example "@someone:example.org"
+   */
+  sender: string;
+
+  /**
+  * The name of the knocking homeserver.
+  * @example "matrix.org"
+   */
+  origin: string;
+
+  /**
+  * A timestamp added by the knocking homeserver.
+  * @example 1234567890
+   */
+  origin_server_ts: number /* int64 */;
+
+  /**
+  * The value `m.room.member`.
+  * @example "m.room.member"
+   */
+  type: string;
+
+  /**
+  * The user ID of the knocking member.
+  * @example "@someone:example.org"
+   */
+  state_key: string;
+
+  /**
+  * The content of the event.
+  * @example {"membership": "knock"}
+   */
+  content: {
+
+    /**
+    * The value `knock`.
+    * @example "knock"
+     */
+    membership: string;
+  };
+}
+```
+**Responses:**
+- **200**: Information about the room to pass along to clients regarding the
+knock.
+  ```typescript
+  {
+
+    /**
+    * A list of state events to help the initiator of the knock identify
+    * the room. Translated as [stripped state events](/client-server-api/#stripped-state)
+    * over the Client-Server API.
+    * 
+    * MUST contain the `m.room.create` event for the room. All events
+    * listed MUST additionally be formatted according to the room
+    * version specification.
+    * 
+    * Entries which are [improperly signed](/server-server-api/#validating-hashes-and-signatures-on-received-events)
+    * or formatted SHOULD be removed by the server prior to supplying
+    * them over the Client-Server API.
+    * 
+    * Note that events have a different format depending on the room
+    * version - check the [room version specification](/rooms) for
+    * precise event formats.
+    * @example [{"type": "m.room.minimal_pdu", "room_id": "!somewhere:example.org", "content": {"see_room_version_spec": "The event format changes depending on the room version."}}, {"type": "m.room.create", "content": {"see_room_version_spec": "The event format changes depending on the room version."}}]
+     */
+    knock_room_state: {}[];
+  }
+  ```
+- **400**: The request is invalid in some way.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **403**: The knocking server or user is not permitted to knock on the room, such as when the
+server/user is banned or the room is not set up for receiving knocks.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **404**: The room that the knocking server is attempting to knock upon is unknown
+to the receiving server.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+## Inviting to a room
+
+When a user on a given homeserver invites another user on the same
+homeserver, the homeserver may sign the membership event itself and skip
+the process defined here. However, when a user invites another user on a
+different homeserver, a request to that homeserver to have the event
+signed and verified must be made.
+
+Note that invites are used to indicate that knocks were accepted. As such,
+receiving servers should be prepared to manually link up a previous knock
+to an invite if the invite event does not directly reference the knock.
+
+> **Note:** 
+*(Added in v1.16)* `invite_room_state` MUST now have its entries formatted
+according to the room's version (see [room version specification](/rooms)). However,
+servers SHOULD consider their local ecosystems before returning the described
+`400 M_MISSING_PARAM` error code. While migrating, servers SHOULD warn about
+invites which fail the validation rather than error in room versions 1 through 11.
+All invites to other room versions which fail validation SHOULD result in an error.
+
+The specification suggests that servers finish their migration no later than
+January 2026, though servers may extend this as required to support their users.
+
+### PUT /invite/{roomId}/{eventId}
+**Summary:** Invites a remote user to a room
+Invites a remote user to a room. Once the event has been signed by both the inviting
+homeserver and the invited homeserver, it can be sent to all of the servers in the
+room by the inviting homeserver.
+
+Servers should prefer to use the v2 API for invites instead of the v1 API. Servers
+which receive a v1 invite request must assume that the room version is either `"1"`
+or `"2"`.
+
+Note that events have a different format depending on the room version - check the
+[room version specification](/rooms) for precise event formats. **The request and response
+bodies here describe the common event fields in more detail and may be missing other
+required fields for a PDU.**
+
+Also note that if the remote homeserver is already in the room, it will receive the
+invite event twice; once through this endpoint, and again through a [federation
+transaction](/server-server-api/#transactions).
+
+Servers MUST apply certain validation to ensure they don't accidentally sign non-invite
+events from a malicious server. A specific error code is not mandated, but servers SHOULD
+return `M_INVALID_PARAM` if:
+
+* The invite event fails a [signature check](/server-server-api/#validating-hashes-and-signatures-on-received-events).
+* The event type is not `m.room.member`.
+* The `membership` field inside the event content is not `invite`.
+* The event sender is not a user ID on the origin server.
+* The `state_key` is not a user ID on the receiving server.
+
+The `invite_room_state` has additional validation, which servers MAY apply to room versions
+1 through 11 and SHOULD apply to all other room versions. As with the above errors, servers
+SHOULD return `M_INVALID_PARAM` if:
+
+* The `m.room.create` event is missing from `invite_room_state`.
+* One or more entries in `invite_room_state` are not formatted according
+  to the room's version.
+* One or more events fails a [signature check](/server-server-api/#validating-hashes-and-signatures-on-received-events).
+* One or more events does not reside in the same room as the invite.
+  Note: Some room versions may require calculating the room ID for an
+  event rather than relying on the presence of `room_id`.
+**Path Parameters:**
+- `roomId` (Required): `string` - The room ID that the user is being invited to.
+- `eventId` (Required): `string` - The event ID for the invite event, generated by the inviting server.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * The matrix ID of the user who sent the original `m.room.third_party_invite`.
+  * @example "@someone:example.org"
+   */
+  sender: string;
+
+  /**
+  * The name of the inviting homeserver.
+  * @example "matrix.org"
+   */
+  origin: string;
+
+  /**
+  * A timestamp added by the inviting homeserver.
+  * @example 1234567890
+   */
+  origin_server_ts: number /* int64 */;
+
+  /**
+  * The value `m.room.member`.
+  * @example "m.room.member"
+   */
+  type: string;
+
+  /**
+  * The user ID of the invited member.
+  * @example "@joe:elsewhere.com"
+   */
+  state_key: string;
+
+  /**
+  * The content of the event, matching what is available in the
+  * [Client-Server API](/client-server-api/). Must include a `membership` of `invite`.
+  * @example {"membership": "invite"}
+   */
+  content: {
+
+    /**
+    * The value `invite`.
+    * @example "invite"
+     */
+    membership: string;
+  };
+
+  /**
+  * Information included alongside the event that is not signed. May include more
+  * than what is listed here.
+   */
+  unsigned?: {
+
+    /**
+    * A list of state events to help the receiver of the invite identify the room.
+    * Translated as [stripped state events](/client-server-api/#stripped-state)
+    * over the Client-Server API.
+    * 
+    * MUST contain the `m.room.create` event for the room. All events listed
+    * MUST additionally be formatted according to the room version specification.
+    * 
+    * Servers might need to apply validation to the `invite_room_state` depending
+    * on room version. See endpoint description for more information.
+    * 
+    * Note that events have a different format depending on the room
+    * version - check the [room version specification](/rooms) for
+    * precise event formats.
+     */
+    invite_room_state?: {}[];
+  };
+}
+```
+**Responses:**
+- **200**: The event with the invited server's signature added. All other fields of the events
+should remain untouched. Note that events have a different format depending on the
+room version - check the [room version specification](/rooms) for precise event formats.
+  ```typescript
+  {}[]
+  ```
+- **403**: The invite is not allowed.
+
+The `M_FORBIDDEN` error code is used to indicate one of the following:
+
+* The sender is not allowed to send invites to the target user/homeserver.
+* The homeserver does not permit anyone to invite its users.
+* The homeserver refuses to participate in the room.
+
+{{% added-in v="1.18"%}} The `M_INVITE_BLOCKED` error code is used to
+indicate that the homeserver rejected the invite due to
+[invite blocking](/client-server-api/#invite-permission).
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **400**: The request is invalid in some way.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### PUT /invite/{roomId}/{eventId}
+**Summary:** Invites a remote user to a room
+**Note:**
+This API is nearly identical to the v1 API with the exception of the request
+body being different, and the response format fixed.
+
+Invites a remote user to a room. Once the event has been signed by both the inviting
+homeserver and the invited homeserver, it can be sent to all of the servers in the
+room by the inviting homeserver.
+
+This endpoint is preferred over the v1 API as it is more useful for servers. Senders
+which receive a 400 or 404 response to this endpoint should retry using the v1
+API as the server may be older, if the room version is "1" or "2".
+
+Note that events have a different format depending on the room version - check the
+[room version specification](/rooms) for precise event formats. **The request and response
+bodies here describe the common event fields in more detail and may be missing other
+required fields for a PDU.**
+
+Also note that if the remote homeserver is already in the room, it will receive the
+invite event twice; once through this endpoint, and again through a [federation
+transaction](/server-server-api/#transactions).
+
+Servers MUST apply certain validation to ensure they don't accidentally sign non-invite
+events from a malicious server. A specific error code is not mandated, but servers SHOULD
+return `M_INVALID_PARAM` if:
+
+* The invite event fails a [signature check](/server-server-api/#validating-hashes-and-signatures-on-received-events).
+* The event type is not `m.room.member`.
+* The `membership` field inside the event content is not `invite`.
+* The event sender is not a user ID on the origin server.
+* The `state_key` is not a user ID on the receiving server.
+
+The `invite_room_state` has additional validation, which servers MAY apply to room versions
+1 through 11 and SHOULD apply to all other room versions. As with the above errors, servers
+SHOULD return `M_INVALID_PARAM` if:
+
+* The `m.room.create` event is missing from `invite_room_state`.
+* One or more entries in `invite_room_state` are not formatted according
+  to the room's version.
+* One or more events fails a [signature check](/server-server-api/#validating-hashes-and-signatures-on-received-events).
+* One or more events does not reside in the same room as the invite.
+  Note: Some room versions may require calculating the room ID for an
+  event rather than relying on the presence of `room_id`.
+**Path Parameters:**
+- `roomId` (Required): `string` - The room ID that the user is being invited to.
+- `eventId` (Required): `string` - The event ID for the invite event, generated by the inviting server.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * The version of the room where the user is being invited to.
+  * @example "2"
+   */
+  room_version: string;
+
+  /**
+  * An invite event. Note that events have a different format depending on the
+  * room version - check the [room version specification](/rooms) for precise event formats.
+   */
+  event: {
+
+    /**
+    * The matrix ID of the user who sent the original `m.room.third_party_invite`.
+    * @example "@someone:example.org"
+     */
+    sender: string;
+
+    /**
+    * The name of the inviting homeserver.
+    * @example "matrix.org"
+     */
+    origin: string;
+
+    /**
+    * A timestamp added by the inviting homeserver.
+    * @example 1234567890
+     */
+    origin_server_ts: number /* int64 */;
+
+    /**
+    * The value `m.room.member`.
+    * @example "m.room.member"
+     */
+    type: string;
+
+    /**
+    * The user ID of the invited member.
+    * @example "@joe:elsewhere.com"
+     */
+    state_key: string;
+
+    /**
+    * The content of the event, matching what is available in the
+    * [Client-Server API](/client-server-api/). Must include a `membership` of `invite`.
+    * @example {"membership": "invite"}
+     */
+    content: {
+
+      /**
+      * The value `invite`.
+      * @example "invite"
+       */
+      membership: string;
+    };
+  };
+
+  /**
+  * A list of state events to help the receiver of the invite identify the room.
+  * Translated as [stripped state events](/client-server-api/#stripped-state)
+  * over the Client-Server API.
+  * 
+  * MUST contain the `m.room.create` event for the room. All events listed
+  * MUST additionally be formatted according to the room version specification.
+  * 
+  * Servers might need to apply validation to the `invite_room_state` depending
+  * on room version. See the endpoint description for more information.
+  * 
+  * Note that events have a different format depending on the room
+  * version - check the [room version specification](/rooms) for
+  * precise event formats.
+   */
+  invite_room_state?: {}[];
+}
+```
+**Responses:**
+- **200**: The event with the invited server's signature added. All other fields of the events
+should remain untouched. Note that events have a different format depending on the
+room version - check the [room version specification](/rooms) for precise event formats.
+  ```typescript
+  {
+
+    /**
+    * An invite event. Note that events have a different format depending on the
+    * room version - check the [room version specification](/rooms) for precise event formats.
+     */
+    event: {
+
+      /**
+      * The matrix ID of the user who sent the original `m.room.third_party_invite`.
+      * @example "@someone:example.org"
+       */
+      sender: string;
+
+      /**
+      * The name of the inviting homeserver.
+      * @example "matrix.org"
+       */
+      origin: string;
+
+      /**
+      * A timestamp added by the inviting homeserver.
+      * @example 1234567890
+       */
+      origin_server_ts: number /* int64 */;
+
+      /**
+      * The value `m.room.member`.
+      * @example "m.room.member"
+       */
+      type: string;
+
+      /**
+      * The user ID of the invited member.
+      * @example "@joe:elsewhere.com"
+       */
+      state_key: string;
+
+      /**
+      * The content of the event, matching what is available in the
+      * [Client-Server API](/client-server-api/). Must include a `membership` of `invite`.
+      * @example {"membership": "invite"}
+       */
+      content: {
+
+        /**
+        * The value `invite`.
+        * @example "invite"
+         */
+        membership: string;
+      };
+    };
+  }
+  ```
+- **400**: The request is invalid or the room the server is attempting
+to join has a version that is not listed in the `ver`
+parameters.
+
+The error should be passed through to clients so that they
+may give better feedback to users.
+
+If `M_MISSING_PARAM` or `M_INVALID_PARAM` is returned and the request is associated
+with a Client-Server API request, the Client-Server API request SHOULD fail
+with a 5xx error rather than being passed through.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+
+    /**
+    * The version of the room. Required if the `errcode`
+    * is `M_INCOMPATIBLE_ROOM_VERSION`.
+     */
+    room_version?: string;
+  }
+  ```
+- **403**: The invite is not allowed.
+
+The `M_FORBIDDEN` error code is used to indicate one of the following:
+
+* The sender is not allowed to send invites to the target user/homeserver.
+* The homeserver does not permit anyone to invite its users.
+* The homeserver refuses to participate in the room.
+
+{{% added-in v="1.18"%}} The `M_INVITE_BLOCKED` error code is used to
+indicate that the homeserver rejected the invite due to
+[invite blocking](/client-server-api/#invite-permission).
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+## Leaving Rooms (Rejecting Invites)
+
+Normally homeservers can send appropriate `m.room.member` events to have
+users leave the room, to reject local invites, or to retract a knock.
+Remote invites/knocks from other homeservers do not involve the server in the
+graph and therefore need another approach to reject the invite. Joining
+the room and promptly leaving is not recommended as clients and servers will
+interpret that as accepting the invite, then leaving the room rather
+than rejecting the invite.
+
+Similar to the [Joining Rooms](#joining-rooms) handshake, the server
+which wishes to leave the room starts with sending a `/make_leave`
+request to a resident server. In the case of rejecting invites, the
+resident server may be the server which sent the invite. After receiving
+a template event from `/make_leave`, the leaving server signs the event
+and replaces the `event_id` with its own. This is then sent to the
+resident server via `/send_leave`. The resident server will then send
+the event to other servers in the room.
+
+### GET /make_leave/{roomId}/{userId}
+**Summary:** Get information required to make a leave event for a room
+Asks the receiving server to return information that the sending
+server will need to prepare a leave event to get out of the room.
+
+Before signing the returned template and calling `/send_leave`,
+the sending server MUST verify that:
+
+* the `room_id` is equal to the `roomId` path parameter.
+* both the `sender` and `state_key` are equal to the `userId` path parameter.
+* the `type` of the event is `m.room.member`.
+* the `membership` field inside `content` is `leave`.
+
+In case any of the above checks fail, the response MUST be treated as malformed and
+discarded. The caller MAY try to leave through another server.
+**Path Parameters:**
+- `roomId` (Required): `string` - The room ID that is about to be left.
+- `userId` (Required): `string` - The user ID the leave event will be for. This MUST be a user ID on the origin server.
+**Responses:**
+- **200**: A template to be used to call `/send_leave`. Note that
+events have a different format depending on the room version - check the
+[room version specification](/rooms) for precise event formats. **The response body
+here describes the common event fields in more detail and may be missing other
+required fields for a PDU.**
+  ```typescript
+  {
+
+    /**
+    * The version of the room where the server is trying to leave. If not provided,
+    * the room version is assumed to be either "1" or "2".
+    * @example "2"
+     */
+    room_version?: string;
+
+    /**
+    * An unsigned template event. Note that events have a different format
+    * depending on the room version - check the [room version specification](/rooms)
+    * for precise event formats.
+     */
+    event?: {
+
+      /**
+      * The user ID of the leaving member.
+      * @example "@someone:example.org"
+       */
+      sender: string;
+
+      /**
+      * The name of the resident homeserver.
+      * @example "matrix.org"
+       */
+      origin: string;
+
+      /**
+      * A timestamp added by the resident homeserver.
+      * @example 1234567890
+       */
+      origin_server_ts: number /* int64 */;
+
+      /**
+      * The value `m.room.member`.
+      * @example "m.room.member"
+       */
+      type: string;
+
+      /**
+      * The user ID of the leaving member.
+      * @example "@someone:example.org"
+       */
+      state_key: string;
+
+      /**
+      * The content of the event.
+      * @example {"membership": "leave"}
+       */
+      content: {
+
+        /**
+        * The value `leave`.
+        * @example "leave"
+         */
+        membership: string;
+      };
+    };
+  }
+  ```
+- **403**: The request is not authorised. This could mean that the user is not in the room.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### PUT /send_leave/{roomId}/{eventId}
+**Summary:** Submit a signed leave event to a resident server
+Submits a signed leave event to the resident server for it
+to accept it into the room's graph. Note that events have
+a different format depending on the room version - check
+the [room version specification](/rooms) for precise event formats.
+**The request and response body here describe the common
+event fields in more detail and may be missing other required
+fields for a PDU.**
+
+The receiving server MUST apply certain validation before accepting the event.
+A specific error code is not mandated, but servers SHOULD return `M_INVALID_PARAM` if:
+
+* The leave event fails a [signature check](/server-server-api/#validating-hashes-and-signatures-on-received-events).
+* The event type is not `m.room.member`.
+* The `membership` field inside the event content is not `leave`.
+* The event sender is not a user ID on the origin server.
+* The `state_key` is not equal to the `sender`.
+**Path Parameters:**
+- `roomId` (Required): `string` - The room ID that is about to be left.
+- `eventId` (Required): `string` - The event ID for the leave event.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * The user ID of the leaving member.
+  * @example "@someone:example.org"
+   */
+  sender: string;
+
+  /**
+  * The name of the leaving homeserver.
+  * @example "matrix.org"
+   */
+  origin: string;
+
+  /**
+  * A timestamp added by the leaving homeserver.
+  * @example 1234567890
+   */
+  origin_server_ts: number /* int64 */;
+
+  /**
+  * The value `m.room.member`.
+  * @example "m.room.member"
+   */
+  type: string;
+
+  /**
+  * The user ID of the leaving member.
+  * @example "@someone:example.org"
+   */
+  state_key: string;
+
+  /**
+  * The content of the event.
+  * @example {"membership": "leave"}
+   */
+  content: {
+
+    /**
+    * The value `leave`.
+    * @example "leave"
+     */
+    membership: string;
+  };
+
+  /**
+  * This field must be present but is ignored; it may be 0.
+  * @example 12
+   */
+  depth: number;
+}
+```
+**Responses:**
+- **200**: An empty response to indicate the event was accepted into the graph by
+the receiving homeserver.
+  ```typescript
+  {}
+  ```
+- **400**: The request is invalid in some way.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+## Third-party invites
+
+> **Note:** 
+More information about third-party invites is available in the Client-Server API
+under the [Third-party invites](/client-server-api/#third-party-invites) module.
+
+When a user wants to invite another user in a room but doesn't know the
+Matrix ID to invite, they can do so using a third-party identifier (e.g.
+an e-mail or a phone number).
+
+This identifier and its bindings to Matrix IDs are verified by an
+identity server implementing the [Identity Service
+API](/identity-service-api).
+
+### Cases where an association exists for a third-party identifier
+
+If the third-party identifier is already bound to a Matrix ID, a [lookup
+request](/identity-service-api/#post_matrixidentityv2lookup) on the identity
+server will return it. The invite is then processed by the inviting homeserver
+as a [standard `m.room.member` invite event](#inviting-to-a-room). This is the
+simplest case.
+
+### Cases where an association doesn't exist for a third-party identifier
+
+If the third-party identifier isn't bound to any Matrix ID, the inviting
+homeserver will request the identity server to [store an invite](/identity-service-api/#invitation-storage)
+for this identifier and to deliver it to whoever binds it to its Matrix ID. It
+will also send an [`m.room.third_party_invite`](/client-server-api/#mroomthird_party_invite)
+event in the room to specify a display name, a token and public keys the
+identity server provided as a response to the invite storage request.
+
+When a third-party identifier with pending invites gets bound to a Matrix ID,
+the identity server will send a request to the [`/3pid/onbind`](#put_matrixfederationv13pidonbind)
+endpoint of the the ID's homeserver as described in the [Invitation
+Storage](/identity-service-api#invitation-storage) section of the Identity
+Service API.
+
+The following process applies for each invite sent by the identity
+server:
+
+The invited homeserver will create an [`m.room.member`](/client-server-api/#mroommember)
+invite event containing a special `third_party_invite` section containing the
+token and a `signed` object, both provided by the identity server.
+
+If the invited homeserver is in the room the invite came from, it can
+auth the event and send it.
+
+However, if the invited homeserver isn't in the room the invite came
+from, it will need to request the inviting homeserver to auth the event
+at the [`/exchange_third_party_invite`](#put_matrixfederationv1exchange_third_party_inviteroomid)
+endpoint.
+
+### PUT /exchange_third_party_invite/{roomId}
+**Summary:** Request a server to auth a third-party invite event
+The receiving server will verify the partial `m.room.member` event
+given in the request body. If valid, the receiving server will issue
+an invite as per the [Inviting to a room](/server-server-api/#inviting-to-a-room) section before returning a
+response to this request.
+**Path Parameters:**
+- `roomId` (Required): `string /* mx-room-id */` - The room ID to exchange a third-party invite in
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * The event type. Must be `m.room.member`
+  * @example "m.room.member"
+   */
+  type: string;
+
+  /**
+  * The room ID the event is for. Must match the ID given in
+  * the path.
+  * format: mx-room-id
+  * pattern: "^!"
+  * @example "!abc123:matrix.org"
+   */
+  room_id: string;
+
+  /**
+  * The user ID of the user who sent the original `m.room.third_party_invite`
+  * event.
+  * @example "@joe:matrix.org"
+   */
+  sender: string /* mx-user-id */;
+
+  /**
+  * The user ID of the invited user
+  * @example "@someone:example.org"
+   */
+  state_key: string /* mx-user-id */;
+
+  /**
+  * The event content
+  * @example {"membership": "invite", "third_party_invite": {"display_name": "alice", "signed": {"mxid": "@alice:localhost", "token": "abc123", "signatures": {"magic.forest": {"ed25519:3": "fQpGIW1Snz+pwLZu6sTy2aHy/DYWWTspTJRPyNp0PKkymfIsNffysMl6ObMMFdIJhk6g6pwlIqZ54rxo8SLmAg"}}}}}
+   */
+  content: {
+
+    /**
+    * The membership state. Must be `invite`
+    * @example "invite"
+     */
+    membership: string;
+
+    /**
+    * The third-party invite
+    * @example {"display_name": "alice", "signed": {"mxid": "@alice:localhost", "token": "abc123", "signatures": {"magic.forest": {"ed25519:3": "fQpGIW1Snz+pwLZu6sTy2aHy/DYWWTspTJRPyNp0PKkymfIsNffysMl6ObMMFdIJhk6g6pwlIqZ54rxo8SLmAg"}}}}
+     */
+    third_party_invite: {
+
+      /**
+      * A name which can be displayed to represent the user instead of their
+      * third-party identifier.
+      * @example "alice"
+       */
+      display_name: string;
+
+      /**
+      * A block of content which has been signed by the identity server, which
+      * homeservers can use to verify the event. Clients should ignore this.
+       */
+      signed: {
+
+        /**
+        * The user ID that has been bound to the third-party identifier.
+        * @example "@alice:example.org"
+         */
+        mxid: string /* mx-user-id */;
+
+        /**
+        * The identity server signatures for this block. This is a map of identity
+        * server name to signing key identifier to base64-encoded signature.
+        * 
+        * The signatures are calculated using the process described at
+        * [Signing JSON](/appendices/#signing-json).
+        * @example {"magic.forest": {"ed25519:3": "fQpGIW1Snz+pwLZu6sTy2aHy/DYWWTspTJRPyNp0PKkymfIsNffysMl6ObMMFdIJhk6g6pwlIqZ54rxo8SLmAg"}}
+         */
+        signatures: {};
+
+        /**
+        * The token generated by the identity server at the
+        * [`/store_invite`](/identity-service-api/#post_matrixidentityv2store-invite)
+        * endpoint.
+        * 
+        * It matches the `state_key` of the corresponding [`m.room.third_party_invite`](/client-server-api/#mroomthird_party_invite)
+        * event.
+        * @example "abc123"
+         */
+        token: string;
+      };
+    };
+  };
+}
+```
+**Responses:**
+- **200**: The invite has been issued successfully.
+  ```typescript
+  {}
+  ```
+
+### PUT /3pid/onbind
+**Summary:** Notifies the server that a third-party identifier has been bound to one
+of its users.
+Used by identity servers to notify the homeserver that one of its users
+has bound a third-party identifier successfully, including any pending
+room invites the identity server has been made aware of.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * The type of third-party identifier. Currently only "email" is
+  * a possible value.
+  * @example "email"
+   */
+  medium: string;
+
+  /**
+  * The third-party identifier itself. For example, an email address.
+  * @example "alice@example.com"
+   */
+  address: string;
+
+  /**
+  * The user that is now bound to the third-party identifier.
+  * @example "@alice:matrix.org"
+   */
+  mxid: string /* mx-user-id */;
+
+  /**
+  * A list of pending invites that the third-party identifier has received.
+   */
+  invites: Array<{
+
+    /**
+    * The type of third-party invite issues. Currently only
+    * "email" is used.
+    * @example "email"
+     */
+    medium: string;
+
+    /**
+    * The third-party identifier that received the invite.
+    * @example "alice@example.com"
+     */
+    address: string;
+
+    /**
+    * The now-bound user ID that received the invite.
+    * @example "@alice:matrix.org"
+     */
+    mxid: string /* mx-user-id */;
+
+    /**
+    * The room ID the invite is valid for.
+    * @example "!somewhere:example.org"
+     */
+    room_id: string /* mx-room-id */;
+
+    /**
+    * The user ID that sent the invite.
+    * @example "@bob:matrix.org"
+     */
+    sender: string /* mx-user-id */;
+
+    /**
+    * A block of content which has been signed by the identity server, which
+    * homeservers can use to verify the event. Clients should ignore this.
+     */
+    signed: {
+
+      /**
+      * The user ID that has been bound to the third-party identifier.
+      * @example "@alice:example.org"
+       */
+      mxid: string /* mx-user-id */;
+
+      /**
+      * The identity server signatures for this block. This is a map of identity
+      * server name to signing key identifier to base64-encoded signature.
+      * 
+      * The signatures are calculated using the process described at
+      * [Signing JSON](/appendices/#signing-json).
+      * @example {"magic.forest": {"ed25519:3": "fQpGIW1Snz+pwLZu6sTy2aHy/DYWWTspTJRPyNp0PKkymfIsNffysMl6ObMMFdIJhk6g6pwlIqZ54rxo8SLmAg"}}
+       */
+      signatures: {};
+
+      /**
+      * The token generated by the identity server at the
+      * [`/store_invite`](/identity-service-api/#post_matrixidentityv2store-invite)
+      * endpoint.
+      * 
+      * It matches the `state_key` of the corresponding [`m.room.third_party_invite`](/client-server-api/#mroomthird_party_invite)
+      * event.
+      * @example "abc123"
+       */
+      token: string;
+    };
+  }>;
+}
+```
+**Responses:**
+- **200**: The homeserver has processed the notification.
+  ```typescript
+  {}
+  ```
+
+#### Verifying the invite
+
+When a homeserver receives an `m.room.member` invite event for a room
+it's in with a `third_party_invite` object, it must verify that the
+association between the third-party identifier initially invited to the
+room and the Matrix ID that claims to be bound to it has been verified
+without having to rely on a third-party server.
+
+To do so, it will fetch from the room's state events the
+`m.room.third_party_invite` event for which the state key matches with
+the value for the `token` key in the `third_party_invite` object from
+the `m.room.member` event's content to fetch the public keys initially
+delivered by the identity server that stored the invite.
+
+It will then use these keys to verify that the `signed` object (in the
+`third_party_invite` object from the `m.room.member` event's content)
+was signed by the same identity server.
+
+Since this `signed` object can only be delivered once in the POST
+request emitted by the identity server upon binding between the
+third-party identifier and the Matrix ID, and contains the invited
+user's Matrix ID and the token delivered when the invite was stored,
+this verification will prove that the `m.room.member` invite event comes
+from the user owning the invited third-party identifier.
+
+## Published Room Directory
+
+To complement the [room directory in the Client-Server API](/client-server-api#published-room-directory),
+homeservers need a way to query the published rooms of another server.
+This can be done by making a request to the `/publicRooms` endpoint for
+the server the room directory should be retrieved for.
+
+### GET /publicRooms
+**Summary:** Lists the server's published room directory
+Lists the server's published room directory.
+
+This API returns paginated responses.
+
+*(Changed in v1.19)* The server determines the order of the rooms
+returned by this endpoint. Previously, rooms were ordered with the largest
+joined member count first. Continuing to order by largest first or another
+stable order is recommended.
+
+This SHOULD not return rooms that are listed on another homeserver's directory,
+just those listed on the receiving homeserver's directory.
+**Query Parameters:**
+- `limit`: `number` - The maximum number of rooms to return. Defaults to 0 (no limit).
+- `since`: `string` - A pagination token from a previous call to this endpoint to fetch more
+rooms.
+- `include_all_networks`: `boolean` - Whether or not to include all networks/protocols defined by application
+services on the homeserver. Defaults to `false`.
+- `third_party_instance_id`: `string` - The specific third-party network/protocol to request from the homeserver.
+Can only be used if `include_all_networks` is false.
+
+This is the `instance_id` of a `Protocol Instance` returned by
+[`GET /_matrix/client/v3/thirdparty/protocols`](/client-server-api/#get_matrixclientv3thirdpartyprotocols).
+**Responses:**
+- **200**: A list of the published rooms on the server.
+  ```typescript
+  {
+
+    /**
+    * A paginated chunk of published rooms.
+     */
+    chunk: Array<{
+
+      /**
+      * The canonical alias of the room, if any.
+      * @example "#general:example.org"
+       */
+      canonical_alias?: string /* mx-room-alias */;
+
+      /**
+      * The name of the room, if any.
+      * @example "General Chat"
+       */
+      name?: string;
+
+      /**
+      * The number of members joined to the room.
+      * @example 42
+       */
+      num_joined_members: number;
+
+      /**
+      * The ID of the room.
+      * @example "!abcdefg:example.org"
+       */
+      room_id: string /* mx-room-id */;
+
+      /**
+      * The plain text topic of the room. Omitted if no `text/plain` mimetype
+      * exists in [`m.room.topic`](/client-server-api/#mroomtopic).
+      * @example "All things general"
+       */
+      topic?: string;
+
+      /**
+      * Whether the room may be viewed by users without joining.
+      * @example false
+       */
+      world_readable: boolean;
+
+      /**
+      * Whether guest users may join the room and participate in it.
+      * If they can, they will be subject to ordinary power level
+      * rules like any other user.
+      * @example true
+       */
+      guest_can_join: boolean;
+
+      /**
+      * The URL for the room's avatar, if one is set.
+      * @example "mxc://example.org/abcdef"
+       */
+      avatar_url?: string /* uri */;
+
+      /**
+      * The room's join rule. When not present, the room is assumed to
+      * be `public`.
+      * @example "public"
+       */
+      join_rule?: string;
+
+      /**
+      * The `type` of room (from [`m.room.create`](/client-server-api/#mroomcreate)), if any.
+       */
+      room_type?: string;
+    }>;
+
+    /**
+    * A pagination token for the response. The absence of this token
+    * means there are no more results to fetch and the client should
+    * stop paginating.
+     */
+    next_batch?: string;
+
+    /**
+    * A pagination token that allows fetching previous results. The
+    * absence of this token means there are no results before this
+    * batch, i.e. this is the first batch.
+     */
+    prev_batch?: string;
+
+    /**
+    * An estimate on the total number of published rooms, if the
+    * server has an estimate.
+     */
+    total_room_count_estimate?: number;
+  }
+  ```
+
+### POST /publicRooms
+**Summary:** Lists the server's published room directory with an optional filter
+Lists the server's published room directory with an optional filter.
+
+This API returns paginated responses.
+
+*(Changed in v1.19)* The server determines the order of the rooms
+returned by this endpoint. Previously, rooms were ordered with the largest
+joined member count first. Continuing to order by largest first or another
+stable order is recommended.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * Limit the number of results returned.
+   */
+  limit?: number;
+
+  /**
+  * A pagination token from a previous request, allowing servers
+  * to get the next (or previous) batch of rooms.  The direction
+  * of pagination is specified solely by which token is supplied,
+  * rather than via an explicit flag.
+   */
+  since?: string;
+
+  /**
+  * Filter to apply to the results.
+   */
+  filter?: {
+
+    /**
+    * An optional string to search for in the room metadata, e.g. name,
+    * topic, canonical alias, etc.
+     */
+    generic_search_term?: string;
+
+    /**
+    * An optional list of [room types](/client-server-api/#types) to search
+    * for. To include rooms without a room type, specify `null` within this
+    * list. When not specified, all applicable rooms (regardless of type)
+    * are returned.
+     */
+    room_types?: any[];
+  };
+
+  /**
+  * Whether or not to include all known networks/protocols from
+  * application services on the homeserver. Defaults to `false`.
+  * @example false
+   */
+  include_all_networks?: boolean;
+
+  /**
+  * The specific third-party network/protocol to request from the
+  * homeserver. Can only be used if `include_all_networks` is false.
+  * 
+  * This is the `instance_id` of a `Protocol Instance` returned by
+  * [`GET /_matrix/client/v3/thirdparty/protocols`](/client-server-api/#get_matrixclientv3thirdpartyprotocols).
+  * @example "irc-freenode"
+   */
+  third_party_instance_id?: string;
+}
+```
+**Responses:**
+- **200**: A filtered list of the published rooms on the server.
+  ```typescript
+  {
+
+    /**
+    * A paginated chunk of published rooms.
+     */
+    chunk: Array<{
+
+      /**
+      * The canonical alias of the room, if any.
+      * @example "#general:example.org"
+       */
+      canonical_alias?: string /* mx-room-alias */;
+
+      /**
+      * The name of the room, if any.
+      * @example "General Chat"
+       */
+      name?: string;
+
+      /**
+      * The number of members joined to the room.
+      * @example 42
+       */
+      num_joined_members: number;
+
+      /**
+      * The ID of the room.
+      * @example "!abcdefg:example.org"
+       */
+      room_id: string /* mx-room-id */;
+
+      /**
+      * The plain text topic of the room. Omitted if no `text/plain` mimetype
+      * exists in [`m.room.topic`](/client-server-api/#mroomtopic).
+      * @example "All things general"
+       */
+      topic?: string;
+
+      /**
+      * Whether the room may be viewed by users without joining.
+      * @example false
+       */
+      world_readable: boolean;
+
+      /**
+      * Whether guest users may join the room and participate in it.
+      * If they can, they will be subject to ordinary power level
+      * rules like any other user.
+      * @example true
+       */
+      guest_can_join: boolean;
+
+      /**
+      * The URL for the room's avatar, if one is set.
+      * @example "mxc://example.org/abcdef"
+       */
+      avatar_url?: string /* uri */;
+
+      /**
+      * The room's join rule. When not present, the room is assumed to
+      * be `public`.
+      * @example "public"
+       */
+      join_rule?: string;
+
+      /**
+      * The `type` of room (from [`m.room.create`](/client-server-api/#mroomcreate)), if any.
+       */
+      room_type?: string;
+    }>;
+
+    /**
+    * A pagination token for the response. The absence of this token
+    * means there are no more results to fetch and the client should
+    * stop paginating.
+     */
+    next_batch?: string;
+
+    /**
+    * A pagination token that allows fetching previous results. The
+    * absence of this token means there are no results before this
+    * batch, i.e. this is the first batch.
+     */
+    prev_batch?: string;
+
+    /**
+    * An estimate on the total number of published rooms, if the
+    * server has an estimate.
+     */
+    total_room_count_estimate?: number;
+  }
+  ```
+
+## Spaces
+
+To complement the [Client-Server API's Spaces module](/client-server-api/#spaces),
+homeservers need a way to query information about spaces from other servers.
+
+### GET /hierarchy/{roomId}
+**Summary:** Retrieve a portion of a space tree.
+Federation version of the Client-Server [`GET /hierarchy`](/client-server-api/#get_matrixclientv1roomsroomidhierarchy)
+endpoint. Unlike the Client-Server API version, this endpoint does not paginate. Instead, all
+the space-room's children the requesting server could feasibly peek/join are returned. The
+requesting server is responsible for filtering the results further down for the user's request.
+
+Only [`m.space.child`](/client-server-api/#mspacechild) state events of the room are considered. Invalid child
+rooms and parent events are not covered by this endpoint.
+
+Responses to this endpoint should be cached for a period of time.
+**Path Parameters:**
+- `roomId` (Required): `string` - The room ID of the space to get a hierarchy for.
+**Query Parameters:**
+- `suggested_only`: `boolean` - Optional (default `false`) flag to indicate whether or not the server should only consider
+suggested rooms. Suggested rooms are annotated in their [`m.space.child`](/client-server-api/#mspacechild) event
+contents.
+**Responses:**
+- **200**: The space room and its children.
+  ```typescript
+  {
+
+    /**
+    * A summary of the room requested.
+     */
+    room: {
+
+      /**
+      * The canonical alias of the room, if any.
+      * @example "#general:example.org"
+       */
+      canonical_alias?: string /* mx-room-alias */;
+
+      /**
+      * The name of the room, if any.
+      * @example "General Chat"
+       */
+      name?: string;
+
+      /**
+      * The number of members joined to the room.
+      * @example 42
+       */
+      num_joined_members: number;
+
+      /**
+      * The ID of the room.
+      * @example "!abcdefg:example.org"
+       */
+      room_id: string /* mx-room-id */;
+
+      /**
+      * The plain text topic of the room. Omitted if no `text/plain` mimetype
+      * exists in [`m.room.topic`](/client-server-api/#mroomtopic).
+      * @example "All things general"
+       */
+      topic?: string;
+
+      /**
+      * Whether the room may be viewed by users without joining.
+      * @example false
+       */
+      world_readable: boolean;
+
+      /**
+      * Whether guest users may join the room and participate in it.
+      * If they can, they will be subject to ordinary power level
+      * rules like any other user.
+      * @example true
+       */
+      guest_can_join: boolean;
+
+      /**
+      * The URL for the room's avatar, if one is set.
+      * @example "mxc://example.org/abcdef"
+       */
+      avatar_url?: string /* uri */;
+
+      /**
+      * The room's join rule. When not present, the room is assumed to
+      * be `public`.
+      * @example "public"
+       */
+      join_rule?: string;
+      room_type?: {};
+
+      /**
+      * If the room is a [restricted room](/server-server-api/#restricted-rooms), these are the room IDs which
+      * are specified by the join rules. Empty or omitted otherwise.
+       */
+      allowed_room_ids?: string /* mx-room-id */[];
+      encryption?: {};
+      room_version?: {};
+
+      /**
+      * The [`m.space.child`](/client-server-api/#mspacechild) events of the space-room, represented
+      * as [Stripped State Events](/client-server-api/#stripped-state) with an added
+      * `origin_server_ts` key.
+      * 
+      * If the room is not a space-room, this should be empty.
+       */
+      children_state: Array<{
+
+        /**
+        * The `content` for the event.
+         */
+        content: {};
+
+        /**
+        * The `state_key` for the event.
+         */
+        state_key: string;
+
+        /**
+        * The `type` for the event.
+         */
+        type: string;
+
+        /**
+        * The `sender` for the event.
+         */
+        sender: string /* mx-user-id */;
+
+        /**
+        * The `origin_server_ts` for the event.
+         */
+        origin_server_ts: number /* int64 */;
+      }>;
+    };
+
+    /**
+    * A summary of the space's children. Rooms which the requesting server cannot peek/join will
+    * be excluded.
+     */
+    children: Array<{
+
+      /**
+      * The canonical alias of the room, if any.
+      * @example "#general:example.org"
+       */
+      canonical_alias?: string /* mx-room-alias */;
+
+      /**
+      * The name of the room, if any.
+      * @example "General Chat"
+       */
+      name?: string;
+
+      /**
+      * The number of members joined to the room.
+      * @example 42
+       */
+      num_joined_members: number;
+
+      /**
+      * The ID of the room.
+      * @example "!abcdefg:example.org"
+       */
+      room_id: string /* mx-room-id */;
+
+      /**
+      * The plain text topic of the room. Omitted if no `text/plain` mimetype
+      * exists in [`m.room.topic`](/client-server-api/#mroomtopic).
+      * @example "All things general"
+       */
+      topic?: string;
+
+      /**
+      * Whether the room may be viewed by users without joining.
+      * @example false
+       */
+      world_readable: boolean;
+
+      /**
+      * Whether guest users may join the room and participate in it.
+      * If they can, they will be subject to ordinary power level
+      * rules like any other user.
+      * @example true
+       */
+      guest_can_join: boolean;
+
+      /**
+      * The URL for the room's avatar, if one is set.
+      * @example "mxc://example.org/abcdef"
+       */
+      avatar_url?: string /* uri */;
+
+      /**
+      * The room's join rule. When not present, the room is assumed to
+      * be `public`.
+      * @example "public"
+       */
+      join_rule?: string;
+      room_type?: {};
+
+      /**
+      * If the room is a [restricted room](/server-server-api/#restricted-rooms), these are the room IDs which
+      * are specified by the join rules. Empty or omitted otherwise.
+       */
+      allowed_room_ids?: string /* mx-room-id */[];
+      encryption?: {};
+      room_version?: {};
+    }>;
+
+    /**
+    * The list of room IDs the requesting server doesn't have a viable way to peek/join. Rooms which
+    * the responding server cannot provide details on will be outright excluded from the response instead.
+    * 
+    * Assuming both the requesting and responding server are well behaved, the requesting server should
+    * consider these room IDs as not accessible from anywhere. They should not be re-requested.
+     */
+    inaccessible_children: string[];
+  }
+  ```
+- **404**: The room is not known to the server or the requesting server is unable to peek/join
+it (if it were to attempt this).
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+## Typing Notifications
+
+When a server's users send typing notifications, those notifications
+need to be sent to other servers in the room so their users are aware of
+the same state. Receiving servers should verify that the user is in the
+room, and is a user belonging to the sending server.
+
+### Definition `m.typing`
+```typescript
+type m.typing = {
+
+  /**
+  * The string `m.typing`
+  * @example "m.typing"
+   */
+  edu_type: "m.typing";
+
+  /**
+  * The typing notification.
+   */
+  content: {
+
+    /**
+    * The room where the user's typing status has been updated.
+    * @example "!somewhere:matrix.org"
+     */
+    room_id: string;
+
+    /**
+    * The user ID that has had their typing status changed.
+    * @example "@john:matrix.org"
+     */
+    user_id: string;
+
+    /**
+    * Whether the user is typing in the room or not.
+    * @example true
+     */
+    typing: boolean;
+  };
+};
+```
+
+## Presence
+
+The server API for presence is based entirely on exchange of the
+following EDUs. There are no PDUs or Federation Queries involved.
+
+Servers should only send presence updates for users that the receiving
+server would be interested in. Such as the receiving server sharing a
+room with a given user.
+
+### Definition `m.presence`
+```typescript
+type m.presence = {
+
+  /**
+  * The string `m.presence`
+  * @example "m.presence"
+   */
+  edu_type: "m.presence";
+
+  /**
+  * The presence updates and requests.
+   */
+  content: {
+
+    /**
+    * A list of presence updates that the receiving server is likely
+    * to be interested in.
+     */
+    push: Array<{
+
+      /**
+      * The user ID this presence EDU is for.
+      * @example "@john:matrix.org"
+       */
+      user_id: string;
+
+      /**
+      * The presence of the user.
+      * @example "online"
+       */
+      presence: "offline" | "unavailable" | "online";
+
+      /**
+      * An optional description to accompany the presence.
+      * @example "Making cupcakes"
+       */
+      status_msg?: string;
+
+      /**
+      * The number of milliseconds that have elapsed since the user
+      * last did something.
+      * @example 5000
+       */
+      last_active_ago: number /* int64 */;
+
+      /**
+      * True if the user is likely to be interacting with their
+      * client. This may be indicated by the user having a
+      * `last_active_ago` within the last few minutes. Defaults
+      * to false.
+      * @example true
+       */
+      currently_active?: boolean;
+    }>;
+  };
+};
+```
+
+## Receipts
+
+Receipts are EDUs used to communicate a marker for a given event.
+Currently the only kind of receipt supported is a "read receipt", or
+where in the event graph the user has read up to.
+
+Read receipts for events that a user sent do not need to be sent. It is
+implied that by sending the event the user has read up to the event.
+
+### Definition `m.receipt`
+```typescript
+type m.receipt = {
+
+  /**
+  * The string `m.receipt`
+  * @example "m.receipt"
+   */
+  edu_type: "m.receipt";
+
+  /**
+  * Receipts for a particular room. The string key is the room ID for
+  * which the receipts under it belong.
+  * @example {"!some_room:example.org": {"m.read": {"@john:matrix.org": {"event_ids": ["$read_this_event:matrix.org"], "data": {"ts": 1533358089009}}}}}
+   */
+  content: {};
+};
+```
+
+## Querying for information
+
+Queries are a way to retrieve information from a homeserver about a
+resource, such as a user or room. The endpoints here are often called in
+conjunction with a request from a client on the client-server API in
+order to complete the call.
+
+There are several types of queries that can be made. The generic
+endpoint to represent all queries is described first, followed by the
+more specific queries that can be made.
+
+### GET /query/{queryType}
+**Summary:** Query for information
+Performs a single query request on the receiving homeserver. The query string
+arguments are dependent on which type of query is being made. Known query types
+are specified as their own endpoints as an extension to this definition.
+**Path Parameters:**
+- `queryType` (Required): `string` - The type of query to make
+**Responses:**
+- **200**: The query response. The schema varies depending on the query being made.
+
+### GET /query/directory
+**Summary:** Query for the room ID and resident homeservers for a room alias
+Performs a query to get the mapped room ID and list of resident homeservers in
+the room for a given room alias. Homeservers should only query room aliases
+that belong to the target server (identified by the [server name](/appendices/#server-name)
+in the alias).
+
+Servers may wish to cache the response to this query to avoid requesting the
+information too often.
+**Query Parameters:**
+- `room_alias` (Required): `string` - The room alias to query.
+**Responses:**
+- **200**: The corresponding room ID and list of known resident homeservers for the room.
+  ```typescript
+  {
+
+    /**
+    * The room ID mapped to the queried room alias.
+    * @example "!roomid1234:example.org"
+     */
+    room_id: string;
+
+    /**
+    * An array of server names that are likely to hold the given room. This
+    * list may or may not include the server answering the query.
+     */
+    servers: string[];
+  }
+  ```
+- **404**: The room alias was not found.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### GET /query/profile
+**Summary:** Query for profile information about a given user
+Performs a query to get profile information, such as a display name or avatar,
+for a given user. Homeservers MUST only query profiles for users that belong
+to the target server (identified by the [server name](/appendices/#server-name)
+in the user ID).
+
+Responding servers MAY:
+  - Include arbitrary key/value pairs in the profile in addition to the
+    specified pairs.
+  - Deny profile look-up over federation by responding with 403 and an error code of
+    `M_FORBIDDEN`.
+  - Omit certain key/value pairs in the response.
+
+Requesting servers MAY wish to cache the response to this query to avoid requesting the
+information too often.
+**Query Parameters:**
+- `user_id` (Required): `string` - The user ID to query. MUST be a user local to the receiving homeserver.
+- `field`: `string` - The field of the profile to query. If specified, the server MUST only return the
+given field in the response. If not specified, the server MUST return the full,
+public, profile for the user.
+
+Defined values are `displayname`, `avatar_url` and `m.tz`. In addition to these
+servers MAY allow users to set additional key/value pairs.
+**Responses:**
+- **200**: The profile for the user. If a `field` is specified in the request, the response
+MUST only include the specified `field`. If no `field` was specified, the response
+SHOULD include all of the fields of the user's profile that can be made public, such
+as the display name and avatar.
+
+If a field in the user's profile can't be made public over the federation, the
+responding server MAY choose to exclude it in the response.
+
+If the user does not have a particular field set on their profile, the server
+MUST either exclude it from the response body or give it the value `null`.
+  ```typescript
+  {
+
+    /**
+    * The display name of the user. MUST either be omitted or set to `null` if
+    * the user does not have a display name set.
+    * @example "John Doe"
+     */
+    displayname?: string;
+
+    /**
+    * The avatar URL for the user's avatar. MUST either be omitted or set to
+    * `null` if the user does not have an avatar set.
+    * @example "mxc://example.org/MyC00lAvatar"
+     */
+    avatar_url?: string;
+
+    /**
+    * The name of the user's time zone. The name SHOULD be registered in the [IANA Time Zone Database](https://www.iana.org/time-zones). Requesting servers MUST tolerate invalid or unknown values.
+     */
+    m.tz?: string;
+  }
+  ```
+- **403**: The server is unwilling to disclose whether the user exists and/or has profile information.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **404**: The user does not exist, does not have a profile or the queried field does not exist.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+## OpenID
+
+Third-party services can exchange an access token previously generated
+by the <span class="title-ref">Client-Server API</span> for information
+about a user. This can help verify that a user is who they say they are
+without granting full access to the user's account.
+
+Access tokens generated by the OpenID API are only good for the OpenID
+API and nothing else.
+
+### GET /openid/userinfo
+**Summary:** Exchange an OpenID token for user information
+Exchanges an OpenID access token for information about the user
+who generated the token. Currently this only exposes the Matrix
+User ID of the owner.
+**Query Parameters:**
+- `access_token` (Required): `string` - The OpenID access token to get information about the owner for.
+**Responses:**
+- **200**: Information about the user who generated the OpenID access token.
+  ```typescript
+  {
+
+    /**
+    * The Matrix User ID who generated the token.
+    * 
+    * The caller MUST validate that the returned user ID is on the server they
+    * called (i.e. if you make a request to example.com and it returns
+    * `@alice:matrix.org`, the result is invalid).
+    * @example "@alice:example.com"
+     */
+    sub: string;
+  }
+  ```
+- **401**: The token was not recognized or has expired.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+## Device Management
+
+Details of a user's devices must be efficiently published to other users
+and kept up-to-date. This is critical for reliable end-to-end
+encryption, in order for users to know which devices are participating
+in a room. It's also required for to-device messaging to work. This
+section is intended to complement the [Device Management
+module](/client-server-api#device-management)
+of the Client-Server API.
+
+Matrix currently uses a custom pubsub system for synchronising
+information about the list of devices for a given user over federation.
+When a server wishes to determine a remote user's device list for the
+first time, it should populate a local cache from the result of a
+`/user/keys/query` API on the remote server. However, subsequent updates
+to the cache should be applied by consuming `m.device_list_update` EDUs.
+Each new `m.device_list_update` EDU describes an incremental change to
+one device for a given user which should replace any existing entry in
+the local server's cache of that device list. Servers must send
+`m.device_list_update` EDUs to all the servers who share a room with a
+given local user, and must be sent whenever that user's device list
+changes (i.e. for new or deleted devices, when that user joins a room
+which contains servers which are not already receiving updates for that
+user's device list, or changes in device information such as the
+device's human-readable name).
+
+Servers send `m.device_list_update` EDUs in a sequence per origin user,
+each with a unique `stream_id`. They also include a pointer to the most
+recent previous EDU(s) that this update is relative to in the `prev_id`
+field. To simplify implementation for clustered servers which could send
+multiple EDUs at the same time, the `prev_id` field should include all
+`m.device_list_update` EDUs which have not been yet been referenced in a
+EDU. If EDUs are emitted in series by a server, there should only ever
+be one `prev_id` in the EDU.
+
+This forms a simple directed acyclic graph of `m.device_list_update`
+EDUs, showing which EDUs a server needs to have received in order to
+apply an update to its local copy of the remote user's device list. If a
+server receives an EDU which refers to a `prev_id` it does not
+recognise, it must resynchronise its list by calling the
+`/user/keys/query API` and resume the process. The response contains a
+`stream_id` which should be used to correlate with subsequent
+`m.device_list_update` EDUs.
+
+### GET /user/devices/{userId}
+**Summary:** Gets all of the user's devices
+Gets information on all of the user's devices
+**Path Parameters:**
+- `userId` (Required): `string` - The user ID to retrieve devices for. Must be a user local to the
+receiving homeserver.
+**Responses:**
+- **200**: The user's devices.
+  ```typescript
+  {
+
+    /**
+    * The user ID devices were requested for.
+    * @example "@alice:example.org"
+     */
+    user_id: string;
+
+    /**
+    * A unique ID for a given user_id which describes the version of
+    * the returned device list.  This is matched with the `stream_id`
+    * field in `m.device_list_update` EDUs in order to incrementally
+    * update the returned device_list.
+    * @example 5
+     */
+    stream_id: number;
+
+    /**
+    * The user's devices. May be empty.
+     */
+    devices: Array<{
+
+      /**
+      * The device ID.
+      * @example "JLAFKJWSCS"
+       */
+      device_id: string;
+
+      /**
+      * Identity keys for the device.
+       */
+      keys: {
+
+        /**
+        * The ID of the user the device belongs to. Must match the user ID used
+        * when logging in.
+        * @example "@alice:example.com"
+         */
+        user_id: string;
+
+        /**
+        * The ID of the device these keys belong to. Must match the device ID used
+        * when logging in.
+        * @example "JLAFKJWSCS"
+         */
+        device_id: string;
+
+        /**
+        * The encryption algorithms supported by this device.
+        * @example ["m.olm.v1.curve25519-aes-sha2", "m.megolm.v1.aes-sha2"]
+         */
+        algorithms: string[];
+
+        /**
+        * Public identity keys. The names of the properties should be in the
+        * format `<algorithm>:<device_id>`. The keys themselves should be
+        * encoded as specified by the key algorithm.
+        * @example {"curve25519:JLAFKJWSCS": "3C5BFWi2Y8MaVvjM8M22DBmh24PmgR0nPvJOIArzgyI", "ed25519:JLAFKJWSCS": "lEuiRJBit0IG6nUf5pUzWTUEsRVVe/HJkoKuEww9ULI"}
+         */
+        keys: {};
+
+        /**
+        * Signatures for the device key object. A map from user ID, to a map from
+        * `<algorithm>:<device_id>` to the signature.
+        * 
+        * The signature is calculated using the process described at [Signing JSON](/appendices/#signing-json).
+        * @example {"@alice:example.com": {"ed25519:JLAFKJWSCS": "dSO80A01XiigH3uBiDVx/EjzaoycHcjq9lfQX0uWsqxl2giMIiSPR8a4d291W1ihKJL/a+myXS367WT6NAIcBA"}}
+         */
+        signatures: {};
+      };
+
+      /**
+      * Optional display name for the device.
+      * @example "Alice's Mobile Phone"
+       */
+      device_display_name?: string;
+    }>;
+
+    /**
+    * The user\'s master signing key.
+     */
+    master_key?: {
+
+      /**
+      * The ID of the user the key belongs to.
+      * @example "@alice:example.com"
+       */
+      user_id: string;
+
+      /**
+      * What the key is used for.
+       */
+      usage: Array<"master" | "self_signing" | "user_signing">;
+
+      /**
+      * The public key.  The object must have exactly one property, whose name is
+      * in the form `<algorithm>:<unpadded_base64_public_key>`, and whose value
+      * is the unpadded base64 public key.
+      * @example {"ed25519:alice+base64+public+key": "alice+base64+public+key"}
+       */
+      keys: {};
+
+      /**
+      * Signatures of the key, calculated using the process described at [Signing JSON](/appendices/#signing-json).
+      * Optional for the master signing key. Other keys must be signed by the
+      * user\'s master signing key.
+      * @example {"@alice:example.com": {"ed25519:alice+base64+master+key": "signature+of+key"}}
+       */
+      signatures?: {};
+    };
+
+    /**
+    * The user\'s self-signing key.
+     */
+    self_signing_key?: {
+
+      /**
+      * The ID of the user the key belongs to.
+      * @example "@alice:example.com"
+       */
+      user_id: string;
+
+      /**
+      * What the key is used for.
+       */
+      usage: Array<"master" | "self_signing" | "user_signing">;
+
+      /**
+      * The public key.  The object must have exactly one property, whose name is
+      * in the form `<algorithm>:<unpadded_base64_public_key>`, and whose value
+      * is the unpadded base64 public key.
+      * @example {"ed25519:alice+base64+public+key": "alice+base64+public+key"}
+       */
+      keys: {};
+
+      /**
+      * Signatures of the key, calculated using the process described at [Signing JSON](/appendices/#signing-json).
+      * Optional for the master signing key. Other keys must be signed by the
+      * user\'s master signing key.
+      * @example {"@alice:example.com": {"ed25519:alice+base64+master+key": "signature+of+key"}}
+       */
+      signatures?: {};
+    };
+  }
+  ```
+
+### Definition `m.device_list_update`
+```typescript
+type m.device_list_update = {
+
+  /**
+  * The string `m.device_list_update`.
+  * @example "m.device_list_update"
+   */
+  edu_type: "m.device_list_update";
+
+  /**
+  * The description of the device whose details has changed.
+   */
+  content: {
+
+    /**
+    * The user ID who owns this device.
+    * @example "@john:example.com"
+     */
+    user_id: string;
+
+    /**
+    * The ID of the device whose details are changing.
+    * @example "QBUAZIFURK"
+     */
+    device_id: string;
+
+    /**
+    * The public human-readable name of this device. Will be absent
+    * if the device has no name.
+    * @example "Mobile"
+     */
+    device_display_name?: string;
+
+    /**
+    * An ID sent by the server for this update, unique for a given
+    * user_id.  Used to identify any gaps in the sequence of `m.device_list_update`
+    * EDUs broadcast by a server.
+    * @example 6
+     */
+    stream_id: number;
+
+    /**
+    * The stream_ids of any prior m.device_list_update EDUs sent for this user
+    * which have not been referred to already in an EDU's prev_id field.  If the
+    * receiving server does not recognise any of the prev_ids, it means an EDU
+    * has been lost and the server should query a snapshot of the device list
+    * via `/user/keys/query` in order to correctly interpret future `m.device_list_update`
+    * EDUs.  May be missing or empty for the first EDU in a sequence.
+     */
+    prev_id?: number[];
+
+    /**
+    * True if the server is announcing that this device has been deleted.
+    * @example false
+     */
+    deleted?: boolean;
+
+    /**
+    * The updated identity keys (if any) for this device.  May be absent if the
+    * device has no E2E keys defined.
+     */
+    keys?: {
+
+      /**
+      * The ID of the user the device belongs to. Must match the user ID used
+      * when logging in.
+      * @example "@alice:example.com"
+       */
+      user_id: string;
+
+      /**
+      * The ID of the device these keys belong to. Must match the device ID used
+      * when logging in.
+      * @example "JLAFKJWSCS"
+       */
+      device_id: string;
+
+      /**
+      * The encryption algorithms supported by this device.
+      * @example ["m.olm.v1.curve25519-aes-sha2", "m.megolm.v1.aes-sha2"]
+       */
+      algorithms: string[];
+
+      /**
+      * Public identity keys. The names of the properties should be in the
+      * format `<algorithm>:<device_id>`. The keys themselves should be
+      * encoded as specified by the key algorithm.
+      * @example {"curve25519:JLAFKJWSCS": "3C5BFWi2Y8MaVvjM8M22DBmh24PmgR0nPvJOIArzgyI", "ed25519:JLAFKJWSCS": "lEuiRJBit0IG6nUf5pUzWTUEsRVVe/HJkoKuEww9ULI"}
+       */
+      keys: {};
+
+      /**
+      * Signatures for the device key object. A map from user ID, to a map from
+      * `<algorithm>:<device_id>` to the signature.
+      * 
+      * The signature is calculated using the process described at [Signing JSON](/appendices/#signing-json).
+      * @example {"@alice:example.com": {"ed25519:JLAFKJWSCS": "dSO80A01XiigH3uBiDVx/EjzaoycHcjq9lfQX0uWsqxl2giMIiSPR8a4d291W1ihKJL/a+myXS367WT6NAIcBA"}}
+       */
+      signatures: {};
+    };
+  };
+};
+```
+
+## End-to-End Encryption
+
+This section complements the [End-to-End Encryption
+module](/client-server-api#end-to-end-encryption)
+of the Client-Server API. For detailed information about end-to-end
+encryption, please see that module.
+
+The APIs defined here are designed to be able to proxy much of the
+client's request through to federation, and have the response also be
+proxied through to the client.
+
+### POST /user/keys/claim
+**Summary:** Claims one-time encryption keys for a user.
+Claims one-time keys for use in pre-key messages.
+
+The request contains the user ID, device ID and algorithm name of the
+keys that are required. If a key matching these requirements can be
+found, the response contains it. The returned key is a one-time key
+if one is available, and otherwise a fallback key.
+
+One-time keys are given out in the order that they were uploaded via
+[/keys/upload](/client-server-api/#post_matrixclientv3keysupload). (All
+keys uploaded within a given call to `/keys/upload` are considered
+equivalent in this regard; no ordering is specified within them.)
+
+Servers must ensure that each one-time key is returned at most once,
+so when a key has been returned, no other request will ever return
+the same key.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * The keys to be claimed. A map from user ID, to a map from
+  * device ID to algorithm name. Requested users must be local
+  * to the receiving homeserver.
+  * @example {"@alice:example.com": {"JLAFKJWSCS": "signed_curve25519"}}
+   */
+  one_time_keys: {};
+}
+```
+**Responses:**
+- **200**: The claimed keys.
+  ```typescript
+  {
+
+    /**
+    * One-time keys for the queried devices. A map from user ID, to a
+    * map from devices to a map from `<algorithm>:<key_id>` to the key object.
+    * 
+    * See the [Client-Server Key Algorithms](/client-server-api/#key-algorithms) section for more information on
+    * the Key Object format.
+    * @example {"@alice:example.com": {"JLAFKJWSCS": {"signed_curve25519:AAAAHg": {"key": "zKbLg+NrIjpnagy+pIY6uPL4ZwEG2v+8F9lmgsnlZzs", "signatures": {"@alice:example.com": {"ed25519:JLAFKJWSCS": "FLWxXqGbwrb8SM3Y795eB6OA8bwBcoMZFXBqnTn58AYWZSqiD45tlBVcDa2L7RwdKXebW/VzDlnfVJ+9jok1Bw"}}}}}}
+     */
+    one_time_keys: {};
+  }
+  ```
+
+### POST /user/keys/query
+**Summary:** Download device identity keys.
+Returns the current devices and identity keys for the given users.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * The keys to be downloaded. A map from user ID, to a list of
+  * device IDs, or to an empty list to indicate all devices for the
+  * corresponding user.  Requested users must be local to the
+  * receiving homeserver.
+  * @example {"@alice:example.com": []}
+   */
+  device_keys: {};
+}
+```
+**Responses:**
+- **200**: The device information.
+  ```typescript
+  {
+
+    /**
+    * Information on the queried devices. A map from user ID, to a
+    * map from device ID to device information.  For each device,
+    * the information returned will be the same as uploaded via
+    * `/keys/upload`, with the addition of an `unsigned`
+    * property.
+     */
+    device_keys: {};
+
+    /**
+    * Information on the master signing keys of the queried users.
+    * A map from user ID, to master signing key information.  For each key, the
+    * information returned will be the same as uploaded via
+    * `/keys/device_signing/upload`, along with the signatures
+    * uploaded via `/keys/signatures/upload` that the user is
+    * allowed to see.
+    * @example {"@alice:example.com": {"user_id": "@alice:example.com", "usage": ["master"], "keys": {"ed25519:base64+master+public+key": "base64+master+public+key"}}}
+     */
+    master_keys?: {};
+
+    /**
+    * Information on the self-signing keys of the queried users. A map
+    * from user ID, to self-signing key information.  For each key, the
+    * information returned will be the same as uploaded via
+    * `/keys/device_signing/upload`.
+    * @example {"@alice:example.com": {"user_id": "@alice:example.com", "usage": ["self_signing"], "keys": {"ed25519:base64+self+signing+public+key": "base64+self+signing+master+public+key"}, "signatures": {"@alice:example.com": {"ed25519:base64+master+public+key": "signature+of+self+signing+key"}}}}
+     */
+    self_signing_keys?: {};
+  }
+  ```
+
+### Definition `m.signing_key_update`
+```typescript
+type m.signing_key_update = {
+
+  /**
+  * The string `m.signing_key_update`.
+  * @example "m.signing_key_update"
+   */
+  edu_type: "m.signing_key_update";
+
+  /**
+  * The updated signing keys.
+   */
+  content: {
+
+    /**
+    * The user ID whose cross-signing keys have changed.
+    * @example "@alice:example.com"
+     */
+    user_id: string;
+
+    /**
+    * Key used for cross signing
+    * @example {"user_id": "@alice:example.com", "usage": ["master"], "keys": {"ed25519:base64+master+public+key": "base64+master+public+key"}}
+     */
+    master_key?: {
+
+      /**
+      * The ID of the user the key belongs to.
+      * @example "@alice:example.com"
+       */
+      user_id: string;
+
+      /**
+      * What the key is used for.
+       */
+      usage: Array<"master" | "self_signing" | "user_signing">;
+
+      /**
+      * The public key.  The object must have exactly one property, whose name is
+      * in the form `<algorithm>:<unpadded_base64_public_key>`, and whose value
+      * is the unpadded base64 public key.
+      * @example {"ed25519:alice+base64+public+key": "alice+base64+public+key"}
+       */
+      keys: {};
+
+      /**
+      * Signatures of the key, calculated using the process described at [Signing JSON](/appendices/#signing-json).
+      * Optional for the master signing key. Other keys must be signed by the
+      * user\'s master signing key.
+      * @example {"@alice:example.com": {"ed25519:alice+base64+master+key": "signature+of+key"}}
+       */
+      signatures?: {};
+    };
+
+    /**
+    * Key used for cross signing
+    * @example {"user_id": "@alice:example.com", "usage": ["self_signing"], "keys": {"ed25519:base64+self+signing+public+key": "base64+self+signing+master+public+key"}, "signatures": {"@alice:example.com": {"ed25519:base64+master+public+key": "signature+of+self+signing+key"}}}
+     */
+    self_signing_key?: {
+
+      /**
+      * The ID of the user the key belongs to.
+      * @example "@alice:example.com"
+       */
+      user_id: string;
+
+      /**
+      * What the key is used for.
+       */
+      usage: Array<"master" | "self_signing" | "user_signing">;
+
+      /**
+      * The public key.  The object must have exactly one property, whose name is
+      * in the form `<algorithm>:<unpadded_base64_public_key>`, and whose value
+      * is the unpadded base64 public key.
+      * @example {"ed25519:alice+base64+public+key": "alice+base64+public+key"}
+       */
+      keys: {};
+
+      /**
+      * Signatures of the key, calculated using the process described at [Signing JSON](/appendices/#signing-json).
+      * Optional for the master signing key. Other keys must be signed by the
+      * user\'s master signing key.
+      * @example {"@alice:example.com": {"ed25519:alice+base64+master+key": "signature+of+key"}}
+       */
+      signatures?: {};
+    };
+  };
+};
+```
+
+## Send-to-device messaging
+
+The server API for send-to-device messaging is based on the
+`m.direct_to_device` EDU. There are no PDUs or Federation Queries
+involved.
+
+Each send-to-device message should be sent to the destination server
+using the following EDU:
+
+### Definition `m.direct_to_device`
+```typescript
+type m.direct_to_device = {
+
+  /**
+  * The string `m.direct_to_device`.
+  * @example "m.direct_to_device"
+   */
+  edu_type: "m.direct_to_device";
+
+  /**
+  * The description of the direct-to-device message.
+   */
+  content: {
+
+    /**
+    * User ID of the sender.
+    * @example "@john:example.com"
+     */
+    sender: string;
+
+    /**
+    * Event type for the message.
+    * @example "m.room_key_request"
+     */
+    type: string;
+
+    /**
+    * Unique ID for the message, used for idempotence.  Arbitrary utf8 string, of maximum length 32 codepoints.
+    * @example "hiezohf6Hoo7kaev"
+     */
+    message_id: string;
+
+    /**
+    * The contents of the messages to be sent.  These are arranged in
+    * a map of user IDs to a map of device IDs to message bodies.
+    * The device ID may also be `*`, meaning all known devices for the user.
+    * @example {"@alice:example.org": {"IWHQUZUIAH": {"algorithm": "m.megolm.v1.aes-sha2", "room_id": "!Cuyf34gef24t:localhost", "session_id": "X3lUlvLELLYxeTx4yOVu6UDpasGEVO0Jbu+QFnm0cKQ", "session_key": "AgAAAADxKHa9uFxcXzwYoNueL5Xqi69IkD4sni8LlfJL7qNBEY..."}}}
+     */
+    messages: {};
+  };
+};
+```
+
+## Content Repository
+
+Attachments to events (images, files, etc) are uploaded to a homeserver
+via the Content Repository described in the [Client-Server
+API](/client-server-api/#content-repository). When a server wishes
+to serve content originating from a remote server, it needs to ask the
+remote server for the media.
+
+Servers MUST use the server described in the [Matrix Content URI](/client-server-api/#matrix-content-mxc-uris).
+Formatted as `mxc://{ServerName}/{MediaID}`, servers MUST download the media from
+`ServerName` using the below endpoints.
+
+*(Changed in v1.11)* Servers were previously advised to use the `/_matrix/media/*`
+endpoints described by the [Content Repository module in the Client-Server API](/client-server-api/#content-repository),
+however, those endpoints have been deprecated. New endpoints are introduced which
+require authentication. Naturally, as a server is not a user, they cannot provide
+the required access token to those endpoints. Instead, servers MUST try the endpoints
+described below before falling back to the deprecated `/_matrix/media/*` endpoints
+when they receive a `404 M_UNRECOGNIZED` error. When falling back, servers MUST
+be sure to set `allow_remote` to `false`.
+
+### GET /media/download/{mediaId}
+**Summary:** Download content from the content repository.
+**Responses:**
+- **200**: The content that was previously uploaded.
+- **429**: 
+- **502**: The content is too large for the server to serve.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **504**: 
+
+### GET /media/thumbnail/{mediaId}
+**Summary:** Download a thumbnail of content from the content repository
+Download a thumbnail of content from the content repository.
+See the [Client-Server API Thumbnails](/client-server-api/#thumbnails)
+section for more information.
+**Query Parameters:**
+- `width` (Required): `number` - The *desired* width of the thumbnail. The actual thumbnail may be
+larger than the size specified.
+- `height` (Required): `number` - The *desired* height of the thumbnail. The actual thumbnail may be
+larger than the size specified.
+- `method`: `"crop" | "scale"` - The desired resizing method. See the [Client-Server API Thumbnails](/client-server-api/#thumbnails)
+section for more information.
+- `animated`: `boolean` - Indicates preference for an animated thumbnail from the server, if possible. Animated
+thumbnails typically use the content types `image/gif`, `image/png` (with APNG format),
+`image/apng`, and `image/webp` instead of the common static `image/png` or `image/jpeg`
+content types.
+
+When `true`, the server SHOULD return an animated thumbnail if possible and supported.
+When `false`, the server MUST NOT return an animated thumbnail. For example, returning a
+static `image/png` or `image/jpeg` thumbnail. When not provided, the server SHOULD NOT
+return an animated thumbnail.
+
+Servers SHOULD prefer to return `image/webp` thumbnails when supporting animation.
+
+When `true` and the media cannot be animated, such as in the case of a JPEG or PDF, the
+server SHOULD behave as though `animated` is `false`.
+**Responses:**
+- **200**: A thumbnail of the requested content.
+- **400**: The request does not make sense to the server, or the server cannot thumbnail
+the content. For example, the caller requested non-integer dimensions or asked
+for negatively-sized images.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **413**: The local content is too large for the server to thumbnail.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **429**: 
+- **502**: The remote content is too large for the server to thumbnail.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **504**: 
+
+## Server Access Control Lists (ACLs)
+
+Server ACLs and their purpose are described in the [Server
+ACLs](/client-server-api#server-access-control-lists-acls-for-rooms)
+section of the Client-Server API.
+
+When a remote server makes a request, it MUST be verified to be allowed
+by the server ACLs. If the server is denied access to a room, the
+receiving server MUST reply with a 403 HTTP status code and an `errcode`
+of `M_FORBIDDEN`.
+
+The following endpoint prefixes MUST be protected:
+
+-   `/_matrix/federation/v1/make_join`
+-   `/_matrix/federation/v1/make_leave`
+-   `/_matrix/federation/v1/send_join`
+-   `/_matrix/federation/v2/send_join`
+-   `/_matrix/federation/v1/send_leave`
+-   `/_matrix/federation/v2/send_leave`
+-   `/_matrix/federation/v1/invite`
+-   `/_matrix/federation/v2/invite`
+-   `/_matrix/federation/v1/make_knock`
+-   `/_matrix/federation/v1/send_knock`
+-   `/_matrix/federation/v1/state`
+-   `/_matrix/federation/v1/state_ids`
+-   `/_matrix/federation/v1/backfill`
+-   `/_matrix/federation/v1/event_auth`
+-   `/_matrix/federation/v1/get_missing_events`
+
+Additionally the [`/_matrix/federation/v1/send/{txnId}`](#put_matrixfederationv1sendtxnid)
+endpoint MUST be protected as follows:
+
+-   ACLs MUST be applied to all PDUs on a per-PDU basis. If the sending
+    server is denied access to the room identified by `room_id`, the PDU
+    MUST be ignored with an appropriate error included in the response
+    for the respective event ID.
+-   ACLs MUST be applied to all EDUs that are local to a specific room:
+
+    -   For [typing notifications (`m.typing`)](#typing-notifications), if
+        the sending server is denied access to the room identified by
+        `room_id`, the EDU MUST be ignored.
+    -   For [receipts (`m.receipt`)](#receipts), all receipts for a particular
+        room ID MUST be ignored if the sending server is denied access to
+        the room identified by that ID.
+
+The following endpoints MAY be protected:
+
+-   [`/_matrix/policy/v1/sign`](#post_matrixpolicyv1sign) - {{< added-in v="1.18" >}}
+    Protected if the server is tracking the DAG and chooses to enforce the ACL.
+
+## Policy Servers
+
+*(Added in v1.18)*
+
+Policy Servers are an available tool for rooms to add proactive protections. Rooms
+which use a Policy Server (PS) can prevent unwanted events from reaching users. Rooms
+are not required to use a Policy Server, and can disable it any time after enabling
+it.
+
+For a homeserver to be a Policy Server, it MUST implement the following functionality
+of the Server-Server API:
+
+* [Normal server name resolution](#resolving-server-names).
+* [Publishing a signing key](#publishing-keys).
+* [Request authentication](#authentication).
+* Being able to [make and send join requests](#joining-rooms).
+* Receiving and processing [`POST /_matrix/policy/v1/sign`](#post_matrixpolicyv1sign)
+  requests.
+
+All other functionality and endpoints are optional for a Policy Server.
+
+> **Note:** 
+Though a Policy Server is not required to implement the full Server-Server API
+surface, some functionality may be desirable to implement anyway:
+
+* Receiving [invites](#inviting-to-a-room) can make it easier to add the Policy
+  Server to a room.
+* Receiving [transactions](#transactions) is recommended to avoid remote servers
+  flagging the Policy Server as "offline", even if the contents are discarded.
+* Receiving [device lookups](#get_matrixfederationv1userdevicesuserid) can also
+  help reduce remote servers flagging the Policy Server as "offline".
+
+> **Note:** 
+Policy Servers are *not* required to track the DAG for a room. Policy Servers
+might be optimized for content moderation and therefore do not need knowledge of
+the DAG.
+
+### Determining if a Policy Server is enabled in a room
+
+For a room to be considered as "using" a Policy Server, *all* of the following
+conditions MUST be true:
+
+* The *current state* for the room has a valid [`m.room.policy`](/client-server-api/#mroompolicy)
+  state event with empty state key. Valid means `content` contains at least:
+  * A string value for `via`.
+  * An object value for `public_keys` containing at least a string value for
+    `ed25519`.
+* The server name denoted by the `m.room.policy` state event's `via` has at least
+  one joined user in the room in *current state*. The user does not need any
+  special permissions or power levels in the room.
+
+If a room has enabled a Policy Server, *all* servers in that room MUST [ask that
+Policy Server](#asking-for-a-policy-server-signature-on-an-event) for a signature
+before sending an event. If the Policy Server refuses to sign the event being
+sent, servers SHOULD fail to send that event as per the [validation rules](#validating-policy-server-signatures).
+
+> **Note:** 
+"Current state" shares the same definition as [soft failure](#soft-failure).
+
+> **Note:** 
+Policy Servers MUST have at least one joined user in the room to give the Policy
+Server agency in whether it serves that role for the room. Otherwise, a room
+would be able to force a Policy Server to participate and then overwhelm it.
+
+### Validating Policy Server signatures
+
+Policy Servers use signatures to indicate whether an event was checked and is
+recommended for inclusion in a room. The Policy Server's recommendation does *not*
+affect the authorization rules for an event, but does affect whether homeservers
+[soft fail](#soft-failure) or refuse to actually go forward with sending an event.
+
+If a room has disabled (or never enabled) a Policy Server, events are recommended
+for inclusion and subject to normal authorization rules.
+
+> **Note:** 
+Because the Policy Server is not asked to sign [`m.room.policy`](/client-server-api/#mroompolicy)
+state events with empty string `state_key`s, those events will not have a Policy
+Server signature. Those events are by default recommended for inclusion and still
+subject to normal authorization rules.
+
+All other events SHOULD have a valid Policy Server signature when a Policy Server
+is enabled in the room, including non-state `m.room.policy` events and `m.room.policy`
+state events with non-empty `state_key`s. This also includes state events like
+membership and power level changes.
+
+If a room has enabled a Policy Server, the Policy Server's signature appears
+alongside the normal [event signatures](#signing-events), though uses a public
+key from the room's `m.room.policy` state event.
+
+> **Note:** 
+Currently, only Ed25519 keys are supported by homeservers. The Key ID for the
+`ed25519` key in `m.room.policy` is *always* `ed25519:policy_server`.
+
+> **Note:** 
+By embedding the Policy Server's public key into room state, the Policy Server
+does not need to be online or have its keys cached by a notary in order to validate
+an event.
+
+> **Note:** 
+The Policy Server's [published signing key](#publishing-keys) SHOULD NOT be the
+same key contained in the `m.room.policy` state event. This is to keep "can send
+federation traffic" and "can recommend events for inclusion" separate, and to
+allow rooms to revoke the Policy Server's key without cooperation of the Policy
+Server.
+
+If the Policy Server is acting as a normal homeserver and attempting to send an
+event, that event will require a signature from the server's published signing
+key alongside the Policy Server signature described in this section.
+
+If the Policy Server's signature is valid, the event is recommended for inclusion
+in the room, and is still subject to normal authorization rules.
+
+If the Policy Server's signature is invalid or missing, the homeserver SHOULD
+[ask for a new signature](#asking-for-a-policy-server-signature-on-an-event). If
+the event still does not have a valid Policy Server signature, the event is *not*
+recommended for inclusion and the homeserver SHOULD:
+
+* If applicable, reject the Client-Server API request which was generating the
+  event. If the Policy Server returned an error, that error SHOULD be provided
+  to the client verbatim. The event the client was attempting to send SHOULD be
+  discarded and not processed/sent any further.
+* If the event was received over federation or the homeserver sends a local client's
+  event anyway, [soft fail](#soft-failure) the event.
+
+> **Note:** 
+For clarity, an event which lacks a valid Policy Server signature is still subject
+to normal authorization rules.
+
+> **Note:** 
+When a Policy Server's signature is invalid, a new one is requested because the
+Policy Server's key may have rotated between the event being signed and the event
+being checked.
+
+Because the key is contained in the `m.room.policy` state event, if the Policy
+Server rotates its key without the room also updating the state event, events
+will be flagged as not recommended for inclusion. This is expected behaviour.
+
+### Asking for a Policy Server signature on an event
+
+Per [above](#determining-if-a-policy-server-is-enabled-in-a-room), if a room has
+a Policy Server enabled, *all* servers in the room MUST ask the Policy Server to
+sign their events before sending them to clients and servers.
+
+After asking for a signature, homeservers SHOULD [validate](#validating-policy-server-signatures)
+the returned signature before continuing to send events. If the Policy Server
+returns an error, the event SHOULD NOT be sent to clients and servers.
+
+### POST /sign
+**Summary:** Asks the Policy Server to sign an event.
+A server is a Policy Server if it implements this endpoint, among
+[other requirements](/server-server-api/#policy-servers). This endpoint
+is otherwise optional. See [Unsupported Endpoints](/server-server-api/#unsupported-endpoints)
+for details on how to exclude implementation of this endpoint.
+
+This endpoint MUST NOT be called for events which have a type of `m.room.policy`
+and an empty string `state_key`. All other events, including state events,
+non-state `m.room.policy` events, and `m.room.policy` state events with
+non-empty string `state_key`s are processed by this endpoint.
+
+Whether a signature is required by a Policy Server further depends on whether
+the room has [enabled a Policy Server](#determining-if-a-policy-server-is-enabled-in-a-room).
+
+> **Note:** 
+The Policy Server MAY respond with *any* of the defined errors to indicate
+failure. For example, if it wishes to hide whether it knows about a room,
+it MAY return `400 M_FORBIDDEN` instead (or, it MAY sign the event anyway).
+
+What the Policy Server checks for when calling this endpoint is left as an
+implementation detail.
+
+> **Note:** 
+The policy server name might be the same as the event's origin, and therefore the event might
+have existing signatures. Those existing signatures might not be returned by the policy server,
+but should be retained to validate the event.
+
+**Request Body (JSON):**
+```typescript
+{}
+```
+**Responses:**
+- **200**: The Policy Server has signed the event, indicating that it recommends the event for
+inclusion in the room. Only the Policy Server's signature is returned. This signature
+is to be added to the event before sending or processing the event further.
+
+`ed25519:policy_server` is *always* used for Ed25519 signatures.
+  ```typescript
+  {}
+  ```
+- **429**: 
+- **400**: The request is invalid or the Policy Server refuses to sign the event.
+
+Error codes include:
+* `M_BAD_JSON` - The supplied PDU-formatted event was improperly formatted. For example,
+  missing keys required for the room version.
+* `M_NOT_JSON` - The body wasn't JSON.
+* `M_FORBIDDEN` - The Policy Server refuses to sign the event.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **403**: The calling server is [ACL'd](/server-server-api/#server-access-control-lists-acls).
+
+> **Note:** 
+This endpoint is optionally affected by server ACLs. The Policy Server
+MAY NOT apply an ACL to the request, especially if the Policy Server
+is not tracking the room DAG.
+
+  ```typescript
+  {
+
+    /**
+    * The `M_FORBIDDEN` error code.
+     */
+    errcode: {};
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **404**: The server is not a Policy Server, or the room is unknown/not protected by the Policy Server.
+
+Error codes include:
+* `M_NOT_FOUND` - The room is not known or is not protected by the Policy Server.
+* `M_UNRECOGNIZED` - The server is not a Policy Server. See [Unsupported Endpoints](/server-server-api/#unsupported-endpoints)
+  for more detail.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+## Signing Events
+
+Signing events is complicated by the fact that servers can choose to
+redact non-essential parts of an event.
+
+### Adding hashes and signatures to outgoing events
+
+Before signing the event, the *content hash* of the event is calculated
+as described below. The hash is encoded using [Unpadded
+Base64](/appendices#unpadded-base64) and stored in the event
+object, in a `hashes` object, under a `sha256` key.
+
+The event object is then *redacted*, following the [redaction
+algorithm](/client-server-api#redactions).
+Finally it is signed as described in [Signing
+JSON](/appendices#signing-json), using the server's signing key
+(see also [Retrieving server keys](#retrieving-server-keys)).
+
+The signature is then copied back to the original event object.
+
+For an example of a signed event, see the [room version
+specification](/rooms).
+
+> **Note:** 
+*(Added in v1.18)*
+Events sent in rooms with [Policy Servers](#policy-servers) MUST [ask](#asking-for-a-policy-server-signature-on-an-event)
+the Policy Server for a signature too.
+
+### Validating hashes and signatures on received events
+
+When a server receives an event over federation from another server, the
+receiving server should check the hashes and signatures on that event.
+
+First the signatures are checked. The event is redacted following the
+[redaction algorithm](/client-server-api#redactions), and
+the resultant object is checked for signatures from the originating
+server, following the algorithm described in [Checking for a
+signature](/appendices#checking-for-a-signature). Note that this
+step should succeed whether we have been sent the full event or a
+redacted copy.
+
+For room versions 3 and later, unless the event is a 3rd party invite, only the
+signature(s) from the originating server (the server the `sender` belongs to)
+are required for verification. Room versions 1 and 2 also require that a
+signature is present from the domain in the `event_id`, if it differs from the
+originating server. If a signature is from an unknown or expired key, it is
+skipped.
+
+If the event is a 3rd party invite, the sender must already match the 3rd party
+invite, and the server which actually sends the event may be a different
+server.
+
+Only signatures from known server keys are validated here. Any unknown keys are ignored.
+In particular, the [policy server key](#validating-policy-server-signatures) is not
+expected to be published and therefore should be skipped at this stage.
+Additionally, any keys that are known to have expired prior to the event's
+`origin_server_ts` are ignored.
+
+> **Note:** 
+*(Added in v1.18)*
+Events sent in rooms with [Policy Servers](#policy-servers) have [additional](#validating-policy-server-signatures)
+signature validation requirements.
+
+If all signatures from known unexpired keys from the originating server(s) are
+found to be valid, the expected content hash is calculated as described below.
+The content hash in the `hashes` property of the received event is base64-decoded,
+and the two are compared for equality.
+
+If the hash check fails, then it is assumed that this is because we have
+only been given a redacted version of the event. To enforce this, the
+receiving server should use the redacted copy it calculated rather than
+the full copy it received.
+
+### Calculating the reference hash for an event
+
+The *reference hash* of an event covers the essential fields of an
+event, including content hashes. It is used for event identifiers in
+some room versions. See the [room version
+specification](/rooms) for more information. It is
+calculated as follows.
+
+1.  The event is put through the redaction algorithm.
+2.  The `signatures` and `unsigned` properties are removed
+    from the event, if present.
+3.  The event is converted into [Canonical
+    JSON](/appendices#canonical-json).
+4.  A sha256 hash is calculated on the resulting JSON object.
+
+### Calculating the content hash for an event
+
+The *content hash* of an event covers the complete event including the
+*unredacted* contents. It is calculated as follows.
+
+First, any existing `unsigned`, `signatures`, and `hashes` properties are
+removed. The resulting object is then encoded as [Canonical
+JSON](/appendices#canonical-json), and the JSON is hashed using
+SHA-256.
+
+### Example code
+
+```py
+def hash_and_sign_event(event_object, signing_key, signing_name):
+    # First we need to hash the event object.
+    content_hash = compute_content_hash(event_object)
+    event_object["hashes"] = {"sha256": encode_unpadded_base64(content_hash)}
+
+    # Strip all the keys that would be removed if the event was redacted.
+    # The hashes are not stripped and cover all the keys in the event.
+    # This means that we can tell if any of the non-essential keys are
+    # modified or removed.
+    stripped_object = strip_non_essential_keys(event_object)
+
+    # Sign the stripped JSON object. The signature only covers the
+    # essential keys and the hashes. This means that we can check the
+    # signature even if the event is redacted.
+    signed_object = sign_json(stripped_object, signing_key, signing_name)
+
+    # Copy the signatures from the stripped event to the original event.
+    event_object["signatures"] = signed_object["signatures"]
+
+def compute_content_hash(event_object):
+    # take a copy of the event before we remove any keys.
+    event_object = dict(event_object)
+
+    # Keys under "unsigned" can be modified by other servers.
+    # They are useful for conveying information like the age of an
+    # event that will change in transit.
+    # Since they can be modified we need to exclude them from the hash.
+    event_object.pop("unsigned", None)
+
+    # Signatures will depend on the current value of the "hashes" key.
+    # We cannot add new hashes without invalidating existing signatures.
+    event_object.pop("signatures", None)
+
+    # The "hashes" key might contain multiple algorithms if we decide to
+    # migrate away from SHA-2. We don't want to include an existing hash
+    # output in our hash so we exclude the "hashes" dict from the hash.
+    event_object.pop("hashes", None)
+
+    # Encode the JSON using a canonical encoding so that we get the same
+    # bytes on every server for the same JSON object.
+    event_json_bytes = encode_canonical_json(event_object)
+
+    return hashlib.sha256(event_json_bytes)
+```
+
+## Security considerations
+
+When a domain's ownership changes, the new controller of the domain can
+masquerade as the previous owner, receiving messages (similarly to
+email) and request past messages from other servers. In the future,
+proposals like
+[MSC1228](https://github.com/matrix-org/matrix-spec-proposals/issues/1228) will
+address this issue.

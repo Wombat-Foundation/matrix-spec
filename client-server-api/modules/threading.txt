@@ -1,0 +1,370 @@
+
+### Threading
+
+*(Added in v1.4)*
+
+Threads allow users to visually branch their conversations in a room. Typically mostly used
+when a room is discussing multiple topics, threads provide more organisation of communication
+that traditional [rich replies](#rich-replies) can't always offer.
+
+Clients SHOULD render threads differently to regular messages or replies in the timeline, such
+as by providing some context to what is going on in the thread but keeping the full conversation
+history behind a disclosure.
+
+Threads are established using a `rel_type` of `m.thread` and reference the
+*thread root* (the main timeline event to which the thread events refer). It is not possible to create a thread from an event which itself
+is the child of an event relationship (i.e., one with an `m.relates_to`
+property with a `rel_type` property - see [Relationship types](#relationship-types)).
+It is therefore also not possible to nest threads. 
+
+Unlike rich reply chains, all events in a thread reference the thread root
+instead of the most recent message.
+
+As a worked example, the following represents a thread and how it would be formed:
+
+```json
+{
+  // irrelevant fields excluded
+  "type": "m.room.message",
+  "event_id": "$alice_hello",
+  "sender": "@alice:example.org",
+  "content": {
+    "msgtype": "m.text",
+    "body": "Hello world! How are you?"
+  }
+}
+```
+
+```json
+{
+  // irrelevant fields excluded
+  "type": "m.room.message",
+  "event_id": "$bob_hello",
+  "sender": "@bob:example.org",
+  "content": {
+    "m.relates_to": {
+      "rel_type": "m.thread",
+      "event_id": "$alice_hello"
+    },
+    "msgtype": "m.text",
+    "body": "I'm doing okay, thank you! How about yourself?"
+  }
+}
+```
+
+```json
+{
+  // irrelevant fields excluded
+  "type": "m.room.message",
+  "event_id": "$alice_reply",
+  "sender": "@alice:example.org",
+  "content": {
+    "m.relates_to": {
+      "rel_type": "m.thread",
+      "event_id": "$alice_hello" // note: always references the *thread root*
+    },
+    "msgtype": "m.text",
+    "body": "I'm doing great! Thanks for asking."
+  }
+}
+```
+
+As shown, any event without a `rel_type` can become a thread root by simply referencing it
+using an `m.thread` relationship.
+
+#### Fallback for unthreaded clients
+
+Clients which understand how to work with threads should simply do so, however clients which
+might not be aware of threads (due to age or scope) might not be able to helpfully represent
+the conversation history to its users.
+
+To work around this, events sent by clients which understand threads SHOULD include [rich reply](#rich-replies)
+metadata to attempt to form a reply chain representation of the conversation. This representation
+is not ideal for heavily threaded rooms, but allows for users to have context as to what is
+being discussed with respect to other messages in the room.
+
+This representation is achieved by merging the two relationships and setting a new `is_falling_back`
+flag to `true`.
+
+```json
+// within an event's content...
+"m.relates_to": {
+  // The m.thread relationship structure
+  "rel_type": "m.thread",
+  "event_id": "$root",
+
+  // The rich reply structure
+  "m.in_reply_to": {
+    // The most recent message known to the client in the thread.
+    // This should be something with a high chance of being rendered by the other client,
+    // such as an `m.room.message` event.
+    "event_id": "$target"
+  },
+
+  // A flag to denote that this is a thread with reply fallback
+  "is_falling_back": true
+}
+```
+
+> **Note:** 
+Clients which are aware of threads (they do not render threads, but are otherwise
+aware of the feature existing in the spec) can treat rich replies to an event with a `rel_type`
+of `m.thread` as a threaded reply, for conversation continuity on the threaded client's side.
+
+To do this, copy the `event_id` (thread root) from the event being replied to, add the
+`m.in_reply_to` metadata, and add `is_falling_back: true` to `m.relates_to`.
+
+#### Replies within threads
+
+In the [fallback for unthreaded clients](#fallback-for-unthreaded-clients) section, a new
+`is_falling_back` flag is added to `m.relates_to`. This flag defaults to `false` when not
+provided, which also allows a threaded message to contain a reply itself.
+
+Aside from `is_falling_back` being `false` (or not specified), the fallback for unthreaded
+clients is used to create a reply within a thread: clients should render the event accordingly.
+
+#### Server behaviour
+
+##### Validation of `m.thread` relationships
+
+Servers SHOULD reject client requests which attempt to start a thread off an
+event with an `m.relates_to` property. If the client attempts to target an event which itself
+has an `m.relates_to` property, then it should receive a HTTP 400 error
+response with appropriate error message, as per the [standard error
+response](#standard-error-response) structure.
+
+> **Note:** 
+A specific error code is not currently available for this case: servers should use `M_UNKNOWN`
+alongside the HTTP 400 status code.
+
+##### Server-side aggregation of `m.thread` relationships
+
+Given threads always reference the thread root, an event can have multiple
+"child" events which then form the thread itself. These events should be
+[aggregated](#aggregations-of-child-events) by the server.
+
+The aggregation for threads includes some information about the user's participation in the thread,
+the approximate number of events in the thread (as known to the server), and the most recent event
+in the thread (topologically).
+
+As with any other aggregation of child events, the `m.thread` aggregation is
+included under the `m.relations` property in `unsigned` for the thread root. For example:
+
+```json
+{
+  "event_id": "$root_event",
+  // irrelevant fields not shown
+  "unsigned": {
+    "m.relations": {
+      "m.thread": {
+        "latest_event": {
+          // A serialized copy of the latest event in the thread.
+          // Some fields are not shown here for brevity.
+          "event_id": "$message",
+          "sender": "@alice:example.org",
+          "room_id": "!room:example.org",
+          "type": "m.room.message",
+          "content": {
+            "msgtype": "m.text",
+            "body": "Woo! Threads!"
+          },
+          "unsigned": {
+            "m.relations": {
+              // ...
+            }
+          }
+        },
+        "count": 7,
+        "current_user_participated": true
+      }
+    }
+  }
+}
+```
+
+`latest_event` is the most recent event (topologically to the server) in the thread sent by an
+un-[ignored user](#ignoring-users). It should be serialized in the same form as the event itself.
+
+Note that, as in the example above, child events of the `latest_event` should
+themselves be aggregated and included under `m.relations` for that event. The
+server should be careful to avoid loops, though loops are not currently
+possible due to `m.thread` not being permitted to target an event with an
+`m.relates_to` property.
+
+`count` is simply the number of events using `m.thread` as a `rel_type` pointing to the target event.
+It does not include events sent by [ignored users](#ignoring-users).
+
+`current_user_participated` is `true` when the authenticated user is either:
+1. The `sender` of the thread root event.
+2. The `sender` of an event which references the thread root with a `rel_type` of `m.thread`.
+
+#### Querying threads in a room
+
+Clients looking to get all the events in a thread can use
+[`GET /relations/{threadRootId}/m.thread`](#get_matrixclientv1roomsroomidrelationseventidreltype),
+however getting all threads in a room is done through a dedicated API:
+
+### GET /rooms/{roomId}/threads
+**Summary:** Fetches a list of the threads in a room.
+This API is used to paginate through the list of the thread roots in a given room. 
+
+Optionally, the returned list may be filtered according to whether the requesting
+user has participated in the thread.
+**Path Parameters:**
+- `roomId` (Required): `string` - The room ID where the thread roots are located.
+**Query Parameters:**
+- `include`: `"all" | "participated"` - Optional (default `all`) flag to denote which thread roots are of interest to the caller.
+When `all`, all thread roots found in the room are returned. When `participated`, only
+thread roots for threads the user has [participated in](/client-server-api/#server-side-aggregation-of-mthread-relationships)
+will be returned.
+- `limit`: `number` - Optional limit for the maximum number of thread roots to include per response. Must be an integer
+greater than zero.
+
+Servers should apply a default value, and impose a maximum value to avoid resource exhaustion.
+- `from`: `string` - A pagination token from a previous result. When not provided, the server starts paginating from
+the most recent event visible to the user (as per history visibility rules; topologically).
+**Responses:**
+- **200**: A portion of the available thread roots in the room, based on the filter criteria.
+  ```typescript
+  {
+
+    /**
+    * The thread roots, ordered by the `latest_event` in each event's aggregated children. All events
+    * returned include bundled [aggregations](/client-server-api/#aggregations-of-child-events).
+    * 
+    * If the thread root event was sent by an [ignored user](/client-server-api/#ignoring-users), the
+    * event is returned redacted to the caller. This is to simulate the same behaviour of a client doing
+    * aggregation locally on the thread.
+     */
+    chunk: Array<{
+
+      /**
+      * The globally unique identifier for this event.
+      * @example "$26RqwJMLw-yds1GAH_QxjHRC1Da9oasK0e5VLnck_45"
+       */
+      event_id: string /* mx-event-id */;
+
+      /**
+      * The type of the event.
+      * @example "m.room.member"
+       */
+      type: string;
+
+      /**
+      * Present if, and only if, this event is a *state* event. The key making
+      * this piece of state unique in the room. Note that it is often an empty
+      * string.
+      * 
+      * State keys starting with an `@` are reserved for referencing user IDs, such
+      * as room members. With the exception of a few events, state events set with a
+      * given user's ID as the state key MUST only be set by that user.
+      * @example "@user:example.org"
+       */
+      state_key?: string;
+
+      /**
+      * Contains the fully-qualified ID of the user who sent this event.
+      * @example "@example:example.org"
+       */
+      sender: string /* mx-user-id */;
+
+      /**
+      * Timestamp (in milliseconds since the unix epoch) on originating homeserver
+      * when this event was sent.
+      * @example 1632489532305
+       */
+      origin_server_ts: number /* int64 */;
+
+      /**
+      * The body of this event, as created by the client which sent it.
+      * @example {"membership": "join"}
+       */
+      content: {};
+      unsigned?: {
+
+        /**
+        * @example {"type": "m.room.redaction", "sender": "@moderator:example.org", "content": {"reason": "spam"}, "redacts": "$26RqwJMLw-yds1GAH_QxjHRC1Da9oasK0e5VLnck_45", "event_id": "$Nhl3rsgHMjk-DjMJANawr9HHAhLg4GcoTYrSiYYGqEE", "origin_server_ts": 1632491098485, "room_id": "!jEsUZKDJdhlrceRyVU:example.org", "unsigned": {"age": 1257}}
+         */
+        redacted_because?: {};
+      };
+
+      /**
+      * The ID of the room associated with this event.
+      * @example "!jEsUZKDJdhlrceRyVU:example.org"
+       */
+      room_id: string /* mx-room-id */;
+    }>;
+
+    /**
+    * A token to supply to `from` to keep paginating the responses. Not present when there are
+    * no further results.
+     */
+    next_batch?: string;
+  }
+  ```
+- **400**: The request was invalid in some way. A meaningful `errcode`
+and description error text will be returned. Example reasons for rejection are:
+
+- The `from` token is unknown to the server.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **403**: The user cannot view or peek on the room. A meaningful `errcode`
+and description error text will be returned. Example reasons for rejection are:
+
+- The room is not set up for peeking.
+- The user has been banned from the room.
+- The room does not exist.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **429**: This request was rate-limited.
+  ```typescript
+  {
+
+    /**
+    * The M_LIMIT_EXCEEDED error code
+    * @example "M_LIMIT_EXCEEDED"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "Too many requests"
+     */
+    error?: string;
+
+    /**
+    * The amount of time in milliseconds the client should wait
+    * before trying the request again.
+    * @example 2000
+     */
+    retry_after_ms?: number;
+  }
+  ```

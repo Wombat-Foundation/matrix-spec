@@ -1,0 +1,341 @@
+
+### Third-party Networks
+
+Application services can provide access to third-party networks via
+bridging. This allows Matrix users to communicate with users on other
+communication platforms, with messages ferried back and forth by the
+application service. A single application service may bridge multiple
+third-party networks, and many individual locations within those
+networks. A single third-party network location may be bridged to
+multiple Matrix rooms.
+
+#### Third-party Lookups
+
+A client may wish to provide a rich interface for joining third-party
+locations and connecting with third-party users. Information necessary
+for such an interface is provided by third-party lookups.
+
+### GET /thirdparty/protocols
+**Summary:** Retrieve metadata about all protocols that a homeserver supports.
+Fetches the overall metadata about protocols supported by the
+homeserver. Includes both the available protocols and all fields
+required for queries against each protocol.
+**Responses:**
+- **200**: The protocols supported by the homeserver.
+  ```typescript
+  {}
+  ```
+
+### GET /thirdparty/protocol/{protocol}
+**Summary:** Retrieve metadata about a specific protocol that the homeserver supports.
+Fetches the metadata from the homeserver about a particular third-party protocol.
+**Path Parameters:**
+- `protocol` (Required): `string` - The name of the protocol.
+**Responses:**
+- **200**: The protocol was found and metadata returned.
+  ```typescript
+  {
+
+    /**
+    * Fields which may be used to identify a third-party user. These should be
+    * ordered to suggest the way that entities may be grouped, where higher
+    * groupings are ordered first. For example, the name of a network should be
+    * searched before the nickname of a user.
+    * @example ["network", "nickname"]
+     */
+    user_fields: string[];
+
+    /**
+    * Fields which may be used to identify a third-party location. These should be
+    * ordered to suggest the way that entities may be grouped, where higher
+    * groupings are ordered first. For example, the name of a network should be
+    * searched before the name of a channel.
+    * @example ["network", "channel"]
+     */
+    location_fields: string[];
+
+    /**
+    * A content URI representing an icon for the third-party protocol.
+    * @example "mxc://example.org/aBcDeFgH"
+     */
+    icon: string;
+
+    /**
+    * The type definitions for the fields defined in `user_fields` and
+    * `location_fields`. Each entry in those arrays MUST have an entry here.
+    * The `string` key for this object is the field name itself.
+    * 
+    * May be an empty object if no fields are defined.
+    * @example {"network": {"regexp": "([a-z0-9]+\\.)*[a-z0-9]+", "placeholder": "irc.example.org"}, "nickname": {"regexp": "[^\\s#]+", "placeholder": "username"}, "channel": {"regexp": "#[^\\s]+", "placeholder": "#foobar"}}
+     */
+    field_types: {};
+
+    /**
+    * A list of objects representing independent instances of configuration.
+    * For example, multiple networks on IRC if multiple are provided by the
+    * same application service.
+    * 
+    * The instances are modified by the homeserver from the response of
+    * [`GET /_matrix/app/v1/thirdparty/protocol/{protocol}`](/application-service-api/#get_matrixappv1thirdpartyprotocolprotocol)
+    * to include an `instance_id` to serve as a unique identifier for each
+    * instance on the homeserver.
+     */
+    instances: Array<{
+
+      /**
+      * A human-readable description for the protocol, such as the name.
+      * @example "Freenode"
+       */
+      desc: string;
+
+      /**
+      * An optional content URI representing the protocol. Overrides the one provided
+      * at the higher level Protocol object.
+      * @example "mxc://example.org/JkLmNoPq"
+       */
+      icon?: string;
+
+      /**
+      * Preset values for `fields` the client may use to search by.
+      * @example {"network": "freenode"}
+       */
+      fields: {};
+
+      /**
+      * A unique identifier across all instances.
+      * @example "freenode"
+       */
+      network_id: string;
+
+      /**
+      * A unique identifier for this instance on the homeserver. This field is added
+      * to the response of [`GET /_matrix/app/v1/thirdparty/protocol/{protocol}`](/application-service-api/#get_matrixappv1thirdpartyprotocolprotocol)
+      * by the homeserver.
+      * 
+      * This is the identifier to use as the `third_party_instance_id` in a request to
+      * [`POST /_matrix/client/v3/publicRooms`](/client-server-api/#post_matrixclientv3publicrooms).
+      * @example "irc-freenode"
+       */
+      instance_id?: string;
+    }>;
+  }
+  ```
+- **404**: The protocol is unknown.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### GET /thirdparty/location/{protocol}
+**Summary:** Retrieve Matrix-side portals rooms leading to a third-party location.
+Requesting this endpoint with a valid protocol name results in a list
+of successful mapping results in a JSON array. Each result contains
+objects to represent the Matrix room or rooms that represent a portal
+to this third-party network. Each has the Matrix room alias string,
+an identifier for the particular third-party network protocol, and an
+object containing the network-specific fields that comprise this
+identifier. It should attempt to canonicalise the identifier as much
+as reasonably possible given the network type.
+**Path Parameters:**
+- `protocol` (Required): `string` - The protocol used to communicate to the third-party network.
+**Query Parameters:**
+- `fields`: `{}` - One or more custom fields to help identify the third-party
+location.
+**Responses:**
+- **200**: At least one portal room was found.
+  ```typescript
+  Array<{
+
+    /**
+    * An alias for a matrix room.
+    * @example "#freenode_#matrix:matrix.org"
+     */
+    alias: string;
+
+    /**
+    * The protocol ID that the third-party location is a part of.
+    * @example "irc"
+     */
+    protocol: string;
+
+    /**
+    * Information used to identify this third-party location.
+    * @example {"network": "freenode", "channel": "#matrix"}
+     */
+    fields: {};
+  }>
+  ```
+- **404**: No portal rooms were found.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### GET /thirdparty/user/{protocol}
+**Summary:** Retrieve the Matrix User ID of a corresponding third-party user.
+Retrieve a Matrix User ID linked to a user on the third-party service, given
+a set of user parameters.
+**Path Parameters:**
+- `protocol` (Required): `string` - The name of the protocol.
+**Query Parameters:**
+- `fields`: `{}` - One or more custom fields that are passed to the AS to help identify the user.
+**Responses:**
+- **200**: The Matrix User IDs found with the given parameters.
+  ```typescript
+  Array<{
+
+    /**
+    * A Matrix User ID representing a third-party user.
+    * @example "@_gitter_jim:matrix.org"
+     */
+    userid: string;
+
+    /**
+    * The protocol ID that the third-party location is a part of.
+    * @example "gitter"
+     */
+    protocol: string;
+
+    /**
+    * Information used to identify this third-party location.
+    * @example {"user": "jim"}
+     */
+    fields: {};
+  }>
+  ```
+- **404**: The Matrix User ID was not found.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### GET /thirdparty/location
+**Summary:** Reverse-lookup third-party locations given a Matrix room alias.
+Retrieve an array of third-party network locations from a Matrix room
+alias.
+**Query Parameters:**
+- `alias` (Required): `string` - The Matrix room alias to look up.
+**Responses:**
+- **200**: All found third-party locations.
+  ```typescript
+  Array<{
+
+    /**
+    * An alias for a matrix room.
+    * @example "#freenode_#matrix:matrix.org"
+     */
+    alias: string;
+
+    /**
+    * The protocol ID that the third-party location is a part of.
+    * @example "irc"
+     */
+    protocol: string;
+
+    /**
+    * Information used to identify this third-party location.
+    * @example {"network": "freenode", "channel": "#matrix"}
+     */
+    fields: {};
+  }>
+  ```
+- **404**: The Matrix room alias was not found
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### GET /thirdparty/user
+**Summary:** Reverse-lookup third-party users given a Matrix User ID.
+Retrieve an array of third-party users from a Matrix User ID.
+**Query Parameters:**
+- `userid` (Required): `string` - The Matrix User ID to look up.
+**Responses:**
+- **200**: An array of third-party users.
+  ```typescript
+  Array<{
+
+    /**
+    * A Matrix User ID representing a third-party user.
+    * @example "@_gitter_jim:matrix.org"
+     */
+    userid: string;
+
+    /**
+    * The protocol ID that the third-party location is a part of.
+    * @example "gitter"
+     */
+    protocol: string;
+
+    /**
+    * Information used to identify this third-party location.
+    * @example {"user": "jim"}
+     */
+    fields: {};
+  }>
+  ```
+- **404**: The Matrix User ID was not found.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```

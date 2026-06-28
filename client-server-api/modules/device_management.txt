@@ -1,0 +1,328 @@
+
+### Device Management
+
+This module provides a means for a user to manage their [devices](/#devices).
+
+#### Client behaviour
+
+Clients that implement this module should offer the user a list of
+registered devices, as well as the means to update their display names.
+Clients should also allow users to delete disused devices.
+
+### GET /devices
+**Summary:** List registered devices for the current user
+Gets information about all devices for the current user.
+**Responses:**
+- **200**: Device information
+  ```typescript
+  {
+
+    /**
+    * A list of all registered devices for this user.
+     */
+    devices?: Array<{
+
+      /**
+      * Identifier of this device.
+      * @example "QBUAZIFURK"
+       */
+      device_id: string;
+
+      /**
+      * Display name set by the user for this device. Absent if no name has been
+      * set.
+      * @example "android"
+       */
+      display_name?: string;
+
+      /**
+      * The IP address where this device was last seen. (May be a few minutes out
+      * of date, for efficiency reasons).
+      * @example "1.2.3.4"
+       */
+      last_seen_ip?: string;
+
+      /**
+      * The timestamp (in milliseconds since the unix epoch) when this devices
+      * was last seen. (May be a few minutes out of date, for efficiency
+      * reasons).
+      * @example 1474491775024
+       */
+      last_seen_ts?: number /* int64 */;
+    }>;
+  }
+  ```
+
+### GET /devices/{deviceId}
+**Summary:** Get a single device
+Gets information on a single device, by device id.
+**Path Parameters:**
+- `deviceId` (Required): `string` - The device to retrieve.
+**Responses:**
+- **200**: Device information
+  ```typescript
+  {
+
+    /**
+    * Identifier of this device.
+    * @example "QBUAZIFURK"
+     */
+    device_id: string;
+
+    /**
+    * Display name set by the user for this device. Absent if no name has been
+    * set.
+    * @example "android"
+     */
+    display_name?: string;
+
+    /**
+    * The IP address where this device was last seen. (May be a few minutes out
+    * of date, for efficiency reasons).
+    * @example "1.2.3.4"
+     */
+    last_seen_ip?: string;
+
+    /**
+    * The timestamp (in milliseconds since the unix epoch) when this devices
+    * was last seen. (May be a few minutes out of date, for efficiency
+    * reasons).
+    * @example 1474491775024
+     */
+    last_seen_ts?: number /* int64 */;
+  }
+  ```
+- **404**: The current user has no device with the given ID.
+
+### PUT /devices/{deviceId}
+**Summary:** Create or update a device
+Updates the metadata on the given device, or creates a new device.
+
+The ability to create new devices is only available to application
+services: regular clients may only update existing devices.
+
+When a new device was created, the homeserver MUST return a 201 HTTP
+status code. It MUST return a 200 HTTP status code if a device was
+updated.
+
+This endpoint is rate-limited for device creation. Servers MAY use login
+rate limits.
+**Path Parameters:**
+- `deviceId` (Required): `string` - The device to update.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * The new display name for this device. If not given, the
+  * display name is unchanged.
+   */
+  display_name?: string;
+}
+```
+**Responses:**
+- **200**: The device was successfully updated.
+  ```typescript
+  {}
+  ```
+- **201**: The device was successfully created by the application service.
+  ```typescript
+  {}
+  ```
+- **404**: The current user has no device with the given ID.
+
+### DELETE /devices/{deviceId}
+**Summary:** Delete a device
+This API endpoint uses the [User-Interactive Authentication API](/client-server-api/#user-interactive-authentication-api),
+except when used by an application service.
+
+Deletes the given device, and invalidates any access token associated with it.
+
+> **Note:** 
+When this endpoint requires User-Interactive Authentication, it cannot be used when the access token was obtained
+via the [OAuth 2.0 API](/client-server-api/#oauth-20-api).
+
+> **Note:** 
+*(Added in v1.18)* [OAuth 2.0 aware clients](/client-server-api/#oauth-20-aware-clients)
+MUST NOT use this endpoint when the server supports the [OAuth 2.0 API](/client-server-api/#oauth-20-api).
+Instead they MUST refer the user to the [account management URL](/client-server-api/#oauth-20-account-management),
+if available, with the `action=org.matrix.device_delete` and `device_id={deviceId}` parameters.
+
+**Path Parameters:**
+- `deviceId` (Required): `string` - The device to delete.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * Additional authentication information for the
+  * user-interactive authentication API.
+   */
+  auth?: {
+
+    /**
+    * The authentication type that the client is attempting to complete.
+    * May be omitted if `session` is given, and the client is reissuing a
+    * request which it believes has been completed out-of-band (for example,
+    * via the [fallback mechanism](/client-server-api/#fallback)).
+     */
+    type?: string;
+
+    /**
+    * The value of the session key given by the homeserver.
+     */
+    session?: string;
+  };
+}
+```
+**Responses:**
+- **200**: The device was successfully removed, or had been removed
+previously.
+  ```typescript
+  {}
+  ```
+- **401**: The homeserver requires additional authentication information.
+  ```typescript
+  {
+
+    /**
+    * A list of the login flows supported by the server for this API.
+     */
+    flows: Array<{
+
+      /**
+      * The login type of each of the stages required to complete this
+      * authentication flow
+       */
+      stages: string[];
+    }>;
+
+    /**
+    * Contains any information that the client will need to know in order to
+    * use a given type of authentication. For each login type presented,
+    * that type may be present as a key in this dictionary. For example, the
+    * public part of an OAuth client ID could be given here.
+    * @example {"example.type.baz": {"example_key": "foobar"}}
+     */
+    params?: {};
+
+    /**
+    * This is a session identifier that the client must pass back to the home
+    * server, if one is provided, in subsequent attempts to authenticate in the
+    * same API call.
+    * @example "xxxxxxyz"
+     */
+    session?: string;
+
+    /**
+    * A list of the stages the client has completed successfully
+     */
+    completed?: string[];
+  }
+  ```
+
+### POST /delete_devices
+**Summary:** Bulk deletion of devices
+This API endpoint uses the [User-Interactive Authentication API](/client-server-api/#user-interactive-authentication-api),
+except when used by an application service.
+
+Deletes the given devices, and invalidates any access token associated with them.
+
+> **Note:** 
+When this endpoint requires User-Interactive Authentication, it cannot be used when the access token was obtained
+via the [OAuth 2.0 API](/client-server-api/#oauth-20-api).
+
+> **Note:** 
+*(Added in v1.18)* [OAuth 2.0 aware clients](/client-server-api/#oauth-20-aware-clients)
+MUST NOT use this endpoint when the server supports the [OAuth 2.0 API](/client-server-api/#oauth-20-api).
+Instead they MUST refer the user to the [account management URL](/client-server-api/#oauth-20-account-management),
+if available.
+
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * The list of device IDs to delete.
+  * @example ["QBUAZIFURK", "AUIECTSRND"]
+   */
+  devices: string[];
+
+  /**
+  * Additional authentication information for the
+  * user-interactive authentication API.
+   */
+  auth?: {
+
+    /**
+    * The authentication type that the client is attempting to complete.
+    * May be omitted if `session` is given, and the client is reissuing a
+    * request which it believes has been completed out-of-band (for example,
+    * via the [fallback mechanism](/client-server-api/#fallback)).
+     */
+    type?: string;
+
+    /**
+    * The value of the session key given by the homeserver.
+     */
+    session?: string;
+  };
+}
+```
+**Responses:**
+- **200**: The devices were successfully removed, or had been removed
+previously.
+  ```typescript
+  {}
+  ```
+- **401**: The homeserver requires additional authentication information.
+  ```typescript
+  {
+
+    /**
+    * A list of the login flows supported by the server for this API.
+     */
+    flows: Array<{
+
+      /**
+      * The login type of each of the stages required to complete this
+      * authentication flow
+       */
+      stages: string[];
+    }>;
+
+    /**
+    * Contains any information that the client will need to know in order to
+    * use a given type of authentication. For each login type presented,
+    * that type may be present as a key in this dictionary. For example, the
+    * public part of an OAuth client ID could be given here.
+    * @example {"example.type.baz": {"example_key": "foobar"}}
+     */
+    params?: {};
+
+    /**
+    * This is a session identifier that the client must pass back to the home
+    * server, if one is provided, in subsequent attempts to authenticate in the
+    * same API call.
+    * @example "xxxxxxyz"
+     */
+    session?: string;
+
+    /**
+    * A list of the stages the client has completed successfully
+     */
+    completed?: string[];
+  }
+  ```
+
+#### Security considerations
+
+Deleting devices has security implications: it invalidates the
+access\_token assigned to the device, so an attacker could use it to log
+out the real user (and do it repeatedly every time the real user tries
+to log in to block the attacker). Servers should require additional
+authentication beyond the access token when deleting devices (for
+example, requiring that the user resubmit their password).
+
+The display names of devices are publicly visible. Clients should
+consider advising the user of this.

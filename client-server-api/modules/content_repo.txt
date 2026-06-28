@@ -1,0 +1,809 @@
+
+### Content repository
+
+The content repository (or "media repository") allows users to upload
+files to their homeserver for later use. For example, files which the
+user wants to send to a room would be uploaded here, as would an avatar
+the user wants to use.
+
+Uploads are POSTed to a resource on the user's local homeserver which
+returns an `mxc://` URI which can later be used to GET the download. Content
+is downloaded from the recipient's local homeserver, which must first
+transfer the content from the origin homeserver using the same API
+(unless the origin and destination homeservers are the same).
+
+When serving content, the server SHOULD provide a
+`Content-Security-Policy` header. The recommended policy is
+`sandbox; default-src 'none'; script-src 'none'; plugin-types application/pdf; style-src 'unsafe-inline'; object-src 'self';`.
+
+*(Added in v1.4)* The server SHOULD additionally provide
+`Cross-Origin-Resource-Policy: cross-origin` when serving content to allow
+(web) clients to access restricted APIs such as `SharedArrayBuffer` when
+interacting with the media repository.
+
+*(Changed in v1.11)* The unauthenticated download endpoints have been
+deprecated in favour of newer, authenticated, ones. This change includes updating
+the paths of all media endpoints from `/_matrix/media/*` to `/_matrix/client/{version}/media/*`,
+with the exception of the `/upload` and `/create` endpoints. The upload/create
+endpoints are expected to undergo a similar transition in a later version of the
+specification.
+
+#### Matrix Content (`mxc://`) URIs
+
+Content locations are represented as Matrix Content (`mxc://`) URIs. They
+look like:
+
+```nohighlight
+mxc://<server-name>/<media-id>
+
+<server-name> : The name of the homeserver where this content originated, e.g. matrix.org
+<media-id> : An opaque ID which identifies the content.
+```
+
+The `media-id` segment MUST consist of only alphanumeric (`A-Za-z0-9`), `_` and
+`-` characters. See the [security considerations](#content-repo-security-considerations)
+section below for more details.
+
+#### Client behaviour {id="content-repo-client-behaviour"}
+
+Clients can access the content repository using the following endpoints.
+
+*(Changed in v1.11)* A number of endpoints under the /_matrix/media hierarchy
+have been deprecated and replaced with new endpoints which require authentication.
+The deprecated endpoints are marked in the section below.
+
+> **Note:** 
+By Matrix 1.12, servers SHOULD "freeze" the deprecated, unauthenticated, endpoints
+to prevent newly-uploaded media from being downloaded. This SHOULD mean that any
+media uploaded *before* the freeze remains accessible via the deprecated endpoints,
+and any media uploaded *after* (or *during*) the freeze SHOULD only be accessible
+through the new, authenticated, endpoints. For remote media, "newly-uploaded" is
+determined by the date the cache was populated. This may mean the media is older
+than the freeze, but because the server had to re-download it, it is now considered
+"new".
+
+Clients SHOULD update to support the authenticated endpoints before servers freeze
+unauthenticated access.
+
+Servers SHOULD consider their local ecosystem impact before enacting a freeze.
+This could mean ensuring their users' typical clients support the new endpoints
+when available, or updating bridges to start using media proxies.
+
+In addition to the above, servers SHOULD exclude [IdP icons used in the `m.login.sso` flow](/client-server-api/#definition-mloginsso-flow-schema)
+from the freeze. See the `m.login.sso` flow schema for details.
+
+An *example* timeline for a server may be:
+
+* Matrix 1.11 release: Clients begin supporting authenticated media.
+* Matrix 1.12 release: Servers freeze unauthenticated media access.
+  * Media uploaded prior to this point still works with the deprecated endpoints.
+  * Newly uploaded (or cached) media *only* works on the authenticated endpoints.
+
+Matrix 1.12 is expected to be released in the July-September 2024 calendar quarter.
+
+### GET /media/download/{serverName}/{mediaId}
+**Summary:** Download content from the content repository.
+
+> **Note:** 
+Clients SHOULD NOT generate or use URLs which supply the access token in
+the query string. These URLs may be copied by users verbatim and provided
+in a chat message to another user, disclosing the sender's access token.
+
+Clients MAY be redirected using the 307/308 responses below to download
+the request object. This is typical when the homeserver uses a Content
+Delivery Network (CDN).
+**Responses:**
+- **200**: The content that was previously uploaded.
+- **307**: 
+- **308**: 
+- **429**: 
+- **502**: 
+- **504**: 
+
+### GET /media/download/{serverName}/{mediaId}/{fileName}
+**Summary:** Download content from the content repository overriding the file name.
+This will download content from the content repository (same as
+the previous endpoint) but replaces the target file name with the one
+provided by the caller.
+
+> **Note:** 
+Clients SHOULD NOT generate or use URLs which supply the access token in
+the query string. These URLs may be copied by users verbatim and provided
+in a chat message to another user, disclosing the sender's access token.
+
+Clients MAY be redirected using the 307/308 responses below to download
+the request object. This is typical when the homeserver uses a Content
+Delivery Network (CDN).
+**Path Parameters:**
+- `fileName` (Required): `string` - A filename to give in the `Content-Disposition` header.
+**Responses:**
+- **200**: The content that was previously uploaded.
+- **307**: 
+- **308**: 
+- **429**: 
+- **502**: 
+- **504**: 
+
+### GET /media/thumbnail/{serverName}/{mediaId}
+**Summary:** Download a thumbnail of content from the content repository
+Download a thumbnail of content from the content repository.
+See the [Thumbnails](/client-server-api/#thumbnails) section for more information.
+
+> **Note:** 
+Clients SHOULD NOT generate or use URLs which supply the access token in
+the query string. These URLs may be copied by users verbatim and provided
+in a chat message to another user, disclosing the sender's access token.
+
+Clients MAY be redirected using the 307/308 responses below to download
+the request object. This is typical when the homeserver uses a Content
+Delivery Network (CDN).
+**Query Parameters:**
+- `width` (Required): `number` - The *desired* width of the thumbnail. The actual thumbnail may be
+larger than the size specified.
+- `height` (Required): `number` - The *desired* height of the thumbnail. The actual thumbnail may be
+larger than the size specified.
+- `method`: `"crop" | "scale"` - The desired resizing method. See the [Thumbnails](/client-server-api/#thumbnails)
+section for more information.
+- `animated`: `boolean` - Indicates preference for an animated thumbnail from the server, if possible. Animated
+thumbnails typically use the content types `image/gif`, `image/png` (with APNG format),
+`image/apng`, and `image/webp` instead of the common static `image/png` or `image/jpeg`
+content types.
+
+When `true`, the server SHOULD return an animated thumbnail if possible and supported.
+When `false`, the server MUST NOT return an animated thumbnail. For example, returning a
+static `image/png` or `image/jpeg` thumbnail. When not provided, the server SHOULD NOT
+return an animated thumbnail.
+
+Servers SHOULD prefer to return `image/webp` thumbnails when supporting animation.
+
+When `true` and the media cannot be animated, such as in the case of a JPEG or PDF, the
+server SHOULD behave as though `animated` is `false`.
+**Responses:**
+- **200**: A thumbnail of the requested content.
+- **307**: 
+- **308**: 
+- **400**: The request does not make sense to the server, or the server cannot thumbnail
+the content. For example, the client requested non-integer dimensions or asked
+for negatively-sized images.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **413**: The local content is too large for the server to thumbnail.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **429**: 
+- **502**: The remote content is too large for the server to thumbnail.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **504**: 
+
+### GET /media/preview_url
+**Summary:** Get information about a URL for a client
+Get information about a URL for the client. Typically this is called when a
+client sees a URL in a message and wants to render a preview for the user.
+
+> **Note:** 
+Clients should consider avoiding this endpoint for URLs posted in encrypted
+rooms. Encrypted rooms often contain more sensitive information the users
+do not want to share with the homeserver, and this can mean that the URLs
+being shared should also not be shared with the homeserver.
+
+**Query Parameters:**
+- `url` (Required): `string /* uri */` - The URL to get a preview of.
+- `ts`: `number /* int64 */` - The preferred point in time to return a preview for. The server may
+return a newer version if it does not have the requested version
+available.
+**Responses:**
+- **200**: The OpenGraph data for the URL, which may be empty. Some values are
+replaced with matrix equivalents if they are provided in the response.
+The differences from the [OpenGraph protocol](https://ogp.me/) are
+described here.
+  ```typescript
+  {
+
+    /**
+    * The byte-size of the image. Omitted if there is no image attached.
+     */
+    matrix:image:size?: number /* int64 */;
+
+    /**
+    * An [`mxc://` URI](/client-server-api/#matrix-content-mxc-uris) to the image. Omitted if there is no image.
+     */
+    og:image?: string /* uri */;
+  }
+  ```
+- **429**: 
+
+### GET /media/config
+**Summary:** Get the configuration for the content repository.
+This endpoint allows clients to retrieve the configuration of the content
+repository, such as upload limitations.
+Clients SHOULD use this as a guide when using content repository endpoints.
+All values are intentionally left optional. Clients SHOULD follow
+the advice given in the field description when the field is not available.
+
+> **Note:** 
+Both clients and server administrators should be aware that proxies
+between the client and the server may affect the apparent behaviour of content
+repository APIs, for example, proxies may enforce a lower upload size limit
+than is advertised by the server on this endpoint.
+
+**Responses:**
+- **200**: The public content repository configuration for the matrix server.
+  ```typescript
+  {
+
+    /**
+    * The maximum size an upload can be in bytes.
+    * Clients SHOULD use this as a guide when uploading content.
+    * If not listed or null, the size limit should be treated as unknown.
+     */
+    m.upload.size?: number /* int64 */;
+  }
+  ```
+- **429**: 
+
+### POST /media/v3/upload
+**Summary:** Upload some content to the content repository.
+**Responses:**
+- **200**: The [`mxc://` URI](/client-server-api/#matrix-content-mxc-uris) for the uploaded content.
+  ```typescript
+  {
+
+    /**
+    * The [`mxc://` URI](/client-server-api/#matrix-content-mxc-uris) to the uploaded content.
+     */
+    content_uri: string /* mx-mxc-uri */;
+  }
+  ```
+- **403**: The user does not have permission to upload the content. Some reasons for this error include:
+
+- The server does not permit the file type.
+- The user has reached a quota for uploaded content.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **413**: 
+- **429**: 
+
+### PUT /media/v3/upload/{serverName}/{mediaId}
+**Summary:** Upload content to an `mxc://` URI that was created earlier.
+This endpoint permits uploading content to an `mxc://` URI that was created
+earlier via [POST /_matrix/media/v1/create](/client-server-api/#post_matrixmediav1create).
+**Responses:**
+- **200**: The upload was successful.
+  ```typescript
+  {}
+  ```
+- **403**: The user does not have permission to upload the content. Some reasons for this error include:
+
+- The server does not permit the file type.
+- The user has reached a quota for uploaded content.
+- The request comes from a different user than the one that called
+  [POST /_matrix/media/v1/create](/client-server-api/#post_matrixmediav1create).
+
+A [standard error response](/client-server-api/#standard-error-response)
+will be returned with the `errcode` `M_FORBIDDEN`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **404**: The user has provided an invalid MXC ID. Some reasons for this error include:
+
+- The MXC ID was not created with [POST /_matrix/media/v1/create](/client-server-api/#post_matrixmediav1create).
+- The MXC ID has expired.
+
+A [standard error response](/client-server-api/#standard-error-response)
+will be returned with the `errcode` `M_NOT_FOUND`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **409**: The endpoint was called with a media ID that already has content. A
+[standard error response](/client-server-api/#standard-error-response)
+will be returned with the `errcode` `M_CANNOT_OVERWRITE_MEDIA`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **413**: 
+- **429**: 
+
+### POST /media/v1/create
+**Summary:** Create a new `mxc://` URI without uploading the content.
+Creates a new `mxc://` URI, independently of the content being uploaded. The content must be provided later
+via [`PUT /_matrix/media/v3/upload/{serverName}/{mediaId}`](/client-server-api/#put_matrixmediav3uploadservernamemediaid).
+
+The server may optionally enforce a maximum age for unused IDs,
+and delete media IDs when the client doesn't start the upload in time,
+or when the upload was interrupted and not resumed in time. The server
+should include the maximum POSIX millisecond timestamp to complete the
+upload in the `unused_expires_at` field in the response JSON. The
+recommended default expiration is 24 hours which should be enough time
+to accommodate users on poor connection who find a better connection to
+complete the upload.
+
+As well as limiting the rate of requests to create `mxc://` URIs, the server
+should limit the number of concurrent *pending media uploads* a given
+user can have. A pending media upload is a created `mxc://` URI where (a)
+the media has not yet been uploaded, and (b) has not yet expired (the
+`unused_expires_at` timestamp has not yet passed). In both cases, the
+server should respond with an HTTP 429 error with an errcode of
+`M_LIMIT_EXCEEDED`.
+**Responses:**
+- **200**: The [`mxc://` URI](/client-server-api/#matrix-content-mxc-uris) for the uploaded content.
+  ```typescript
+  {
+
+    /**
+    * The [`mxc://` URI](/client-server-api/#matrix-content-mxc-uris) at
+    * which the content will be available, once it is uploaded.
+    * @example "mxc://example.com/AQwafuaFswefuhsfAFAgsw"
+     */
+    content_uri: string /* mx-mxc-uri */;
+
+    /**
+    * The timestamp (in milliseconds since the unix epoch) when the
+    * generated media id will expire, if media is not uploaded.
+    * @example 1647257217083
+     */
+    unused_expires_at?: number /* int64 */;
+  }
+  ```
+- **403**: The user does not have permission to upload the content.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **429**: 
+
+### GET /media/v3/download/{serverName}/{mediaId}
+**Summary:** Download content from the content repository.
+
+> **Note:** 
+Replaced by [`GET /_matrix/client/v1/media/download/{serverName}/{mediaId}`](/client-server-api/#get_matrixclientv1mediadownloadservernamemediaid)
+(requires authentication).
+
+> **Note:** 
+*(Changed in v1.11)* This endpoint MAY return `404 M_NOT_FOUND`
+for media which exists, but is after the server froze unauthenticated
+media access. See [Client Behaviour](/client-server-api/#content-repo-client-behaviour) for more
+information.
+
+**Responses:**
+- **200**: The content that was previously uploaded.
+- **307**: 
+- **308**: 
+- **429**: 
+- **502**: 
+- **504**: 
+
+### GET /media/v3/download/{serverName}/{mediaId}/{fileName}
+**Summary:** Download content from the content repository overriding the file name
+
+> **Note:** 
+Replaced by [`GET /_matrix/client/v1/media/download/{serverName}/{mediaId}/{fileName}`](/client-server-api/#get_matrixclientv1mediadownloadservernamemediaidfilename)
+(requires authentication).
+
+This will download content from the content repository (same as
+the previous endpoint) but replace the target file name with the one
+provided by the caller.
+
+> **Note:** 
+*(Changed in v1.11)* This endpoint MAY return `404 M_NOT_FOUND`
+for media which exists, but is after the server froze unauthenticated
+media access. See [Client Behaviour](/client-server-api/#content-repo-client-behaviour) for more
+information.
+
+**Path Parameters:**
+- `fileName` (Required): `string` - A filename to give in the `Content-Disposition` header.
+**Responses:**
+- **200**: The content that was previously uploaded.
+- **307**: 
+- **308**: 
+- **429**: 
+- **502**: 
+- **504**: 
+
+### GET /media/v3/thumbnail/{serverName}/{mediaId}
+**Summary:** Download a thumbnail of content from the content repository
+
+> **Note:** 
+Replaced by [`GET /_matrix/client/v1/media/thumbnail/{serverName}/{mediaId}`](/client-server-api/#get_matrixclientv1mediathumbnailservernamemediaid)
+(requires authentication).
+
+Download a thumbnail of content from the content repository.
+See the [Thumbnails](/client-server-api/#thumbnails) section for more information.
+
+> **Note:** 
+*(Changed in v1.11)* This endpoint MAY return `404 M_NOT_FOUND`
+for media which exists, but is after the server froze unauthenticated
+media access. See [Client Behaviour](/client-server-api/#content-repo-client-behaviour) for more
+information.
+
+**Query Parameters:**
+- `width` (Required): `number` - The *desired* width of the thumbnail. The actual thumbnail may be
+larger than the size specified.
+- `height` (Required): `number` - The *desired* height of the thumbnail. The actual thumbnail may be
+larger than the size specified.
+- `method`: `"crop" | "scale"` - The desired resizing method. See the [Thumbnails](/client-server-api/#thumbnails)
+section for more information.
+- `animated`: `boolean` - Indicates preference for an animated thumbnail from the server, if possible. Animated
+thumbnails typically use the content types `image/gif`, `image/png` (with APNG format),
+`image/apng`, and `image/webp` instead of the common static `image/png` or `image/jpeg`
+content types.
+
+When `true`, the server SHOULD return an animated thumbnail if possible and supported.
+When `false`, the server MUST NOT return an animated thumbnail. For example, returning a
+static `image/png` or `image/jpeg` thumbnail. When not provided, the server SHOULD NOT
+return an animated thumbnail.
+
+Servers SHOULD prefer to return `image/webp` thumbnails when supporting animation.
+
+When `true` and the media cannot be animated, such as in the case of a JPEG or PDF, the
+server SHOULD behave as though `animated` is `false`.
+**Responses:**
+- **200**: A thumbnail of the requested content.
+- **307**: 
+- **308**: 
+- **400**: The request does not make sense to the server, or the server cannot thumbnail
+the content. For example, the client requested non-integer dimensions or asked
+for negatively-sized images.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **413**: The local content is too large for the server to thumbnail.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **429**: 
+- **502**: The remote content is too large for the server to thumbnail.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **504**: 
+
+### GET /media/v3/preview_url
+**Summary:** Get information about a URL for a client
+
+> **Note:** 
+Replaced by [`GET /_matrix/client/v1/media/preview_url`](/client-server-api/#get_matrixclientv1mediapreview_url).
+
+Get information about a URL for the client. Typically this is called when a
+client sees a URL in a message and wants to render a preview for the user.
+
+**Note:**
+Clients should consider avoiding this endpoint for URLs posted in encrypted
+rooms. Encrypted rooms often contain more sensitive information the users
+do not want to share with the homeserver, and this can mean that the URLs
+being shared should also not be shared with the homeserver.
+**Query Parameters:**
+- `url` (Required): `string /* uri */` - The URL to get a preview of.
+- `ts`: `number /* int64 */` - The preferred point in time to return a preview for. The server may
+return a newer version if it does not have the requested version
+available.
+**Responses:**
+- **200**: The OpenGraph data for the URL, which may be empty. Some values are
+replaced with matrix equivalents if they are provided in the response.
+The differences from the [OpenGraph](https://ogp.me/) protocol are
+described here.
+  ```typescript
+  {
+
+    /**
+    * The byte-size of the image. Omitted if there is no image attached.
+     */
+    matrix:image:size?: number /* int64 */;
+
+    /**
+    * An [`mxc://` URI](/client-server-api/#matrix-content-mxc-uris) to the image. Omitted if there is no image.
+     */
+    og:image?: string /* uri */;
+  }
+  ```
+- **429**: 
+
+### GET /media/v3/config
+**Summary:** Get the configuration for the content repository.
+
+> **Note:** 
+Replaced by [`GET /_matrix/client/v1/media/config`](/client-server-api/#get_matrixclientv1mediaconfig).
+
+This endpoint allows clients to retrieve the configuration of the content
+repository, such as upload limitations.
+Clients SHOULD use this as a guide when using content repository endpoints.
+All values are intentionally left optional. Clients SHOULD follow
+the advice given in the field description when the field is not available.
+
+**NOTE:** Both clients and server administrators should be aware that proxies
+between the client and the server may affect the apparent behaviour of content
+repository APIs, for example, proxies may enforce a lower upload size limit
+than is advertised by the server on this endpoint.
+**Responses:**
+- **200**: The public content repository configuration for the matrix server.
+  ```typescript
+  {
+
+    /**
+    * The maximum size an upload can be in bytes.
+    * Clients SHOULD use this as a guide when uploading content.
+    * If not listed or null, the size limit should be treated as unknown.
+     */
+    m.upload.size?: number /* int64 */;
+  }
+  ```
+- **429**: 
+
+##### Thumbnails
+
+The homeserver SHOULD be able to supply thumbnails for uploaded images
+and videos. The exact file types which can be thumbnailed are not
+currently specified - see [Issue
+\#1938](https://github.com/matrix-org/matrix-spec/issues/453) for more
+information.
+
+The thumbnail methods are "crop" and "scale". "scale" tries to return an
+image where either the width or the height is smaller than the requested
+size. The client should then scale and letterbox the image if it needs
+to fit within a given rectangle. "crop" tries to return an image where
+the width and height are close to the requested size and the aspect
+matches the requested size. The client should scale the image if it
+needs to fit within a given rectangle.
+
+The dimensions given to the thumbnail API are the minimum size the
+client would prefer. Servers must never return thumbnails smaller than
+the client's requested dimensions, unless the content being thumbnailed
+is smaller than the dimensions. When the content is smaller than the
+requested dimensions, servers should return the original content rather
+than thumbnail it.
+
+Servers SHOULD produce thumbnails with the following dimensions and
+methods:
+
+-   32x32, crop
+-   96x96, crop
+-   320x240, scale
+-   640x480, scale
+-   800x600, scale
+
+In summary:
+-   "scale" maintains the original aspect ratio of the image
+-   "crop" provides an image in the aspect ratio of the sizes given in
+    the request
+-   The server will return an image larger than or equal to the
+    dimensions requested where possible.
+
+Servers MUST NOT upscale thumbnails under any circumstance. Servers MUST
+NOT return a smaller thumbnail than requested, unless the original
+content makes that impossible.
+
+#### Security considerations {id="content-repo-security-considerations"}
+
+The HTTP GET endpoint does not require any authentication. Knowing the
+URL of the content is sufficient to retrieve the content, even if the
+entity isn't in the room.
+
+`mxc://` URIs are vulnerable to directory traversal attacks such as
+`mxc://127.0.0.1/../../../some_service/etc/passwd`. This would cause the
+target homeserver to try to access and return this file. As such,
+homeservers MUST sanitise `mxc://` URIs by:
+
+-   restricting the `server-name` segment to valid
+    [server names](/appendices/#server-name)
+-   allowing only alphanumeric (`A-Za-z0-9`), `_` and `-` characters in
+    the `media-id` segment
+
+The resulting set of whitelisted characters allows URL-safe
+base64 encodings specified in RFC 4648. Applying this character
+whitelist is preferable to blacklisting `.` and `/` as there are
+techniques around blacklisted characters (percent-encoded characters,
+UTF-8 encoded traversals, etc).
+
+Homeservers have additional content-specific concerns:
+
+-   Clients may try to upload very large files. Homeservers should not
+    store files that are too large and should not serve them to clients,
+    returning a HTTP 413 error with the `M_TOO_LARGE` code.
+-   Clients may try to upload very large images. Homeservers should not
+    attempt to generate thumbnails for images that are too large,
+    returning a HTTP 413 error with the `M_TOO_LARGE` code.
+-   Remote homeservers may host very large files or images. Homeservers
+    should not proxy or thumbnail large files or images from remote
+    homeservers, returning a HTTP 502 error with the `M_TOO_LARGE` code.
+-   Clients may try to upload a large number of files. Homeservers
+    should limit the number and total size of media that can be uploaded
+    by clients, returning a HTTP 403 error with the `M_FORBIDDEN` code.
+-   Clients may try to access a large number of remote files through a
+    homeserver. Homeservers should restrict the number and size of
+    remote files that it caches.
+-   Clients or remote homeservers may try to upload malicious files
+    targeting vulnerabilities in either the homeserver thumbnailing or
+    the client decoders.
+
+##### Serving inline content
+
+Clients with insecure configurations may be vulnerable to Cross-Site Scripting
+attacks when served media with a `Content-Disposition` of `inline`. Clients
+SHOULD NOT be hosted on the same domain as the media endpoints for the homeserver
+to mitigate most of this risk. Servers SHOULD restrict `Content-Type` headers to
+one of the following values when serving content with `Content-Disposition: inline`:
+
+* `text/css`
+* `text/plain`
+* `text/csv`
+* `application/json`
+* `application/ld+json`
+* `image/jpeg`
+* `image/gif`
+* `image/png`
+* `image/apng`
+* `image/webp`
+* `image/avif`
+* `video/mp4`
+* `video/webm`
+* `video/ogg`
+* `video/quicktime`
+* `audio/mp4`
+* `audio/webm`
+* `audio/aac`
+* `audio/mpeg`
+* `audio/ogg`
+* `audio/wave`
+* `audio/wav`
+* `audio/x-wav`
+* `audio/x-pn-wav`
+* `audio/flac`
+* `audio/x-flac`
+
+These types are unlikely to cause Cross-Site Scripting issues when a `Content-Type`
+header is provided, as clients will only try to render the data using that content
+type. For example, if a HTML file is uploaded with a `Content-Type` of `image/png`,
+clients will just assume that the image is corrupted, and won't render it as a
+HTML page. Therefore, there is no risk in trusting the user-defined content type,
+as long as the `Content-Disposition` is calculated based on that type.
+
+Clients SHOULD NOT rely on servers returning `inline` rather than `attachment`
+on [`/download`](#get_matrixclientv1mediadownloadservernamemediaid). Server implementations might decide out of an abundance of
+caution that all downloads are responded to with `attachment`, regardless of
+content type - clients should not be surprised by this behaviour.

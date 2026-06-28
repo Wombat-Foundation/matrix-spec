@@ -1,0 +1,305 @@
+
+### Event Context
+
+This API returns a number of events that happened just before and after
+the specified event. This allows clients to get the context surrounding
+an event.
+
+#### Client behaviour
+
+There is a single HTTP API for retrieving event context, documented
+below.
+
+### GET /rooms/{roomId}/context/{eventId}
+**Summary:** Get events and state around the specified event.
+This API returns a number of events that happened just before and
+after the specified event. This allows clients to get the context
+surrounding an event.
+
+*Note*: This endpoint supports lazy-loading of room member events. See
+[Lazy-loading room members](/client-server-api/#lazy-loading-room-members) for more information.
+**Path Parameters:**
+- `roomId` (Required): `string` - The room to get events from.
+- `eventId` (Required): `string` - The event to get context around.
+**Query Parameters:**
+- `limit`: `number` - The maximum number of context events to return. The limit applies
+to the sum of the `events_before` and `events_after` arrays. The
+requested event ID is always returned in `event` even if `limit` is
+0. Defaults to 10.
+- `filter`: `string` - A JSON `RoomEventFilter` to filter the returned events with. The
+filter is only applied to `events_before`, `events_after`, and
+`state`. It is not applied to the `event` itself. The filter may
+be applied before or/and after the `limit` parameter - whichever the
+homeserver prefers.
+
+See [Filtering](/client-server-api/#filtering) for more information.
+**Responses:**
+- **200**: The events and state surrounding the requested event.
+  ```typescript
+  {
+
+    /**
+    * A token that can be used to paginate backwards with using [`GET /messages`](/client-server-api/#get_matrixclientv3roomsroomidmessages).
+     */
+    start?: string;
+
+    /**
+    * A token that can be used to paginate forwards with using [`GET /messages`](/client-server-api/#get_matrixclientv3roomsroomidmessages).
+     */
+    end?: string;
+
+    /**
+    * A list of room events that happened just before the
+    * requested event, in reverse-chronological order.
+     */
+    events_before?: Array<{
+
+      /**
+      * The globally unique identifier for this event.
+      * @example "$26RqwJMLw-yds1GAH_QxjHRC1Da9oasK0e5VLnck_45"
+       */
+      event_id: string /* mx-event-id */;
+
+      /**
+      * The type of the event.
+      * @example "m.room.member"
+       */
+      type: string;
+
+      /**
+      * Present if, and only if, this event is a *state* event. The key making
+      * this piece of state unique in the room. Note that it is often an empty
+      * string.
+      * 
+      * State keys starting with an `@` are reserved for referencing user IDs, such
+      * as room members. With the exception of a few events, state events set with a
+      * given user's ID as the state key MUST only be set by that user.
+      * @example "@user:example.org"
+       */
+      state_key?: string;
+
+      /**
+      * Contains the fully-qualified ID of the user who sent this event.
+      * @example "@example:example.org"
+       */
+      sender: string /* mx-user-id */;
+
+      /**
+      * Timestamp (in milliseconds since the unix epoch) on originating homeserver
+      * when this event was sent.
+      * @example 1632489532305
+       */
+      origin_server_ts: number /* int64 */;
+
+      /**
+      * The body of this event, as created by the client which sent it.
+      * @example {"membership": "join"}
+       */
+      content: {};
+      unsigned?: {
+
+        /**
+        * @example {"type": "m.room.redaction", "sender": "@moderator:example.org", "content": {"reason": "spam"}, "redacts": "$26RqwJMLw-yds1GAH_QxjHRC1Da9oasK0e5VLnck_45", "event_id": "$Nhl3rsgHMjk-DjMJANawr9HHAhLg4GcoTYrSiYYGqEE", "origin_server_ts": 1632491098485, "room_id": "!jEsUZKDJdhlrceRyVU:example.org", "unsigned": {"age": 1257}}
+         */
+        redacted_because?: {};
+      };
+
+      /**
+      * The ID of the room associated with this event.
+      * @example "!jEsUZKDJdhlrceRyVU:example.org"
+       */
+      room_id: string /* mx-room-id */;
+    }>;
+
+    /**
+    * Details of the requested event.
+     */
+    event?: {
+
+      /**
+      * The globally unique identifier for this event.
+      * @example "$26RqwJMLw-yds1GAH_QxjHRC1Da9oasK0e5VLnck_45"
+       */
+      event_id: string /* mx-event-id */;
+
+      /**
+      * The type of the event.
+      * @example "m.room.member"
+       */
+      type: string;
+
+      /**
+      * Present if, and only if, this event is a *state* event. The key making
+      * this piece of state unique in the room. Note that it is often an empty
+      * string.
+      * 
+      * State keys starting with an `@` are reserved for referencing user IDs, such
+      * as room members. With the exception of a few events, state events set with a
+      * given user's ID as the state key MUST only be set by that user.
+      * @example "@user:example.org"
+       */
+      state_key?: string;
+
+      /**
+      * Contains the fully-qualified ID of the user who sent this event.
+      * @example "@example:example.org"
+       */
+      sender: string /* mx-user-id */;
+
+      /**
+      * Timestamp (in milliseconds since the unix epoch) on originating homeserver
+      * when this event was sent.
+      * @example 1632489532305
+       */
+      origin_server_ts: number /* int64 */;
+
+      /**
+      * The body of this event, as created by the client which sent it.
+      * @example {"membership": "join"}
+       */
+      content: {};
+      unsigned?: {
+
+        /**
+        * @example {"type": "m.room.redaction", "sender": "@moderator:example.org", "content": {"reason": "spam"}, "redacts": "$26RqwJMLw-yds1GAH_QxjHRC1Da9oasK0e5VLnck_45", "event_id": "$Nhl3rsgHMjk-DjMJANawr9HHAhLg4GcoTYrSiYYGqEE", "origin_server_ts": 1632491098485, "room_id": "!jEsUZKDJdhlrceRyVU:example.org", "unsigned": {"age": 1257}}
+         */
+        redacted_because?: {};
+      };
+
+      /**
+      * The ID of the room associated with this event.
+      * @example "!jEsUZKDJdhlrceRyVU:example.org"
+       */
+      room_id: string /* mx-room-id */;
+    };
+
+    /**
+    * A list of room events that happened just after the
+    * requested event, in chronological order.
+     */
+    events_after?: Array<{
+
+      /**
+      * The globally unique identifier for this event.
+      * @example "$26RqwJMLw-yds1GAH_QxjHRC1Da9oasK0e5VLnck_45"
+       */
+      event_id: string /* mx-event-id */;
+
+      /**
+      * The type of the event.
+      * @example "m.room.member"
+       */
+      type: string;
+
+      /**
+      * Present if, and only if, this event is a *state* event. The key making
+      * this piece of state unique in the room. Note that it is often an empty
+      * string.
+      * 
+      * State keys starting with an `@` are reserved for referencing user IDs, such
+      * as room members. With the exception of a few events, state events set with a
+      * given user's ID as the state key MUST only be set by that user.
+      * @example "@user:example.org"
+       */
+      state_key?: string;
+
+      /**
+      * Contains the fully-qualified ID of the user who sent this event.
+      * @example "@example:example.org"
+       */
+      sender: string /* mx-user-id */;
+
+      /**
+      * Timestamp (in milliseconds since the unix epoch) on originating homeserver
+      * when this event was sent.
+      * @example 1632489532305
+       */
+      origin_server_ts: number /* int64 */;
+
+      /**
+      * The body of this event, as created by the client which sent it.
+      * @example {"membership": "join"}
+       */
+      content: {};
+      unsigned?: {
+
+        /**
+        * @example {"type": "m.room.redaction", "sender": "@moderator:example.org", "content": {"reason": "spam"}, "redacts": "$26RqwJMLw-yds1GAH_QxjHRC1Da9oasK0e5VLnck_45", "event_id": "$Nhl3rsgHMjk-DjMJANawr9HHAhLg4GcoTYrSiYYGqEE", "origin_server_ts": 1632491098485, "room_id": "!jEsUZKDJdhlrceRyVU:example.org", "unsigned": {"age": 1257}}
+         */
+        redacted_because?: {};
+      };
+
+      /**
+      * The ID of the room associated with this event.
+      * @example "!jEsUZKDJdhlrceRyVU:example.org"
+       */
+      room_id: string /* mx-room-id */;
+    }>;
+
+    /**
+    * The state of the room at the last event returned.
+     */
+    state?: Array<{
+
+      /**
+      * The globally unique identifier for this event.
+      * @example "$26RqwJMLw-yds1GAH_QxjHRC1Da9oasK0e5VLnck_45"
+       */
+      event_id: string /* mx-event-id */;
+
+      /**
+      * The type of the event.
+      * @example "m.room.member"
+       */
+      type: string;
+
+      /**
+      * Present if, and only if, this event is a *state* event. The key making
+      * this piece of state unique in the room. Note that it is often an empty
+      * string.
+      * 
+      * State keys starting with an `@` are reserved for referencing user IDs, such
+      * as room members. With the exception of a few events, state events set with a
+      * given user's ID as the state key MUST only be set by that user.
+      * @example "@user:example.org"
+       */
+      state_key?: string;
+
+      /**
+      * Contains the fully-qualified ID of the user who sent this event.
+      * @example "@example:example.org"
+       */
+      sender: string /* mx-user-id */;
+
+      /**
+      * Timestamp (in milliseconds since the unix epoch) on originating homeserver
+      * when this event was sent.
+      * @example 1632489532305
+       */
+      origin_server_ts: number /* int64 */;
+
+      /**
+      * The body of this event, as created by the client which sent it.
+      * @example {"membership": "join"}
+       */
+      content: {};
+      unsigned?: {
+
+        /**
+        * @example {"type": "m.room.redaction", "sender": "@moderator:example.org", "content": {"reason": "spam"}, "redacts": "$26RqwJMLw-yds1GAH_QxjHRC1Da9oasK0e5VLnck_45", "event_id": "$Nhl3rsgHMjk-DjMJANawr9HHAhLg4GcoTYrSiYYGqEE", "origin_server_ts": 1632491098485, "room_id": "!jEsUZKDJdhlrceRyVU:example.org", "unsigned": {"age": 1257}}
+         */
+        redacted_because?: {};
+      };
+
+      /**
+      * The ID of the room associated with this event.
+      * @example "!jEsUZKDJdhlrceRyVU:example.org"
+       */
+      room_id: string /* mx-room-id */;
+    }>;
+  }
+  ```
+
+#### Security considerations
+
+The server must only return results that the user has permission to see.

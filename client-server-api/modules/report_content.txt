@@ -1,0 +1,240 @@
+
+### Reporting Content
+
+Users may encounter content which they find inappropriate and should be
+able to report it to the server administrators or room moderators for
+review. This module defines a way for users to report content.
+
+#### Client behaviour
+
+### POST /rooms/{roomId}/report
+**Summary:** Report a room as inappropriate.
+Reports a room as inappropriate to the server, which may then notify
+the appropriate people. How such information is delivered is left up to
+implementations. The caller is not required to be joined to the room to
+report it.
+
+Clients could infer whether a reported room exists based on the 404 response.
+Homeservers that wish to conceal this information MAY return 200 responses
+regardless of the existence of the reported room.
+
+Furthermore, it might be possible for clients to deduce whether a reported
+room exists by timing the response. This is because only a report for an
+existing room will require the homeserver to do further processing. To
+combat this, homeservers MAY add a random delay when generating a response.
+**Path Parameters:**
+- `roomId` (Required): `string` - The room being reported.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * The reason the room is being reported. May be blank.
+   */
+  reason: string;
+}
+```
+**Responses:**
+- **200**: The room has been reported successfully.
+  ```typescript
+  {}
+  ```
+- **404**: The room was not found on the homeserver.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **429**: This request was rate-limited.
+  ```typescript
+  {
+
+    /**
+    * The M_LIMIT_EXCEEDED error code
+    * @example "M_LIMIT_EXCEEDED"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "Too many requests"
+     */
+    error?: string;
+
+    /**
+    * The amount of time in milliseconds the client should wait
+    * before trying the request again.
+    * @example 2000
+     */
+    retry_after_ms?: number;
+  }
+  ```
+
+### POST /rooms/{roomId}/report/{eventId}
+**Summary:** Report an event in a joined room as inappropriate.
+Reports an event as inappropriate to the server, which may then notify
+the appropriate people. The caller must be joined to the room to report
+it.
+
+Clients could infer whether a reported event or room exists based on the 404
+response. Homeservers that wish to conceal this information MAY return 200
+responses regardless of the existence of the reported event or room.
+
+Furthermore, it might be possible for clients to deduce whether a reported
+event exists by timing the response. This is because only a report for an
+existing event will require the homeserver to do further processing. To
+combat this, homeservers MAY add a random delay when generating a response.
+**Path Parameters:**
+- `roomId` (Required): `string` - The room in which the event being reported is located.
+- `eventId` (Required): `string` - The event to report.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * The reason the content is being reported.
+   */
+  reason?: string;
+}
+```
+**Responses:**
+- **200**: The event has been reported successfully.
+  ```typescript
+  {}
+  ```
+- **404**: The event was not found or you are not joined to the room where the
+event resides.
+
+Homeserver implementations can additionally return this error if the
+reported event has been redacted.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### POST /users/{userId}/report
+**Summary:** Report a user as inappropriate.
+Reports a user as inappropriate to the server, which may then notify
+the appropriate people. How such information is delivered is left up to
+implementations. The caller is not required to be joined to any rooms
+that the reported user is joined to.
+
+Clients may wish to [ignore](#ignoring-users) users after reporting them.
+
+Clients could infer whether a reported user exists based on the 404 response.
+Homeservers that wish to conceal this information MAY return 200 responses
+regardless of the existence of the reported user.
+
+Furthermore, it might be possible for clients to deduce whether a reported
+user exists by timing the response. This is because only a report for an
+existing user will require the homeserver to do further processing. To
+combat this, homeservers MAY add a random delay when generating a response.
+**Path Parameters:**
+- `userId` (Required): `string /* mx-user-id */` - The user being reported.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * The reason the room is being reported. May be blank.
+   */
+  reason: string;
+}
+```
+**Responses:**
+- **200**: The user has been reported successfully or the server chose
+to not disclose whether the users exists.
+  ```typescript
+  {}
+  ```
+- **404**: The user was not found on the homeserver.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **429**: This request was rate-limited.
+  ```typescript
+  {
+
+    /**
+    * The M_LIMIT_EXCEEDED error code
+    * @example "M_LIMIT_EXCEEDED"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "Too many requests"
+     */
+    error?: string;
+
+    /**
+    * The amount of time in milliseconds the client should wait
+    * before trying the request again.
+    * @example 2000
+     */
+    retry_after_ms?: number;
+  }
+  ```
+
+#### Server behaviour
+
+Servers are free to handle the reported content however they desire.
+This may be a dedicated room to alert server administrators to the
+reported content or some other mechanism for notifying the appropriate
+people.
+
+Particularly during waves of harmful content, users may report whole
+rooms instead of individual events. Server administrators and safety teams
+should, therefore, be cautious not to shut down rooms that might otherwise
+be legitimate.
+
+*(Changed in v1.8)* When processing event reports, servers MUST
+verify that the reporting user is currently joined to the room the event
+is in before accepting a report.
+
+*(Added in v1.13)* Contrarily, servers MUST NOT restrict room reports
+based on whether or not the reporting user is joined to the room. This is
+because users can be exposed to harmful content without being joined to a
+room. For instance, through room directories or invites.
+
+*(Added in v1.14)* Similarly, servers MUST NOT restrict user reports
+based on whether or not the reporting user is joined to any rooms that the
+reported user is joined to. This is because users can be exposed to harmful
+content without being joined to a room. For instance, through user
+directories or invites.

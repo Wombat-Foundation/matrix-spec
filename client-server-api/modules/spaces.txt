@@ -1,0 +1,564 @@
+### Spaces
+
+*(Added in v1.2)*
+
+Often used to group rooms of similar subject matter (such as an "Official
+matrix.org rooms" space or a "Work stuff" space), spaces are a way to
+organise rooms while being represented as rooms themselves.
+
+A space is defined by the [`m.space` room type](#types), making it known as a
+"space-room". The space's name, topic, avatar, aliases, etc are all defined through
+the existing relevant state events within the space-room.
+
+Sending normal [`m.room.message`](#mroommessage) events within the space-room is
+discouraged - clients are not generally expected to have a way to render the timeline
+of the room. As such, space-rooms should be created with [`m.room.power_levels`](#mroompower_levels)
+which prohibit normal events by setting `events_default` to a suitably high number.
+In the default power level structure, this would be `100`. Clients might wish to
+go a step further and explicitly ignore notification counts on space-rooms.
+
+Membership of a space is defined and controlled by the existing mechanisms which
+govern a room: [`m.room.member`](/client-server-api#mroommember), [`m.room.history_visibility`](/client-server-api#mroomhistory_visibility),
+and [`m.room.join_rules`](/client-server-api#mroomjoin_rules). Canonical aliases and invites, including
+third-party invites, still work just as they do in normal rooms as well. Furthermore,
+spaces can also be published in the [room directory](/client-server-api#published-room-directory) to make them
+discoverable.
+
+All other aspects of regular rooms are additionally carried over, such as the
+ability to set arbitrary state events, hold room account data, etc. Spaces are
+just rooms with extra functionality on top.
+
+#### Managing rooms/spaces included in a space
+
+Spaces form a hierarchy of rooms which clients can use to structure their room
+list into a tree-like view. The parent/child relationship can be defined in two
+ways: with [`m.space.child`](#mspacechild) state events in the space-room, or with
+[`m.space.parent`](#mspaceparent) state events in the child room.
+
+In most cases, both the child and parent relationship should be defined to aid
+discovery of the space and its rooms. When only a `m.space.child` is used, the space
+is effectively a curated list of rooms which the rooms themselves might not be aware
+of. When only a `m.space.parent` is used, the rooms are "secretly" added to spaces
+with the effect of not being advertised directly by the space.
+
+> **Note:** 
+Considering spaces are rooms themselves, it is possible to nest spaces within spaces,
+and it is possible to create a loop. Though the creation of loops is explicitly disallowed,
+implementations might still encounter them and must be careful not to loop infinitely when
+this happens.
+
+Clients and servers should additionally be aware of excessively long trees which may
+cause performance issues.
+
+##### `m.space.child` relationship
+
+When using this approach, the state events get sent into the space-room which is the
+parent to the room. The `state_key` for the event is the child room's ID.
+
+For example, to achieve the following:
+
+```nohighlight
+#space:example.org
+    #general:example.org (!abcdefg:example.org)
+    !private:example.org
+```
+
+the state of `#space:example.org` would consist of:
+
+*Unimportant fields trimmed for brevity.*
+
+```json
+{
+    "type": "m.space.child",
+    "state_key": "!abcdefg:example.org",
+    "content": {
+        "via": ["example.org"]
+    }
+}
+```
+```json
+{
+    "type": "m.space.child",
+    "state_key": "!private:example.org",
+    "content": {
+        "via": ["example.org"]
+    }
+}
+```
+
+No state events in the child rooms themselves would be required (though they can also
+be present). This allows for users to define spaces without needing explicit permission
+from the room moderators/admins.
+
+Child rooms can be removed from a space by omitting the `via` key of `content` on the
+relevant state event, such as through redaction or otherwise clearing the `content`.
+
+### Event `m.space.child`
+```typescript
+type m_space_child = {
+
+  /**
+  * The fields in this object will vary depending on the type of event. When interacting with the REST API, this is the HTTP body.
+   */
+  content: {};
+
+  /**
+  * A unique key which defines the overwriting semantics for this piece of room state. This value is often a zero-length string. The presence of this key makes this event a State Event.
+  * State keys starting with an `@` are reserved for referencing user IDs, such as room members. With the exception of a few events, state events set with a given user's ID as the state key MUST only be set by that user.
+   */
+  state_key: string;
+
+  /**
+  * The type of event, as defined by [the event type specification](/client-server-api/#types-of-room-events).
+   */
+  type: string;
+
+  /**
+  * The globally unique event identifier.
+   */
+  event_id: string /* mx-event-id */;
+
+  /**
+  * Contains the fully-qualified ID of the user who sent this event.
+   */
+  sender: string /* mx-user-id */;
+
+  /**
+  * Timestamp in milliseconds on originating homeserver when this event was sent.
+   */
+  origin_server_ts: number /* int64 */;
+
+  /**
+  * Contains optional extra information about the event.
+   */
+  unsigned?: {
+
+    /**
+    * The time in milliseconds that has elapsed since the event was sent.
+     */
+    age?: number;
+  };
+
+  /**
+  * The ID of the room associated with this event. Will not be present on events
+  * that arrive through `/sync`, despite being required everywhere else.
+   */
+  room_id: string /* mx-room-id */;
+};
+```
+
+###### Ordering of children within a space
+
+When the client is displaying the children of a space, the children should be ordered
+using the algorithm below. In some cases, like a traditional left side room list, the
+client may override the ordering to provide better user experience. A theoretical
+space summary view would however show the children ordered.
+
+Taking the set of space children, first order the children with a valid `order` key
+lexicographically by Unicode code-points such that `\x20` (space) is sorted before
+`\x7E` (`~`). Then, take the remaining children and order them by the `origin_server_ts`
+of their `m.space.child` event in ascending numeric order, placing them after the
+children with a valid `order` key in the resulting set.
+
+In cases where the `order` values are the same, the children are ordered by their
+timestamps.  If the timestamps are the same, the children are ordered lexicographically
+by their room IDs (state keys) in ascending order.
+
+Noting the careful use of ASCII spaces here, the following demonstrates a set of space
+children being ordered appropriately:
+
+*Unimportant fields trimmed for brevity.*
+
+```json
+[
+    {
+        "type": "m.space.child",
+        "state_key": "!b:example.org",
+        "origin_server_ts": 1640341000000,
+        "content": {
+            "order": " ",
+            "via": ["example.org"]
+        }
+    },
+    {
+        "type": "m.space.child",
+        "state_key": "!a:example.org",
+        "origin_server_ts": 1640141000000,
+        "content": {
+            "order": "aaaa",
+            "via": ["example.org"]
+        }
+    },
+    {
+        "type": "m.space.child",
+        "state_key": "!c:example.org",
+        "origin_server_ts": 1640841000000,
+        "content": {
+            "order": "first",
+            "via": ["example.org"]
+        }
+    },
+    {
+        "type": "m.space.child",
+        "state_key": "!e:example.org",
+        "origin_server_ts": 1640641000000,
+        "content": {
+            "via": ["example.org"]
+        }
+    },
+    {
+        "type": "m.space.child",
+        "state_key": "!d:example.org",
+        "origin_server_ts": 1640741000000,
+        "content": {
+            "via": ["example.org"]
+        }
+    }
+]
+```
+
+1. `!b:example.org` is first because `\x20` is before `aaaa` lexically.
+2. `!a:example.org` is next because `aaaa` is before `first` lexically.
+3. `!c:example.org` is next because `first` is the last `order` value.
+4. `!e:example.org` is next because the event timestamp is smallest.
+5. `!d:example.org` is last because the event timestamp is largest.
+
+##### `m.space.parent` relationships
+
+Rooms can additionally claim to be part of a space by populating their own state
+with a parent event. Similar to child events within spaces, the parent event's
+`state_key` is the room ID of the parent space, and they have a similar `via` list
+within their `content` to denote both whether or not the link is valid and which
+servers might be possible to join through.
+
+To avoid situations where a room falsely claims it is part of a given space,
+`m.space.parent` events should be ignored unless one of the following is true:
+
+* A corresponding `m.space.child` event can be found in the supposed parent space.
+* The sender of the `m.space.parent` event has sufficient power level in the
+  supposed parent space to send `m.space.child` state events (there doesn't need
+  to be a matching child event).
+
+> **Note:** 
+Clients might need to peek into a parent space to inspect the room state if they
+aren't already joined. If the client is unable to peek the state, the link should
+be assumed to be invalid.
+
+> **Note:** 
+A consequence of the second condition is that a room admin being demoted in the
+parent space, leaving the parent space, or otherwise being removed from the parent
+space can mean that a previously valid `m.space.parent` event becomes invalid.
+
+`m.space.parent` events can additionally include a `canonical` boolean key in their
+`content` to denote that the parent space is the main/primary space for the room.
+This can be used to, for example, have the client find other rooms by peeking into
+that space and suggesting them to the user. Only one canonical parent should exist,
+though this is not enforced. To tiebreak, use the lowest room ID sorted lexicographically
+by Unicode code-points.
+
+### Event `m.space.parent`
+```typescript
+type m_space_parent = {
+
+  /**
+  * The fields in this object will vary depending on the type of event. When interacting with the REST API, this is the HTTP body.
+   */
+  content: {};
+
+  /**
+  * A unique key which defines the overwriting semantics for this piece of room state. This value is often a zero-length string. The presence of this key makes this event a State Event.
+  * State keys starting with an `@` are reserved for referencing user IDs, such as room members. With the exception of a few events, state events set with a given user's ID as the state key MUST only be set by that user.
+   */
+  state_key: string;
+
+  /**
+  * The type of event, as defined by [the event type specification](/client-server-api/#types-of-room-events).
+   */
+  type: string;
+
+  /**
+  * The globally unique event identifier.
+   */
+  event_id: string /* mx-event-id */;
+
+  /**
+  * Contains the fully-qualified ID of the user who sent this event.
+   */
+  sender: string /* mx-user-id */;
+
+  /**
+  * Timestamp in milliseconds on originating homeserver when this event was sent.
+   */
+  origin_server_ts: number /* int64 */;
+
+  /**
+  * Contains optional extra information about the event.
+   */
+  unsigned?: {
+
+    /**
+    * The time in milliseconds that has elapsed since the event was sent.
+     */
+    age?: number;
+  };
+
+  /**
+  * The ID of the room associated with this event. Will not be present on events
+  * that arrive through `/sync`, despite being required everywhere else.
+   */
+  room_id: string /* mx-room-id */;
+};
+```
+
+#### Discovering rooms within spaces
+
+Often the client will want to assist the user in exploring what rooms/spaces are part
+of a space. This can be done with crawling [`m.space.child`](#mspacechild) state events
+in the client and peeking into the rooms to get information like the room name, though
+this is impractical for most cases.
+
+Instead, a hierarchy API is provided to walk the space tree and discover the rooms with
+their aesthetic details.
+
+The [`GET /hierarchy`](#get_matrixclientv1roomsroomidhierarchy) API works in a depth-first
+manner: when it encounters another space as a child it recurses into that space before
+returning non-space children.
+
+> **Note:** 
+Though prohibited, it is still possible for loops to occur. Servers should gracefully
+break loops.
+
+Additionally, a given child room might appear multiple times in the response as a
+grandchild (for example).
+
+### GET /rooms/{roomId}/hierarchy
+**Summary:** Retrieve a portion of a space tree.
+Paginates over the space tree in a depth-first manner to locate child rooms of a given space.
+
+Where a child room is unknown to the local server, federation is used to fill in the details.
+The servers listed in the `via` array should be contacted to attempt to fill in missing rooms.
+
+Only [`m.space.child`](/client-server-api/#mspacechild) state events of the room are considered.
+Invalid child rooms and parent events are not covered by this endpoint.
+**Path Parameters:**
+- `roomId` (Required): `string` - The room ID of the space to get a hierarchy for.
+**Query Parameters:**
+- `suggested_only`: `boolean` - Optional (default `false`) flag to indicate whether or not the server should only consider
+suggested rooms. Suggested rooms are annotated in their [`m.space.child`](/client-server-api/#mspacechild)
+event contents.
+- `limit`: `number` - Optional limit for the maximum number of rooms to include per response. Must be an integer
+greater than zero.
+
+Servers should apply a default value, and impose a maximum value to avoid resource exhaustion.
+- `max_depth`: `number` - Optional limit for how far to go into the space. Must be a non-negative integer.
+
+When reached, no further child rooms will be returned.
+
+Servers should apply a default value, and impose a maximum value to avoid resource exhaustion.
+- `from`: `string` - A pagination token from a previous result. If specified, `max_depth` and `suggested_only` cannot
+be changed from the first request.
+**Responses:**
+- **200**: A portion of the space tree, starting at the provided room ID.
+  ```typescript
+  {
+
+    /**
+    * The rooms for the current page, with the current filters.
+    * 
+    * The server should return any rooms where at least one of the following conditions is true:
+    * 
+    * * The requesting user is currently a member (their [room membership](#room-membership) is `join`).
+    * * The requesting user already has permission to join, i.e. one of the following:
+    *   * The user's room membership is `invite`.
+    *   * The room's [join rules](#mroomjoin_rules) are set to `public`.
+    *   * The room's join rules are set to [`restricted`](#restricted-rooms), provided the user meets one of the specified conditions.
+    * * The room is "knockable" (the room's join rules are set to `knock`, or `knock_restricted`, in a room version that supports those settings).
+    * * The room's [`m.room.history_visibility`](#room-history-visibility) is set to `world_readable`.
+     */
+    rooms: Array<{
+
+      /**
+      * The canonical alias of the room, if any.
+      * @example "#general:example.org"
+       */
+      canonical_alias?: string /* mx-room-alias */;
+
+      /**
+      * The name of the room, if any.
+      * @example "General Chat"
+       */
+      name?: string;
+
+      /**
+      * The number of members joined to the room.
+      * @example 42
+       */
+      num_joined_members: number;
+
+      /**
+      * The ID of the room.
+      * @example "!abcdefg:example.org"
+       */
+      room_id: string /* mx-room-id */;
+
+      /**
+      * The plain text topic of the room. Omitted if no `text/plain` mimetype
+      * exists in [`m.room.topic`](/client-server-api/#mroomtopic).
+      * @example "All things general"
+       */
+      topic?: string;
+
+      /**
+      * Whether the room may be viewed by users without joining.
+      * @example false
+       */
+      world_readable: boolean;
+
+      /**
+      * Whether guest users may join the room and participate in it.
+      * If they can, they will be subject to ordinary power level
+      * rules like any other user.
+      * @example true
+       */
+      guest_can_join: boolean;
+
+      /**
+      * The URL for the room's avatar, if one is set.
+      * @example "mxc://example.org/abcdef"
+       */
+      avatar_url?: string /* uri */;
+
+      /**
+      * The room's join rule. When not present, the room is assumed to
+      * be `public`.
+      * @example "public"
+       */
+      join_rule?: string;
+      room_type?: {};
+      allowed_room_ids?: {};
+      encryption?: {};
+      room_version?: {};
+
+      /**
+      * The [`m.space.child`](/client-server-api/#mspacechild) events of the space-room, represented
+      * as [Stripped State Events](/client-server-api/#stripped-state) with an added `origin_server_ts` key.
+      * 
+      * If the room is not a space-room, this should be empty.
+       */
+      children_state: Array<{
+
+        /**
+        * The `content` for the event.
+         */
+        content: {};
+
+        /**
+        * The `state_key` for the event.
+         */
+        state_key: string;
+
+        /**
+        * The `type` for the event.
+         */
+        type: string;
+
+        /**
+        * The `sender` for the event.
+         */
+        sender: string /* mx-user-id */;
+
+        /**
+        * The `origin_server_ts` for the event.
+         */
+        origin_server_ts: number /* int64 */;
+      }>;
+    }>;
+
+    /**
+    * A token to supply to `from` to keep paginating the responses. Not present when there are
+    * no further results.
+     */
+    next_batch?: string;
+  }
+  ```
+- **400**: The request was invalid in some way. A meaningful `errcode`
+and description error text will be returned. Example reasons for rejection are:
+
+- The `from` token is unknown to the server.
+- `suggested_only` or `max_depth` changed during pagination.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **403**: The user cannot view or peek on the room. A meaningful `errcode`
+and description error text will be returned. Example reasons for rejection are:
+
+- The room is not set up for peeking.
+- The user has been banned from the room.
+- The room does not exist.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **429**: This request was rate-limited.
+  ```typescript
+  {
+
+    /**
+    * The M_LIMIT_EXCEEDED error code
+    * @example "M_LIMIT_EXCEEDED"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "Too many requests"
+     */
+    error?: string;
+
+    /**
+    * The amount of time in milliseconds the client should wait
+    * before trying the request again.
+    * @example 2000
+     */
+    retry_after_ms?: number;
+  }
+  ```
+
+##### Server behaviour
+
+In the case where the server does not have access to the state of a child room, it can
+request the information over federation with the
+[`GET /hierarchy`](/server-server-api/#get_matrixfederationv1hierarchyroomid) API. The
+response to this endpoint should be cached for a period of time. The response might
+additionally contain information about rooms the requesting user is already a member
+of, or that the server is aware of - the local data should be used instead of the remote
+server's data.
+
+Note that the response to the client endpoint is contextual based on the user. Servers are
+encouraged to cache the data for a period of time, though permission checks may need to
+be performed to ensure the response is accurate for that user.

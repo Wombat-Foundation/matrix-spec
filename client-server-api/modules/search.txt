@@ -1,0 +1,550 @@
+
+### Server Side Search
+
+The search API allows clients to perform full text search across events
+in all rooms that the user has been in, including those that they have
+left. Only events that the user is allowed to see will be searched, e.g.
+it won't include events in rooms that happened after you left.
+
+#### Client behaviour
+
+There is a single HTTP API for performing server-side search, documented
+below.
+
+### POST /search
+**Summary:** Perform a server-side search.
+Performs a full text search across different categories.
+**Query Parameters:**
+- `next_batch`: `string` - The point to return events from. If given, this should be a
+`next_batch` result from a previous call to this endpoint.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * Describes which categories to search in and their criteria.
+   */
+  search_categories: {
+
+    /**
+    * Mapping of category name to search criteria.
+     */
+    room_events?: {
+
+      /**
+      * The string to search events for
+       */
+      search_term: string;
+
+      /**
+      * The keys to search. Defaults to all.
+       */
+      keys?: Array<"content.body" | "content.name" | "content.topic">;
+
+      /**
+      * This takes a [filter](/client-server-api/#filtering).
+       */
+      filter?: {
+
+        /**
+        * The maximum number of events to return, must be an integer greater than 0.
+        * 
+        * Servers should apply a default value, and impose a maximum value to avoid
+        * resource exhaustion.
+         */
+        limit?: number;
+
+        /**
+        * A list of sender IDs to exclude. If this list is absent then no senders are excluded. A matching sender will be excluded even if it is listed in the `senders` filter.
+         */
+        not_senders?: string /* mx-user-id */[];
+
+        /**
+        * A list of event types to exclude. If this list is absent then no event types are excluded. A matching type will be excluded even if it is listed in the `types` filter. A `*` can be used as a wildcard to match any sequence of characters.
+         */
+        not_types?: string[];
+
+        /**
+        * A list of senders IDs to include. If this list is absent then all senders are included.
+         */
+        senders?: string /* mx-user-id */[];
+
+        /**
+        * A list of event types to include. If this list is absent then all event types are included. A `*` can be used as a wildcard to match any sequence of characters.
+         */
+        types?: string[];
+
+        /**
+        * If `true`, enables per-[thread](/client-server-api/#threading) notification
+        * counts. Only applies to the `/sync` endpoint. Defaults to `false`.
+         */
+        unread_thread_notifications?: boolean;
+
+        /**
+        * If `true`, enables lazy-loading of membership events. See
+        * [Lazy-loading room members](/client-server-api/#lazy-loading-room-members)
+        * for more information. Defaults to `false`.
+         */
+        lazy_load_members?: boolean;
+
+        /**
+        * If `true`, sends all membership events for all events, even if they have already
+        * been sent to the client. Does not
+        * apply unless `lazy_load_members` is `true`. See
+        * [Lazy-loading room members](/client-server-api/#lazy-loading-room-members)
+        * for more information. Defaults to `false`.
+         */
+        include_redundant_members?: boolean;
+
+        /**
+        * A list of room IDs to exclude. If this list is absent then no rooms are excluded. A matching room will be excluded even if it is listed in the `rooms` filter.
+         */
+        not_rooms?: string /* mx-room-id */[];
+
+        /**
+        * A list of room IDs to include. If this list is absent then all rooms are included.
+         */
+        rooms?: string /* mx-room-id */[];
+
+        /**
+        * If `true`, includes only events with a `url` key in their content. If `false`, excludes those events. If omitted, `url` key is not considered for filtering.
+         */
+        contains_url?: boolean;
+      };
+
+      /**
+      * The order in which to search for results.
+      * By default, this is `"rank"`.
+       */
+      order_by?: "recent" | "rank";
+
+      /**
+      * Configures whether any context for the events
+      * returned are included in the response.
+       */
+      event_context?: {
+
+        /**
+        * How many events before the result are
+        * returned. By default, this is `5`.
+         */
+        before_limit?: number;
+
+        /**
+        * How many events after the result are
+        * returned. By default, this is `5`.
+         */
+        after_limit?: number;
+
+        /**
+        * Requests that the server returns the
+        * historic profile information for the users
+        * that sent the events that were returned.
+        * By default, this is `false`.
+         */
+        include_profile?: boolean;
+      };
+
+      /**
+      * Requests the server return the current state for
+      * each room returned.
+       */
+      include_state?: boolean;
+
+      /**
+      * Requests that the server partitions the result set
+      * based on the provided list of keys.
+       */
+      groupings?: {
+
+        /**
+        * List of groups to request.
+         */
+        group_by?: Array<{
+
+          /**
+          * Key that defines the group.
+           */
+          key?: "room_id" | "sender";
+        }>;
+      };
+    };
+  };
+}
+```
+**Responses:**
+- **200**: Results of the search.
+  ```typescript
+  {
+
+    /**
+    * Describes which categories to search in and their criteria.
+     */
+    search_categories: {
+
+      /**
+      * Mapping of category name to search criteria.
+       */
+      room_events?: {
+
+        /**
+        * An approximate count of the total number of results found.
+         */
+        count?: number;
+
+        /**
+        * List of words which should be highlighted, useful for stemming which may change the query terms.
+         */
+        highlights?: string[];
+
+        /**
+        * List of results in the requested order.
+         */
+        results?: Array<{
+
+          /**
+          * A number that describes how closely this result matches the search. Higher is closer.
+           */
+          rank?: number;
+
+          /**
+          * The event that matched.
+           */
+          result?: {
+
+            /**
+            * The globally unique identifier for this event.
+            * @example "$26RqwJMLw-yds1GAH_QxjHRC1Da9oasK0e5VLnck_45"
+             */
+            event_id: string /* mx-event-id */;
+
+            /**
+            * The type of the event.
+            * @example "m.room.member"
+             */
+            type: string;
+
+            /**
+            * Present if, and only if, this event is a *state* event. The key making
+            * this piece of state unique in the room. Note that it is often an empty
+            * string.
+            * 
+            * State keys starting with an `@` are reserved for referencing user IDs, such
+            * as room members. With the exception of a few events, state events set with a
+            * given user's ID as the state key MUST only be set by that user.
+            * @example "@user:example.org"
+             */
+            state_key?: string;
+
+            /**
+            * Contains the fully-qualified ID of the user who sent this event.
+            * @example "@example:example.org"
+             */
+            sender: string /* mx-user-id */;
+
+            /**
+            * Timestamp (in milliseconds since the unix epoch) on originating homeserver
+            * when this event was sent.
+            * @example 1632489532305
+             */
+            origin_server_ts: number /* int64 */;
+
+            /**
+            * The body of this event, as created by the client which sent it.
+            * @example {"membership": "join"}
+             */
+            content: {};
+            unsigned?: {
+
+              /**
+              * @example {"type": "m.room.redaction", "sender": "@moderator:example.org", "content": {"reason": "spam"}, "redacts": "$26RqwJMLw-yds1GAH_QxjHRC1Da9oasK0e5VLnck_45", "event_id": "$Nhl3rsgHMjk-DjMJANawr9HHAhLg4GcoTYrSiYYGqEE", "origin_server_ts": 1632491098485, "room_id": "!jEsUZKDJdhlrceRyVU:example.org", "unsigned": {"age": 1257}}
+               */
+              redacted_because?: {};
+            };
+
+            /**
+            * The ID of the room associated with this event.
+            * @example "!jEsUZKDJdhlrceRyVU:example.org"
+             */
+            room_id: string /* mx-room-id */;
+          };
+
+          /**
+          * Context for result, if requested.
+           */
+          context?: {
+
+            /**
+            * Pagination token for the start of the chunk
+             */
+            start?: string;
+
+            /**
+            * Pagination token for the end of the chunk
+             */
+            end?: string;
+
+            /**
+            * The historic profile information of the
+            * users that sent the events returned.
+            * 
+            * The key is the user ID for which
+            * the profile belongs to.
+             */
+            profile_info?: {};
+
+            /**
+            * Events just before the result.
+             */
+            events_before?: Array<{
+
+              /**
+              * The globally unique identifier for this event.
+              * @example "$26RqwJMLw-yds1GAH_QxjHRC1Da9oasK0e5VLnck_45"
+               */
+              event_id: string /* mx-event-id */;
+
+              /**
+              * The type of the event.
+              * @example "m.room.member"
+               */
+              type: string;
+
+              /**
+              * Present if, and only if, this event is a *state* event. The key making
+              * this piece of state unique in the room. Note that it is often an empty
+              * string.
+              * 
+              * State keys starting with an `@` are reserved for referencing user IDs, such
+              * as room members. With the exception of a few events, state events set with a
+              * given user's ID as the state key MUST only be set by that user.
+              * @example "@user:example.org"
+               */
+              state_key?: string;
+
+              /**
+              * Contains the fully-qualified ID of the user who sent this event.
+              * @example "@example:example.org"
+               */
+              sender: string /* mx-user-id */;
+
+              /**
+              * Timestamp (in milliseconds since the unix epoch) on originating homeserver
+              * when this event was sent.
+              * @example 1632489532305
+               */
+              origin_server_ts: number /* int64 */;
+
+              /**
+              * The body of this event, as created by the client which sent it.
+              * @example {"membership": "join"}
+               */
+              content: {};
+              unsigned?: {
+
+                /**
+                * @example {"type": "m.room.redaction", "sender": "@moderator:example.org", "content": {"reason": "spam"}, "redacts": "$26RqwJMLw-yds1GAH_QxjHRC1Da9oasK0e5VLnck_45", "event_id": "$Nhl3rsgHMjk-DjMJANawr9HHAhLg4GcoTYrSiYYGqEE", "origin_server_ts": 1632491098485, "room_id": "!jEsUZKDJdhlrceRyVU:example.org", "unsigned": {"age": 1257}}
+                 */
+                redacted_because?: {};
+              };
+
+              /**
+              * The ID of the room associated with this event.
+              * @example "!jEsUZKDJdhlrceRyVU:example.org"
+               */
+              room_id: string /* mx-room-id */;
+            }>;
+
+            /**
+            * Events just after the result.
+             */
+            events_after?: Array<{
+
+              /**
+              * The globally unique identifier for this event.
+              * @example "$26RqwJMLw-yds1GAH_QxjHRC1Da9oasK0e5VLnck_45"
+               */
+              event_id: string /* mx-event-id */;
+
+              /**
+              * The type of the event.
+              * @example "m.room.member"
+               */
+              type: string;
+
+              /**
+              * Present if, and only if, this event is a *state* event. The key making
+              * this piece of state unique in the room. Note that it is often an empty
+              * string.
+              * 
+              * State keys starting with an `@` are reserved for referencing user IDs, such
+              * as room members. With the exception of a few events, state events set with a
+              * given user's ID as the state key MUST only be set by that user.
+              * @example "@user:example.org"
+               */
+              state_key?: string;
+
+              /**
+              * Contains the fully-qualified ID of the user who sent this event.
+              * @example "@example:example.org"
+               */
+              sender: string /* mx-user-id */;
+
+              /**
+              * Timestamp (in milliseconds since the unix epoch) on originating homeserver
+              * when this event was sent.
+              * @example 1632489532305
+               */
+              origin_server_ts: number /* int64 */;
+
+              /**
+              * The body of this event, as created by the client which sent it.
+              * @example {"membership": "join"}
+               */
+              content: {};
+              unsigned?: {
+
+                /**
+                * @example {"type": "m.room.redaction", "sender": "@moderator:example.org", "content": {"reason": "spam"}, "redacts": "$26RqwJMLw-yds1GAH_QxjHRC1Da9oasK0e5VLnck_45", "event_id": "$Nhl3rsgHMjk-DjMJANawr9HHAhLg4GcoTYrSiYYGqEE", "origin_server_ts": 1632491098485, "room_id": "!jEsUZKDJdhlrceRyVU:example.org", "unsigned": {"age": 1257}}
+                 */
+                redacted_because?: {};
+              };
+
+              /**
+              * The ID of the room associated with this event.
+              * @example "!jEsUZKDJdhlrceRyVU:example.org"
+               */
+              room_id: string /* mx-room-id */;
+            }>;
+          };
+        }>;
+
+        /**
+        * The current state for every room in the results.
+        * This is included if the request had the
+        * `include_state` key set with a value of `true`.
+        * 
+        * The key is the room ID for which the `State
+        * Event` array belongs to.
+         */
+        state?: {};
+
+        /**
+        * Any groups that were requested.
+        * 
+        * The outer `string` key is the group key requested (eg: `room_id`
+        * or `sender`). The inner `string` key is the grouped value (eg:
+        * a room's ID or a user's ID).
+         */
+        groups?: {};
+
+        /**
+        * Token that can be used to get the next batch of
+        * results, by passing as the `next_batch` parameter to
+        * the next call. If this field is absent, there are no
+        * more results.
+         */
+        next_batch?: string;
+      };
+    };
+  }
+  ```
+- **400**: Part of the request was invalid.
+- **429**: This request was rate-limited.
+  ```typescript
+  {
+
+    /**
+    * The M_LIMIT_EXCEEDED error code
+    * @example "M_LIMIT_EXCEEDED"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "Too many requests"
+     */
+    error?: string;
+
+    /**
+    * The amount of time in milliseconds the client should wait
+    * before trying the request again.
+    * @example 2000
+     */
+    retry_after_ms?: number;
+  }
+  ```
+
+#### Search Categories
+
+The search API allows clients to search in different categories of
+items. Currently the only specified category is `room_events`.
+
+##### `room_events`
+
+This category covers all events that the user is allowed to see,
+including events in rooms that they have left. The search is performed
+on certain keys of certain event types.
+
+The supported keys to search over are:
+
+-   `content.body` in [`m.room.message`](/client-server-api/#mroommessage)
+-   `content.name` in [`m.room.name`](/client-server-api/#mroomname)
+-   In [`m.room.topic`](/client-server-api/#mroomtopic), `content.topic`
+    as well as the `body` of the `text/plain` representation in `content['m.topic']`.
+
+The search will *not* include rooms that are end to end encrypted.
+
+The results include a `rank` key that can be used to sort the results by
+relevancy. The higher the `rank` the more relevant the result is.
+
+The value of `count` gives an approximation of the total number of
+results. Homeservers may give an estimate rather than an exact value for
+this field.
+
+#### Ordering
+
+The client can specify the ordering that the server returns results in.
+The two allowed orderings are:
+
+-   `rank`, which returns the most relevant results first.
+-   `recent`, which returns the most recent results first.
+
+The default ordering is `rank`.
+
+#### Groups
+
+The client can request that the results are returned along with grouping
+information, e.g. grouped by `room_id`. In this case the response will
+contain a group entry for each distinct value of `room_id`. Each group
+entry contains at least a list of the `event_ids` that are in that
+group, as well as potentially other metadata about the group.
+
+The current required supported groupings are:
+
+-   `room_id`
+-   `sender`
+
+#### Pagination
+
+The server may return a `next_batch` key at various places in the
+response. These are used to paginate the results. To fetch more results,
+the client should send the *same* request to the server with a
+`next_batch` query parameter set to that of the token.
+
+The scope of the pagination is defined depending on where the
+`next_batch` token was returned. For example, using a token inside a
+group will return more results from within that group.
+
+The currently supported locations for the `next_batch` token are:
+
+-   `search_categories.<category>.next_batch`
+-   `search_categories.<category>.groups.<group_key>.<group_id>.next_batch`
+
+A server need not support pagination, even if there are more matching
+results. In that case, they must not return a `next_batch` token in the
+response.
+
+#### Security considerations
+
+The server must only return results that the user has permission to see.

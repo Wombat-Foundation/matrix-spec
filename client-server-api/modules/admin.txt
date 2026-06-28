@@ -1,0 +1,358 @@
+
+### Server Administration
+
+This module adds capabilities for server administrators to inspect
+server state and data.
+
+#### Client Behaviour
+
+### GET /v3/admin/whois/{userId}
+**Summary:** Gets information about a particular user.
+Gets information about a particular user.
+
+This API may be restricted to only be called by the user being looked
+up, or by a server admin. Server-local administrator privileges are not
+specified in this document.
+**Path Parameters:**
+- `userId` (Required): `string` - The user to look up.
+**Responses:**
+- **200**: The lookup was successful.
+  ```typescript
+  {
+
+    /**
+    * The Matrix user ID of the user.
+     */
+    user_id?: string;
+
+    /**
+    * Each key is an identifier for one of the user's devices.
+     */
+    devices?: {};
+  }
+  ```
+
+### GET /v1/admin/suspend/{userId}
+**Summary:** Gets information about the suspended status of a particular user.
+Gets information about the suspended status of a particular server-local user.
+
+The user calling this endpoint MUST be a server admin.
+
+In order to prevent user enumeration, servers MUST ensure that authorisation is checked
+prior to trying to do account lookups.
+**Path Parameters:**
+- `userId` (Required): `string /* mx-user-id */` - The user to look up.
+**Responses:**
+- **200**: The lookup was successful.
+  ```typescript
+  {
+
+    /**
+    * Whether the target account is suspended.
+    * @example true
+     */
+    suspended: boolean;
+  }
+  ```
+- **400**: The user ID does not belong to the local server. The errcode is `M_INVALID_PARAM`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **403**: The requesting user is not a server administrator, or the target user is another
+administrator. The errcode is `M_FORBIDDEN`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **404**: The user ID is not found, or is deactivated. The errcode is `M_NOT_FOUND`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### PUT /v1/admin/suspend/{userId}
+**Summary:** Set the suspended status of a particular user.
+Sets the suspended status of a particular server-local user.
+
+The user calling this endpoint MUST be a server admin. The client SHOULD check that the user
+is allowed to suspend other users at the [`GET /capabilities`](/client-server-api/#get_matrixclientv3capabilities)
+endpoint prior to using this endpoint.
+
+In order to prevent user enumeration, servers MUST ensure that authorisation is checked
+prior to trying to do account lookups.
+**Path Parameters:**
+- `userId` (Required): `string /* mx-user-id */` - The user to change the suspended status of.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * Whether to suspend the target account.
+  * @example true
+   */
+  suspended: boolean;
+}
+```
+**Responses:**
+- **200**: The action was successful.
+  ```typescript
+  {
+
+    /**
+    * Whether the target account is suspended.
+    * @example true
+     */
+    suspended: boolean;
+  }
+  ```
+- **400**: The user ID does not belong to the local server. The errcode is `M_INVALID_PARAM`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **403**: The requesting user is not a server administrator, is trying to suspend their own
+account, or the target user is another administrator. The errcode is `M_FORBIDDEN`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **404**: The user ID is not found, or is deactivated. The errcode is `M_NOT_FOUND`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### GET /v1/admin/lock/{userId}
+**Summary:** Gets information about the locked status of a particular user.
+Gets information about the locked status of a particular server-local user.
+
+The user calling this endpoint MUST be a server admin.
+
+In order to prevent user enumeration, servers MUST ensure that authorisation is checked
+prior to trying to do account lookups.
+**Path Parameters:**
+- `userId` (Required): `string /* mx-user-id */` - The user to look up.
+**Responses:**
+- **200**: The lookup was successful.
+  ```typescript
+  {
+
+    /**
+    * Whether the target account is locked.
+     */
+    locked: boolean;
+  }
+  ```
+- **400**: The user ID does not belong to the local server. The errcode is `M_INVALID_PARAM`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **403**: The requesting user is not a server administrator, or the target user is another
+administrator. The errcode is `M_FORBIDDEN`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **404**: The user ID is not found, or is deactivated. The errcode is `M_NOT_FOUND`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### PUT /v1/admin/lock/{userId}
+**Summary:** Set the locked status of a particular user.
+Sets the locked status of a particular server-local user.
+
+The user calling this endpoint MUST be a server admin. The client SHOULD check that the user
+is allowed to lock other users at the [`GET /capabilities`](/client-server-api/#get_matrixclientv3capabilities)
+endpoint prior to using this endpoint.
+
+In order to prevent user enumeration, servers MUST ensure that authorisation is checked
+prior to trying to do account lookups.
+**Path Parameters:**
+- `userId` (Required): `string /* mx-user-id */` - The user to change the locked status of.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * Whether to lock the target account.
+  * @example true
+   */
+  locked: boolean;
+}
+```
+**Responses:**
+- **200**: The action was successful.
+  ```typescript
+  {
+
+    /**
+    * Whether the target account is locked.
+    * @example true
+     */
+    locked: boolean;
+  }
+  ```
+- **400**: The user ID does not belong to the local server. The errcode is `M_INVALID_PARAM`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **403**: The requesting user is not a server administrator, is trying to lock their own
+account, or the target user is another administrator. The errcode is `M_FORBIDDEN`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **404**: The user ID is not found, or is deactivated. The errcode is `M_NOT_FOUND`.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```

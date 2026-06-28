@@ -1,0 +1,2636 @@
+
+### Push Notifications
+
+```nohighlight
+                                   +--------------------+  +-------------------+
+                  Matrix HTTP      |                    |  |                   |
+             Notification Protocol |   App Developer    |  |   Device Vendor   |
+                                   |                    |  |                   |
+           +-------------------+   | +----------------+ |  | +---------------+ |
+           |                   |   | |                | |  | |               | |
+           | Matrix homeserver +----->  Push Gateway  +------> Push Provider | |
+           |                   |   | |                | |  | |               | |
+           +-^-----------------+   | +----------------+ |  | +----+----------+ |
+             |                     |                    |  |      |            |
+    Matrix   |                     |                    |  |      |            |
+ Client/Server API  +              |                    |  |      |            |
+             |      |              +--------------------+  +-------------------+
+             |   +--+-+                                           |
+             |   |    <-------------------------------------------+
+             +---+    |
+                 |    |          Provider Push Protocol
+                 +----+
+          Mobile Device or Client
+```
+
+This module adds support for push notifications. Homeservers send
+notifications of events to user-configured HTTP endpoints. Users may
+also configure a number of rules that determine which events generate
+notifications. These are all stored and managed by the user's
+homeserver. This allows user-specific push settings to be reused between
+client applications.
+
+The above diagram shows the flow of push notifications being sent to a
+handset where push notifications are submitted via the handset vendor,
+such as Apple's APNS or Google's GCM. This happens as follows:
+
+1.  The client app signs in to a homeserver.
+2.  The client app registers with its vendor's Push Provider and obtains
+    a routing token of some kind.
+3.  The mobile app uses the Client/Server API to add a 'pusher',
+    providing the URL of a specific Push Gateway which is configured for
+    that application. It also provides the routing token it has acquired
+    from the Push Provider.
+4.  The homeserver starts sending HTTP requests to the Push Gateway
+    using the supplied URL. The Push Gateway relays this notification to
+    the Push Provider, passing the routing token along with any
+    necessary private credentials the provider requires to send push
+    notifications.
+5.  The Push Provider sends the notification to the device.
+
+Definitions for terms used in this section are below:
+
+Push Provider
+
+:   A push provider is a service managed by the device vendor which can send
+    notifications directly to the device. Google Cloud Messaging (GCM) and
+    Apple Push Notification Service (APNS) are two examples of push
+    providers.
+
+Push Gateway
+
+:   A push gateway is a server that receives HTTP event notifications from
+    homeservers and passes them on to a different protocol such as APNS for
+    iOS devices or GCM for Android devices. Clients inform the homeserver
+    which Push Gateway to send notifications to when it sets up a Pusher.
+
+Pusher
+
+:   A pusher is a worker on the homeserver that manages the sending of HTTP
+    notifications for a user. A user can have multiple pushers: one per
+    device.
+
+Push Rule
+
+:   A push rule is a single rule that states under what *conditions* an
+    event should be passed onto a push gateway and *how* the notification
+    should be presented. These rules are stored on the user's homeserver.
+    They are manually configured by the user, who can create and view them
+    via the Client/Server API.
+
+Push Ruleset
+
+:   A push ruleset *scopes a set of rules according to some criteria*. For
+    example, some rules may only be applied for messages from a particular
+    sender, a particular room, or by default. The push ruleset contains the
+    entire set of rules.
+
+#### Push Rules
+
+A push rule is a single rule that states under what *conditions* an
+event should be passed onto a push gateway and *how* the notification
+should be presented. There are different "kinds" of push rules and each
+rule has an associated priority. Every push rule MUST have a `kind` and
+`rule_id`. The `rule_id` is a unique string within the kind of rule.
+Rules may have extra keys depending on the value of `kind`.
+
+The different `kind`s of rule, in the order that they are checked, are:
+
+1.  **Override rules (`override`).**
+    The highest priority rules are user-configured overrides.
+
+1.  **Content-specific rules (`content`).**
+    These configure behaviour for messages that match certain patterns. Content
+    rules take one parameter: `pattern`, that gives the
+    [glob-style pattern](/appendices#glob-style-matching) to match against.
+    The match is performed case-insensitively, and must match any substring of
+    the `content.body` property which starts and ends at a word boundary. A word
+    boundary is defined as the start or end of the value, or any character not
+    in the sets `[A-Z]`, `[a-z]`, `[0-9]` or `_`.The exact meaning of
+    "case insensitive" is defined by the implementation of the homeserver.
+
+1.  **Room-specific rules (`room`).**
+    These rules change the behaviour of all messages for a given room. The
+    `rule_id` of a room rule is always the ID of the room that it affects.
+
+1.  **Sender-specific rules (`sender`).**
+    These rules configure notification behaviour for messages from a
+    specific Matrix user ID. The `rule_id` of Sender rules is always the
+    Matrix user ID of the user whose messages they'd apply to.
+
+1.  **Underride rules (`underride`).**
+    These are identical to `override` rules, but have a lower priority than
+    `content`, `room` and `sender` rules.
+
+Rules with the same `kind` can specify an ordering priority. This
+determines which rule is selected in the event of multiple matches. For
+example, a rule matching "tea" and a separate rule matching "time" would
+both match the sentence "It's time for tea". The ordering of the rules
+would then resolve the tiebreak to determine which rule is executed.
+Only `actions` for highest priority rule will be sent to the Push
+Gateway.
+
+Each rule can be enabled or disabled. Disabled rules never match. If no
+rules match an event, the homeserver MUST NOT notify the Push Gateway
+for that event. Homeservers MUST NOT notify the Push Gateway for events
+that the user has sent themselves.
+
+##### Actions
+
+All rules have an associated list of `actions`. An action affects if and
+how a notification is delivered for a matching event. The following
+actions are defined:
+
+`notify`
+
+:   This causes each matching event to generate a notification.
+
+`set_tweak`
+
+:   Sets an entry in the `tweaks` dictionary key that is sent in the
+    notification request to the Push Gateway. This takes the form of a
+    dictionary with a `set_tweak` key whose value is the name of the tweak
+    to set. It may also have a `value` key which is the value to which it
+    should be set.
+
+    The following tweaks are defined:
+
+    `sound`
+
+    :   A string representing the sound to be played when this notification
+        arrives. A value of `default` means to play a default sound. A device
+        may choose to alert the user by some other means if appropriate, eg.
+        vibration.
+
+    `highlight`
+
+    :   A boolean representing whether or not this message should be highlighted
+        in the UI. This will normally take the form of presenting the message in
+        a different colour and/or style. The UI might also be adjusted to draw
+        particular attention to the room in which the event occurred. If a
+        `highlight` tweak is given with no value, its value is defined to be
+        `true`. If no highlight tweak is given at all then the value of
+        `highlight` is defined to be false.
+
+    Tweaks are passed transparently through the homeserver so client
+    applications and Push Gateways may agree on additional tweaks. For
+    example, a tweak may be added to specify how to flash the notification
+    light on a mobile device.
+
+Actions that have no parameters are represented as a string. Otherwise,
+they are represented as a dictionary with a key equal to their name and
+other keys as their parameters, e.g.
+`{ "set_tweak": "sound", "value": "default" }`.
+
+###### Historical Actions
+
+Older versions of the Matrix specification included the `dont_notify` and
+`coalesce` actions. Clients and homeservers MUST ignore these actions, for
+instance, by stripping them from actions arrays they encounter. This means,
+for example, that a rule with `["dont_notify"]` actions MUST be equivalent
+to a rule with an empty actions array.
+
+##### Conditions
+
+`override` and `underride` rules MAY have a list of 'conditions'. All
+conditions must hold true for an event in order for the rule to match. A
+rule with no conditions always matches.
+
+Unrecognised conditions MUST NOT match any events, effectively making
+the push rule disabled.
+
+`room`, `sender` and `content` rules do not have conditions in the same
+way, but instead have predefined conditions. In the cases of `room` and
+`sender` rules, the `rule_id` of the rule determines its behaviour.
+
+The following conditions are defined:
+
+**`event_match`**
+
+This is a glob pattern match on a property of the event. Parameters:
+
+-   `key`: The [dot-separated path of the property](/appendices#dot-separated-property-paths)
+    of the event to match, e.g. `content.body`.
+
+-   `pattern`: The [glob-style pattern](/appendices#glob-style-matching) to match against.
+
+The match is performed case-insensitively, and must match the entire value of
+the event property given by `key` (though see below regarding `content.body`). The
+exact meaning of "case insensitive" is defined by the implementation of the
+homeserver.
+
+If the property specified by `key` is completely absent from the event, or does
+not have a string value, then the condition will not match, even if `pattern`
+is `*`.
+
+> **Note:** 
+For example, if `key` is `content.topic`, and `pattern` is `lunc?*`, then
+the following event will match:
+
+```json
+{
+  "content": {
+    "topic": "Lunch plans",
+  },
+  "event_id": "$143273582443PhrSn:example.org",
+  "room_id": "!636q39766251:example.com",
+  "sender": "@example:example.org",
+  "state_key": "",
+  "type": "m.room.topic"
+}
+```
+
+Other `topic` values which will match are:
+
+ * `"LUNCH"` (case-insensitive; `*` may match zero characters)
+
+The following `topic` values will NOT match:
+ * `" lunch"` (note leading space)
+ * `"lunc"` (`?` must match a character)
+ * `null` (not a string)
+
+As a special case, if `key` is `content.body`, then `pattern` must instead
+match any substring of the value of the property which starts and ends at a
+word boundary. A word boundary is defined as the start or end of the value, or
+any character not in the sets `[A-Z]`, `[a-z]`, `[0-9]` or `_`.
+
+> **Note:** 
+For example, if `key` is `content.body` and `pattern` is `ex*ple`, the
+following event will match:
+
+```json
+{
+  "content": {
+    "body": "An example event."
+  },
+  "event_id": "$143273976499sgjks:example.org",
+  "room_id": "!636q39766251:example.com",
+  "sender": "@example:example.org",
+  "type": "m.room.message"
+}
+```
+
+Other `body` values which will match are:
+
+ * `"exple"` (the pattern can match at the start and end of the body.)
+ * `"An exciting triple-whammy"` (the pattern can span multiple words, and `-`
+   acts as a word separator.)
+
+> **Note:** 
+Note that there is no implicit condition for `state_key`. In other words, push
+rules which should match only state events must include an explicit condition
+for `state_key`.
+
+For an example of this, see the default rule
+[`.m.rule.tombstone`](#mruletombstone) below.
+
+**`event_property_is`**
+
+This is an exact value match on a property of the event. Parameters:
+
+-   `key`: The [dot-separated path of the property](/appendices#dot-separated-property-paths)
+    of the event to match, e.g. `content.body`.
+
+-   `value`: The value to match against.
+
+The match is performed exactly and only supports non-compound [canonical JSON](/appendices#canonical-json)
+values: strings, integers in the range of `[-(2**53)+1, (2**53)-1]`, booleans, and
+`null`.
+
+If the property specified by `key` is completely absent from the event, or does
+not have a string, integer, boolean, or `null` value, then the condition will not
+match.
+
+> **Note:** 
+For example, if `key` is `content.m\.federate`, and `value` is `true`, then
+the following event will match:
+
+```json
+{
+  "content": {
+    "creator": "@example:example.org",
+    "m.federate": true,
+    "predecessor": {
+      "event_id": "$something:example.org",
+      "room_id": "!oldroom:example.org"
+    },
+    "room_version": "1"
+  },
+  "event_id": "$143273582443PhrSn:example.org",
+  "room_id": "!636q39766251:example.com",
+  "sender": "@example:example.org",
+  "state_key": "",
+  "type": "m.room.create"
+}
+```
+
+The following `m.federate` values will NOT match:
+ * `"true"` (note the string value)
+ * `1` (do not cast types)
+
+**`event_property_contains`**
+
+This matches if an array property of an event exactly contains a value. Parameters:
+
+-   `key`: The [dot-separated path of the property](/appendices#dot-separated-property-paths)
+    of the event to match, e.g. `content.body`.
+
+-   `value`: The value to match against.
+
+The array values are matched exactly and only supports non-compound [canonical JSON](/appendices#canonical-json)
+values: strings, integers in the range of `[-(2**53)+1, (2**53)-1]`, booleans,
+and `null`. Array values not of those types are ignored.
+
+If the property specified by `key` is completely absent from the event, or is not
+an array, then the condition will not match.
+
+> **Note:** 
+For example, if `key` is `content.alt_aliases`, and `value` is `"#myroom:example.com"`,
+then the following event will match:
+
+```json
+{
+  "content": {
+    "alias": "#somewhere:localhost",
+    "alt_aliases": [
+      "#somewhere:example.org",
+      "#myroom:example.com"
+    ]
+  },
+  "event_id": "$143273582443PhrSn:example.org",
+  "origin_server_ts": 1432735824653,
+  "room_id": "!jEsUZKDJdhlrceRyVU:example.org",
+  "sender": "@example:example.org",
+  "state_key": "",
+  "type": "m.room.canonical_alias",
+  "unsigned": {
+    "age": 1234
+  }
+}
+```
+
+The following `alt_aliases` values will NOT match:
+ * `":example.com"` (partial values do not match)
+
+**`contains_display_name`**
+
+*(Changed in v1.17)*: this condition is deprecated and **should not be
+used in new push rules**.
+
+This matches messages where `content.body` contains the owner's display name in
+that room. This is a separate condition because display names may change and as such
+it would be hard to maintain a rule that matched the user's display name. This
+condition has no parameters.
+
+**`room_member_count`**
+
+This matches the current number of members in the room. Parameters:
+
+-   `is`: A decimal integer optionally prefixed by one of, `==`, `<`,
+    `>`, `>=` or `<=`. A prefix of `<` matches rooms where the member
+    count is strictly less than the given number and so forth. If no
+    prefix is present, this parameter defaults to `==`.
+
+**`sender_notification_permission`**
+
+This takes into account the current power levels in the room, ensuring
+the sender of the event has high enough power to trigger the
+notification.
+
+Parameters:
+
+-   `key`: A string that determines the power level the sender must have
+    to trigger notifications of a given type, such as `room`. Refer to
+    the [m.room.power\_levels](#mroompower_levels) event schema for information about what
+    the defaults are and how to interpret the event. The `key` is used
+    to look up the power level required to send a notification type from
+    the `notifications` object in the power level event content.
+
+#### Predefined Rules
+
+*(Changed in v1.17)*: the legacy default push rules that looked for
+mentions in the `body` of the event were removed.
+
+Homeservers can specify "server-default rules". They operate at a lower
+priority than "user-defined rules", except for the `.m.rule.master` rule
+which has always a higher priority than any other rule. The `rule_id`
+for all server-default rules MUST start with a dot (".") to identify
+them as "server-default". The following server-default rules are
+specified:
+
+##### Default Override Rules
+
+**`.m.rule.master`**
+
+Matches all events. This can be enabled to turn off all push
+notifications. Unlike other server-default rules, this one has always a
+higher priority than other rules, even user defined ones. By default this
+rule is disabled.
+
+Definition:
+
+```json
+{
+    "rule_id": ".m.rule.master",
+    "default": true,
+    "enabled": false,
+    "conditions": [],
+    "actions": []
+}
+```
+
+**`.m.rule.suppress_notices`**
+
+Matches messages with a `msgtype` of `notice`.
+
+Definition:
+
+```json
+{
+    "rule_id": ".m.rule.suppress_notices",
+    "default": true,
+    "enabled": true,
+    "conditions": [
+        {
+            "kind": "event_match",
+            "key": "content.msgtype",
+            "pattern": "m.notice"
+        }
+    ],
+    "actions": []
+}
+```
+
+**`.m.rule.invite_for_me`**
+
+Matches any invites to a new room for this user.
+
+Definition:
+
+```json
+{
+    "rule_id": ".m.rule.invite_for_me",
+    "default": true,
+    "enabled": true,
+    "conditions": [
+        {
+            "key": "type",
+            "kind": "event_match",
+            "pattern": "m.room.member"
+        },
+        {
+            "key": "content.membership",
+            "kind": "event_match",
+            "pattern": "invite"
+        },
+        {
+            "key": "state_key",
+            "kind": "event_match",
+            "pattern": "[the user's Matrix ID]"
+        }
+    ],
+    "actions": [
+       "notify",
+        {
+            "set_tweak": "sound",
+            "value": "default"
+        }
+    ]
+}
+```
+
+**`.m.rule.member_event`**
+
+Matches any `m.room.member_event`.
+
+Definition:
+
+```json
+{
+    "rule_id": ".m.rule.member_event",
+    "default": true,
+    "enabled": true,
+    "conditions": [
+        {
+            "key": "type",
+            "kind": "event_match",
+            "pattern": "m.room.member"
+        }
+    ],
+    "actions": []
+}
+```
+
+<a id="_m_rule_is_user_mention"></a> **`.m.rule.is_user_mention`**
+
+*(Added in v1.7)*
+
+Matches any message which contains the user's Matrix ID in the list of `user_ids`
+under the `m.mentions` property.
+
+Definition:
+
+```json
+{
+    "rule_id": ".m.rule.is_user_mention",
+    "default": true,
+    "enabled": true,
+    "conditions": [
+        {
+            "kind": "event_property_contains",
+            "key": "content.m\\.mentions.user_ids",
+            "value": "[the user's Matrix ID]"
+        }
+    ],
+    "actions": [
+        "notify",
+        {
+            "set_tweak": "sound",
+            "value": "default"
+        },
+        {
+            "set_tweak": "highlight"
+        }
+    ]
+}
+```
+
+<a id="_m_rule_is_room_mention"></a> **`.m.rule.is_room_mention`**
+
+*(Added in v1.7)*
+
+Matches any message from a sender with the proper power level with the `room`
+property of the `m.mentions` property set to `true`.
+
+Definition:
+
+```json
+{
+    "rule_id": ".m.rule.is_room_mention",
+    "default": true,
+    "enabled": true,
+    "conditions": [
+        {
+            "kind": "event_property_is",
+            "key": "content.m\\.mentions.room",
+            "value": true
+        },
+        {
+            "kind": "sender_notification_permission",
+            "key": "room"
+        }
+    ],
+    "actions": [
+        "notify",
+        {
+            "set_tweak": "highlight"
+        }
+    ]
+}
+```
+
+**<a id="mruletombstone"></a>`.m.rule.tombstone`**
+
+Matches any state event whose type is `m.room.tombstone`. This is
+intended to notify users of a room when it is upgraded, similar to what
+an `@room` notification would accomplish.
+
+Definition:
+
+```json
+{
+    "rule_id": ".m.rule.tombstone",
+    "default": true,
+    "enabled": true,
+    "conditions": [
+        {
+            "kind": "event_match",
+            "key": "type",
+            "pattern": "m.room.tombstone"
+        },
+        {
+            "kind": "event_match",
+            "key": "state_key",
+            "pattern": ""
+        }
+    ],
+    "actions": [
+        "notify",
+        {
+            "set_tweak": "highlight"
+        }
+    ]
+}
+```
+
+**<a id="mrulereaction"></a>`.m.rule.reaction`**
+
+*(Added in v1.7)*
+
+Matches any event whose type is `m.reaction`. This suppresses notifications for [`m.reaction`](#mreaction) events.
+
+Definition:
+
+```json
+{
+    "rule_id": ".m.rule.reaction",
+    "default": true,
+    "enabled": true,
+    "conditions": [
+        {
+            "kind": "event_match",
+            "key": "type",
+            "pattern": "m.reaction"
+        }
+    ],
+    "actions": []
+}
+```
+
+**`.m.rule.room.server_acl`**
+
+*(Added in v1.4)*
+
+Suppresses notifications for [`m.room.server_acl`](#mroomserver_acl) events.
+
+Definition:
+
+```json
+{
+    "rule_id": ".m.rule.room.server_acl",
+    "default": true,
+    "enabled": true,
+    "conditions": [
+        {
+            "kind": "event_match",
+            "key": "type",
+            "pattern": "m.room.server_acl"
+        },
+        {
+            "kind": "event_match",
+            "key": "state_key",
+            "pattern": ""
+        }
+    ],
+    "actions": []
+}
+```
+
+**`.m.rule.suppress_edits`**
+
+*(Added in v1.9)*
+
+Suppresses notifications related to [event replacements](#event-replacements).
+
+Definition:
+
+```json
+{
+    "rule_id": ".m.rule.suppress_edits",
+    "default": true,
+    "enabled": true,
+    "conditions": [
+        {
+            "kind": "event_property_is",
+            "key": "content.m\\.relates_to.rel_type",
+            "value": "m.replace"
+        }
+    ],
+    "actions": []
+}
+```
+
+##### Default Underride Rules
+
+**`.m.rule.call`**
+
+Matches any incoming VOIP call.
+
+Definition:
+
+```json
+{
+    "rule_id": ".m.rule.call",
+    "default": true,
+    "enabled": true,
+    "conditions": [
+        {
+            "key": "type",
+            "kind": "event_match",
+            "pattern": "m.call.invite"
+        }
+    ],
+    "actions": [
+        "notify",
+        {
+            "set_tweak": "sound",
+            "value": "ring"
+        }
+    ]
+}
+```
+
+**`.m.rule.encrypted_room_one_to_one`**
+
+Matches any encrypted event sent in a room with exactly two members.
+Unlike other push rules, this rule cannot be matched against the content
+of the event by nature of it being encrypted. This causes the rule to be
+an "all or nothing" match where it either matches *all* events that are
+encrypted (in 1:1 rooms) or none.
+
+Definition:
+
+```json
+{
+    "rule_id": ".m.rule.encrypted_room_one_to_one",
+    "default": true,
+    "enabled": true,
+    "conditions": [
+        {
+            "kind": "room_member_count",
+            "is": "2"
+        },
+        {
+            "kind": "event_match",
+            "key": "type",
+            "pattern": "m.room.encrypted"
+        }
+    ],
+    "actions": [
+        "notify",
+        {
+            "set_tweak": "sound",
+            "value": "default"
+        }
+    ]
+}
+```
+
+**`.m.rule.room_one_to_one`**
+
+Matches any message sent in a room with exactly two members.
+
+Definition:
+
+```json
+{
+    "rule_id": ".m.rule.room_one_to_one",
+    "default": true,
+    "enabled": true,
+    "conditions": [
+        {
+            "kind": "room_member_count",
+            "is": "2"
+        },
+        {
+            "kind": "event_match",
+            "key": "type",
+            "pattern": "m.room.message"
+        }
+    ],
+    "actions": [
+        "notify",
+        {
+            "set_tweak": "sound",
+            "value": "default"
+        }
+    ]
+}
+```
+
+**`.m.rule.message`**
+
+Matches all chat messages.
+
+Definition:
+
+```json
+{
+     "rule_id": ".m.rule.message",
+     "default": true,
+     "enabled": true,
+     "conditions": [
+         {
+             "kind": "event_match",
+             "key": "type",
+             "pattern": "m.room.message"
+         }
+     ],
+     "actions": [
+         "notify"
+     ]
+}
+```
+
+**`.m.rule.encrypted`**
+
+Matches all encrypted events. Unlike other push rules, this rule cannot
+be matched against the content of the event by nature of it being
+encrypted. This causes the rule to be an "all or nothing" match where it
+either matches *all* events that are encrypted (in group rooms) or none.
+
+Definition:
+
+```json
+{
+     "rule_id": ".m.rule.encrypted",
+     "default": true,
+     "enabled": true,
+     "conditions": [
+         {
+             "kind": "event_match",
+             "key": "type",
+             "pattern": "m.room.encrypted"
+         }
+     ],
+     "actions": [
+         "notify"
+     ]
+}
+```
+
+#### Push Rules: API
+
+Clients can retrieve, add, modify and remove push rules globally or
+per-device using the APIs below.
+
+### GET /pushrules/
+**Summary:** Retrieve all push rulesets.
+Retrieve all push rulesets for this user. Currently the only push ruleset
+defined is `global`.
+**Responses:**
+- **200**: All the push rulesets for this user.
+  ```typescript
+  {
+
+    /**
+    * The global ruleset.
+     */
+    global: {
+      content?: Array<{
+
+        /**
+        * The actions to perform when this rule is matched.
+         */
+        actions: any[];
+
+        /**
+        * Whether this is a default rule, or has been set explicitly.
+         */
+        default: boolean;
+
+        /**
+        * Whether the push rule is enabled or not.
+         */
+        enabled: boolean;
+
+        /**
+        * The ID of this rule.
+         */
+        rule_id: string;
+
+        /**
+        * The conditions that must hold true for an event in order for a rule to be
+        * applied to an event. A rule with no conditions always matches. Only
+        * applicable to `underride` and `override` rules.
+         */
+        conditions?: Array<{
+
+          /**
+          * The kind of condition to apply. See [conditions](/client-server-api/#conditions-1) for
+          * more information on the allowed kinds and how they work.
+           */
+          kind: string;
+
+          /**
+          * Required for `event_match`, `event_property_is` and `event_property_contains`
+          * conditions. The dot-separated field of the event to match.
+          * 
+          * Required for `sender_notification_permission` conditions. The field in
+          * the power level event the user needs a minimum power level for. Fields
+          * must be specified under the `notifications` property in the power level
+          * event's `content`.
+          * @example "content.body"
+           */
+          key?: string;
+
+          /**
+          * Required for `event_match` conditions. The [glob-style pattern](/appendices#glob-style-matching)
+          * to match against.
+           */
+          pattern?: string;
+
+          /**
+          * Required for `room_member_count` conditions. A decimal integer
+          * optionally prefixed by one of, ==, <, >, >= or <=. A prefix of < matches
+          * rooms where the member count is strictly less than the given number and
+          * so forth. If no prefix is present, this parameter defaults to ==.
+           */
+          is?: string;
+
+          /**
+          * Required for `event_property_is` and `event_property_contains` conditions.
+          * A non-compound [canonical JSON](/appendices#canonical-json) value to match
+          * against.
+           */
+          value?: any;
+        }>;
+
+        /**
+        * The [glob-style pattern](/appendices#glob-style-matching) to match against.
+        * Only applicable to `content` rules.
+         */
+        pattern?: string;
+      }>;
+      override?: Array<{
+
+        /**
+        * The actions to perform when this rule is matched.
+         */
+        actions: any[];
+
+        /**
+        * Whether this is a default rule, or has been set explicitly.
+         */
+        default: boolean;
+
+        /**
+        * Whether the push rule is enabled or not.
+         */
+        enabled: boolean;
+
+        /**
+        * The ID of this rule.
+         */
+        rule_id: string;
+
+        /**
+        * The conditions that must hold true for an event in order for a rule to be
+        * applied to an event. A rule with no conditions always matches. Only
+        * applicable to `underride` and `override` rules.
+         */
+        conditions?: Array<{
+
+          /**
+          * The kind of condition to apply. See [conditions](/client-server-api/#conditions-1) for
+          * more information on the allowed kinds and how they work.
+           */
+          kind: string;
+
+          /**
+          * Required for `event_match`, `event_property_is` and `event_property_contains`
+          * conditions. The dot-separated field of the event to match.
+          * 
+          * Required for `sender_notification_permission` conditions. The field in
+          * the power level event the user needs a minimum power level for. Fields
+          * must be specified under the `notifications` property in the power level
+          * event's `content`.
+          * @example "content.body"
+           */
+          key?: string;
+
+          /**
+          * Required for `event_match` conditions. The [glob-style pattern](/appendices#glob-style-matching)
+          * to match against.
+           */
+          pattern?: string;
+
+          /**
+          * Required for `room_member_count` conditions. A decimal integer
+          * optionally prefixed by one of, ==, <, >, >= or <=. A prefix of < matches
+          * rooms where the member count is strictly less than the given number and
+          * so forth. If no prefix is present, this parameter defaults to ==.
+           */
+          is?: string;
+
+          /**
+          * Required for `event_property_is` and `event_property_contains` conditions.
+          * A non-compound [canonical JSON](/appendices#canonical-json) value to match
+          * against.
+           */
+          value?: any;
+        }>;
+
+        /**
+        * The [glob-style pattern](/appendices#glob-style-matching) to match against.
+        * Only applicable to `content` rules.
+         */
+        pattern?: string;
+      }>;
+      room?: Array<{
+
+        /**
+        * The actions to perform when this rule is matched.
+         */
+        actions: any[];
+
+        /**
+        * Whether this is a default rule, or has been set explicitly.
+         */
+        default: boolean;
+
+        /**
+        * Whether the push rule is enabled or not.
+         */
+        enabled: boolean;
+
+        /**
+        * The ID of this rule.
+         */
+        rule_id: string;
+
+        /**
+        * The conditions that must hold true for an event in order for a rule to be
+        * applied to an event. A rule with no conditions always matches. Only
+        * applicable to `underride` and `override` rules.
+         */
+        conditions?: Array<{
+
+          /**
+          * The kind of condition to apply. See [conditions](/client-server-api/#conditions-1) for
+          * more information on the allowed kinds and how they work.
+           */
+          kind: string;
+
+          /**
+          * Required for `event_match`, `event_property_is` and `event_property_contains`
+          * conditions. The dot-separated field of the event to match.
+          * 
+          * Required for `sender_notification_permission` conditions. The field in
+          * the power level event the user needs a minimum power level for. Fields
+          * must be specified under the `notifications` property in the power level
+          * event's `content`.
+          * @example "content.body"
+           */
+          key?: string;
+
+          /**
+          * Required for `event_match` conditions. The [glob-style pattern](/appendices#glob-style-matching)
+          * to match against.
+           */
+          pattern?: string;
+
+          /**
+          * Required for `room_member_count` conditions. A decimal integer
+          * optionally prefixed by one of, ==, <, >, >= or <=. A prefix of < matches
+          * rooms where the member count is strictly less than the given number and
+          * so forth. If no prefix is present, this parameter defaults to ==.
+           */
+          is?: string;
+
+          /**
+          * Required for `event_property_is` and `event_property_contains` conditions.
+          * A non-compound [canonical JSON](/appendices#canonical-json) value to match
+          * against.
+           */
+          value?: any;
+        }>;
+
+        /**
+        * The [glob-style pattern](/appendices#glob-style-matching) to match against.
+        * Only applicable to `content` rules.
+         */
+        pattern?: string;
+      }>;
+      sender?: Array<{
+
+        /**
+        * The actions to perform when this rule is matched.
+         */
+        actions: any[];
+
+        /**
+        * Whether this is a default rule, or has been set explicitly.
+         */
+        default: boolean;
+
+        /**
+        * Whether the push rule is enabled or not.
+         */
+        enabled: boolean;
+
+        /**
+        * The ID of this rule.
+         */
+        rule_id: string;
+
+        /**
+        * The conditions that must hold true for an event in order for a rule to be
+        * applied to an event. A rule with no conditions always matches. Only
+        * applicable to `underride` and `override` rules.
+         */
+        conditions?: Array<{
+
+          /**
+          * The kind of condition to apply. See [conditions](/client-server-api/#conditions-1) for
+          * more information on the allowed kinds and how they work.
+           */
+          kind: string;
+
+          /**
+          * Required for `event_match`, `event_property_is` and `event_property_contains`
+          * conditions. The dot-separated field of the event to match.
+          * 
+          * Required for `sender_notification_permission` conditions. The field in
+          * the power level event the user needs a minimum power level for. Fields
+          * must be specified under the `notifications` property in the power level
+          * event's `content`.
+          * @example "content.body"
+           */
+          key?: string;
+
+          /**
+          * Required for `event_match` conditions. The [glob-style pattern](/appendices#glob-style-matching)
+          * to match against.
+           */
+          pattern?: string;
+
+          /**
+          * Required for `room_member_count` conditions. A decimal integer
+          * optionally prefixed by one of, ==, <, >, >= or <=. A prefix of < matches
+          * rooms where the member count is strictly less than the given number and
+          * so forth. If no prefix is present, this parameter defaults to ==.
+           */
+          is?: string;
+
+          /**
+          * Required for `event_property_is` and `event_property_contains` conditions.
+          * A non-compound [canonical JSON](/appendices#canonical-json) value to match
+          * against.
+           */
+          value?: any;
+        }>;
+
+        /**
+        * The [glob-style pattern](/appendices#glob-style-matching) to match against.
+        * Only applicable to `content` rules.
+         */
+        pattern?: string;
+      }>;
+      underride?: Array<{
+
+        /**
+        * The actions to perform when this rule is matched.
+         */
+        actions: any[];
+
+        /**
+        * Whether this is a default rule, or has been set explicitly.
+         */
+        default: boolean;
+
+        /**
+        * Whether the push rule is enabled or not.
+         */
+        enabled: boolean;
+
+        /**
+        * The ID of this rule.
+         */
+        rule_id: string;
+
+        /**
+        * The conditions that must hold true for an event in order for a rule to be
+        * applied to an event. A rule with no conditions always matches. Only
+        * applicable to `underride` and `override` rules.
+         */
+        conditions?: Array<{
+
+          /**
+          * The kind of condition to apply. See [conditions](/client-server-api/#conditions-1) for
+          * more information on the allowed kinds and how they work.
+           */
+          kind: string;
+
+          /**
+          * Required for `event_match`, `event_property_is` and `event_property_contains`
+          * conditions. The dot-separated field of the event to match.
+          * 
+          * Required for `sender_notification_permission` conditions. The field in
+          * the power level event the user needs a minimum power level for. Fields
+          * must be specified under the `notifications` property in the power level
+          * event's `content`.
+          * @example "content.body"
+           */
+          key?: string;
+
+          /**
+          * Required for `event_match` conditions. The [glob-style pattern](/appendices#glob-style-matching)
+          * to match against.
+           */
+          pattern?: string;
+
+          /**
+          * Required for `room_member_count` conditions. A decimal integer
+          * optionally prefixed by one of, ==, <, >, >= or <=. A prefix of < matches
+          * rooms where the member count is strictly less than the given number and
+          * so forth. If no prefix is present, this parameter defaults to ==.
+           */
+          is?: string;
+
+          /**
+          * Required for `event_property_is` and `event_property_contains` conditions.
+          * A non-compound [canonical JSON](/appendices#canonical-json) value to match
+          * against.
+           */
+          value?: any;
+        }>;
+
+        /**
+        * The [glob-style pattern](/appendices#glob-style-matching) to match against.
+        * Only applicable to `content` rules.
+         */
+        pattern?: string;
+      }>;
+    };
+  }
+  ```
+
+### GET /pushrules/global/
+**Summary:** Retrieve all push rules.
+Retrieve all push rules for this user.
+**Responses:**
+- **200**: All the push rules for this user.
+  ```typescript
+  {
+    content?: Array<{
+
+      /**
+      * The actions to perform when this rule is matched.
+       */
+      actions: any[];
+
+      /**
+      * Whether this is a default rule, or has been set explicitly.
+       */
+      default: boolean;
+
+      /**
+      * Whether the push rule is enabled or not.
+       */
+      enabled: boolean;
+
+      /**
+      * The ID of this rule.
+       */
+      rule_id: string;
+
+      /**
+      * The conditions that must hold true for an event in order for a rule to be
+      * applied to an event. A rule with no conditions always matches. Only
+      * applicable to `underride` and `override` rules.
+       */
+      conditions?: Array<{
+
+        /**
+        * The kind of condition to apply. See [conditions](/client-server-api/#conditions-1) for
+        * more information on the allowed kinds and how they work.
+         */
+        kind: string;
+
+        /**
+        * Required for `event_match`, `event_property_is` and `event_property_contains`
+        * conditions. The dot-separated field of the event to match.
+        * 
+        * Required for `sender_notification_permission` conditions. The field in
+        * the power level event the user needs a minimum power level for. Fields
+        * must be specified under the `notifications` property in the power level
+        * event's `content`.
+        * @example "content.body"
+         */
+        key?: string;
+
+        /**
+        * Required for `event_match` conditions. The [glob-style pattern](/appendices#glob-style-matching)
+        * to match against.
+         */
+        pattern?: string;
+
+        /**
+        * Required for `room_member_count` conditions. A decimal integer
+        * optionally prefixed by one of, ==, <, >, >= or <=. A prefix of < matches
+        * rooms where the member count is strictly less than the given number and
+        * so forth. If no prefix is present, this parameter defaults to ==.
+         */
+        is?: string;
+
+        /**
+        * Required for `event_property_is` and `event_property_contains` conditions.
+        * A non-compound [canonical JSON](/appendices#canonical-json) value to match
+        * against.
+         */
+        value?: any;
+      }>;
+
+      /**
+      * The [glob-style pattern](/appendices#glob-style-matching) to match against.
+      * Only applicable to `content` rules.
+       */
+      pattern?: string;
+    }>;
+    override?: Array<{
+
+      /**
+      * The actions to perform when this rule is matched.
+       */
+      actions: any[];
+
+      /**
+      * Whether this is a default rule, or has been set explicitly.
+       */
+      default: boolean;
+
+      /**
+      * Whether the push rule is enabled or not.
+       */
+      enabled: boolean;
+
+      /**
+      * The ID of this rule.
+       */
+      rule_id: string;
+
+      /**
+      * The conditions that must hold true for an event in order for a rule to be
+      * applied to an event. A rule with no conditions always matches. Only
+      * applicable to `underride` and `override` rules.
+       */
+      conditions?: Array<{
+
+        /**
+        * The kind of condition to apply. See [conditions](/client-server-api/#conditions-1) for
+        * more information on the allowed kinds and how they work.
+         */
+        kind: string;
+
+        /**
+        * Required for `event_match`, `event_property_is` and `event_property_contains`
+        * conditions. The dot-separated field of the event to match.
+        * 
+        * Required for `sender_notification_permission` conditions. The field in
+        * the power level event the user needs a minimum power level for. Fields
+        * must be specified under the `notifications` property in the power level
+        * event's `content`.
+        * @example "content.body"
+         */
+        key?: string;
+
+        /**
+        * Required for `event_match` conditions. The [glob-style pattern](/appendices#glob-style-matching)
+        * to match against.
+         */
+        pattern?: string;
+
+        /**
+        * Required for `room_member_count` conditions. A decimal integer
+        * optionally prefixed by one of, ==, <, >, >= or <=. A prefix of < matches
+        * rooms where the member count is strictly less than the given number and
+        * so forth. If no prefix is present, this parameter defaults to ==.
+         */
+        is?: string;
+
+        /**
+        * Required for `event_property_is` and `event_property_contains` conditions.
+        * A non-compound [canonical JSON](/appendices#canonical-json) value to match
+        * against.
+         */
+        value?: any;
+      }>;
+
+      /**
+      * The [glob-style pattern](/appendices#glob-style-matching) to match against.
+      * Only applicable to `content` rules.
+       */
+      pattern?: string;
+    }>;
+    room?: Array<{
+
+      /**
+      * The actions to perform when this rule is matched.
+       */
+      actions: any[];
+
+      /**
+      * Whether this is a default rule, or has been set explicitly.
+       */
+      default: boolean;
+
+      /**
+      * Whether the push rule is enabled or not.
+       */
+      enabled: boolean;
+
+      /**
+      * The ID of this rule.
+       */
+      rule_id: string;
+
+      /**
+      * The conditions that must hold true for an event in order for a rule to be
+      * applied to an event. A rule with no conditions always matches. Only
+      * applicable to `underride` and `override` rules.
+       */
+      conditions?: Array<{
+
+        /**
+        * The kind of condition to apply. See [conditions](/client-server-api/#conditions-1) for
+        * more information on the allowed kinds and how they work.
+         */
+        kind: string;
+
+        /**
+        * Required for `event_match`, `event_property_is` and `event_property_contains`
+        * conditions. The dot-separated field of the event to match.
+        * 
+        * Required for `sender_notification_permission` conditions. The field in
+        * the power level event the user needs a minimum power level for. Fields
+        * must be specified under the `notifications` property in the power level
+        * event's `content`.
+        * @example "content.body"
+         */
+        key?: string;
+
+        /**
+        * Required for `event_match` conditions. The [glob-style pattern](/appendices#glob-style-matching)
+        * to match against.
+         */
+        pattern?: string;
+
+        /**
+        * Required for `room_member_count` conditions. A decimal integer
+        * optionally prefixed by one of, ==, <, >, >= or <=. A prefix of < matches
+        * rooms where the member count is strictly less than the given number and
+        * so forth. If no prefix is present, this parameter defaults to ==.
+         */
+        is?: string;
+
+        /**
+        * Required for `event_property_is` and `event_property_contains` conditions.
+        * A non-compound [canonical JSON](/appendices#canonical-json) value to match
+        * against.
+         */
+        value?: any;
+      }>;
+
+      /**
+      * The [glob-style pattern](/appendices#glob-style-matching) to match against.
+      * Only applicable to `content` rules.
+       */
+      pattern?: string;
+    }>;
+    sender?: Array<{
+
+      /**
+      * The actions to perform when this rule is matched.
+       */
+      actions: any[];
+
+      /**
+      * Whether this is a default rule, or has been set explicitly.
+       */
+      default: boolean;
+
+      /**
+      * Whether the push rule is enabled or not.
+       */
+      enabled: boolean;
+
+      /**
+      * The ID of this rule.
+       */
+      rule_id: string;
+
+      /**
+      * The conditions that must hold true for an event in order for a rule to be
+      * applied to an event. A rule with no conditions always matches. Only
+      * applicable to `underride` and `override` rules.
+       */
+      conditions?: Array<{
+
+        /**
+        * The kind of condition to apply. See [conditions](/client-server-api/#conditions-1) for
+        * more information on the allowed kinds and how they work.
+         */
+        kind: string;
+
+        /**
+        * Required for `event_match`, `event_property_is` and `event_property_contains`
+        * conditions. The dot-separated field of the event to match.
+        * 
+        * Required for `sender_notification_permission` conditions. The field in
+        * the power level event the user needs a minimum power level for. Fields
+        * must be specified under the `notifications` property in the power level
+        * event's `content`.
+        * @example "content.body"
+         */
+        key?: string;
+
+        /**
+        * Required for `event_match` conditions. The [glob-style pattern](/appendices#glob-style-matching)
+        * to match against.
+         */
+        pattern?: string;
+
+        /**
+        * Required for `room_member_count` conditions. A decimal integer
+        * optionally prefixed by one of, ==, <, >, >= or <=. A prefix of < matches
+        * rooms where the member count is strictly less than the given number and
+        * so forth. If no prefix is present, this parameter defaults to ==.
+         */
+        is?: string;
+
+        /**
+        * Required for `event_property_is` and `event_property_contains` conditions.
+        * A non-compound [canonical JSON](/appendices#canonical-json) value to match
+        * against.
+         */
+        value?: any;
+      }>;
+
+      /**
+      * The [glob-style pattern](/appendices#glob-style-matching) to match against.
+      * Only applicable to `content` rules.
+       */
+      pattern?: string;
+    }>;
+    underride?: Array<{
+
+      /**
+      * The actions to perform when this rule is matched.
+       */
+      actions: any[];
+
+      /**
+      * Whether this is a default rule, or has been set explicitly.
+       */
+      default: boolean;
+
+      /**
+      * Whether the push rule is enabled or not.
+       */
+      enabled: boolean;
+
+      /**
+      * The ID of this rule.
+       */
+      rule_id: string;
+
+      /**
+      * The conditions that must hold true for an event in order for a rule to be
+      * applied to an event. A rule with no conditions always matches. Only
+      * applicable to `underride` and `override` rules.
+       */
+      conditions?: Array<{
+
+        /**
+        * The kind of condition to apply. See [conditions](/client-server-api/#conditions-1) for
+        * more information on the allowed kinds and how they work.
+         */
+        kind: string;
+
+        /**
+        * Required for `event_match`, `event_property_is` and `event_property_contains`
+        * conditions. The dot-separated field of the event to match.
+        * 
+        * Required for `sender_notification_permission` conditions. The field in
+        * the power level event the user needs a minimum power level for. Fields
+        * must be specified under the `notifications` property in the power level
+        * event's `content`.
+        * @example "content.body"
+         */
+        key?: string;
+
+        /**
+        * Required for `event_match` conditions. The [glob-style pattern](/appendices#glob-style-matching)
+        * to match against.
+         */
+        pattern?: string;
+
+        /**
+        * Required for `room_member_count` conditions. A decimal integer
+        * optionally prefixed by one of, ==, <, >, >= or <=. A prefix of < matches
+        * rooms where the member count is strictly less than the given number and
+        * so forth. If no prefix is present, this parameter defaults to ==.
+         */
+        is?: string;
+
+        /**
+        * Required for `event_property_is` and `event_property_contains` conditions.
+        * A non-compound [canonical JSON](/appendices#canonical-json) value to match
+        * against.
+         */
+        value?: any;
+      }>;
+
+      /**
+      * The [glob-style pattern](/appendices#glob-style-matching) to match against.
+      * Only applicable to `content` rules.
+       */
+      pattern?: string;
+    }>;
+  }
+  ```
+
+### GET /pushrules/global/{kind}/{ruleId}
+**Summary:** Retrieve a push rule.
+Retrieve a single specified push rule.
+**Path Parameters:**
+- `kind` (Required): `"override" | "underride" | "sender" | "room" | "content"` - The kind of rule
+- `ruleId` (Required): `string` - The identifier for the rule.
+**Responses:**
+- **200**: The specific push rule. This will also include keys specific to the
+rule itself such as the rule's `actions` and `conditions` if set.
+  ```typescript
+  {
+
+    /**
+    * The actions to perform when this rule is matched.
+     */
+    actions: any[];
+
+    /**
+    * Whether this is a default rule, or has been set explicitly.
+     */
+    default: boolean;
+
+    /**
+    * Whether the push rule is enabled or not.
+     */
+    enabled: boolean;
+
+    /**
+    * The ID of this rule.
+     */
+    rule_id: string;
+
+    /**
+    * The conditions that must hold true for an event in order for a rule to be
+    * applied to an event. A rule with no conditions always matches. Only
+    * applicable to `underride` and `override` rules.
+     */
+    conditions?: Array<{
+
+      /**
+      * The kind of condition to apply. See [conditions](/client-server-api/#conditions-1) for
+      * more information on the allowed kinds and how they work.
+       */
+      kind: string;
+
+      /**
+      * Required for `event_match`, `event_property_is` and `event_property_contains`
+      * conditions. The dot-separated field of the event to match.
+      * 
+      * Required for `sender_notification_permission` conditions. The field in
+      * the power level event the user needs a minimum power level for. Fields
+      * must be specified under the `notifications` property in the power level
+      * event's `content`.
+      * @example "content.body"
+       */
+      key?: string;
+
+      /**
+      * Required for `event_match` conditions. The [glob-style pattern](/appendices#glob-style-matching)
+      * to match against.
+       */
+      pattern?: string;
+
+      /**
+      * Required for `room_member_count` conditions. A decimal integer
+      * optionally prefixed by one of, ==, <, >, >= or <=. A prefix of < matches
+      * rooms where the member count is strictly less than the given number and
+      * so forth. If no prefix is present, this parameter defaults to ==.
+       */
+      is?: string;
+
+      /**
+      * Required for `event_property_is` and `event_property_contains` conditions.
+      * A non-compound [canonical JSON](/appendices#canonical-json) value to match
+      * against.
+       */
+      value?: any;
+    }>;
+
+    /**
+    * The [glob-style pattern](/appendices#glob-style-matching) to match against.
+    * Only applicable to `content` rules.
+     */
+    pattern?: string;
+  }
+  ```
+- **404**: The push rule does not exist.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### DELETE /pushrules/global/{kind}/{ruleId}
+**Summary:** Delete a push rule.
+This endpoint removes the push rule defined in the path.
+**Path Parameters:**
+- `kind` (Required): `"override" | "underride" | "sender" | "room" | "content"` - The kind of rule
+- `ruleId` (Required): `string` - The identifier for the rule.
+**Responses:**
+- **200**: The push rule was deleted.
+  ```typescript
+  {}
+  ```
+- **404**: The push rule does not exist.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### PUT /pushrules/global/{kind}/{ruleId}
+**Summary:** Add or change a push rule.
+This endpoint allows the creation and modification of user defined push
+rules.
+
+If a rule with the same `rule_id` already exists among rules of the same
+kind, it is updated with the new parameters, otherwise a new rule is
+created.
+
+If both `after` and `before` are provided, the new or updated rule must
+be the next most important rule with respect to the rule identified by
+`before`.
+
+If neither `after` nor `before` are provided and the rule is created, it
+should be added as the most important user defined rule among rules of
+the same kind.
+
+When creating push rules, they MUST be enabled by default.
+**Path Parameters:**
+- `kind` (Required): `"override" | "underride" | "sender" | "room" | "content"` - The kind of rule
+- `ruleId` (Required): `string` - The identifier for the rule. If the string starts with a dot ("."),
+the request MUST be rejected as this is reserved for server-default
+rules. Slashes ("/") and backslashes ("\\") are also not allowed.
+**Query Parameters:**
+- `before`: `string` - Use 'before' with a `rule_id` as its value to make the new rule the
+next-most important rule with respect to the given user defined rule.
+It is not possible to add a rule relative to a predefined server rule.
+- `after`: `string` - This makes the new rule the next-less important rule relative to the
+given user defined rule. It is not possible to add a rule relative
+to a predefined server rule.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * The action(s) to perform when the conditions for this rule are met.
+   */
+  actions: any[];
+
+  /**
+  * The conditions that must hold true for an event in order for a
+  * rule to be applied to an event. A rule with no conditions
+  * always matches. Only applicable to `underride` and `override` rules.
+   */
+  conditions?: Array<{
+
+    /**
+    * The kind of condition to apply. See [conditions](/client-server-api/#conditions-1) for
+    * more information on the allowed kinds and how they work.
+     */
+    kind: string;
+
+    /**
+    * Required for `event_match`, `event_property_is` and `event_property_contains`
+    * conditions. The dot-separated field of the event to match.
+    * 
+    * Required for `sender_notification_permission` conditions. The field in
+    * the power level event the user needs a minimum power level for. Fields
+    * must be specified under the `notifications` property in the power level
+    * event's `content`.
+    * @example "content.body"
+     */
+    key?: string;
+
+    /**
+    * Required for `event_match` conditions. The [glob-style pattern](/appendices#glob-style-matching)
+    * to match against.
+     */
+    pattern?: string;
+
+    /**
+    * Required for `room_member_count` conditions. A decimal integer
+    * optionally prefixed by one of, ==, <, >, >= or <=. A prefix of < matches
+    * rooms where the member count is strictly less than the given number and
+    * so forth. If no prefix is present, this parameter defaults to ==.
+     */
+    is?: string;
+
+    /**
+    * Required for `event_property_is` and `event_property_contains` conditions.
+    * A non-compound [canonical JSON](/appendices#canonical-json) value to match
+    * against.
+     */
+    value?: any;
+  }>;
+
+  /**
+  * Only applicable to `content` rules. The glob-style pattern to match against.
+   */
+  pattern?: string;
+}
+```
+**Responses:**
+- **200**: The push rule was created/updated.
+  ```typescript
+  {}
+  ```
+- **400**: There was a problem configuring this push rule.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **404**: The push rule does not exist (when updating a push rule).
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **429**: This request was rate-limited.
+  ```typescript
+  {
+
+    /**
+    * The M_LIMIT_EXCEEDED error code
+    * @example "M_LIMIT_EXCEEDED"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "Too many requests"
+     */
+    error?: string;
+
+    /**
+    * The amount of time in milliseconds the client should wait
+    * before trying the request again.
+    * @example 2000
+     */
+    retry_after_ms?: number;
+  }
+  ```
+
+### GET /pushrules/global/{kind}/{ruleId}/enabled
+**Summary:** Get whether a push rule is enabled
+This endpoint gets whether the specified push rule is enabled.
+**Path Parameters:**
+- `kind` (Required): `"override" | "underride" | "sender" | "room" | "content"` - The kind of rule
+- `ruleId` (Required): `string` - The identifier for the rule.
+**Responses:**
+- **200**: Whether the push rule is enabled.
+  ```typescript
+  {
+
+    /**
+    * Whether the push rule is enabled or not.
+     */
+    enabled: boolean;
+  }
+  ```
+- **404**: The push rule does not exist.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### PUT /pushrules/global/{kind}/{ruleId}/enabled
+**Summary:** Enable or disable a push rule.
+This endpoint allows clients to enable or disable the specified push rule.
+**Path Parameters:**
+- `kind` (Required): `"override" | "underride" | "sender" | "room" | "content"` - The kind of rule
+- `ruleId` (Required): `string` - The identifier for the rule.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * Whether the push rule is enabled or not.
+   */
+  enabled: boolean;
+}
+```
+**Responses:**
+- **200**: The push rule was enabled or disabled.
+  ```typescript
+  {}
+  ```
+- **404**: The push rule does not exist.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### GET /pushrules/global/{kind}/{ruleId}/actions
+**Summary:** The actions for a push rule
+This endpoint get the actions for the specified push rule.
+**Path Parameters:**
+- `kind` (Required): `"override" | "underride" | "sender" | "room" | "content"` - The kind of rule
+- `ruleId` (Required): `string` - The identifier for the rule.
+**Responses:**
+- **200**: The actions for this push rule.
+  ```typescript
+  {
+
+    /**
+    * The action(s) to perform for this rule.
+     */
+    actions: any[];
+  }
+  ```
+- **404**: The push rule does not exist.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+### PUT /pushrules/global/{kind}/{ruleId}/actions
+**Summary:** Set the actions for a push rule.
+This endpoint allows clients to change the actions of a push rule.
+This can be used to change the actions of builtin rules.
+**Path Parameters:**
+- `kind` (Required): `"override" | "underride" | "sender" | "room" | "content"` - The kind of rule
+- `ruleId` (Required): `string` - The identifier for the rule.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * The action(s) to perform for this rule.
+   */
+  actions: any[];
+}
+```
+**Responses:**
+- **200**: The actions for the push rule were set.
+  ```typescript
+  {}
+  ```
+- **404**: The push rule does not exist.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+
+#### Push Rules: Events
+
+When a user changes their push rules a `m.push_rules` event is sent to
+all clients in the `account_data` section of their next [`/sync`](#get_matrixclientv3sync) request.
+The content of the event is the current push rules for the user.
+
+### Event `m.push_rules`
+```typescript
+type m_push_rules = {
+
+  /**
+  * The fields in this object will vary depending on the type of event. When interacting with the REST API, this is the HTTP body.
+   */
+  content: {};
+
+  /**
+  * The type of event, as defined by [the event type specification](/client-server-api/#types-of-room-events).
+   */
+  type: string;
+};
+```
+
+##### Examples
+
+To create a rule that suppresses notifications for the room with ID
+`!dj234r78wl45Gh4D:matrix.org`:
+
+    curl -X PUT -H "Content-Type: application/json" "https://example.com/_matrix/client/v3/pushrules/global/room/%21dj234r78wl45Gh4D%3Amatrix.org?access_token=123456" -d \
+    '{
+       "actions" : []
+     }'
+
+To suppress notifications for the user `@spambot:matrix.org`:
+
+    curl -X PUT -H "Content-Type: application/json" "https://example.com/_matrix/client/v3/pushrules/global/sender/%40spambot%3Amatrix.org?access_token=123456" -d \
+    '{
+       "actions" : []
+     }'
+
+To always notify for messages that contain the work 'cake' and set a
+specific sound (with a rule\_id of `SSByZWFsbHkgbGlrZSBjYWtl`):
+
+    curl -X PUT -H "Content-Type: application/json" "https://example.com/_matrix/client/v3/pushrules/global/content/SSByZWFsbHkgbGlrZSBjYWtl?access_token=123456" -d \
+    '{
+       "pattern": "cake",
+       "actions" : ["notify", {"set_tweak":"sound", "value":"cakealarm.wav"}]
+     }'
+
+To add a rule suppressing notifications for messages starting with
+'cake' but ending with 'lie', superseding the previous rule:
+
+    curl -X PUT -H "Content-Type: application/json" "https://example.com/_matrix/client/v3/pushrules/global/content/U3BvbmdlIGNha2UgaXMgYmVzdA?access_token=123456&before=SSByZWFsbHkgbGlrZSBjYWtl" -d \
+    '{
+       "pattern": "cake*lie",
+       "actions" : ["notify"]
+     }'
+
+To add a custom sound for notifications messages containing the word
+'beer' in any rooms with 10 members or fewer (with greater importance
+than the room, sender and content rules):
+
+    curl -X PUT -H "Content-Type: application/json" "https://example.com/_matrix/client/v3/pushrules/global/override/U2VlIHlvdSBpbiBUaGUgRHVrZQ?access_token=123456" -d \
+    '{
+       "conditions": [
+         {"kind": "event_match", "key": "content.body", "pattern": "beer" },
+         {"kind": "room_member_count", "is": "<=10"}
+       ],
+       "actions" : [
+         "notify",
+         {"set_tweak":"sound", "value":"beeroclock.wav"}
+       ]
+     }'
+
+#### Client behaviour
+
+Clients MUST configure a Pusher before they will receive push
+notifications. There is a single API endpoint for this, as described
+below.
+
+### GET /pushers
+**Summary:** Gets the current pushers for the authenticated user
+Gets all currently active pushers for the authenticated user.
+**Responses:**
+- **200**: The pushers for this user.
+  ```typescript
+  {
+
+    /**
+    * An array containing the current pushers for the user
+     */
+    pushers?: Array<{
+
+      /**
+      * This is a unique identifier for this pusher. See `/set` for
+      * more detail.
+      * Max length, 512 bytes.
+       */
+      pushkey: string;
+
+      /**
+      * The kind of pusher. `"http"` is a pusher that
+      * sends HTTP pokes.
+       */
+      kind: string;
+
+      /**
+      * This is a reverse-DNS style identifier for the application.
+      * Max length, 64 chars.
+       */
+      app_id: string;
+
+      /**
+      * A string that will allow the user to identify what application
+      * owns this pusher.
+       */
+      app_display_name: string;
+
+      /**
+      * A string that will allow the user to identify what device owns
+      * this pusher.
+       */
+      device_display_name: string;
+
+      /**
+      * This string determines which set of device specific rules this
+      * pusher executes.
+       */
+      profile_tag?: string;
+
+      /**
+      * The preferred language for receiving notifications (e.g. 'en'
+      * or 'en-US')
+       */
+      lang: string;
+
+      /**
+      * A dictionary of information for the pusher implementation
+      * itself.
+       */
+      data: {
+
+        /**
+        * Required if `kind` is `http`. The URL to use to send
+        * notifications to.
+         */
+        url?: string /* uri */;
+
+        /**
+        * The format to use when sending notifications to the Push
+        * Gateway.
+         */
+        format?: string;
+      };
+    }>;
+  }
+  ```
+
+### POST /pushers/set
+**Summary:** Modify a pusher for this user on the homeserver.
+This endpoint allows the creation, modification and deletion of [pushers](/client-server-api/#push-notifications)
+for this user ID. The behaviour of this endpoint varies depending on the
+values in the JSON body.
+
+If `kind` is not `null`, the pusher with this `app_id` and `pushkey`
+for this user is updated, or it is created if it doesn't exist. If
+`kind` is `null`, the pusher with this `app_id` and `pushkey` for this
+user is deleted.
+**Request Body (JSON):**
+```typescript
+{
+
+  /**
+  * This is a unique identifier for this pusher. The value you
+  * should use for this is the routing or destination address
+  * information for the notification, for example, the APNS token
+  * for APNS or the Registration ID for GCM. If your notification
+  * client has no such concept, use any unique identifier.
+  * Max length, 512 bytes.
+  * 
+  * If the `kind` is `"email"`, this is the email address to
+  * send notifications to.
+   */
+  pushkey: string;
+
+  /**
+  * The kind of pusher to configure. `"http"` makes a pusher that
+  * sends HTTP pokes. `"email"` makes a pusher that emails the
+  * user with unread notifications. `null` deletes the pusher.
+   */
+  kind: any;
+
+  /**
+  * This is a reverse-DNS style identifier for the application.
+  * It is recommended that this end with the platform, such that
+  * different platform versions get different app identifiers.
+  * Max length, 64 chars.
+  * 
+  * If the `kind` is `"email"`, this is `"m.email"`.
+   */
+  app_id: string;
+
+  /**
+  * Required if `kind` is not `null`. A string that will allow the
+  * user to identify what application owns this pusher.
+   */
+  app_display_name?: string;
+
+  /**
+  * Required if `kind` is not `null`. A string that will allow the
+  * user to identify what device owns this pusher.
+   */
+  device_display_name?: string;
+
+  /**
+  * This string determines which set of device specific rules this
+  * pusher executes.
+   */
+  profile_tag?: string;
+
+  /**
+  * Required if `kind` is not `null`. The preferred language for
+  * receiving notifications (e.g. 'en' or 'en-US').
+   */
+  lang?: string;
+
+  /**
+  * Required if `kind` is not `null`. A dictionary of information
+  * for the pusher implementation itself.
+  * 
+  * If `kind` is `http`, this MUST contain `url` which is the URL
+  * to use for sending notifications. Clients MAY use this object
+  * to pass custom data to their push gateway. Servers MUST forward
+  * the entire content including `format` and any custom keys but excluding `url`
+  * when calling [`/_matrix/push/v1/notify`](/push-gateway-api/#post_matrixpushv1notify).
+   */
+  data?: {
+
+    /**
+    * Required if `kind` is `http`. The URL to use for sending
+    * notifications. MUST be an HTTPS URL with a path of
+    * `/_matrix/push/v1/notify`.
+    * @example "https://push-gateway.location.here/_matrix/push/v1/notify"
+     */
+    url?: string /* uri */;
+
+    /**
+    * The format in which to send notifications to the push gateway
+    * if the `kind` is `http`. The details about what fields the
+    * homeserver should include are defined in the
+    * [Push Gateway Specification](/push-gateway-api/). If omitted,
+    * the server is expected to populate all of the event-related fields
+    * specified in [`/_matrix/push/v1/notify`](/push-gateway-api/#post_matrixpushv1notify).
+     */
+    format?: "event_id_only";
+  };
+
+  /**
+  * If true, the homeserver should add another pusher with the
+  * given pushkey and App ID in addition to any others with
+  * different user IDs. Otherwise, the homeserver must remove any
+  * other pushers with the same App ID and pushkey for different
+  * users. The default is `false`.
+   */
+  append?: boolean;
+}
+```
+**Responses:**
+- **200**: The pusher was set.
+  ```typescript
+  {}
+  ```
+- **400**: One or more of the pusher values were invalid.
+  ```typescript
+  {
+
+    /**
+    * An error code.
+    * @example "M_UNKNOWN"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "An unknown error occurred"
+     */
+    error?: string;
+  }
+  ```
+- **429**: This request was rate-limited.
+  ```typescript
+  {
+
+    /**
+    * The M_LIMIT_EXCEEDED error code
+    * @example "M_LIMIT_EXCEEDED"
+     */
+    errcode: string;
+
+    /**
+    * A human-readable error message.
+    * @example "Too many requests"
+     */
+    error?: string;
+
+    /**
+    * The amount of time in milliseconds the client should wait
+    * before trying the request again.
+    * @example 2000
+     */
+    retry_after_ms?: number;
+  }
+  ```
+
+##### Listing Notifications
+
+A client can retrieve a list of events that it has been notified about.
+This may be useful so that users can see a summary of what important
+messages they have received.
+
+### GET /notifications
+**Summary:** Gets a list of events that the user has been notified about
+This API is used to paginate through the list of events that the
+user has been, or would have been notified about.
+**Query Parameters:**
+- `from`: `string` - Pagination token to continue from. This should be the `next_token`
+returned from an earlier call to this endpoint.
+- `limit`: `number` - Limit on the number of events to return in this request.
+- `only`: `string` - Allows basic filtering of events returned. Supply `highlight`
+to return only events where the notification had the highlight
+tweak set.
+**Responses:**
+- **200**: A batch of events is being returned
+  ```typescript
+  {
+
+    /**
+    * The token to supply in the `from` param of the next
+    * `/notifications` request in order to request more
+    * events. If this is absent, there are no more results.
+     */
+    next_token?: string;
+
+    /**
+    * The list of events that triggered notifications.
+     */
+    notifications: Array<{
+
+      /**
+      * The action(s) to perform when the conditions for this rule are met.
+      * See [Push Rules: API](/client-server-api/#push-rules-api).
+       */
+      actions: any[];
+
+      /**
+      * The Event object for the event that triggered the notification.
+       */
+      event: {
+
+        /**
+        * The globally unique identifier for this event.
+        * @example "$26RqwJMLw-yds1GAH_QxjHRC1Da9oasK0e5VLnck_45"
+         */
+        event_id: string /* mx-event-id */;
+
+        /**
+        * The type of the event.
+        * @example "m.room.member"
+         */
+        type: string;
+
+        /**
+        * Present if, and only if, this event is a *state* event. The key making
+        * this piece of state unique in the room. Note that it is often an empty
+        * string.
+        * 
+        * State keys starting with an `@` are reserved for referencing user IDs, such
+        * as room members. With the exception of a few events, state events set with a
+        * given user's ID as the state key MUST only be set by that user.
+        * @example "@user:example.org"
+         */
+        state_key?: string;
+
+        /**
+        * Contains the fully-qualified ID of the user who sent this event.
+        * @example "@example:example.org"
+         */
+        sender: string /* mx-user-id */;
+
+        /**
+        * Timestamp (in milliseconds since the unix epoch) on originating homeserver
+        * when this event was sent.
+        * @example 1632489532305
+         */
+        origin_server_ts: number /* int64 */;
+
+        /**
+        * The body of this event, as created by the client which sent it.
+        * @example {"membership": "join"}
+         */
+        content: {};
+
+        /**
+        * Contains optional extra information about the event.
+         */
+        unsigned?: {
+
+          /**
+          * The time in milliseconds that has elapsed since the event was sent. This field is generated by the local homeserver, and may be incorrect if the local time on at least one of the two servers is out of sync, which can cause the age to either be negative or greater than it actually is.
+          * @example 1567437
+           */
+          age?: number /* int64 */;
+
+          /**
+          * The event that redacted this event, if any.
+          * @example {"type": "m.room.redaction", "sender": "@moderator:example.org", "content": {"reason": "spam"}, "redacts": "$26RqwJMLw-yds1GAH_QxjHRC1Da9oasK0e5VLnck_45", "event_id": "$Nhl3rsgHMjk-DjMJANawr9HHAhLg4GcoTYrSiYYGqEE", "origin_server_ts": 1632491098485, "unsigned": {"age": 1257, "membership": "leave"}}
+           */
+          redacted_because?: {};
+
+          /**
+          * The client-supplied [transaction ID](/client-server-api/#transaction-identifiers), for example, provided via
+          * `PUT /_matrix/client/v3/rooms/{roomId}/send/{eventType}/{txnId}`,
+          * if the client being given the event is the same one which sent it.
+           */
+          transaction_id?: string;
+
+          /**
+          * The `content` of the previous state event that was replaced by this event.
+          * This field is generated by the local homeserver, and is only returned if
+          * the event is a state event, and the client has permission to see the
+          * previous event.
+           */
+          prev_content?: {};
+
+          /**
+          * The event ID of the state event replaced by this event. This field is generated
+          * by the local homeserver, and is only returned if the event is a state event.
+          * Unlike `prev_content`, this field is included regardless of history visibility.
+           */
+          replaces_state?: string /* mx-event-id */;
+
+          /**
+          * The room membership of the user making the request, at the time of the event.
+          * 
+          * This property is the value of the `membership` property of the
+          * requesting user's [`m.room.member`](/client-server-api#mroommember)
+          * state at the point of the event, including any changes caused by the
+          * event. If the user had yet to join the room at the time of the event
+          * (i.e, they have no `m.room.member` state), this property is set to
+          * `leave`.
+          * 
+          * Homeservers SHOULD populate this property
+          * wherever practical, but they MAY omit it if necessary (for example,
+          * if calculating the value is expensive, servers might choose to only
+          * implement it in encrypted rooms). The property is *not* normally populated
+          * in events pushed to application services via the application service transaction API
+          * (where there is no clear definition of "requesting user").
+          * @example "join"
+           */
+          membership?: string;
+        };
+      };
+
+      /**
+      * The profile tag of the rule that matched this event.
+       */
+      profile_tag?: string;
+
+      /**
+      * Indicates whether the user has sent a read receipt indicating
+      * that they have read this message.
+       */
+      read: boolean;
+
+      /**
+      * The ID of the room in which the event was posted.
+       */
+      room_id: string;
+
+      /**
+      * The unix timestamp at which the event notification was sent,
+      * in milliseconds.
+       */
+      ts: number /* int64 */;
+    }>;
+  }
+  ```
+
+##### Receiving notifications
+
+Servers MUST include the number of unread notifications in a client's
+[`/sync`](#get_matrixclientv3sync) stream, and MUST update it as it changes. Notifications are
+determined by the push rules which apply to an event.
+
+For encrypted events, the homeserver has limited access to the event content
+and properly processing push rules falls on the client. Clients should process
+push rules for each incoming event *after decrypting* them. This may result in
+needing to modify the number of unread notifications received from the homeserver.
+
+##### Marking notifications as read
+
+When the user updates their read receipt (either by using the API or by
+sending an event), notifications prior to and including that event MUST
+be marked as read. Which specific events are affected can vary depending
+on whether a [threaded read receipt](#threaded-read-receipts) was used.
+Note that users can send both an `m.read` and `m.read.private` receipt,
+both of which are capable of clearing notifications.
+
+If the user has both `m.read` and `m.read.private` set in the room then
+the receipt which is more recent/ahead must be used to determine where
+the user has read up to. For example, given an oldest-first set of events A,
+B, C, and D the `m.read` receipt could be at event C and `m.read.private`
+at event A - the user is considered to have read up to event C. If the
+`m.read.private` receipt is then updated to point to B or C, the user's
+notification state doesn't change (the `m.read` receipt is still more
+ahead), however if the `m.read.private` receipt were to be updated to
+event D then the user has read up to D (the `m.read` receipt is now
+behind the `m.read.private` receipt).
+
+*(Added in v1.4)* When handling threaded read receipts, the server is to
+partition the notification count to each thread (with the main timeline being
+its own thread). To determine if an event is part of a thread the server follows
+the [event relationship](#forming-relationships-between-events) until it finds a
+thread root via an `m.thread` relation (as specified by the [threading
+module](#threading)), however it is not recommended that the server traverse
+infinitely. Instead, implementations are encouraged to do a maximum of 3 hops to
+find a thread before deciding that the event does not belong to a thread. This
+is primarily to ensure that future events, like `m.reaction`, are correctly
+considered "part of" a given thread.
+
+#### Server behaviour
+
+When receiving a new event homeservers process push rules for each of the local
+users in the room (excluding the sender). This may result in:
+
+* Generating a new number of unread notifications for the user.
+* Making a request to the configured push gateway.
+
+The updated notification count from a new event MUST appear in the same [`/sync`](#get_matrixclientv3sync)
+response as the event itself.
+
+#### Push Gateway behaviour
+
+##### Recommendations for APNS
+
+The exact format for sending APNS notifications is flexible and up to
+the client app and its push gateway to agree on. As APNS requires that
+the sender has a private key owned by the app developer, each app must
+have its own push gateway. It is recommended that:
+
+-   The APNS token be base64 encoded and used as the pushkey.
+-   A different app\_id be used for apps on the production and sandbox
+    APS environments.
+-   APNS push gateways do not attempt to wait for errors from the APNS
+    gateway before returning and instead to store failures and return
+    'rejected' responses next time that pushkey is used.
+
+#### Security considerations
+
+Clients specify the Push Gateway URL to use to send event notifications
+to. This URL should be over HTTPS and *never* over HTTP.
+
+As push notifications will pass through a Push Provider, message content
+shouldn't be sent in the push itself where possible. Instead, Push
+Gateways should send a "sync" command to instruct the client to get new
+events from the homeserver directly.
