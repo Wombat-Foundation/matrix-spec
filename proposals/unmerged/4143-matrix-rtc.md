@@ -48,10 +48,10 @@ protocol and are described in [MSC4075: MatrixRTC notifications & call ringing][
 
 ### Slots
 
-MatrixRTC slots act as virtual locations for MatrixRTC applications to run in. Slots are defined by
-state events of type `m.rtc.slot`, which means that they can only be created or modified by users
-with sufficient power level. This design deliberately separates slot management from slot membership,
-which is introduced [below] and typically requires lower power level.
+MatrixRTC slots act as virtual locations for MatrixRTC applications to run in. Slots are tied to rooms
+and represented by state events of type `m.rtc.slot`. This means that slots can only be created or
+modified by users with sufficient power level. This design deliberately separates slot management
+from slot membership, which is introduced [below] and typically requires lower power level.
 
 [below]: #membership
 
@@ -104,14 +104,16 @@ neither `application_type` nor `application_slot_id` can contain the `#` charact
 ```
 
 - `status` (required, string): The slot's current status. MUST be one of `"open"`, `"closed"`.
-- `application` (object): Describes the application that can run in this slot.
+- `application` (object): Describes the application that can run in this slot. REQUIRED if
+  `status = open`.
   - `type` (required, string): The globally unique application identifier. MUST follow the
-    [Common Namespaced Identifier Grammar].
+    [Common Namespaced Identifier Grammar]. MUST align with the event's `state_key`.
   - Optionally includes further properties for settings that are specific to the application
     `type`. The concrete properties are defined by the application's specification. A calling
     application, for instance, could include properties for constraining the call to be voice-only.
-- `encryption` (object): Describes the encryption mechanism to use in this slot. Further,
-  details on the available mechanisms can be found in the [encryption section] below.
+- `encryption` (object): If present, describes the encryption mechanism to use in this slot. Further,
+  details on the available mechanisms can be found in the [encryption section] below. If absent,
+  encryption is disabled.
   - `type` (required, string): The globally unique identifier of the encryption mechanism.
     MUST follow the [Common Namespaced Identifier Grammar].
   - Optionally includes further properties for settings that are specific to the encryption
@@ -121,11 +123,11 @@ neither `application_type` nor `application_slot_id` can contain the `#` charact
 
 #### Slot lifecycle
 
-A slot is opened by sending an `m.rtc.slot` state event with `status = "open"`, a valid `application`
-object that aligns with the slot's `state_key` and, if needed, a valid `encryption` object. To close a
-slot, the corresponding `m.rtc.slot` state event is updated with `status = "closed"`. The `application`
-and `encryption` objects are not required on closed slots but may be kept around for convenience to
-simplify re-opening the slot. Slot events that don't match the schema above, SHOULD be considered closed.
+A slot is opened by sending an `m.rtc.slot` state event with `status = "open"`, a valid application
+object and, if needed, a valid encryption object as per the JSON schema above. Any slot that
+doesn't fulfill these requirements is closed. To explicitly close an open slot, the associated `m.rtc.slot`
+state event is updated with `status = "closed"`. The `application` and `encryption` objects are not
+required on closed slots but may be kept around for convenience to simplify re-opening the slot.
 The semantics of open and closed slots for actual slot membership are described in the membership event
 section [below].
 
@@ -196,7 +198,7 @@ To join a slot, the client sends an `m.rtc.member` event with the following sche
     allowing clients to avoid connecting to members outside their area of interest.
 - `member` (required, object): Information to identify the member.
   - `id` (required, string): Identifier to distinguish multiple members, even for the same user
-    and device. MUST be unique for each join. This means that clients need to use a different
+    and device. MUST be unique for each join of the same user. This means that clients need to use a different
     identifier when leaving and then rejoining a slot.
   - `claimed_device_id` (required, string) — Matrix device identifier. This is used to exchange
     encryption keys as explained later in the [encryption section]. The device ID is untrusted ("claimed"
@@ -217,7 +219,7 @@ To join a slot, the client sends an `m.rtc.member` event with the following sche
 - `sticky_key` (required, string): The sticky key for the ephemeral map algorithm as defined
   in the addendum of [MSC4354]. MUST have the same value as `member.id`.
 
-Apart from having to match the above schema, an `m.rtc.member` event SHOULD only be considered to be
+Apart from having to match the above schema, an `m.rtc.member` event MUST only be considered to be
 joined if all of the following conditions apply:
 
 - An open slot exists in the room state as an `m.rtc.slot` state event with `state_key` equalling
@@ -227,7 +229,7 @@ joined if all of the following conditions apply:
   This is to ensure that the membership view is as consistent as possible across all members.
 - If the room is encrypted, the `m.rtc.member` event was sent encrypted rather than in clear.
 
-If these conditions are not fulfilled, clients SHOULD treat the member as left and refrain
+If these conditions are not fulfilled, clients MUST treat the member as left and refrain
 from sending them encryption keys or connecting to their transports.
 
 #### Leaving a slot
@@ -314,7 +316,7 @@ give rise to sessions.
 
 ```
 m.rtc.member[0]            |████████████████████████            ████████████████████████|████
-                           |^ join           leave ^            ^ join           leave ^|
+                           |^ join           leave ^            ^ join                  |   ^ leave
                            |                                                            |
 m.rtc.member[1]            |       ████████████████████████████████████████████████     |
                            |       ^ join                                   leave ^     |
@@ -426,7 +428,7 @@ is taken from the `member.claimed_device_id` property of the respective `m.rtc.m
 
 ```json5
 // PUT /_matrix/client/v3/sendToDevice/m.rtc.encryption_key/{txnId} 
-// (Unencrypted contents shown, but in reality this would be an encrypted message)
+// Unencrypted OlmPlaintext (formerly OlmPayload) shown, but in reality this would be an encrypted message
 
 {
     "room_id": "{room_id}",
@@ -674,6 +676,14 @@ efficient. This would obviously weaken security properties though. A future prop
 tradeoff and introduce a shared-key system via a new encryption `type`.
 
 ## Security considerations
+
+### Shadow sessions
+
+Malicious clients could ignore slot events and consider members to be joined regardless of slot
+restrictions. This would allow them to engage in "shadow sessions" in the room that would be ignored
+by other, conforming clients in the room. While this undermines the authoritativeness of slots, it
+does not impact conforming clients in any way. RTC application and transport designers should be
+aware that slots don't provide access control, however, and adopt appropriate measures.
 
 ### Discoverability of RTC infrastructure
 
