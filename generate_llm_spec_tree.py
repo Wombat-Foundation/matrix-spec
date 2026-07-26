@@ -4,21 +4,23 @@ This script parses raw markdown files and replaces Hugo shortcodes with inline,
 fully resolved schema and event definitions translated into clean TypeScript.
 """
 
+import argparse
 import json
 import os
 import re
+from pathlib import Path
 
 import yaml
 
-CONTENT_DIR = "content"
-DATA_DIR = "data"
-OUTPUT_ROOT = "matrix_spec_llm"
+DATA_DIR = Path("data")
+DEFAULT_OUTPUT_ROOT = Path("matrix_spec_llm")
+DEFAULT_SOURCE_ROOTS = (Path("content"), Path("proposals"))
 
 
 def _load_ref_file(full_path):
     """Helper to load json or yaml files."""
     with open(full_path, "r", encoding="utf-8") as f:
-        if full_path.endswith(".json"):
+        if str(full_path).endswith(".json"):
             return json.load(f)
         return yaml.safe_load(f)
 
@@ -282,48 +284,81 @@ def process_shortcodes(content):
     return content
 
 
-def generate_spec_tree():
-    """Traverses content/ and generates a mirrored matrix_spec_llm/ tree."""
+def _strip_front_matter(content):
+    """Remove one leading YAML front-matter block, if present."""
+    if content.startswith("---"):
+        parts = content.split("---", 2)
+        if len(parts) >= 3:
+            return parts[2]
+    return content
+
+
+def _rel_output_path(src_path, source_root):
+    """Map a source markdown file to its output .txt path."""
+    rel_path = src_path.relative_to(source_root)
+    if src_path.name == "_index.md":
+        return rel_path.with_name("index.txt")
+    return rel_path.with_suffix(".txt")
+
+
+def _render_markdown_file(src_path):
+    """Convert a markdown source file to compact, LLM-friendly text."""
+    with open(src_path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    content = _strip_front_matter(content)
+    processed = process_shortcodes(content)
+    return re.sub(r"\n{3,}", "\n\n", processed)
+
+
+def generate_spec_tree(source_roots=None, output_root=DEFAULT_OUTPUT_ROOT):
+    """Traverse markdown source roots and generate a mirrored text tree."""
+    roots = [Path(root) for root in (source_roots or DEFAULT_SOURCE_ROOTS)]
+    output_root = Path(output_root)
+
     print("Generating mirrored LLM-friendly Matrix Spec tree...")
-    for root, _, files in os.walk(CONTENT_DIR):
-        for file in files:
-            if not file.endswith(".md"):
+    written = 0
+
+    for source_root in roots:
+        if not source_root.exists():
+            continue
+
+        for src_path in source_root.rglob("*.md"):
+            rel_output_path = _rel_output_path(src_path, source_root)
+            if source_root.name == "content":
+                dest_path = output_root / rel_output_path
+            else:
+                dest_path = output_root / source_root.name / rel_output_path
+
+            if dest_path.resolve() == src_path.resolve():
                 continue
 
-            src_path = os.path.join(root, file)
+            processed = _render_markdown_file(src_path)
 
-            # Map input path to output path
-            rel_path = os.path.relpath(src_path, CONTENT_DIR)
-
-            # Use 'index.txt' instead of '_index.txt' for better readability
-            if file == "_index.md":
-                dest_file = "index.txt"
-            else:
-                dest_file = file.replace(".md", ".txt")
-
-            dest_dir = os.path.join(OUTPUT_ROOT, os.path.dirname(rel_path))
-            dest_path = os.path.join(dest_dir, dest_file)
-
-            # Load and parse content
-            with open(src_path, "r", encoding="utf-8") as f:
-                content = f.read()
-
-            # Strip YAML Hugo Front Matter
-            if content.startswith("---"):
-                parts = content.split("---", 2)
-                if len(parts) >= 3:
-                    content = parts[2]
-
-            processed = process_shortcodes(content)
-            # Simplify spaces
-            processed = re.sub(r"\n{3,}", "\n\n", processed)
-
-            os.makedirs(dest_dir, exist_ok=True)
+            dest_path.parent.mkdir(parents=True, exist_ok=True)
             with open(dest_path, "w", encoding="utf-8") as out:
                 out.write(processed)
+            written += 1
 
-    print(f"Success! Mirrored LLM-friendly spec tree created at: ./{OUTPUT_ROOT}/")
+    print(f"Success! Wrote {written} generated text files under ./{output_root}/")
+
+
+def _parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--output-root",
+        default=str(DEFAULT_OUTPUT_ROOT),
+        help="Destination root for generated text files.",
+    )
+    parser.add_argument(
+        "--source-root",
+        action="append",
+        dest="source_roots",
+        help="Markdown source root to process. Can be passed multiple times.",
+    )
+    return parser.parse_args()
 
 
 if __name__ == "__main__":
-    generate_spec_tree()
+    args = _parse_args()
+    generate_spec_tree(args.source_roots, args.output_root)
