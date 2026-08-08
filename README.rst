@@ -20,3 +20,20 @@ You MUST consult these files before jumping to conclusions. They are
 organized/categorized by name and subject, and the text files are small
 enough for you to individually slurp up entirely if needed for one or
 two relevant documents/subjects.
+
+----
+
+Update helpers
+==============
+
+This checkout keeps three different sync workflows separate:
+
+* ``scripts/update-unmerged-proposals.sh`` refreshes ``proposals/unmerged``
+  from open proposal PRs in a sibling ``matrix-spec-proposals`` checkout.
+* ``scripts/update-merged-proposals.sh`` refreshes upstream-managed files under
+  ``proposals/`` from the ``main`` branch of a sibling ``matrix-spec-proposals``
+  checkout, including proposal images and other sidecar assets.
+* ``scripts/update-merged-spec.sh`` refreshes the checked-in plain-text spec
+  corpus from another checkout which already contains the plain-text files.
+  Set ``SOURCE_REPO=/path/to/plain-text-spec-checkout`` before running it; the
+  upstream ``matrix-spec`` repo does not contain these ``.txt`` artifacts.
