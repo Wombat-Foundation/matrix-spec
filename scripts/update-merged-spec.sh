@@ -3,6 +3,9 @@ set -euo pipefail
 
 SOURCE_REPO="${SOURCE_REPO:-}"
 SOURCE_REF="${SOURCE_REF:-HEAD}"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="$(cd "$script_dir/.." && pwd)"
+parent_dir="$(dirname "$repo_root")"
 
 managed_paths=(
 	appendices.txt
@@ -24,10 +27,45 @@ if ! command -v git >/dev/null 2>&1; then
 	exit 1
 fi
 
+infer_source_repo() {
+	local candidate
+	local matches=()
+
+	for candidate in "$parent_dir"/*; do
+		[[ -d "$candidate" ]] || continue
+		[[ "$candidate" != "$repo_root" ]] || continue
+		git -C "$candidate" rev-parse --git-dir >/dev/null 2>&1 || continue
+		[[ -f "$candidate/appendices.txt" ]] || continue
+		[[ -f "$candidate/index.txt" ]] || continue
+		[[ -f "$candidate/server-server-api.txt" ]] || continue
+		[[ -d "$candidate/client-server-api" ]] || continue
+		matches+=("$candidate")
+	done
+
+	case "${#matches[@]}" in
+	0)
+		return 1
+		;;
+	1)
+		printf '%s\n' "${matches[0]}"
+		;;
+	*)
+		echo "error: multiple candidate plain-text spec checkouts found:" >&2
+		printf '  %s\n' "${matches[@]}" >&2
+		echo "set SOURCE_REPO explicitly" >&2
+		return 1
+		;;
+	esac
+}
+
 if [[ -z "$SOURCE_REPO" ]]; then
-	echo "error: SOURCE_REPO must point at a checkout containing the plain-text spec files" >&2
-	echo "example: SOURCE_REPO=../matrix-spec-plain ./scripts/update-merged-spec.sh" >&2
-	exit 1
+	if ! SOURCE_REPO="$(infer_source_repo)"; then
+		echo "error: SOURCE_REPO must point at a checkout containing the plain-text spec files" >&2
+		echo "no unique sibling plain-text checkout was found next to $repo_root" >&2
+		echo "example: SOURCE_REPO=../matrix-spec-plain ./scripts/update-merged-spec.sh" >&2
+		exit 1
+	fi
+	echo "auto-detected SOURCE_REPO=$SOURCE_REPO"
 fi
 
 git -C "$SOURCE_REPO" rev-parse --git-dir >/dev/null

@@ -35,5 +35,7 @@ This checkout keeps three different sync workflows separate:
   checkout, including proposal images and other sidecar assets.
 * ``scripts/update-merged-spec.sh`` refreshes the checked-in plain-text spec
   corpus from another checkout which already contains the plain-text files.
-  Set ``SOURCE_REPO=/path/to/plain-text-spec-checkout`` before running it; the
-  upstream ``matrix-spec`` repo does not contain these ``.txt`` artifacts.
+  If ``SOURCE_REPO`` is unset it will try to auto-detect a unique sibling
+  checkout next to this repo. If that is ambiguous or missing, set
+  ``SOURCE_REPO=/path/to/plain-text-spec-checkout`` explicitly; the upstream
+  ``matrix-spec`` repo does not contain these ``.txt`` artifacts.
