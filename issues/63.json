@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/63",
+  "repository_url": "https://api.github.com/repos/matrix-org/matrix-spec",
+  "labels_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/63/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/63/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/63/events",
+  "html_url": "https://github.com/matrix-org/matrix-spec/issues/63",
+  "id": 1155610879,
+  "node_id": "MDU6SXNzdWUxMTU1NjEwODc5",
+  "number": 63,
+  "title": "We need to re-consider splitting users into alias & underlying opaque ID (SPEC-152)",
+  "user": {
+    "login": "matrixbot",
+    "id": 10127976,
+    "node_id": "MDQ6VXNlcjEwMTI3OTc2",
+    "avatar_url": "https://avatars.githubusercontent.com/u/10127976?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/matrixbot",
+    "html_url": "https://github.com/matrixbot",
+    "followers_url": "https://api.github.com/users/matrixbot/followers",
+    "following_url": "https://api.github.com/users/matrixbot/following{/other_user}",
+    "gists_url": "https://api.github.com/users/matrixbot/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/matrixbot/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/matrixbot/subscriptions",
+    "organizations_url": "https://api.github.com/users/matrixbot/orgs",
+    "repos_url": "https://api.github.com/users/matrixbot/repos",
+    "events_url": "https://api.github.com/users/matrixbot/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/matrixbot/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 3883769547,
+      "node_id": "MDU6TGFiZWwzODgzNzY5NTQ3",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/feature",
+      "name": "feature",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Suggestion for a significant extension which needs considerable consideration"
+    },
+    {
+      "id": 3883770012,
+      "node_id": "MDU6TGFiZWwzODgzNzcwMDEy",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/p1",
+      "name": "p1",
+      "color": "eeeeee",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 3883799475,
+      "node_id": "MDU6TGFiZWwzODgzNzk5NDc1",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/A-Identity-Service",
+      "name": "A-Identity-Service",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 3883803266,
+      "node_id": "MDU6TGFiZWwzODgzODAzMjY2",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/room-vNext",
+      "name": "room-vNext",
+      "color": "f77bd8",
+      "default": false,
+      "description": "An idea which will require a bump in room version"
+    }
+  ],
+  "state": "open",
+  "locked": false,
+  "assignees": [],
+  "milestone": null,
+  "comments": 8,
+  "created_at": "2015-04-14T17:59:57Z",
+  "updated_at": "2024-10-17T03:05:58Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Back when we defined rooms as split between aliases and IDs, there was a discussion over also splitting users between aliases and IDs too.  At the time, the argument for doing so was \"for symmetry\", which didn't cut it, but we're starting to see concrete reasons why this could be a good thing to do.  This bug is intended to gather together reasons to do so.\n- We can use alias->ID api to also handle canonicalising case as per [SYN-109](https://matrix.org/jira/browse/SYN-109) rather than [SPEC-62](https://matrix.org/jira/browse/SPEC-62)\n- We get email-style aliasing for free, allowing easy consolidation of various accounts to point at One True Account, and avoid having to support multiple accounts in clients\n- We could use it for horizontal scaling, HA, and decentralising user accounts in general - replicating a single user account over multiple servers\n- We could use it as the basis for a portability/account migration system.\n\nObviously the risks include:\n- Another waste-of-time holy war over how to present aliases to users in UI as they're a many:one mapping.  Needless to say, I suggest we just present them like email addresses (which are after all also many:one, effectively)\n- Lots of security challenges in terms of which accounts are allowed to reside on which HSes, and how you prevent phishing attacks, and how you encrypt user data to protect them sufficiently.\n\nIf this idea went ahead, I suggest we adopt a syntax like:\n\n@&#8203;matthew:matrix.org <-- user alias\n^opaque_id:matrix.org <-- user id\n\nI suggest using ^ as the sigil, as it doesn't escape in URLs, doesn't mean anything else, and is easily visually recognisable.\n\nYes, this would be a major backwards-incompatible change to the event format if we start shoving ^'s everywhere - so we need to decide to do so sooner than later if we are.\n\nI suggest we consider using public key fingerprint as the opaque ID for the user (if this makes any sense at all).  \n\n(Imported from https://matrix.org/jira/browse/SPEC-152)\n\n(Reported by @ara4n)\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/63/reactions",
+    "total_count": 14,
+    "+1": 13,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 1,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/63/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

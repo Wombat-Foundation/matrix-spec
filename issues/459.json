@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/459",
+  "repository_url": "https://api.github.com/repos/matrix-org/matrix-spec",
+  "labels_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/459/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/459/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/459/events",
+  "html_url": "https://github.com/matrix-org/matrix-spec/issues/459",
+  "id": 1155798596,
+  "node_id": "MDU6SXNzdWUxMTU1Nzk4NTk2",
+  "number": 459,
+  "title": "/sync could take a `to` as well as `since` param, to help with splicing together /sync streams.",
+  "user": {
+    "login": "ara4n",
+    "id": 1294269,
+    "node_id": "MDQ6VXNlcjEyOTQyNjk=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1294269?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/ara4n",
+    "html_url": "https://github.com/ara4n",
+    "followers_url": "https://api.github.com/users/ara4n/followers",
+    "following_url": "https://api.github.com/users/ara4n/following{/other_user}",
+    "gists_url": "https://api.github.com/users/ara4n/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/ara4n/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/ara4n/subscriptions",
+    "organizations_url": "https://api.github.com/users/ara4n/orgs",
+    "repos_url": "https://api.github.com/users/ara4n/repos",
+    "events_url": "https://api.github.com/users/ara4n/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/ara4n/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 3883764107,
+      "node_id": "MDU6TGFiZWwzODgzNzY0MTA3",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/enhancement",
+      "name": "enhancement",
+      "color": "98e6ae",
+      "default": true,
+      "description": "A suggestion for a relatively simple improvement to the protocol"
+    },
+    {
+      "id": 3883769549,
+      "node_id": "MDU6TGFiZWwzODgzNzY5NTQ5",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/A-Client-Server",
+      "name": "A-Client-Server",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues affecting the CS API"
+    },
+    {
+      "id": 3883804069,
+      "node_id": "MDU6TGFiZWwzODgzODA0MDY5",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/wart",
+      "name": "wart",
+      "color": "98e6ae",
+      "default": false,
+      "description": "A point where the protocol is inconsistent or inelegant"
+    },
+    {
+      "id": 3884262003,
+      "node_id": "MDU6TGFiZWwzODg0MjYyMDAz",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/p3",
+      "name": "p3",
+      "color": "eeeeee",
+      "default": false,
+      "description": ""
+    }
+  ],
+  "state": "open",
+  "locked": false,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2019-04-02T14:51:38Z",
+  "updated_at": "2022-03-01T20:45:42Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "If I have a client which runs a background /sync stream to keep up-to-date, it could be useful to have parallel /sync streams (perhaps with different levels of detail via filtering) which need to be spliced into the bg stream in order to merge a shortlived fg stream with the ongoing bg stream without a race.\r\n\r\nThis could be useful in hybrid initial sync (where we do a high-detail sync of foregrounded rooms in parallel with a low-detail background sync of all rooms) - currently we propose interrupting the background sync in order to sync the fg room, and then resume it again.  Whereas this could let the fg sync be merged with the bg sync once complete.\r\n\r\nThis could also be useful in a daemon like pantalaimon which maintains a bg /sync stream on behalf of multiple clients, but needs to splice individual client /sync responses into the bg stream (and so hand the common 'live' stream over to the clients).",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/459/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/459/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

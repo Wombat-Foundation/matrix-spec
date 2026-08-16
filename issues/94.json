@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/94",
+  "repository_url": "https://api.github.com/repos/matrix-org/matrix-spec",
+  "labels_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/94/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/94/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/94/events",
+  "html_url": "https://github.com/matrix-org/matrix-spec/issues/94",
+  "id": 1155616312,
+  "node_id": "MDU6SXNzdWUxMTU1NjE2MzEy",
+  "number": 94,
+  "title": "Ability to change history visibility retrospectively. (SPEC-210)",
+  "user": {
+    "login": "matrixbot",
+    "id": 10127976,
+    "node_id": "MDQ6VXNlcjEwMTI3OTc2",
+    "avatar_url": "https://avatars.githubusercontent.com/u/10127976?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/matrixbot",
+    "html_url": "https://github.com/matrixbot",
+    "followers_url": "https://api.github.com/users/matrixbot/followers",
+    "following_url": "https://api.github.com/users/matrixbot/following{/other_user}",
+    "gists_url": "https://api.github.com/users/matrixbot/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/matrixbot/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/matrixbot/subscriptions",
+    "organizations_url": "https://api.github.com/users/matrixbot/orgs",
+    "repos_url": "https://api.github.com/users/matrixbot/repos",
+    "events_url": "https://api.github.com/users/matrixbot/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/matrixbot/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 3883769547,
+      "node_id": "MDU6TGFiZWwzODgzNzY5NTQ3",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/feature",
+      "name": "feature",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Suggestion for a significant extension which needs considerable consideration"
+    },
+    {
+      "id": 3883769549,
+      "node_id": "MDU6TGFiZWwzODgzNzY5NTQ5",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/A-Client-Server",
+      "name": "A-Client-Server",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues affecting the CS API"
+    },
+    {
+      "id": 3883769853,
+      "node_id": "MDU6TGFiZWwzODgzNzY5ODUz",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/p2",
+      "name": "p2",
+      "color": "eeeeee",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 3883803266,
+      "node_id": "MDU6TGFiZWwzODgzODAzMjY2",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/room-vNext",
+      "name": "room-vNext",
+      "color": "f77bd8",
+      "default": false,
+      "description": "An idea which will require a bump in room version"
+    }
+  ],
+  "state": "open",
+  "locked": false,
+  "assignees": [],
+  "milestone": null,
+  "comments": 15,
+  "created_at": "2015-08-19T12:17:35Z",
+  "updated_at": "2023-11-29T12:44:28Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Background\n\nThe IRC bridge provisioned rooms without the `m.room.history_visibility` flag set. This was a mistake and needed to be rectified. However, `m.room.history_visibility` doesn't allow retroactively changing the visibility of past events.\n\nThe solutions available at the time were:\n- Redact every message.\n- Manually delete old history from the room.\n- Change the matrix room the IRC bridged to and seal the old room.\n### Problem\n\nWe don't currently have a way to retroactively say either:\n- users can only see events if they were joined at the time\n- new users can't see history from before a given event.\n\n(Imported from https://matrix.org/jira/browse/SPEC-210)\n\n(Reported by @erikjohnston)\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/94/reactions",
+    "total_count": 5,
+    "+1": 5,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/94/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}
