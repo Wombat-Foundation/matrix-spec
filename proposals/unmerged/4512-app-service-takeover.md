@@ -1,4 +1,4 @@
-# MSC4512: Delegating parts of the C-S and S-S API to application services
+# MSC4512: Delegating parts of the Client-Server and Server-Server API to application services
 
 With the Matrix spec growing, there is an increased burden on homeserver maintainers to implement
 new functionality[^1]. In some cases, this burden could be reduced by sharing common code as
@@ -21,7 +21,7 @@ file] for application services. `proxy_prefix` is a string and defines the path 
 service is claiming. `proxy_url` is a string that determines the `url` to send proxied requests to.
 `proxy_prefix` and `proxy_url` are optional but if used, MUST always be specified together.
 
-``` yaml
+```yaml
 id: "My app service"
 url: null
 as_token: "30c05ae90a248a4188e620216fa72e349803310ec83e2a77b34fe90be6081f46"
@@ -32,34 +32,39 @@ proxy_prefix: "foo/bar"
 proxy_url: "http://127.0.0.1:1234"
 ```
 
-When both `proxy_prefix` and `proxy_url` are set, the server proxies matching C-S and S-S requests
-to the application service and allows the service to trigger S-S requests under its own prefix.
+When both `proxy_prefix` and `proxy_url` are set, the server proxies matching Client-Server and
+Server-Server requests to the application service and allows the service to trigger Server-Server
+requests under its own prefix.
+
+For now, authentication is REQUIRED for any Client-Server and Server-Server requests under the
+`proxy_prefix`. A future proposal may introduce a way for application services to define when
+authentication isn't required.
 
 ### Proxying client-server requests
 
-For any authenticated C-S request under `/_matrix/client/(unstable/[^/]+|v[^/]+)/{proxy_prefix}/.*`,
-the server first authorises the request as usual. If authorization succeeds, the server proxies the
-request to the same path anchored on `proxy_url` and streams the response back to the requesting
-client.
+For any authenticated Client-Server request under
+`/_matrix/client/(unstable/[^/]+|v[^/]+)/{proxy_prefix}/.*`, the server first authorises the request
+as usual. If authorization succeeds, the server proxies the request to the same path anchored on
+`proxy_url` and streams the response back to the requesting client.
 
-Any "hop-by-hop" headers as defined by [RFC2616] MUST be stripped both before forwarding the request
-to the service and before streaming the response back to the requesting client.
+Any "hop-by-hop" headers as defined by [RFC 2616] MUST be stripped both before forwarding the
+request to the service and before streaming the response back to the requesting client.
 
 Additionally, the `Authorization` header MUST be stripped on the forwarded request. Instead, the
-server supplies the MXID of the requesting client to the application service in a new request header
-`X-Matrix-User-Identifier`.
+server supplies the User ID of the requesting client to the application service in a new request
+header `X-Matrix-User-Identifier`.
 
 ### Proxying server-server requests
 
 The process for proxying server-server requests is analogous.
 
-For any authenticated S-S request under
+For any authenticated Server-Server request under
 `/_matrix/federation/(unstable/[^/]+|v[^/]+)/{proxy_prefix}/.*`, the server first authorises the
 request as usual. If authorization succeeds, the server proxies the request to the same path
 anchored on `proxy_url` and streams the response back to the requesting server.
 
-Any "hop-by-hop" headers as defined by [RFC2616] MUST be stripped both before forwarding the request
-to the service and before streaming the response back to the requesting server.
+Any "hop-by-hop" headers as defined by \[RFC2616\] MUST be stripped both before forwarding the
+request to the service and before streaming the response back to the requesting server.
 
 Additionally, the `Authorization` header MUST be stripped on the forwarded request. Instead, the
 server supplies the server name of the requesting server to the application service in a new request
@@ -67,9 +72,10 @@ header `X-Matrix-Origin`.
 
 ### Sending server-server requests
 
-Application services that provide both C-S and S-S endpoints may need to call their S-S endpoint(s)
-on a different server when processing C-S requests. To enable this, a new Client-Server endpoint
-`POST /_matrix/client/v1/appservice/fed_proxy` is introduced.
+Application services that provide both Client-Server and Server-Server endpoints may need to call
+their Server-Server endpoint(s) on a different server when processing Client-Server requests. To
+enable this, a new Client-Server endpoint `POST /_matrix/client/v1/appservice/fed_proxy` is
+introduced.
 
 ``` http
 POST /_matrix/client/v1/appservice/fed_proxy HTTP/1.1
@@ -136,9 +142,12 @@ design as no associated use cases are known yet.
 
 ## Alternatives
 
-The existing `url` property could be reused to avoid having to specify a separate `proxy_url`. This
-would disallow using proxying while disabling namespace-related traffic from the server by setting
-`url` to `null`, however.
+The existing `url` property could be reused to avoid having to specify a separate `proxy_url`.
+However, `url` is also used to forward events to the application service as per its `namespaces`
+setting. An application service may not be interested in receiving regular Matrix events though.
+Instead, it could only be using `namespaces` to be able to puppet users on the Client-Server API.
+The separate `proxy_url` property resolves this conflict and avoids excess traffic between the
+homeserver and the application service.
 
 ## Security considerations
 
@@ -167,5 +176,5 @@ None.
   [lk-jwt-service]: https://github.com/element-hq/lk-jwt-service
   [MSC4195]: https://github.com/matrix-org/matrix-spec-proposals/pull/4195
   [registration file]: https://spec.matrix.org/v1.19/application-service-api/#registration
-  [RFC2616]: https://datatracker.ietf.org/doc/html/rfc2616#section-13.5.1
+  [RFC 2616]: https://datatracker.ietf.org/doc/html/rfc2616#section-13.5.1
   [server name]: https://spec.matrix.org/v1.19/appendices/#server-name

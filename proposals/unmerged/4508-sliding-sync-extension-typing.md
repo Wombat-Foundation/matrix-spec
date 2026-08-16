@@ -1,4 +1,4 @@
-# MSC4508: Sliding Sync Extension: Typing Notifications
+# MSC4508: Sliding Sync Extensions: Common format and Typing
 
 [MSC4186](https://github.com/matrix-org/matrix-spec-proposals/pull/4186) (Simplified Sliding Sync)
 only includes core room data and omits other data, such as typing notifications, from the sync
@@ -8,7 +8,7 @@ response. Instead, such data is left to "extensions", which clients opt into ind
 This MSC defines the extension for typing notifications, so that clients using sliding sync can show
 typing indicators in rooms.
 
-Supersedes [MSC3961](https://github.com/matrix-org/matrix-spec-proposals/blob/kegan/ssext-typing/proposals/3961-sliding-sync-typing.md).
+Supersedes [MSC3961](https://github.com/matrix-org/matrix-spec-proposals/pull/3961).
 
 # Proposal
 
@@ -17,7 +17,7 @@ A new sliding sync extension is added, with the extension key `typing`.
 ## Common extension semantics
 
 [MSC4186](https://github.com/matrix-org/matrix-spec-proposals/pull/4186) defines the `extensions`
-request field as a map from extension key to an extension config, but leaves the format of the
+request field as a map from extension key to an `ExtensionConfig`, but leaves the format of the
 config to the MSCs defining each extension. As this is the first such MSC, it defines the following
 semantics, which are expected to be common to all extensions. Future extension MSCs may reference
 this definition rather than redefine them.
@@ -29,18 +29,28 @@ this definition rather than redefine them.
 > needs the latest state (rather than all updates), while for to-device messages the client must
 > (eventually) receive every missed to-device message in order.
 
-All extensions include the following fields:
+All extensions include the following fields as members of their `ExtensionConfig`:
 
 | Name | Type | Required | Comment |
 | - | - | - | - |
 | `enabled` | `bool` | No | Whether the extension is enabled. Defaults to `false`. The server only processes the extension if this is `true`. |
 
-Extension MSCs MUST address the behaviour when an extension that was absent or disabled is later
-enabled on an existing connection. Extensions SHOULD leave the behaviour up to server
-implementations unless there is a client UX need, as clients SHOULD enable the extensions they need
-at the beginning of the connection. This gives the server flexibility to track extension data
-efficiently, regardless of whether extensions are toggled. Servers MUST allow toggling extensions,
-even if they only send newly changed data, and MUST NOT reject the request.
+Extension MSCs MUST address the behaviour when an extension is enabled partway through an existing
+connection. There are two distinct cases:
+
+- The extension is enabled for the first time on the connection, having been absent or disabled on
+  every previous request. Clients may choose to defer an extension deliberately to allow the initial
+  request to complete faster.
+- The extension is re-enabled having previously been enabled and then disabled on the same
+  connection. The client has whatever data it received before disabling the extension, but that data
+  is stale by an unknown amount.
+
+Extensions MUST support the former case of deferring first enablement. However, extensions SHOULD
+leave the behaviour in the latter case up to server implementations unless there is a client UX
+need, as clients SHOULD enable the extensions they need towards the beginning of the connection.
+This gives the server flexibility to track extension data efficiently, regardless of whether
+extensions are toggled. In either case servers MUST allow extensions to be toggled, even if they
+only send newly changed data, and MUST NOT reject the request.
 
 Extension MSCs MUST specify the expected behaviour of clients when the sliding sync connection is
 reset (via `M_UNKNOWN_POS`).
@@ -52,17 +62,32 @@ As with unknown fields elsewhere in the client-server API, servers MUST ignore e
 they do not recognise (rather than rejecting the request), so that newer clients remain compatible
 with older servers.
 
+Since an ignored extension is indistinguishable from an enabled extension that has no data to send,
+extension MSCs MUST define both an unstable and a stable feature flag in
+[`/_matrix/client/versions`](https://spec.matrix.org/latest/client-server-api/#get_matrixclientversions)
+`unstable_features`, so that clients can detect support for an individual extension. Per convention
+the stable flag is the unstable flag with `.stable` appended. Servers SHOULD advertise the stable
+flag once they support the extension as specified, without waiting until they advertise the spec
+version that contains it.
+
+> [!NOTE]
+>
+> Feature flags allow a client to detect that a server does not implement an extension at all. They
+> do not help a client that has mistyped an extension key, which the server will silently ignore as
+> above.
+
 ## Common per-room extension semantics
 
 Some extensions apply on a per-room basis, of which this is the first. We define the generic
 per-room semantics here.
 
-The per-room extensions include the following fields (as well as the ones above):
+The per-room extensions include the following fields as members of their `ExtensionConfig` (as well
+as the ones above):
 
 | Name | Type | Required | Comment |
 | - | - | - | - |
-| `lists` | `[string]` | No | Which lists (by list key, from the `lists` request field) the extension applies to. Defaults to `["*"]`. |
-| `rooms` | `[string]` | No | Which room subscriptions (by room ID, from the `room_subscriptions` request field) the extension applies to. Defaults to `["*"]`. |
+| `lists` | `[string]` | No | Which lists (by list key, from the `lists` request field) the extension applies to. Defaults to all lists. |
+| `rooms` | `[string]` | No | Which room subscriptions (by room ID, from the `room_subscriptions` request field) the extension applies to. Defaults to all room subscriptions. |
 
 The `lists` and `rooms` arguments control which rooms are "in scope" for the extension. A room is in
 scope if either of the following holds:
@@ -71,11 +96,11 @@ scope if either of the following holds:
   list's filters, the room's index in the filtered list is within the list's range), or
 - it is one of the room subscriptions named in `rooms`.
 
-The special value `"*"` acts as a wildcard: `{"lists": ["*"]}` matches all lists in the request and
-`{"rooms": ["*"]}` matches all room subscriptions in the request. An empty array matches nothing,
-e.g. `{"lists": [], "rooms": ["*"]}` applies the extension only to room subscriptions. List keys
-that are not in the request, and rooms that are either unknown or inaccessible to the user, are
-ignored.
+Both fields default to matching everything if they are not present, i.e. a missing `lists` will
+match all rooms that are in *any* list, and a missing `rooms` will match all room subscriptions.
+Conversely, an empty array matches nothing, e.g. `{"lists": []}` applies the extension only to room
+subscriptions, and `{"rooms": []}` applies it only to rooms in lists. List keys that are not in the
+request, and rooms that are either unknown or inaccessible to the user, are ignored.
 
 Note that a room being in scope does *not* require the room to have an entry in the `rooms` section
 of the *response*: a room within a list's range is in scope even if the room has no other updates to
@@ -118,16 +143,21 @@ The `typing` extension takes no arguments beyond the common ones:
 
 ## Extension response
 
-If the extension is enabled, the server MAY include a `typing` section in the `extensions` response
-field, with the following format:
+If the extension is enabled, the server MUST include a `typing` section in the `extensions` response
+field whenever it has typing data to send (as described under [Semantics](#semantics) below). It MAY
+omit the section when there is nothing to send. The `ExtensionResult` has the following format:
 
 | Name | Type | Required | Comment |
 | - | - | - | - |
-| `rooms` | `{string: Event}` | No | A map of room ID to the `m.typing` ephemeral event for that room. |
+| `rooms` | `{string: TypingUpdate}` | No | A map of room ID to the current typing state of that room. |
 
-The value for each room is the same `m.typing` event that would appear in the room's
-`ephemeral.events` array in a [`/v3/sync`
-response](https://spec.matrix.org/v1.17/client-server-api/#typing-notifications), e.g.:
+where a `TypingUpdate` is:
+
+| Name | Type | Required | Comment |
+| - | - | - | - |
+| `user_ids` | `[string]` | Yes | The users currently typing in the room. |
+
+For example:
 
 ```jsonc
 {
@@ -135,10 +165,7 @@ response](https://spec.matrix.org/v1.17/client-server-api/#typing-notifications)
         "typing": {
             "rooms": {
                 "!abcd:example.com": {
-                    "type": "m.typing",
-                    "content": {
-                        "user_ids": ["@alice:example.com", "@bob:example.com"]
-                    }
+                    "user_ids": ["@alice:example.com", "@bob:example.com"]
                 }
             }
         }
@@ -146,8 +173,13 @@ response](https://spec.matrix.org/v1.17/client-server-api/#typing-notifications)
 }
 ```
 
-As in `/v3/sync`, the `user_ids` field contains the complete list of users currently typing in that
-room: it replaces, rather than updates, any typing state the client previously had for the room.
+As in [`/v3/sync`](https://spec.matrix.org/v1.17/client-server-api/#typing-notifications), the
+`user_ids` field contains the complete list of users currently typing in that room: it replaces,
+rather than updates, any typing state the client previously had for the room.
+
+Note that, unlike `/v3/sync`, the typing state is *not* wrapped in an `m.typing` ephemeral event
+with `type` and `content` fields. The extension can only ever carry typing notifications, so the
+wrapper conveys no information.
 
 ## Semantics
 
@@ -163,10 +195,11 @@ For the rooms that remain:
 - Whenever a room enters scope on a connection, the server MUST send the room's current typing
   state. This applies on an initial sync (no `pos`), when the room first comes into scope on the
   connection, and when it re-enters scope after having dropped out (e.g. after falling out of a
-  list's range). As a minor optimisation, the server MAY omit the room if there are no users typing
-  and the previously sent state (if any) was also empty. If the extension is enabled partway through
-  a connection, the server MAY omit this initial data for rooms already in scope, per the common
-  extension semantics above.
+  list's range). As a minor optimisation, the server MAY omit the room if there are no users typing.
+- If the extension is enabled partway through a connection after having been disabled, the server
+  MAY omit this initial data for rooms already in scope, per the common extension semantics above.
+  Clients therefore MUST discard any typing state they hold for in-scope rooms when they enable the
+  extension partway through a connection.
 - On an incremental sync, an in-scope room is included if its typing state has changed since the
   previous request's `pos`.
 
@@ -183,18 +216,18 @@ A change in typing state of an in-scope room counts as an update for the purpose
 it causes a waiting `/sync` request to return, even if there is nothing else to send. This can
 result in a response whose `rooms` section is empty but whose `typing` extension section is not.
 
-Typing is pure "latest state" data: each `m.typing` event replaces the previous state for the room,
-rather than building on it. When a room (re-)enters scope, the server brings the client up-to-date
-by sending the room's current typing state; it never has to replay the individual updates the room
+Typing is pure "latest state" data: each update replaces the previous state for the room, rather
+than building on it. When a room (re-)enters scope, the server brings the client up-to-date by
+sending the room's current typing state; it never has to replay the individual updates the room
 missed while out of scope. Consequently, the server does not need to track which typing state it has
-previously sent on a connection (unless it wants to use the omission optimisation described above).
+previously sent on a connection.
 
 # Potential issues
 
 A room within the range of a scoped list receives typing updates even if the user is not currently
 viewing it, which is wasted bandwidth for clients that only show typing indicators inside the room
-view. Clients can avoid this by scoping the extension: for example `{"lists": [], "rooms": ["*"]}`
-together with a room subscription for the currently-open room limits typing updates to that room.
+view. Clients can avoid this by scoping the extension: for example `{"lists": []}` together with a
+room subscription for the currently-open room limits typing updates to that room.
 
 # Alternatives
 
@@ -202,6 +235,11 @@ The common extension arguments (`enabled`, `lists`, `rooms`) could be defined in
 "extensions framework" MSC that each extension MSC depends on, rather than in this one. That adds an
 extra MSC to the process for little benefit; instead this MSC defines them in a way that later
 extension MSCs can reference.
+
+The response could send the typing state as a full `m.typing` ephemeral event (i.e. wrapped in
+`type` and `content` fields), matching the shape used in `/v3/sync` and the experimental
+implementation. That would let clients reuse an existing code path for parsing the event, but the
+wrapper is redundant when the extension can only carry one type of data.
 
 # Security considerations
 
@@ -220,13 +258,27 @@ The experimental implementations of
 Element X) have supported this extension with the unprefixed `typing` key on the
 `/_matrix/client/unstable/org.matrix.simplified_msc3575/sync` endpoint.
 
-Until this MSC is accepted, implementations MUST use `org.matrix.msc4508.typing` (substituting this
-proposal's MSC number) as the extension key on the stable
-[MSC4186](https://github.com/matrix-org/matrix-spec-proposals/pull/4186) endpoint. The unprefixed
-`typing` key remains in use on the unstable `org.matrix.simplified_msc3575` endpoint for
-compatibility with existing implementations.
+Until this MSC is accepted, implementations MUST use `org.matrix.msc4508.typing` as the extension
+key on the stable [MSC4186](https://github.com/matrix-org/matrix-spec-proposals/pull/4186) endpoint.
+The unprefixed `typing` key remains in use on the unstable `org.matrix.simplified_msc3575` endpoint
+for compatibility with existing implementations.
 
-# Dependencies
+Per the common extension semantics above, servers advertise support for this extension in
+`unstable_features` of
+[`/_matrix/client/versions`](https://spec.matrix.org/latest/client-server-api/#get_matrixclientversions):
 
-This MSC builds on [MSC4186](https://github.com/matrix-org/matrix-spec-proposals/pull/4186), which
-at the time of writing has passed FCP but has not yet been released in the spec.
+- `org.matrix.msc4508` while this MSC is unstable, covering both the `org.matrix.msc4508.typing` key
+  on the stable endpoint and the unprefixed `typing` key on the unstable endpoint; and
+- `org.matrix.msc4508.stable` once the server supports the extension as specified here, under the
+  unprefixed `typing` key on the stable endpoint, until it advertises the spec version containing
+  this MSC.
+
+# Appendix
+
+## Changelog
+
+Differences from the experimental implementation of simplified sliding sync in Synapse v1.151.0.
+
+1. Removed the special value `"*"` from the common room extension fields.
+2. The per-room value in the response is now a bare object with a `user_ids` field, rather than a
+   full `m.typing` ephemeral event with `type` and `content` fields.
