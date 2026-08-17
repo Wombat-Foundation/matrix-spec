@@ -1,0 +1,10 @@
+msc	file	git_ref	known_lineage
+4480	proposals/unmerged/4480-sliding-sync-sticky-events.md	refs/pr/upstream/4480	builds_on:4354,4186
+4481	proposals/unmerged/4481-matrix.to-encoding.md	refs/pr/upstream/4481	
+4482	proposals/unmerged/4482-ability-to-bookmark-messages.md	refs/pr/upstream/4482	builds_on:4474
+4483	proposals/unmerged/4483-encrypted-account-data.md	refs/pr/upstream/4483	
+4484	proposals/unmerged/4484-admin-oauth-scope.md	refs/pr/upstream/4484	
+4485	proposals/unmerged/4485-featured-endpoint.md	refs/pr/upstream/4485	
+4486	proposals/unmerged/4486-extended-delayed-events-api.md	refs/pr/upstream/4486	builds_on:4140
+4487	proposals/unmerged/4487-deprecate-internal-matrix.to.md	refs/pr/upstream/4487	
+4489	proposals/unmerged/4489-per-room_contact_state_event.md	refs/pr/upstream/4489	

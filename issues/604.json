@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/604",
+  "repository_url": "https://api.github.com/repos/matrix-org/matrix-spec",
+  "labels_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/604/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/604/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/604/events",
+  "html_url": "https://github.com/matrix-org/matrix-spec/issues/604",
+  "id": 1155896629,
+  "node_id": "MDU6SXNzdWUxMTU1ODk2NjI5",
+  "number": 604,
+  "title": "mechanism for a homeserver to suggest a default jitsi server to use for clients",
+  "user": {
+    "login": "richvdh",
+    "id": 1389908,
+    "node_id": "MDQ6VXNlcjEzODk5MDg=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1389908?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/richvdh",
+    "html_url": "https://github.com/richvdh",
+    "followers_url": "https://api.github.com/users/richvdh/followers",
+    "following_url": "https://api.github.com/users/richvdh/following{/other_user}",
+    "gists_url": "https://api.github.com/users/richvdh/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/richvdh/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/richvdh/subscriptions",
+    "organizations_url": "https://api.github.com/users/richvdh/orgs",
+    "repos_url": "https://api.github.com/users/richvdh/repos",
+    "events_url": "https://api.github.com/users/richvdh/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/richvdh/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 3883764107,
+      "node_id": "MDU6TGFiZWwzODgzNzY0MTA3",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/enhancement",
+      "name": "enhancement",
+      "color": "98e6ae",
+      "default": true,
+      "description": "A suggestion for a relatively simple improvement to the protocol"
+    },
+    {
+      "id": 3883769549,
+      "node_id": "MDU6TGFiZWwzODgzNzY5NTQ5",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/A-Client-Server",
+      "name": "A-Client-Server",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues affecting the CS API"
+    },
+    {
+      "id": 3884312003,
+      "node_id": "MDU6TGFiZWwzODg0MzEyMDAz",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/A-integrations",
+      "name": "A-integrations",
+      "color": "5319E7",
+      "default": false,
+      "description": "Integration (Manager) API"
+    },
+    {
+      "id": 3884312006,
+      "node_id": "MDU6TGFiZWwzODg0MzEyMDA2",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/A-Widgets",
+      "name": "A-Widgets",
+      "color": "5319E7",
+      "default": false,
+      "description": "anything to do with widgets"
+    }
+  ],
+  "state": "open",
+  "locked": false,
+  "assignees": [],
+  "milestone": null,
+  "comments": 25,
+  "created_at": "2020-04-06T14:38:13Z",
+  "updated_at": "2022-12-24T07:27:25Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "As a homeserver admin, I might like to suggest a default jitsi server other than `jitsi.riot.im` to people who connect with riot to my server.\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/604/reactions",
+    "total_count": 5,
+    "+1": 5,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/604/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1324,7 +1324,6 @@ file	pr	ref
 3956-extensible-events-encryption.md	3956	refs/pr/upstream/3956
 3959-sliding-sync-account-data.md	3959	refs/pr/upstream/3959
 3960-sliding-sync-receipts.md	3960	refs/pr/upstream/3960
-3961-sliding-sync-typing.md	3961	refs/pr/upstream/3961
 3963-oblivious-matrix-over-https.md	3963	refs/pr/upstream/3963
 3964-notifications-for-room-tags.md	3964	refs/pr/upstream/3964
 3971-sharing-image-packs.md	3971	refs/pr/upstream/3971
@@ -1381,7 +1380,6 @@ file	pr	ref
 4057-static-room-directory.md	4057	refs/pr/upstream/4057
 4060-room-rules.md	4060	refs/pr/upstream/4060
 4062-dont_email_tweak.md	4062	refs/pr/upstream/4062
-4069-inhibit-profile-propagation.md	4069	refs/pr/upstream/4069
 4071-pagination-token-headers.md	4071	refs/pr/upstream/4071
 4073-shepherd-teams.md	4073	refs/pr/upstream/4073
 4074-server-side-annotations-aggregation.md	4074	refs/pr/upstream/4074
@@ -1500,7 +1498,6 @@ file	pr	ref
 4271-recommended-enabled-ness-for-default-push-rules.md	4271	refs/pr/upstream/4271
 4273-approval-disapproval.md	4273	refs/pr/upstream/4273
 4274-inline-media-galleries.md	4274	refs/pr/upstream/4274
-4278-media-preview-controls.md	4278	refs/pr/upstream/4278
 4279-service-notice-rooms.md	4279	refs/pr/upstream/4279
 4282-interactive-room-message.md	4282	refs/pr/upstream/4282
 4283-ignore-block-distinction.md	4283	refs/pr/upstream/4283
@@ -1520,7 +1517,6 @@ file	pr	ref
 4309-finalisded-delayed-events-on-sync.md	4309	refs/pr/upstream/4309
 4310-MatrixRTC-call-decline.md	4310	refs/pr/upstream/4310
 4310-matrixRTC-call-decline.md	4310	refs/pr/upstream/4310
-4319-room-member-events-for-invite-knock-sync-response.md	4319	refs/pr/upstream/4319
 4320-rich-presence.md	4320	refs/pr/upstream/4320
 4321-policy-room-upgrade-semantics.md	4321	refs/pr/upstream/4321
 4322-simple-media-self-redaction.md	4322	refs/pr/upstream/4322
@@ -1579,7 +1575,6 @@ file	pr	ref
 4405-deprecate-emoji-verification.md	4405	refs/pr/upstream/4405
 4406-m-sender-ignored.md	4406	refs/pr/upstream/4406
 4407-sticky-events-widget-api.md	4407	refs/pr/upstream/4407
-4409-carify-thumbnailing.md	4409	refs/pr/upstream/4409
 4412-widget-base-postmessage-api.md	4412	refs/pr/upstream/4412
 4413-remove-private-join-rule.md	4413	refs/pr/upstream/4413
 4414-design-decision-errors.md	4414	refs/pr/upstream/4414
@@ -1665,3 +1660,14 @@ file	pr	ref
 4513-standard-http-status-codes.md	4513	refs/pr/upstream/4513
 4514-edu-size-limit.md	4514	refs/pr/upstream/4514
 4515-rtc-transports-widget-action.md	4515	refs/pr/upstream/4515
+4517-federated-thirdparty-lookups.md	4517	refs/pr/upstream/4517
+4518-registries.md	4518	refs/pr/upstream/4518
+4519-rtc-transports-registry.md	4519	refs/pr/upstream/4519
+4521-algebraic-set-reconciliation.md	4521	refs/pr/upstream/4521
+4522-username-colors.md	4522	refs/pr/upstream/4522
+4524-federation-bidirectional-ping.md	4524	refs/pr/upstream/4524
+4525-paginated-sync.md	4525	refs/pr/upstream/4525
+4526-refresh-token-grant-error-handling.md	4526	refs/pr/upstream/4526
+4527-state-event-power-levels.md	4527	refs/pr/upstream/4527
+4528-incompatible-server-error.md	4528	refs/pr/upstream/4528
+4529-profile-overrides.md	4529	refs/pr/upstream/4529

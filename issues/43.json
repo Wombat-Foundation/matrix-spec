@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/43",
+  "repository_url": "https://api.github.com/repos/matrix-org/matrix-spec",
+  "labels_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/43/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/43/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/43/events",
+  "html_url": "https://github.com/matrix-org/matrix-spec/issues/43",
+  "id": 1155569418,
+  "node_id": "MDU6SXNzdWUxMTU1NTY5NDE4",
+  "number": 43,
+  "title": "How to delete \"state\". (SPEC-8)",
+  "user": {
+    "login": "matrixbot",
+    "id": 10127976,
+    "node_id": "MDQ6VXNlcjEwMTI3OTc2",
+    "avatar_url": "https://avatars.githubusercontent.com/u/10127976?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/matrixbot",
+    "html_url": "https://github.com/matrixbot",
+    "followers_url": "https://api.github.com/users/matrixbot/followers",
+    "following_url": "https://api.github.com/users/matrixbot/following{/other_user}",
+    "gists_url": "https://api.github.com/users/matrixbot/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/matrixbot/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/matrixbot/subscriptions",
+    "organizations_url": "https://api.github.com/users/matrixbot/orgs",
+    "repos_url": "https://api.github.com/users/matrixbot/repos",
+    "events_url": "https://api.github.com/users/matrixbot/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/matrixbot/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 3883769547,
+      "node_id": "MDU6TGFiZWwzODgzNzY5NTQ3",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/feature",
+      "name": "feature",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Suggestion for a significant extension which needs considerable consideration"
+    },
+    {
+      "id": 3883775222,
+      "node_id": "MDU6TGFiZWwzODgzNzc1MjIy",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/A-S2S",
+      "name": "A-S2S",
+      "color": "5319E7",
+      "default": false,
+      "description": "Server-to-Server API (federation)"
+    },
+    {
+      "id": 3883799472,
+      "node_id": "MDU6TGFiZWwzODgzNzk5NDcy",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/p4",
+      "name": "p4",
+      "color": "eeeeee",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 3883803266,
+      "node_id": "MDU6TGFiZWwzODgzODAzMjY2",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/room-vNext",
+      "name": "room-vNext",
+      "color": "f77bd8",
+      "default": false,
+      "description": "An idea which will require a bump in room version"
+    }
+  ],
+  "state": "open",
+  "locked": false,
+  "assignees": [],
+  "milestone": null,
+  "comments": 7,
+  "created_at": "2014-09-16T11:40:20Z",
+  "updated_at": "2022-03-01T16:49:49Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "#### Motivation\r\n\r\nCurrently, when a user leaves a room they keep an entry in the current state table which is never deleted. For large, old, busy rooms this could easily lead to the current state table being huge as it would contain an event for every use that has ever been in the room. \r\n\r\nSince these entries are not used for anything, it would be much more convenient if the act of leaving simply involved removing the corresponding membership entry from the current state.\r\n#### Problems\r\n\r\nThe main problem with removing entries from current state is making it work with the state conflict resolution algorithm. The algorithm **must** have these properties:\r\n\r\n* Not depend on server state.\r\n* Not depend on order events were received in.\r\n\r\nCurrently, the algorithm works by comparing the current state with the newly proposed state. If they are on separate branches of the tree then the two separate branches are compared.\r\n\r\nHowever, if we have removed the entry from the current state we have nothing to compare any new state events with, and so it is treated as if it is completely new state. Thus by property 2, a deletion can only take effect if there are no other undeleted branches of the state tree, which doesn't really work very well.\r\n\r\n(Imported from https://matrix.org/jira/browse/SPEC-8)\r\n\r\n(Reported by @erikjohnston)\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/43/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/43/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

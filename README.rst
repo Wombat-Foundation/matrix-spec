@@ -20,3 +20,25 @@ You MUST consult these files before jumping to conclusions. They are
 organized/categorized by name and subject, and the text files are small
 enough for you to individually slurp up entirely if needed for one or
 two relevant documents/subjects.
+
+----
+
+Update helpers
+==============
+
+To update all datasets sequentially, run:
+
+* ``scripts/update-all.sh`` executes all update scripts listed below in order.
+
+Individual sync workflows:
+
+* ``scripts/update-issues.sh`` fetches GitHub issues and updates ``issues/`` with JSON, TSV, and YAML-frontmatter Markdown files.
+* ``scripts/update-unmerged-proposals.sh`` refreshes ``proposals/unmerged``
+  from open proposal PRs in a sibling ``matrix-spec-proposals`` checkout (or defaults to ``../proposals``).
+* ``scripts/update-merged-proposals.sh`` refreshes upstream-managed files under
+  ``proposals/`` from the ``main`` branch of a sibling ``matrix-spec-proposals``
+  checkout, including proposal images and other sidecar assets.
+* ``scripts/update-spec.sh`` refreshes the checked-in plain-text spec
+  corpus. If ``SOURCE_REPO`` is unset, it auto-detects a unique sibling plain-text
+  checkout or defaults to the current repository root. You can also specify
+  ``SOURCE_REPO=/path/to/plain-text-spec-checkout`` explicitly.

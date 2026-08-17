@@ -2,7 +2,7 @@
 
 Scheduling messages to be sent at a defined later time is a feature present on a number of other
 messaging platforms such as [Teams] or [Telegram]. This mechanism has a wide range of possible
-applications such as tea timers, reminders, self-destructing messages (where the redaction is
+applications such as reminders, self-destructing messages (where the redaction is
 scheduled to be sent later), or other ephemeral events such as temporary power level changes.
 
 [Teams]: https://support.microsoft.com/en-us/office/schedule-chat-messages-in-microsoft-teams-2fc5ea77-7bb4-4511-8f59-e62bac1c0f6a
@@ -81,16 +81,11 @@ The homeserver MUST NOT send the event before the scheduled time.
 To support batch sending, homeservers MAY add up to 30 seconds to the scheduled send time.
 Note: clients might find that their events are delayed further due to server load and similar conditions.
 
-The homeserver MUST persist scheduled delayed events such that they will not be lost by the homeserver being restarted.
-Moreover, when a homeserver restarts, it MUST scan for all scheduled delayed events whose send time has already passed
-(i.e. delayed events that were scheduled to be sent while the homeserver was offline),
-and send those delayed events as soon as possible, in chronological order of their scheduled send times.
-
 The homeserver MAY enforce a maximum allowed delay for delayed events. This limit is
 communicated to the client in a capability (described later in this proposal).
-If a requested delay exceeds this maximum, the homeserver will respond with HTTP 403
+If a requested delay exceeds this maximum, the homeserver will respond with HTTP 400
 and a [standard error response](https://spec.matrix.org/v1.18/client-server-api/#standard-error-response)
-with an `errcode` of `M_FORBIDDEN`.
+with an `errcode` of `M_DELAY_TOO_LARGE`.
 
 The homeserver SHOULD apply rate limiting to the scheduling of delayed events to provide mitigation against the
 [Resource Exhaustion](https://spec.matrix.org/v1.18/appendices/#threat-resource-exhaustion) threat.
@@ -116,14 +111,12 @@ Retry-After: 1200
 }
 ```
 
-As a special case, if this limit has been set to 0 such that scheduling delayed events is disallowed entirely,
-the homeserver will instead respond with HTTP 403 and a standard error response with an `errcode` of `M_FORBIDDEN`.
-
 #### Delayed event limits as a capability
 
 The values of both the maximum allowed delay and the maximum allowed number of scheduled events are advertised as a
 [capability](https://spec.matrix.org/v1.18/client-server-api/#capabilities-negotiation) named `m.delayed_events`, via
 the values of fields named `max_delay_ms` and `max_scheduled` respectively.
+For any of these limits enforced by the server, its representative field MUST be present in the capability.
 If the server doesn't enforce one of these limits, its representative field MUST be absent from the capability.
 If the server enforces none of these limits, the capability MAY be omitted entirely instead of having an empty body.
 
@@ -169,7 +162,7 @@ Where the `action` is `send`, the homeserver SHOULD apply rate limiting to provi
 For all `action`s, the homeserver SHOULD apply rate limiting to provide mitigation against the
 [Resource Exhaustion](https://spec.matrix.org/v1.18/appendices/#threat-resource-exhaustion) threat.
 
-If no delayed event with the specified `delay_id` can be found,
+If no delayed event for the requesting user with the specified `delay_id` can be found,
 the homeserver will respond with HTTP 404
 and a [standard error response](https://spec.matrix.org/v1.18/client-server-api/#standard-error-response)
 with an `errcode` of `M_NOT_FOUND`.
@@ -217,7 +210,7 @@ A new authenticated Client-Server API endpoint at
 `GET /_matrix/client/v1/delayed_events/{delay_id}` responds with
 details on the delayed event with the specified `delay_id`.
 
-If no delayed event with the specified `delay_id` exists,
+If no delayed event for the requesting user with the specified `delay_id` exists,
 or it does exist but had been scheduled by a user other than the one requesting this endpoint,
 the homeserver will respond with HTTP 404
 and a [standard error response](https://spec.matrix.org/v1.18/client-server-api/#standard-error-response)
@@ -317,7 +310,7 @@ sending. If the power level situation has changed at the time the delay passes, 
 
 #### Rate-limiting at the point of sending
 
-Further to the rate limiting of the API endpoints, the homeserver SHOULD apply rate limiting to the sending
+In addition to the rate limiting of the API endpoints, the homeserver SHOULD apply rate limiting to the sending
 of delayed messages at the point that they are inserted into the DAG.
 
 This is to provide mitigation against the [High Volume of Messages](
@@ -344,17 +337,6 @@ enable a client to verify that an event was *actually* sent by the sender's devi
 proposal shouldn't affect how that verification works because those other proposals will
 need to account for eventual consistency anyway, which may appear as a delayed event or
 attached to a disjointed part of the DAG.
-
-### Conflicting delayed state events
-
-A delayed state event can overwrite other state events that were sent in between the delayed event
-being scheduled and it being sent. Whether or not this is problematic strongly depends on the
-use case, though. When the overwrite is undesired, a possible remedy could be to cancel the scheduled
-delayed event when a conflicting new state event is sent into the room. Alternatively, it might be
-possible to avoid the conflict in the first place by using separate `state_key`s or by not relying on
-state events to begin with. Additionally, this type of race condition can also happen without delayed
-events due to federation delay. Potentially addressing this situation is, therefore, left to a future
-proposal.
 
 ### Inability to filter and paginate delayed events
 

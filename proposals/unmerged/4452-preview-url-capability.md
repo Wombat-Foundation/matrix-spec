@@ -16,7 +16,7 @@ capabilities API.
 
 ## Proposal
 
-The [GET /\_matrix/client/v3/capabilities](https://spec.matrix.org/v1.18/client-server-api/#get_matrixclientv3capabilities)
+The [GET /\_matrix/client/v3/capabilities](https://spec.matrix.org/v1.18/client-server-api/#get_matrixclientv3capabilities) endpoint
 will include a new capability key, `m.preview_url` containing a single `enabled` flag.
 
 ```json
@@ -41,10 +41,7 @@ depending on the authenticated user (e.g. disabled for guest users).
 
 ## Potential issues
 
-This increases complexity for clients who offer URL previews as a feature. They will need to check
-the capabilities offered by the homeserver before they can start making requests. This has been mitigated
-by reusing the capabilities endpoint. For the reasons outlined in Alternatives, it's an acceptable
-tradeoff to include a capability for this feature.
+None
 
 ## Alternatives
 

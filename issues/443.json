@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/443",
+  "repository_url": "https://api.github.com/repos/matrix-org/matrix-spec",
+  "labels_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/443/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/443/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/443/events",
+  "html_url": "https://github.com/matrix-org/matrix-spec/issues/443",
+  "id": 1155796089,
+  "node_id": "MDU6SXNzdWUxMTU1Nzk2MDg5",
+  "number": 443,
+  "title": "Fix endpoints that only differ by a trailing variable",
+  "user": {
+    "login": "anoadragon453",
+    "id": 1342360,
+    "node_id": "MDQ6VXNlcjEzNDIzNjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1342360?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/anoadragon453",
+    "html_url": "https://github.com/anoadragon453",
+    "followers_url": "https://api.github.com/users/anoadragon453/followers",
+    "following_url": "https://api.github.com/users/anoadragon453/following{/other_user}",
+    "gists_url": "https://api.github.com/users/anoadragon453/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/anoadragon453/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/anoadragon453/subscriptions",
+    "organizations_url": "https://api.github.com/users/anoadragon453/orgs",
+    "repos_url": "https://api.github.com/users/anoadragon453/repos",
+    "events_url": "https://api.github.com/users/anoadragon453/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/anoadragon453/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 3883764666,
+      "node_id": "MDU6TGFiZWwzODgzNzY0NjY2",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/clarification",
+      "name": "clarification",
+      "color": "98e6ae",
+      "default": false,
+      "description": "An area where the expected behaviour is understood, but the spec could do with being more explicit"
+    },
+    {
+      "id": 3883769549,
+      "node_id": "MDU6TGFiZWwzODgzNzY5NTQ5",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/A-Client-Server",
+      "name": "A-Client-Server",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues affecting the CS API"
+    },
+    {
+      "id": 3883770098,
+      "node_id": "MDU6TGFiZWwzODgzNzcwMDk4",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/A-Application-Services",
+      "name": "A-Application-Services",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues affecting the AS API"
+    },
+    {
+      "id": 3883775222,
+      "node_id": "MDU6TGFiZWwzODgzNzc1MjIy",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/A-S2S",
+      "name": "A-S2S",
+      "color": "5319E7",
+      "default": false,
+      "description": "Server-to-Server API (federation)"
+    },
+    {
+      "id": 3883799475,
+      "node_id": "MDU6TGFiZWwzODgzNzk5NDc1",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/A-Identity-Service",
+      "name": "A-Identity-Service",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    }
+  ],
+  "state": "open",
+  "locked": false,
+  "assignees": [],
+  "milestone": null,
+  "comments": 6,
+  "created_at": "2019-03-07T12:23:26Z",
+  "updated_at": "2022-03-01T20:42:28Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Some of the endpoints are differentiated simply by lack of a variable on the end. This is bad because you get into the question of what to do when you have the following endpoint definitions:\r\n\r\n* `/_matrix/some/endpoint`\r\n* `/_matrix/some/endpoint/$var`\r\n\r\nand you get a request that looks like:\r\n\r\n`/_matrix/some/endpoint/`\r\n\r\nDoes this match the first definition? Or the second definition with `$var` = `\"\"`? To make matters worse sometimes `\"\"` is a valid value!\r\n\r\nThis is currently noticed in the following endpoints, but there may be more:\r\n\r\nSpecced (as of this issue):\r\n\r\n* `GET /_matrix/client/r0/rooms/{roomId}/state/{eventType}/{stateKey}`\r\n* `GET /_matrix/client/r0/rooms/{roomId}/state/{eventType}`\r\n\r\n---\r\n\r\n* `GET /_matrix/client/r0/user/{userId}/filter/`\r\n* `GET /_matrix/client/r0/user/{userId}/filter/{filter}`\r\n\r\nUnspecced (as of this issue):\r\n\r\n* `GET /_matrix/federation/v1/groups/{groupId}/categories/`\r\n* `GET /_matrix/federation/v1/groups/{groupId}/categories/{categoryId}`\r\n\r\n---\r\n\r\n* `GET /_matrix/federation/v1/groups/{groupId}/roles/`\r\n* `GET /_matrix/federation/v1/groups/{groupId}/roles/{roleId}`",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/443/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/443/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

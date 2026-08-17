@@ -851,6 +851,62 @@ proposal. Please also see the potential issues from the dependent MSCs.
 
 ## Alternatives
 
+### Use the Authorization Code Grant instead of the Device Authorization Grant
+
+Instead of the [RFC8628](https://datatracker.ietf.org/doc/html/rfc8628) Device Authorization Grant, the new device
+could use the [RFC6749](https://datatracker.ietf.org/doc/html/rfc6749#section-4.1) Authorization Code Grant (with
+PKCE), the grant already used for a regular sign in with the OAuth 2.0 API. This could take one of three shapes:
+
+1. **New device authorizes in its own browser.** The new device is the OAuth 2.0 client and opens the authorization
+   URL locally; the redirect returns to it as in a regular same-device sign in, and the existing device is not involved
+   in the grant.
+2. **Existing device as OAuth 2.0 client.** The existing device runs the whole grant in its browser and passes the
+   resulting tokens to the new device over the secure channel.
+3. **New device authorizes on existing device.** The new device is the OAuth 2.0 client but sends its authorization URL
+   over the secure channel for the existing device to open; the authorization code must then be relayed back to the new
+   device, which completes the token exchange with its PKCE `code_verifier`.
+
+For:
+
+- Availability: the `authorization_code` grant type is mandatory in the
+  [OAuth 2.0 API](https://spec.matrix.org/v1.15/client-server-api/#oauth-20-api), whereas the
+  [device authorization flow] is optional, so this would work with every OAuth-capable homeserver.
+- No polling and no `user_code` display: the new device gets the outcome directly rather than polling the token
+  endpoint at the RFC8628 `interval` and prompting the user to confirm a `user_code`.
+- Shape 1 is a plain same-device sign in, so nothing crosses the secure channel for the grant and the existing device
+  opens no URL, removing the [Malicious client sends arbitrary verification URI](#malicious-client-sends-arbitrary-verification-uri)
+  concern and resisting [remote phishing](#social-engineering-sign-in-with-qr-remote-phishing) (an attacker only wins
+  if the victim authenticates on the attacker's own device).
+- In shape 3 the existing device can validate the authorization URL against the `authorization_endpoint` in the
+  homeserver's metadata, which is not possible for an RFC8628 `verification_uri`.
+
+Against:
+
+- Shape 1 forfeits the main benefit of QR login: the new device's browser has no session with the authorization
+  server, so the user must always authenticate from scratch there — reducing this to "sign in normally, then set up
+  E2EE via QR" rather than "sign in via QR".
+- Shape 2 gives the existing device the new session's access and refresh tokens, losing the property that it never
+  handles those credentials, and needs the authorization server to issue tokens for one client on behalf of another.
+- Shape 3 assumes the authorizing browser and the client receiving the code are co-located, which is false here: the
+  redirect lands in the existing device's browser but targets the new client's `redirect_uri`, and there is no
+  portable way for the existing device to capture it (custom schemes/app links aren't claimable across clients — never
+  by a web client — and loopback redirects have nothing listening). Any workaround re-invents the cross-device
+  delivery RFC8628 already standardizes, and the code transits the existing device (though PKCE keeps it unusable
+  without the new device's `code_verifier`).
+- With the Device Authorization Grant the `verification_uri`/`user_code` are not bound to any user agent, so consent
+  can fall back to whichever browser or device still holds a session. Shapes 2 and 3 pin consent to a specific browser
+  on the existing device; if it has no session there, re-authenticating in place is the only option.
+- The homeserver loses the cross-device signal: a Device Authorization Request is distinguishable from a normal sign
+  in, letting the consent screen state that *another* device is being signed in — a mitigation relied upon in
+  [Sign in with QR remote phishing](#social-engineering-sign-in-with-qr-remote-phishing).
+
+Of the three shapes outlined here, the first one appears to be most sensible with the main trade-off being that the user
+may need to re-authenticate on the new device.
+
+Note that this proposal already includes the `m.login.protocols` negotiation step, so the mechanism is extensible: a
+future MSC could add an Authorization Code Grant protocol (in whichever shape proves most useful) alongside
+`device_authorization_grant` without a breaking change. There is therefore no need to choose between the grants now.
+
 ### Alternative method of secret sharing
 
 Instead of sharing a secrets bundle directly, the existing device could cross-sign the new device and then use
@@ -869,6 +925,46 @@ Against:
 - The new device cannot upload the cross-signing signature with the device keys in a single request. This introduces a
   chance of other devices seeing the new device as unverified, incorrectly prompting the user to verify the device that
   will soon be verified.
+
+### Proof of possession of the new device's key
+
+As described under [Device ID confusion](#device-id-confusion), the existing device's checks bind the shared secrets to
+a `device_id` that comes online during the flow, but not to the peer it is talking to on the secure channel. A stronger
+binding could be obtained by requiring the new device to prove possession of the private key associated with the
+`device_id` it claims.
+
+Concretely, before sharing secrets the existing device would require the peer to demonstrate that it controls the
+Ed25519 device signing key (`ed25519:D`) that the homeserver publishes for device `D`:
+
+- The new device signs a value that is bound to *this* secure channel — for example the secure channel transcript hash
+  or session key from [MSC4388], or the existing device's public key — with its Ed25519 device key, and sends the
+  signature over the secure channel. Binding to the channel prevents an attacker from relaying a proof that the victim's
+  genuine device produced on a different channel.
+- Before sharing secrets, the existing device fetches the new device's published keys (e.g. via
+  [`POST /_matrix/client/v3/keys/query`](https://spec.matrix.org/v1.15/client-server-api/#post_matrixclientv3keysquery))
+  for `device_id` `D`, and confirms both that the returned `ed25519:D` matches the key used to produce the signature and
+  that the signature verifies. Verifying a bare signature is not sufficient on its own, because an attacker could
+  present a freshly generated key pair; the proof must be anchored to the key the homeserver holds for `D`.
+
+This defeats both variants of the device ID confusion attack: a peer that free-rides on the victim's concurrent login
+holds no private key for `D`, and a peer that claims a device ID belonging to another of the victim's devices cannot
+produce a signature valid for that device's published key.
+
+For:
+
+- Cryptographically binds the secure channel peer to the device the secrets are shared with, closing the device ID
+  confusion gap rather than relying on the unpredictability of the device ID.
+
+Against:
+
+- The new device's device keys must be published on the homeserver *before* secrets are shared, so that the existing
+  device can query them. This conflicts with the single `/keys/upload` request described in
+  [Secret sharing and device verification](#secret-sharing-and-device-verification), where the device keys and
+  cross-signing signature are uploaded together specifically to avoid the new device being transiently visible as
+  unverified. Splitting the upload reintroduces that window, or an extra round-trip is needed. This is the same
+  trade-off weighed in [Alternative method of secret sharing](#alternative-method-of-secret-sharing).
+- Adds protocol complexity and an additional homeserver round-trip to an already large proposal, to mitigate a threat
+  whose preconditions are contrived.
 
 ### Support users without cross-signing set up
 
@@ -932,6 +1028,110 @@ Mitigations:
 - After the new device gets the access token it calls the `whoami` endpoint to determine what user was authenticated.
   The new device MAY then prompt the user to confirm that they wish to proceed before proceeding.
 
+### Social Engineering: Sign in with QR remote phishing
+
+Scenario:
+
+An attacker has an out-of-band channel (e.g. email) through which they can communicate with a victim (a legitimate user
+of a homeserver). The attacker starts the QR sign-in process as described in this MSC on a remote client that they
+control. The attacker generate a QR code using the device under their control. The attacker then uses the out-of-band
+channel to trick the victim into scanning the QR code with their existing Matrix client and completing the sign-in.
+
+A variant of this (which is referred to as "remote client + malicious homeserver") is where the homeserver is also under
+active control of the attacker. In this case the attacker can bypass any server-side measures (such as showing a consent
+screen to the user) to complete the attack more easily.
+
+Result:
+
+- The attacker has the victim's end-to-end encryption secrets on the device under their control.
+- The attacker has an access token for the victim's account.
+  (n.b. in the case of the homeserver being under control of the attacker then the attacker can create a valid access
+  token without requiring any action of the victim)
+  
+Mitigations:
+
+|Mitigation|Applicable to remote client scenario|Applicable to remote client + malicious homeserver variant|
+|-|-|-|
+|The consent screen shown by the homeserver during the Device Authorization Grant SHOULD make it explicit that the user is signing in another device (as opposed to the device that they are currently using).|Yes|No - as homeserver under control of attacker|
+|Because the data in the QR code is a Matrix-specific binary format, system provided QR scanners can not be used to initiate an attack. This means that the client can control the UI shown to the user prior to scanning a QR code.|Yes|Yes|
+|Before scanning a QR code an existing client SHOULD warn the user in the UI about the dangers of scanning a QR from an untrusted source.|Yes|Yes|
+|If an existing client provides a mechanism to initiate the scanning of a QR (e.g. via a deep-link) then it MUST not bypass any warnings that are implemented.|Yes|Yes|
+
+### Malicious client sends arbitrary verification URI
+
+Scenario:
+
+- The attacker convinces the victim to complete the secure channel establishment, including the check code step, with a
+  new client under the attacker's control (as in the remote phishing scenario above).
+- Because this MSC places no restrictions on the `verification_uri` and `verification_uri_complete` fields of the
+  `m.login.protocol` message, the malicious client sends an arbitrary URL in place of one from a genuine
+  [Device Authorization Response].
+- The victim's existing client automatically opens the attacker's URL in a trusted browser environment (e.g. an
+  `ASWebAuthenticationSession` on iOS where the cookie jar and password manager features are available) at a point where
+  the user is expecting to authenticate.
+
+Result:
+
+- The victim's trusted client opens an attacker-controlled URL. For example, this could be a spoofed consent/login page
+  attempting to capture the user's homeserver credentials, or a URI with a non-`https` scheme that deep-links into
+  another application.
+
+Mitigations:
+
+- The prerequisites are the same as for the
+  [remote phishing](#social-engineering-sign-in-with-qr-remote-phishing) scenario above, so the same UX mitigations
+  (warnings before scanning a QR code from an untrusted source) apply. An attacker in this position could instead
+  complete the full sign in and obtain an access token and the end-to-end encryption secrets, which is a strictly more
+  valuable outcome, and in any case there are much simpler ways of attempting to get a victim to open an arbitrary URL.
+  As such, no protocol-level mitigation is proposed.
+- Clients MAY choose to only open URIs with an `https` scheme, or to warn the user before opening a URI with an
+  unusual scheme.
+
+Note that it is not possible for the existing client to validate the `verification_uri` against the homeserver's
+advertised authorization server metadata: [RFC8628](https://datatracker.ietf.org/doc/html/rfc8628#section-3.2) does not
+require the `verification_uri` to be hosted on the same server as the authorization server itself (for example, a
+vanity short URL such as `https://example.com/devicelogin` is used with an issuer of
+`https://login.example.com`).
+
+### Device ID confusion
+
+Scenario:
+
+- The victim's existing device establishes a secure channel with a device under the attacker's control (for example as
+  in the [remote phishing](#social-engineering-sign-in-with-qr-remote-phishing) scenario above), including completing
+  the check code step.
+- The attacker's device sends an `m.login.protocol` message claiming a `device_id` of `D`, where `D` is the device ID
+  that a genuine new device belonging to the victim is (or will shortly be) using in a separate, legitimate login that
+  the victim is performing at the same time.
+- The existing device's checks are satisfied without the attacker's device ever authenticating: at step 4 the device
+  `D` is not yet present (`404`), and by the time the existing device performs its liveness check before sharing
+  secrets (`GET /_matrix/client/v3/devices/D`), device `D` has come online — created by the victim's *genuine* new
+  device, not the attacker's.
+
+Result:
+
+- The victim's existing device shares end-to-end encryption secrets with the attacker's device (which did not complete
+  authentication).
+  *n.b. the attacker did not obtain a valid access token during this exploitation.*
+
+The root of the weakness is that the existing device treats "a device with ID `D` exists on the homeserver" as proof
+that "the peer I am talking to on the secure channel is the device that logged in as `D`". These are not equivalent: the
+liveness check can be satisfied by *any* concurrent login that happens to use the same device ID, including one
+performed by a different party.
+
+Mitigations:
+
+- Where the attack is initiated through [remote phishing](#social-engineering-sign-in-with-qr-remote-phishing) the same
+  mitigations are applicable in this scenario.
+- The `device_id` is [chosen by the new device and is not otherwise predictable](https://spec.matrix.org/v1.19/client-server-api/#device-id-allocation),
+  so mounting this attack requires the attacker to know or force the device ID that the victim's genuine new device will
+  use, concurrently with the phishing flow. This makes the attack contrived, but does not close the underlying gap.
+- The existing device already asserts that `D` was absent at step 4 and present before secret sharing. This binds the
+  secrets to a device ID that came online during the flow, but — as noted above — not to the secure channel peer.
+- A stronger, cryptographic mitigation (alongside trade-offs) is described under [Proof of possession of the new device's key](#proof-of-possession-of-the-new-devices-key)
+  in the alternatives section, which binds the secure channel peer to the device keys published for `D` on the
+  homeserver.
+
 ## Threat modelling
 
 During the design of this proposal various security threats have been identified and considered. The details of these
@@ -942,6 +1142,10 @@ The following table is intended to provide an overview with links into the detai
 |Threat|Summary|Impacted layers|Types of mitigations|MSC section(s)|
 |-|-|-|-|-|
 |**Unattended devices**|The Sign in with QR mechanism could be used by an attacker who has gained temporary access to a client to escalate the attack to creation of a new client session that has ongoing access|login protocol; grant|biometrics; server policies|[MSC4108 Malicious session spawning](#malicious-session-spawning)|
+|**Social engineering: Sign in with QR remote phishing (remote client)**|Attacker tricks a legitimate user into scanning a QR code (generated on an attacker controlled remote client) with their existing client and completing the sign in, resulting in disclosure of access token and end-to-end encryption secrets|login protocol; grant|UX|[MSC4108 Social Engineering: Sign in with QR remote phishing](#social-engineering-sign-in-with-qr-remote-phishing)|
+|**Social engineering: Sign in with QR remote phishing (remote client + malicious homeserver)**|Similar to remote client phishing, but homeserver is under active control of the attacker and wants to compromise the victim's end-to-end encryption|login protocol|UX|[MSC4108 Social Engineering: Sign in with QR remote phishing](#social-engineering-sign-in-with-qr-remote-phishing)|
+|**Malicious client sends arbitrary verification URI**|A malicious new client sends an arbitrary URL in the `m.login.protocol` message which the victim's existing client then opens in a trusted browser environment|login protocol|UX|[MSC4108 Malicious client sends arbitrary verification URI](#malicious-client-sends-arbitrary-verification-uri)|
+|**Device ID confusion**|A malicious device on the secure channel claims a `device_id` that the victim's genuine new device is bringing online concurrently, causing the existing device's liveness check to pass and secrets to be shared with the attacker without it authenticating|login protocol|device ID checks; UX|[MSC4108 Device ID confusion](#device-id-confusion)|
 |**Shoulder-surfing attacker (Specter)**|Attacker has control of homeserver and network and is present for QR scanning and attempts to steal end-to-end encryption secrets|secure channel|cryptographic|[MSC4388 Shoulder-surfing attacker (Specter)](https://github.com/matrix-org/matrix-spec-proposals/blob/element-hq/oidc-qr-secure-channel/proposals/4388-secure-qr-channel.md#shoulder-surfing-attacker-specter)|
 |**Pure Dolev-Yao attacker**|Attacker has control of the network but isn't present for QR scanning|secure channel|cryptographic|[MSC4388 Pure Dolev-Yao attacker](https://github.com/matrix-org/matrix-spec-proposals/blob/element-hq/oidc-qr-secure-channel/proposals/4388-secure-qr-channel.md#pure-dolev-yao-attacker)|
 |**Shoulder-surfing to sign in to attacker account**|Victim is signing in a new device. Attacker is present for QR code display/scanning. Victim's new device could be signed in as attacker|login protocol; secure channel|cryptographic; UX|[MSC4108 Shoulder-surfing to sign in to attacker account](#shoulder-surfing-to-sign-in-to-attacker-account)|
