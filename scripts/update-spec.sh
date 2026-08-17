@@ -58,15 +58,19 @@ infer_source_repo() {
 	esac
 }
 
+UPSTREAM_REMOTE="${UPSTREAM_REMOTE:-upstream}"
+UPSTREAM_MAIN="${UPSTREAM_MAIN:-upstream/main}"
+
 if [[ -z "$SOURCE_REPO" ]]; then
-	if ! SOURCE_REPO="$(infer_source_repo)"; then
-		echo "error: SOURCE_REPO must point at a checkout containing the plain-text spec files" >&2
-		echo "no unique sibling plain-text checkout was found next to $repo_root" >&2
-		echo "example: SOURCE_REPO=../matrix-spec-plain ./scripts/update-merged-spec.sh" >&2
-		exit 1
+	if SOURCE_REPO="$(infer_source_repo)"; then
+		echo "auto-detected SOURCE_REPO=$SOURCE_REPO"
+	else
+		echo "no unique sibling plain-text checkout found; using current repository ($repo_root)"
+		SOURCE_REPO="$repo_root"
 	fi
-	echo "auto-detected SOURCE_REPO=$SOURCE_REPO"
 fi
+
+
 
 git -C "$SOURCE_REPO" rev-parse --git-dir >/dev/null
 
@@ -77,12 +81,12 @@ manifest="$tmp_dir/files.txt"
 : >"$manifest"
 
 for path in "${managed_paths[@]}"; do
-	if git -C "$SOURCE_REPO" cat-file -e "$SOURCE_REF:$path" 2>/dev/null; then
+	obj_type="$(git -C "$SOURCE_REPO" cat-file -t "$SOURCE_REF:$path" 2>/dev/null || true)"
+	if [[ "$obj_type" == "blob" ]]; then
 		printf '%s\n' "$path" >>"$manifest"
-		continue
+	elif [[ "$obj_type" == "tree" ]]; then
+		git -C "$SOURCE_REPO" ls-tree -r --name-only "$SOURCE_REF" "$path" >>"$manifest"
 	fi
-
-	git -C "$SOURCE_REPO" ls-tree -r --name-only "$SOURCE_REF" "$path" >>"$manifest"
 done
 
 sort -u "$manifest" -o "$manifest"

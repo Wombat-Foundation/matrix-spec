@@ -69,8 +69,8 @@
   "closed_by": null,
   "reactions": {
     "url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/836/reactions",
-    "total_count": 30,
-    "+1": 20,
+    "total_count": 31,
+    "+1": 21,
     "-1": 0,
     "laugh": 0,
     "hooray": 0,
