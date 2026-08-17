@@ -28,7 +28,6 @@ git -C "$SOURCE_REPO" fetch "$UPSTREAM_REMOTE" \
 tmp_dir="$(mktemp -d "${TARGET_DIR}.tmp.XXXXXX")"
 trap 'rm -rf "$tmp_dir"' EXIT
 
-manifest_rel="${MANIFEST_PATH#$TARGET_DIR/}"
 printf 'file\tref\n' >"$tmp_dir/SOURCES.tsv"
 
 while read -r path; do
@@ -52,7 +51,7 @@ if [[ -f "$MANIFEST_PATH" ]]; then
 		while IFS=$'\t' read -r file _ref; do
 			[[ -n "$file" ]] || continue
 			case "$file" in
-			"" | .* | */../* | ../* | */.. | ..) continue ;;
+			"" | .* | */../* | */..) continue ;;
 			esac
 			rm -f -- "$TARGET_DIR/$file"
 		done
@@ -61,7 +60,7 @@ fi
 echo "copying refreshed files to $TARGET_DIR"
 find "$tmp_dir" -type f ! -name 'SOURCES.tsv' -print0 |
 	while IFS= read -r -d '' src; do
-		rel="${src#$tmp_dir/}"
+		rel="${src#"$tmp_dir"/}"
 		dest="$TARGET_DIR/$rel"
 		mkdir -p "$(dirname "$dest")"
 		cp -- "$src" "$dest"

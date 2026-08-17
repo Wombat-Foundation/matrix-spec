@@ -70,8 +70,6 @@ if [[ -z "$SOURCE_REPO" ]]; then
 	fi
 fi
 
-
-
 git -C "$SOURCE_REPO" rev-parse --git-dir >/dev/null
 
 tmp_dir="$(mktemp -d "merged-spec.tmp.XXXXXX")"
@@ -106,10 +104,10 @@ find . \
 	while read -r path; do
 		trimmed="${path#./}"
 		case "$trimmed" in
-		appendices.txt|application-service-api.txt|generate_llm_spec_tree.py|identity-service-api.txt|index.txt|proposals.txt|push-gateway-api.txt|server-server-api.txt)
+		appendices.txt | application-service-api.txt | generate_llm_spec_tree.py | identity-service-api.txt | index.txt | proposals.txt | push-gateway-api.txt | server-server-api.txt)
 			grep -Fxq "$trimmed" "$manifest" || rm -f -- "$trimmed"
 			;;
-		changelog/*|client-server-api/*|olm-megolm/*|rooms/*)
+		changelog/* | client-server-api/* | olm-megolm/* | rooms/*)
 			grep -Fxq "$trimmed" "$manifest" || rm -f -- "$trimmed"
 			;;
 		esac

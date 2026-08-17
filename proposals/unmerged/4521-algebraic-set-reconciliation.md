@@ -246,6 +246,14 @@ The depth-limited refine-and-resolve shape mirrors the practical reconciliation
 architecture used by Erlay.[^4] Keep the field math fixed, size the exchange
 before decoding, and split only when the current capacity is not enough.
 
+**Pre-split antichain selection.** Requesters SHOULD use the strata estimate to
+provision the initial exchange request at a pre-split prefix depth $d$ where
+$\frac{\hat{d}}{2^d} \approx 32$ rather than initiating requests at depth 0.
+Because index extraction is $O(\Delta)$ independent of total population size $N$
+and decode complexity scales super-linearly ($O(k^2 \log k)$ per bucket),
+issuing a pre-split antichain of capacity-32 requests enables 1-round set
+reconciliation while avoiding multi-round trie probe descent latency.
+
 This split is a localization step, not a proof that the peer is wrong: it only
 narrows the candidate population to the prefix that still overflows.
 
