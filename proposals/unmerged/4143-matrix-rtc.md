@@ -42,9 +42,13 @@ This proposal also doesn't cover notifications for RTC sessions. These are consi
 protocol and are described in [MSC4075: MatrixRTC notifications & call ringing][MSC4075] and
 [MSC4310: MatrixRTC decline m.rtc.decline][MSC4310].
 
+Finally, deprecation of the [legacy VoIP system] in the spec is covered by [MSC4531].
+
+[legacy VoIP system]: https://spec.matrix.org/v1.18/client-server-api/#voice-over-ip
 [MSC4075]: https://github.com/matrix-org/matrix-spec-proposals/pull/4075
 [MSC4310]: https://github.com/matrix-org/matrix-spec-proposals/pull/4310
 [MSC4519]: https://github.com/matrix-org/matrix-spec-proposals/pull/4519
+[MSC4531]: https://github.com/matrix-org/matrix-spec-proposals/pull/4531
 
 ## Proposal
 
@@ -131,11 +135,11 @@ neither `application_type` nor `application_slot_id` can contain the `#` charact
 
 A slot is opened by sending an `m.rtc.slot` state event with `status = "open"`, a valid application
 object and, if needed, a valid encryption object as per the JSON schema above. Any slot that
-doesn't fulfill these requirements is closed. To explicitly close an open slot, the associated `m.rtc.slot`
-state event is updated with `status = "closed"`. The `application` and `encryption` objects are not
-required on closed slots but may be kept around for convenience to simplify re-opening the slot.
-The semantics of open and closed slots for actual slot membership are described in the membership event
-section [below].
+doesn't fulfill these requirements MUST be treated as closed. To explicitly close an open slot, the
+associated `m.rtc.slot` state event is updated with `status = "closed"`. The `application` and `encryption`
+objects are not required on closed slots but may be kept around for convenience to simplify re-opening
+the slot. The semantics of open and closed slots for actual slot membership are described in the membership
+event section [below].
 
 Slots do not close automatically. A slot that is deliberately long-lived could be used to
 create a Discord-style experience where members hop on and off as desired. A conferencing
@@ -367,11 +371,8 @@ Use of encryption in MatrixRTC is REQUIRED in encrypted rooms. This means that `
 MUST be encrypted and `m.rtc.slot` events MUST contain an `encryption` object when sent in an encrypted
 room. Member / slot events that violate these conditions MUST be considered left / closed.
 
-Conversely, MatrixRTC encryption MUST NOT be used in unencrypted rooms. This is because the specific
-encryption mechanism introduced in this proposal is not well suited for unencrypted rooms. A future MSC
-may introduce another mechanism that lends itself better to unencrypted rooms.
-
-The only available encryption mechanism for now is `m.per_member`.
+The only available encryption mechanism for now is `m.per_member` which is defined in the remainder of
+this section.
 
 ```json5
 {
@@ -394,9 +395,9 @@ distributed among session members. Other devices, even if in the room, never get
 
 #### Distributing keys
 
-When joining a slot, clients generate a 32-byte cryptographically secure key. They then share
-the key with other clients joined to the slot by sending encrypted to-device messages of the
-type `m.rtc.encryption_key`.
+When joining a slot, clients generate a 32-byte key by using a cryptographically secure pseudorandom
+number generator. They then share the key with other clients joined to the slot by sending encrypted
+to-device messages of the type `m.rtc.encryption_key`.
 
 The recipient devices are determined from the `m.rtc.member` events that are considered to be
 joined to the slot. The conditions for considering a member joined were given
@@ -410,16 +411,13 @@ The schema for `m.rtc.encryption_key` to-device messages is as follows:
 // Unencrypted content of OlmPayload shown, but in reality this would be an encrypted message
 
 {
-    "room_id": "{room_id}",
-    "member_id": "{member_id}",
-    "media_key": {
-      "index": {index},
-      "key": "{encoded_key}",
-    },
-"index": <index>,
-"key": "{encoded_key}",
-},
-"format": 0
+  "room_id": "{room_id}",
+  "member_id": "{member_id}",
+  "media_key": {
+    "index": <index>,
+    "key": "{encoded_key}",
+    "format": "m.base64"
+  }
 }
 ```
 
@@ -432,8 +430,8 @@ The schema for `m.rtc.encryption_key` to-device messages is as follows:
   - `index` (required, number): The rolling index of the key to distinguish it from other keys. The
     value MUST be between 0 and 255 inclusive. WebRTC-based transports may use this as the `keyID`
     field of [SFrame](https://www.w3.org/TR/webrtc-encoded-transform/#sframe) headers.
-- `format` (required, number): The format in which the key was exported. Only `0` is allowed for now
-  and implies that the key's raw bytes were encoded using unpadded base64.
+  - `format` (required, string): The format in which the key was exported. Only `m.base64` is allowed
+    for now and implies that the key's raw bytes were encoded using unpadded base64.
 
 Upon receipt, clients SHOULD discard any `m.rtc.encryption_key` events that were sent in cleartext.
 
@@ -443,7 +441,7 @@ clients verify that the sender and device that was used to send the member event
 and device of the to-device message. Otherwise the message MUST be discarded.
 
 In keeping with [MSC4153: Exclude non-cross-signed devices][MSC4153], clients SHOULD also discard
-`m.rtc.encryption_key` events when the sending device is not cross-signed.
+`m.rtc.encryption_key` events when the sending device is not cross-signed by its owner.
 
 [MSC4153]: https://github.com/matrix-org/matrix-spec-proposals/pull/4153
 
@@ -512,6 +510,15 @@ with
          ├────── delay (5s) ───────┤                                      ├────── delay ...
          ├─────────────────── grace (10s) ───────────────────┤            ├────── grace ...
 ```
+
+#### Encrypted sessions in unencrypted rooms
+
+MatrixRTC encryption MUST NOT be used in unencrypted rooms. This is because the specific encryption
+mechanism introduced above is not well suited for unencrypted rooms. In an unencrypted room, events
+are not authenticated. As a result, the device ID of RTC members cannot be obtained from `m.rtc.member`
+events directly. Including the device ID in the member event's `content` isn't sufficient either. Due to
+the absence of event authentication, a malicious homeserver could just forge member events to capture
+keys. A future MSC may introduce another mechanism that lends itself better to unencrypted rooms.
 
 ## Potential issues
 
@@ -609,24 +616,6 @@ Time ─────────────────────────
 This was meant to assist in reconstructing historical sessions efficiently. However, the relations
 turned out to not be helpful because finding the slot as well as other members' member events
 still required manual history traversal while employing timestamp overlap logic.
-
-### Transport provisioning models
-
-This proposal requires the server-side Matrix deployment to also provide the MatrixRTC transport
-infrastructure. Alternatives that were considered and discarded include:
-
-* A transport system separate from Matrix accounts – Users could obtain an account with a separate
-  service provider for the RTC transport infrastructure. This is difficult to achieve across federation,
-  however, since all members joined to a slot would need an account with the same external service
-  provider.
-* Client-provided transports – Clients themself could define and operate transport infrastructure such as
-  SFUs. This is problematic because most users rely on a relatively small number of popular clients.
-  Consequently, a low number of transport backends would have to cover the majority of traffic which makes
-  the system harder to scale and raises questions around cost, governance, and accountability for
-  infrastructure maintenance.
-* Centralized infrastructure – A single shared service could provide transport infrastructure for all
-  MatrixRTC users. This creates a single point of failure though. It's also unclear what entity would
-  operate such a service.
 
 ### Key distribution via room events
 

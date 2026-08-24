@@ -98,8 +98,8 @@
   },
   "reactions": {
     "url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/295/reactions",
-    "total_count": 67,
-    "+1": 60,
+    "total_count": 66,
+    "+1": 59,
     "-1": 0,
     "laugh": 0,
     "hooray": 0,

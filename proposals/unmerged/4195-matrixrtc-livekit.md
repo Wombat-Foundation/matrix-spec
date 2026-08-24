@@ -40,7 +40,7 @@ Example for two participants from different homeservers A and B
 ## Proposal
 
 This MSC defines the **LiveKit RTC Transport**, which can appear as one of the **RTC Transports**
-offered by a homeserver and being used as transport by clients.
+offered by a homeserver and being used as transport by clients, as per [MSC4519](https://github.com/matrix-org/matrix-spec-proposals/pull/4519).
 
 ### Canonical JSON Serialization
 
@@ -640,6 +640,9 @@ required as these fields  will only be accessed via some other unstable prefix.
 
 This MSC builds on [MSC4143](https://github.com/matrix-org/matrix-spec-proposals/pull/4143) (which
 at the time of writing has not yet been accepted into the spec).
+
+This MSC additionally requires [MSC4519](https://github.com/matrix-org/matrix-spec-proposals/pull/4519)
+to be accepted.
 
 ## Appendix: Hash Derivation Test Vectors
 

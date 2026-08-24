@@ -1507,7 +1507,6 @@ file	pr	ref
 4295-bot-bounce-limit.md	4295	refs/pr/upstream/4295
 4296-device-id-mentions.md	4296	refs/pr/upstream/4296
 4298-redact-on-ban-room-version.md	4298	refs/pr/upstream/4298
-4299-trusted-users.md	4299	refs/pr/upstream/4299
 4300-request-response.md	4300	refs/pr/upstream/4300
 4302-fhir-resources.md	4302	refs/pr/upstream/4302
 4303-slightly-strict-user-id-grammar-in-rooms.md	4303	refs/pr/upstream/4303
@@ -1556,7 +1555,6 @@ file	pr	ref
 4369-capability-error-code.md	4369	refs/pr/upstream/4369
 4370-prev-events-federation-endpoint.md	4370	refs/pr/upstream/4370
 4371-eliminate-transactions.md	4371	refs/pr/upstream/4371
-4375-admin-room-management.md	4375	refs/pr/upstream/4375
 4377-clarify-image-pack-ordering.md	4377	refs/pr/upstream/4377
 0000-proposal-template.md	4379	refs/pr/upstream/4379
 4382-peppered-hash-verification.md	4382	refs/pr/upstream/4382
@@ -1566,7 +1564,6 @@ file	pr	ref
 4387-safety-error-code.md	4387	refs/pr/upstream/4387
 4388-secure-qr-channel.md	4388	refs/pr/upstream/4388
 4389-image-ordering-within-packs.md	4389	refs/pr/upstream/4389
-4390-room-blocking.md	4390	refs/pr/upstream/4390
 4391-simplified-in-room-bot-commands.md	4391	refs/pr/upstream/4391
 4392-encrypted-reactions-and-replies.md	4392	refs/pr/upstream/4392
 4396-inlined-linked-media.md	4396	refs/pr/upstream/4396
@@ -1671,3 +1668,5 @@ file	pr	ref
 4527-state-event-power-levels.md	4527	refs/pr/upstream/4527
 4528-incompatible-server-error.md	4528	refs/pr/upstream/4528
 4529-profile-overrides.md	4529	refs/pr/upstream/4529
+4531-deprecate-legacy-voip.md	4531	refs/pr/upstream/4531
+4532-revised-social-presence.md	4532	refs/pr/upstream/4532

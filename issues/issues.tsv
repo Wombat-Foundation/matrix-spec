@@ -29,7 +29,7 @@
 2327	open	2026-03-03T14:32:14Z	2026-03-03T14:32:14Z	/_matrix/client/v1/media/preview_url should clarify what status codes / errors may be returned	https://api.github.com/repos/matrix-org/matrix-spec/issues/2327
 2325	open	2026-02-28T20:57:19Z	2026-03-02T11:34:30Z	Navigation header should be sticky in mobile view	https://api.github.com/repos/matrix-org/matrix-spec/issues/2325
 2322	open	2026-02-25T02:53:16Z	2026-05-23T01:36:20Z	Option to "sync" room power levels and permissions with the parent space	https://api.github.com/repos/matrix-org/matrix-spec/issues/2322
-2321	open	2026-02-23T23:10:33Z	2026-02-23T23:11:11Z	Forum type rooms	https://api.github.com/repos/matrix-org/matrix-spec/issues/2321
+2321	open	2026-02-23T23:10:33Z	2026-08-18T08:20:56Z	Forum type rooms	https://api.github.com/repos/matrix-org/matrix-spec/issues/2321
 2314	open	2026-02-16T16:54:35Z	2026-05-07T21:07:49Z	Underscores in string powerlevels	https://api.github.com/repos/matrix-org/matrix-spec/issues/2314
 2313	open	2026-02-15T16:04:59Z	2026-04-02T13:11:02Z	How to check if guest registration is available, without creating a guest account?	https://api.github.com/repos/matrix-org/matrix-spec/issues/2313
 2312	open	2026-02-14T15:15:47Z	2026-02-14T15:15:47Z	/media/v3/preview_url response spec should include the original value of og:image	https://api.github.com/repos/matrix-org/matrix-spec/issues/2312
@@ -182,7 +182,7 @@
 1931	closed	2024-08-16T20:15:04Z	2024-08-16T20:47:35Z	Restricting permissions for relations - Thread-only rooms	https://api.github.com/repos/matrix-org/matrix-spec/issues/1931
 1927	closed	2024-08-12T15:42:42Z	2024-08-15T09:31:51Z	Document that the spec uses RFC 2119	https://api.github.com/repos/matrix-org/matrix-spec/issues/1927
 1925	closed	2024-08-11T13:10:13Z	2024-10-07T13:15:19Z	Text calling	https://api.github.com/repos/matrix-org/matrix-spec/issues/1925
-1922	open	2024-08-09T20:05:16Z	2026-05-12T07:27:48Z	Make state resolution faster	https://api.github.com/repos/matrix-org/matrix-spec/issues/1922
+1922	open	2024-08-09T20:05:16Z	2026-08-20T18:48:54Z	Make state resolution faster	https://api.github.com/repos/matrix-org/matrix-spec/issues/1922
 1917	open	2024-08-05T21:19:06Z	2026-04-01T18:35:03Z	Clarify order of initial vs incremental `/sync`	https://api.github.com/repos/matrix-org/matrix-spec/issues/1917
 1913	closed	2024-07-25T09:51:37Z	2024-08-12T09:53:19Z	GET /.well-known/matrix/client only allows additional properties of type `object`	https://api.github.com/repos/matrix-org/matrix-spec/issues/1913
 1912	closed	2024-07-19T11:13:11Z	2024-10-30T10:30:07Z	Add 403 response error to `/_matrix/federation/v1/state_ids/{roomId}`	https://api.github.com/repos/matrix-org/matrix-spec/issues/1912
@@ -202,7 +202,6 @@
 1878	open	2024-06-18T16:11:59Z	2024-06-18T16:15:29Z	"Requires authentication" phrasing can be confusing	https://api.github.com/repos/matrix-org/matrix-spec/issues/1878
 1874	closed	2024-06-18T00:52:03Z	2024-06-18T09:03:25Z	Cannot Register using API after 2 weeks of trying	https://api.github.com/repos/matrix-org/matrix-spec/issues/1874
 1873	closed	2024-06-17T09:01:39Z	2025-05-08T09:29:34Z	Handlebars spills through into API viewer	https://api.github.com/repos/matrix-org/matrix-spec/issues/1873
-1868	closed	2024-06-12T14:03:56Z	2024-06-13T16:38:44Z	The strategy of `Harvest now, decrypt later' seems like a HUGE problem for matrix's privacy and encryption.	https://api.github.com/repos/matrix-org/matrix-spec/issues/1868
 1864	closed	2024-06-12T11:39:36Z	2024-06-12T21:46:48Z	Order field in m.tag is a float even though Canonical JSON forbids floats	https://api.github.com/repos/matrix-org/matrix-spec/issues/1864
 1859	open	2024-06-11T08:06:56Z	2024-06-24T12:05:26Z	How should an appservice opt-out of providing an endpoint?	https://api.github.com/repos/matrix-org/matrix-spec/issues/1859
 1857	closed	2024-06-10T18:27:01Z	2024-06-20T17:54:31Z	Matrix 1.11	https://api.github.com/repos/matrix-org/matrix-spec/issues/1857
@@ -581,7 +580,7 @@
 1077	closed	2022-05-22T11:17:47Z	2023-04-04T21:23:48Z	Ability to redact a room.	https://api.github.com/repos/matrix-org/matrix-spec/issues/1077
 1076	open	2022-05-22T11:04:58Z	2022-05-28T02:10:59Z	It's nonsensical to apply power levels to guest users.	https://api.github.com/repos/matrix-org/matrix-spec/issues/1076
 1075	open	2022-05-20T09:35:23Z	2026-07-20T11:47:20Z	Temporarily disable notifications for a room with an active discussion for X minutes or hours	https://api.github.com/repos/matrix-org/matrix-spec/issues/1075
-1074	open	2022-05-20T09:31:28Z	2026-08-15T15:23:19Z	Keywords to disable notifications	https://api.github.com/repos/matrix-org/matrix-spec/issues/1074
+1074	open	2022-05-20T09:31:28Z	2026-08-17T09:47:34Z	Keywords to disable notifications	https://api.github.com/repos/matrix-org/matrix-spec/issues/1074
 1073	closed	2022-05-18T20:25:54Z	2025-06-03T18:05:25Z	"Account registration and management" section starts off telling you how to deactivate your account	https://api.github.com/repos/matrix-org/matrix-spec/issues/1073
 1072	open	2022-05-18T14:05:44Z	2023-08-04T17:03:48Z	Upgrading a room should rewrite restricted join rules on affected rooms	https://api.github.com/repos/matrix-org/matrix-spec/issues/1072
 1071	closed	2022-05-18T13:08:14Z	2022-05-18T20:12:19Z	spec.matrix.org has several "Specification error: Example invalid or not present" errors.	https://api.github.com/repos/matrix-org/matrix-spec/issues/1071
@@ -792,7 +791,6 @@
 842	open	2021-06-01T01:10:54Z	2022-05-28T03:10:00Z	Iterate on unban docs?	https://api.github.com/repos/matrix-org/matrix-spec/issues/842
 841	closed	2021-05-29T11:48:36Z	2022-05-28T02:29:49Z	'content-disposition: <filename>' should be 'content-disposition: inline; filename=<filename>'	https://api.github.com/repos/matrix-org/matrix-spec/issues/841
 840	open	2021-05-28T15:36:40Z	2024-06-24T15:32:03Z	Appserviceless/homeserverless ghosts/puppets (IRCv3 RELAYMSG)	https://api.github.com/repos/matrix-org/matrix-spec/issues/840
-839	closed	2021-05-27T18:36:26Z	2022-05-28T03:10:51Z	Migrade from GitHub on libre alternative e.g. Gitea	https://api.github.com/repos/matrix-org/matrix-spec/issues/839
 838	open	2021-05-22T16:34:52Z	2025-03-20T19:05:32Z	Clarify if forgiving-base64 is allowed	https://api.github.com/repos/matrix-org/matrix-spec/issues/838
 837	open	2021-05-20T19:38:49Z	2022-03-02T00:01:42Z	[Feature Request]: Optional Phone Call Integration	https://api.github.com/repos/matrix-org/matrix-spec/issues/837
 836	open	2021-05-20T16:43:19Z	2026-06-19T14:27:30Z	Ability to disable richer features per room or space.	https://api.github.com/repos/matrix-org/matrix-spec/issues/836
@@ -1091,7 +1089,7 @@
 544	open	2019-09-20T16:46:44Z	2022-09-16T12:21:08Z	POST account/3pid example suggests it could return submit_url	https://api.github.com/repos/matrix-org/matrix-spec/issues/544
 543	open	2019-09-17T11:22:46Z	2022-03-01T22:28:16Z	Add 3PID API flow diagrams	https://api.github.com/repos/matrix-org/matrix-spec/issues/543
 542	open	2019-09-16T18:46:51Z	2022-03-01T22:28:05Z	Consider a flag on events to make them non-searchable	https://api.github.com/repos/matrix-org/matrix-spec/issues/542
-541	open	2019-09-11T08:08:23Z	2026-06-23T17:30:30Z	Message attachments (multiple photos, files, other messages for forwarding, etc)	https://api.github.com/repos/matrix-org/matrix-spec/issues/541
+541	open	2019-09-11T08:08:23Z	2026-08-19T11:06:37Z	Message attachments (multiple photos, files, other messages for forwarding, etc)	https://api.github.com/repos/matrix-org/matrix-spec/issues/541
 540	open	2019-09-10T18:44:13Z	2023-07-31T12:27:41Z	Make e2ee less reliant on the server	https://api.github.com/repos/matrix-org/matrix-spec/issues/540
 539	closed	2019-09-02T16:08:20Z	2025-06-03T18:14:39Z	m.room.aliases may contain aliases from other homeservers	https://api.github.com/repos/matrix-org/matrix-spec/issues/539
 538	open	2019-09-01T20:29:12Z	2022-03-01T22:27:19Z	/joined_members makes implementation specific claims about speed and use cases	https://api.github.com/repos/matrix-org/matrix-spec/issues/538
@@ -1266,7 +1264,7 @@
 368	closed	2018-09-04T15:25:25Z	2024-11-29T09:44:09Z	Reply fallbacks leak room history	https://api.github.com/repos/matrix-org/matrix-spec/issues/368
 367	open	2018-09-03T22:33:42Z	2022-08-13T17:41:28Z	Ability to hide users below a given power level in the membership list	https://api.github.com/repos/matrix-org/matrix-spec/issues/367
 366	open	2018-09-03T18:03:47Z	2022-03-01T20:26:30Z	Add forwarded message entity	https://api.github.com/repos/matrix-org/matrix-spec/issues/366
-365	open	2018-08-31T22:41:22Z	2024-07-07T20:21:57Z	Better specify how to validate events	https://api.github.com/repos/matrix-org/matrix-spec/issues/365
+365	open	2018-08-31T22:41:22Z	2026-08-20T13:34:24Z	Better specify how to validate events	https://api.github.com/repos/matrix-org/matrix-spec/issues/365
 364	open	2018-08-31T10:44:54Z	2022-03-01T20:26:08Z	we could do with a grammar for tags	https://api.github.com/repos/matrix-org/matrix-spec/issues/364
 363	open	2018-08-31T05:13:23Z	2022-03-01T20:25:51Z	Consider making error codes spec-independent (put them in the appendix)	https://api.github.com/repos/matrix-org/matrix-spec/issues/363
 362	open	2018-08-30T20:58:45Z	2022-03-01T20:25:39Z	Identity services should be able to revoke all their keys on a whim	https://api.github.com/repos/matrix-org/matrix-spec/issues/362
