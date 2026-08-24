@@ -1572,6 +1572,7 @@ file	pr	ref
 4405-deprecate-emoji-verification.md	4405	refs/pr/source/4405
 4406-m-sender-ignored.md	4406	refs/pr/source/4406
 4407-sticky-events-widget-api.md	4407	refs/pr/source/4407
+4411-widget-state-event.md	4411	refs/pr/source/4411
 4412-widget-base-postmessage-api.md	4412	refs/pr/source/4412
 4413-remove-private-join-rule.md	4413	refs/pr/source/4413
 4414-design-decision-errors.md	4414	refs/pr/source/4414
