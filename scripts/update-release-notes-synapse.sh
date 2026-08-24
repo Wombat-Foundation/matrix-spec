@@ -33,7 +33,8 @@ while read -r path; do
 	git -C "$SYNAPSE_REPO" show "$SYNAPSE_REF:$path" >"$dest"
 	printf '%s\t%s\n' "$path" "$SYNAPSE_REF" >>"$tmp_dir/SOURCES.tsv"
 done < <(
-	git -C "$SYNAPSE_REPO" ls-tree -r --name-only "$SYNAPSE_REF" -- CHANGES.md changelog.d
+	git -C "$SYNAPSE_REPO" ls-tree -r --name-only "$SYNAPSE_REF" -- \
+		CHANGES.md changelog.d docs/changelogs
 )
 
 mkdir -p "$TARGET_DIR"
@@ -43,7 +44,7 @@ if [[ -f "$TARGET_DIR/SOURCES.tsv" ]]; then
 	tail -n +2 "$TARGET_DIR/SOURCES.tsv" |
 		while IFS=$'\t' read -r path _ref; do
 			case "$path" in
-			CHANGES.md | changelog.d/*) rm -f -- "$TARGET_DIR/$path" ;;
+			CHANGES.md | changelog.d/* | docs/changelogs/*) rm -f -- "$TARGET_DIR/$path" ;;
 			esac
 		done
 fi

@@ -50,6 +50,7 @@ Individual sync workflows:
   ``spec/``. If ``SOURCE_REPO`` is unset, it auto-detects a unique sibling plain-text
   checkout or defaults to the current repository root. You can also specify
   ``SOURCE_REPO=/path/to/plain-text-spec-checkout`` explicitly.
-* ``scripts/update-synapse-release-notes.sh`` refreshes ``CHANGES.md`` and the
-  pending ``changelog.d/`` fragments under ``release-notes-synapse/`` from a
-  sibling Synapse checkout (default: ``../synapse``).
+* ``scripts/update-release-notes-synapse.sh`` refreshes ``CHANGES.md``, the
+  archived release notes under ``docs/changelogs/``, and pending
+  ``changelog.d/`` fragments under ``release-notes-synapse/`` from a sibling
+  Synapse checkout (default: ``../synapse``).
