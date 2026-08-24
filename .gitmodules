@@ -1,0 +1,12 @@
+[submodule "ext/spec"]
+	path = ext/spec
+	url = https://github.com/matrix-org/matrix-spec.git
+[submodule "ext/proposals"]
+	path = ext/proposals
+	url = https://github.com/matrix-org/matrix-spec-proposals.git
+[submodule "ext/synapse"]
+	path = ext/synapse
+	url = https://github.com/element-hq/synapse.git
+[submodule "ext/web"]
+	path = ext/web
+	url = https://github.com/matrix-org/matrix.org.git

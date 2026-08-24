@@ -6,7 +6,7 @@ special kind of [relationship](#forming-relationships-between-events) which
 effectively quotes the referenced event for the client to render/process how
 it wishes. They are normally used with [`m.room.message`](#mroommessage) events.
 
-> **Note:** 
+> **Note:**
 *(Changed in v1.3)*
 Until v1.3 of the spec, rich replies were limited to `m.room.message` events
 which could represent an HTML-formatted body. As of v1.3 this is now expanded
@@ -16,7 +16,7 @@ be included.
 Additionally, a rich reply can reference any other event type as of v1.3.
 Previously, a rich reply could only reference another `m.room.message` event.
 
-> **Note:** 
+> **Note:**
 *(Changed in v1.13)*
 In previous versions of the specification, rich replies could include a fallback
 representation of the original message in the `body` (using a prefix sequence)
@@ -62,7 +62,7 @@ as if it were to be under `m.relates_to` directly instead.
 
 #### Mentioning the replied to user
 
-> **Note:** 
+> **Note:**
 *(Changed in v1.16)*
 Clients SHOULD no longer propagate mentioned users in the replied to event.
 

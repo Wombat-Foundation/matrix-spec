@@ -7,7 +7,7 @@ The types of state events that affect authorisation are:
 -   [`m.room.power_levels`](/client-server-api#mroompower_levels)
 -   [`m.room.third_party_invite`](/client-server-api#mroomthird_party_invite)
 
-> **Note:** 
+> **Note:**
 Power levels are inferred from defaults when not explicitly supplied.
 For example, mentions of the `sender`'s power level can also refer to
 the default power level for users in the room.
@@ -146,7 +146,7 @@ The rules are as follows:
     3.  Otherwise, reject.
 12. Otherwise, allow.
 
-> **Note:** 
+> **Note:**
 Some consequences of these rules:
 
 -   Unless you are a member of the room, the only permitted operations

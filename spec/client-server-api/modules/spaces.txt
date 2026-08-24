@@ -41,7 +41,7 @@ is effectively a curated list of rooms which the rooms themselves might not be a
 of. When only a `m.space.parent` is used, the rooms are "secretly" added to spaces
 with the effect of not being advertised directly by the space.
 
-> **Note:** 
+> **Note:**
 Considering spaces are rooms themselves, it is possible to nest spaces within spaces,
 and it is possible to create a loop. Though the creation of loops is explicitly disallowed,
 implementations might still encounter them and must be careful not to loop infinitely when
@@ -239,12 +239,12 @@ To avoid situations where a room falsely claims it is part of a given space,
   supposed parent space to send `m.space.child` state events (there doesn't need
   to be a matching child event).
 
-> **Note:** 
+> **Note:**
 Clients might need to peek into a parent space to inspect the room state if they
 aren't already joined. If the client is unable to peek the state, the link should
 be assumed to be invalid.
 
-> **Note:** 
+> **Note:**
 A consequence of the second condition is that a room admin being demoted in the
 parent space, leaving the parent space, or otherwise being removed from the parent
 space can mean that a previously valid `m.space.parent` event becomes invalid.
@@ -324,7 +324,7 @@ The [`GET /hierarchy`](#get_matrixclientv1roomsroomidhierarchy) API works in a d
 manner: when it encounters another space as a child it recurses into that space before
 returning non-space children.
 
-> **Note:** 
+> **Note:**
 Though prohibited, it is still possible for loops to occur. Servers should gracefully
 break loops.
 
@@ -364,9 +364,9 @@ be changed from the first request.
 
     /**
     * The rooms for the current page, with the current filters.
-    * 
+    *
     * The server should return any rooms where at least one of the following conditions is true:
-    * 
+    *
     * * The requesting user is currently a member (their [room membership](#room-membership) is `join`).
     * * The requesting user already has permission to join, i.e. one of the following:
     *   * The user's room membership is `invite`.
@@ -426,7 +426,7 @@ be changed from the first request.
       * The URL for the room's avatar, if one is set.
       * @example "mxc://example.org/abcdef"
        */
-      avatar_url?: string /* uri */;
+      avatar_url?: string /* mx-mxc-uri */;
 
       /**
       * The room's join rule. When not present, the room is assumed to
@@ -442,7 +442,7 @@ be changed from the first request.
       /**
       * The [`m.space.child`](/client-server-api/#mspacechild) events of the space-room, represented
       * as [Stripped State Events](/client-server-api/#stripped-state) with an added `origin_server_ts` key.
-      * 
+      *
       * If the room is not a space-room, this should be empty.
        */
       children_state: Array<{

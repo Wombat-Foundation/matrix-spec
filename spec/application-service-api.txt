@@ -13,7 +13,7 @@ service.
 
 ### Registration
 
-> **Note:** 
+> **Note:**
 Previously, application services could register with a homeserver via
 HTTP APIs. This was removed as it was seen as a security risk. A
 compromised application service could re-register for a global `*` regex
@@ -59,7 +59,7 @@ type Registration = {
   as_token: string;
 
   /**
-  * A secret token that the homeserver will use authenticate requests to the application service.
+  * A secret token that the homeserver will use to authenticate requests to the application service.
    */
   hs_token: string;
 
@@ -71,7 +71,7 @@ type Registration = {
 
   /**
   * Whether the application service wants to [receive ephemeral data](/application-service-api/#pushing-ephemeral-data).
-  * 
+  *
   * Defaults to `false` if not present.
    */
   receive_ephemeral?: boolean;
@@ -143,7 +143,7 @@ namespaces:
   rooms: []
 ```
 
-> **Note:** 
+> **Note:**
 For the `users` namespace, application services can only register interest in
 *local* users (i.e., users whose IDs end with the `server_name` of the local
 homeserver). Events affecting users on other homeservers are not sent to an application
@@ -155,7 +155,7 @@ application service is interested in).
 For the `rooms` and `aliases` namespaces, all events in a matching room will be
 sent to the application service.
 
-> **Note:** 
+> **Note:**
 If the homeserver in question has multiple application services, each
 `as_token` and `id` MUST be unique per application service as these are
 used to identify the application service. The homeserver MUST enforce
@@ -176,7 +176,7 @@ an `M_FORBIDDEN` error if it does not match.
 The format of the `Authorization` header is similar to the [Client-Server API](/client-server-api/#client-authentication):
 `Bearer TheHSTokenGoesHere`.
 
-> **Note:** 
+> **Note:**
 In previous versions of this specification, an `access_token` query
 parameter was used instead. Servers should only send this query parameter
 if supporting legacy versions of the specification.
@@ -301,7 +301,7 @@ these IDs and they are used to ensure idempotency of requests.
     * Present if, and only if, this event is a *state* event. The key making
     * this piece of state unique in the room. Note that it is often an empty
     * string.
-    * 
+    *
     * State keys starting with an `@` are reserved for referencing user IDs, such
     * as room members. With the exception of a few events, state events set with a
     * given user's ID as the state key MUST only be set by that user.
@@ -345,12 +345,12 @@ these IDs and they are used to ensure idempotency of requests.
   /**
   * A list of ephemeral data, if the `receive_ephemeral` setting was enabled in the
   * [registration](/application-service-api/#registration) file.
-  * 
+  *
   * There are only three event types that can currently occur in this list: `m.presence`,
   * `m.typing`, and `m.receipt`. Room-scoped ephemeral data (`m.typing` and
   * `m.receipt`) MUST include a `room_id` property to identify the room that they
   * were sent in.
-  * 
+  *
   * This property can be omitted if it would be empty.
    */
   ephemeral?: Array<{
@@ -488,7 +488,7 @@ homeserver should retry several times before timing out. This should
 result in an HTTP status 408 "Request Timeout" on the client which
 initiated this request (e.g. to join a room alias).
 
-> **Note:** 
+> **Note:**
 Blocking the homeserver and expecting the application service to create
 the entity using the client-server API is simpler and more flexible than
 alternative methods such as returning an initial sync style JSON blob
@@ -698,7 +698,7 @@ an application service supports.
     * The type definitions for the fields defined in `user_fields` and
     * `location_fields`. Each entry in those arrays MUST have an entry here.
     * The `string` key for this object is the field name itself.
-    * 
+    *
     * May be an empty object if no fields are defined.
     * @example {"network": {"regexp": "([a-z0-9]+\\.)*[a-z0-9]+", "placeholder": "irc.example.org"}, "nickname": {"regexp": "[^\\s#]+", "placeholder": "username"}, "channel": {"regexp": "#[^\\s]+", "placeholder": "#foobar"}}
      */
@@ -1211,7 +1211,7 @@ The `ts` query string argument is only valid on the following endpoints:
 Other endpoints, such as `/kick`, do not support `ts`: instead, callers can use the
 `PUT /state` endpoint to mimic the behaviour of the other APIs.
 
-> **Note:** 
+> **Note:**
 Changing the time of an event does not change the server-side (DAG) ordering for the
 event. The event will still be appended at the tip of the DAG as though the timestamp
 was set to "now". Future MSCs, like [MSC2716](https://github.com/matrix-org/matrix-spec-proposals/pull/2716),
@@ -1250,7 +1250,7 @@ Authorization: Bearer YourApplicationServiceTokenHere
 }
 ```
 
-> **Note:** 
+> **Note:**
 *(Added in v1.17)*
 Servers MUST still allow application services to use the `/register` endpoint
 with a login type of `m.login.application_service` even if they don't support
@@ -1283,7 +1283,7 @@ Authorization: Bearer YourApplicationServiceTokenHere
 }
 ```
 
-> **Note:** 
+> **Note:**
 *(Added in v1.17)*
 Application services MUST NOT use the `/login` endpoint if the server doesn't
 support the Legacy authentication API. If `/login` is called with the

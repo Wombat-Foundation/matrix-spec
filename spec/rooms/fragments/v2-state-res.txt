@@ -29,9 +29,9 @@ might remove someone's ability to do something in the room.
 **Unconflicted state map and conflicted state set.**
 The keys of the state maps *S<sub>i</sub>* are 2-tuples of strings of the form
 *K* = `(event_type, state_key)`. The values *V* are state events.
-The key-value pairs (*K*, *V*) across all state maps *S<sub>i</sub>* can be 
+The key-value pairs (*K*, *V*) across all state maps *S<sub>i</sub>* can be
 divided into two collections.
-If a given key *K* is present in every *S<sub>i</sub>* with the same value *V* 
+If a given key *K* is present in every *S<sub>i</sub>* with the same value *V*
 in each state map, then the pair (*K*, *V*) belongs to the *unconflicted state map*.
 Otherwise, *V* belongs to the *conflicted state set*.
 
@@ -111,7 +111,7 @@ from smallest to largest, using the following comparison relation on
 events: for events *x* and *y*, *x* &lt; *y* if
 
 1.  the mainline position of *x* is **greater** than
-    the mainline position of *y* (i.e. the auth chain of 
+    the mainline position of *y* (i.e. the auth chain of
     *x* is based on an earlier event in the mainline than *y*); or
 2.  the mainline positions of the events are the same, but *x*'s
     `origin_server_ts` is *less* than *y*'s `origin_server_ts`; or
@@ -163,7 +163,7 @@ chain should appear in the process, as they should not appear in state
 (the algorithm only uses events that appear in either the state sets or
 in the auth chain of the events in the state sets).
 
-> **Note:** 
+> **Note:**
 This helps ensure that different servers' view of state is more likely
 to converge, since rejection state of an event may be different. This
 can happen if a third server gives an incorrect version of the state

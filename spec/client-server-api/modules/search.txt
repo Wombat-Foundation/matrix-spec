@@ -48,7 +48,7 @@ Performs a full text search across different categories.
 
         /**
         * The maximum number of events to return, must be an integer greater than 0.
-        * 
+        *
         * Servers should apply a default value, and impose a maximum value to avoid
         * resource exhaustion.
          */
@@ -228,7 +228,7 @@ Performs a full text search across different categories.
             * Present if, and only if, this event is a *state* event. The key making
             * this piece of state unique in the room. Note that it is often an empty
             * string.
-            * 
+            *
             * State keys starting with an `@` are reserved for referencing user IDs, such
             * as room members. With the exception of a few events, state events set with a
             * given user's ID as the state key MUST only be set by that user.
@@ -287,7 +287,7 @@ Performs a full text search across different categories.
             /**
             * The historic profile information of the
             * users that sent the events returned.
-            * 
+            *
             * The key is the user ID for which
             * the profile belongs to.
              */
@@ -314,7 +314,7 @@ Performs a full text search across different categories.
               * Present if, and only if, this event is a *state* event. The key making
               * this piece of state unique in the room. Note that it is often an empty
               * string.
-              * 
+              *
               * State keys starting with an `@` are reserved for referencing user IDs, such
               * as room members. With the exception of a few events, state events set with a
               * given user's ID as the state key MUST only be set by that user.
@@ -376,7 +376,7 @@ Performs a full text search across different categories.
               * Present if, and only if, this event is a *state* event. The key making
               * this piece of state unique in the room. Note that it is often an empty
               * string.
-              * 
+              *
               * State keys starting with an `@` are reserved for referencing user IDs, such
               * as room members. With the exception of a few events, state events set with a
               * given user's ID as the state key MUST only be set by that user.
@@ -423,7 +423,7 @@ Performs a full text search across different categories.
         * The current state for every room in the results.
         * This is included if the request had the
         * `include_state` key set with a value of `true`.
-        * 
+        *
         * The key is the room ID for which the `State
         * Event` array belongs to.
          */
@@ -431,7 +431,7 @@ Performs a full text search across different categories.
 
         /**
         * Any groups that were requested.
-        * 
+        *
         * The outer `string` key is the group key requested (eg: `room_id`
         * or `sender`). The inner `string` key is the grouped value (eg:
         * a room's ID or a user's ID).

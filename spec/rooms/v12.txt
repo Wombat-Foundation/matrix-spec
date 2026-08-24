@@ -24,7 +24,7 @@ Clients SHOULD observe the following changes to events in this room version:
 
 ## Server implementation components
 
-> **Note:** 
+> **Note:**
 The information contained in this section is strictly for server
 implementors. Applications which use the Client-Server API are generally
 unaffected by the intricacies contained here. The section above
@@ -49,12 +49,12 @@ The types of state events that affect authorisation are:
 -   [`m.room.power_levels`](/client-server-api#mroompower_levels)
 -   [`m.room.third_party_invite`](/client-server-api#mroomthird_party_invite)
 
-> **Note:** 
+> **Note:**
 Power levels are inferred from defaults when not explicitly supplied.
 For example, mentions of the `sender`'s power level can also refer to
 the default power level for users in the room.
 
-> **Note:** 
+> **Note:**
 {{% added-in v=12 %}} The power level of "room creators" is infinitely high.
 
 Room creators include:
@@ -65,7 +65,7 @@ Room creators include:
 Room creators cannot be demoted to a lower power level, even through `m.room.power_levels`.
 This is reflected in rule 10.4 below.
 
-> **Note:** 
+> **Note:**
 `m.room.redaction` events are subject to auth rules in the same way as any other event.
 In practice, that means they will normally be allowed by the auth rules, unless the
 `m.room.power_levels` event sets a power level requirement for `m.room.redaction`
@@ -76,7 +76,7 @@ The ability to send a redaction event does not mean that the redaction itself sh
 be performed. Receiving servers must perform additional checks, as described in
 the [Handling redactions](#handling-redactions) section.
 
-> **Note:** 
+> **Note:**
 The `m.room.create` event MUST NOT be selected for `auth_events` on events. The
 `room_id` (being the `m.room.create` event's ID) implies this instead. This is
 reflected in a change to rule 3.2 below.
@@ -236,7 +236,7 @@ The rules are as follows:
     10. Otherwise, allow.
 11. Otherwise, allow.
 
-> **Note:** 
+> **Note:**
 Some consequences of these rules:
 
 -   Unless you are a member of the room, the only permitted operations
@@ -248,7 +248,7 @@ Some consequences of these rules:
 
 ### State resolution
 
-> **Note:** 
+> **Note:**
 {{% added-in v=12 %}} This state resolution algorithm is largely the same as the
 algorithm found in [room version 2](/rooms/v2) with the following modifications:
 
@@ -433,7 +433,7 @@ chain should appear in the process, as they should not appear in state
 (the algorithm only uses events that appear in either the state sets or
 in the auth chain of the events in the state sets).
 
-> **Note:** 
+> **Note:**
 This helps ensure that different servers' view of state is more likely
 to converge, since rejection state of an event may be different. This
 can happen if a third server gives an incorrect version of the state

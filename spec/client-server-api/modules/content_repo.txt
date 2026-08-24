@@ -52,7 +52,7 @@ Clients can access the content repository using the following endpoints.
 have been deprecated and replaced with new endpoints which require authentication.
 The deprecated endpoints are marked in the section below.
 
-> **Note:** 
+> **Note:**
 By Matrix 1.12, servers SHOULD "freeze" the deprecated, unauthenticated, endpoints
 to prevent newly-uploaded media from being downloaded. This SHOULD mean that any
 media uploaded *before* the freeze remains accessible via the deprecated endpoints,
@@ -84,7 +84,7 @@ Matrix 1.12 is expected to be released in the July-September 2024 calendar quart
 ### GET /media/download/{serverName}/{mediaId}
 **Summary:** Download content from the content repository.
 
-> **Note:** 
+> **Note:**
 Clients SHOULD NOT generate or use URLs which supply the access token in
 the query string. These URLs may be copied by users verbatim and provided
 in a chat message to another user, disclosing the sender's access token.
@@ -94,11 +94,11 @@ the request object. This is typical when the homeserver uses a Content
 Delivery Network (CDN).
 **Responses:**
 - **200**: The content that was previously uploaded.
-- **307**: 
-- **308**: 
-- **429**: 
-- **502**: 
-- **504**: 
+- **307**:
+- **308**:
+- **429**:
+- **502**:
+- **504**:
 
 ### GET /media/download/{serverName}/{mediaId}/{fileName}
 **Summary:** Download content from the content repository overriding the file name.
@@ -106,7 +106,7 @@ This will download content from the content repository (same as
 the previous endpoint) but replaces the target file name with the one
 provided by the caller.
 
-> **Note:** 
+> **Note:**
 Clients SHOULD NOT generate or use URLs which supply the access token in
 the query string. These URLs may be copied by users verbatim and provided
 in a chat message to another user, disclosing the sender's access token.
@@ -118,18 +118,18 @@ Delivery Network (CDN).
 - `fileName` (Required): `string` - A filename to give in the `Content-Disposition` header.
 **Responses:**
 - **200**: The content that was previously uploaded.
-- **307**: 
-- **308**: 
-- **429**: 
-- **502**: 
-- **504**: 
+- **307**:
+- **308**:
+- **429**:
+- **502**:
+- **504**:
 
 ### GET /media/thumbnail/{serverName}/{mediaId}
 **Summary:** Download a thumbnail of content from the content repository
 Download a thumbnail of content from the content repository.
 See the [Thumbnails](/client-server-api/#thumbnails) section for more information.
 
-> **Note:** 
+> **Note:**
 Clients SHOULD NOT generate or use URLs which supply the access token in
 the query string. These URLs may be copied by users verbatim and provided
 in a chat message to another user, disclosing the sender's access token.
@@ -160,8 +160,8 @@ When `true` and the media cannot be animated, such as in the case of a JPEG or P
 server SHOULD behave as though `animated` is `false`.
 **Responses:**
 - **200**: A thumbnail of the requested content.
-- **307**: 
-- **308**: 
+- **307**:
+- **308**:
 - **400**: The request does not make sense to the server, or the server cannot thumbnail
 the content. For example, the client requested non-integer dimensions or asked
 for negatively-sized images.
@@ -198,7 +198,7 @@ for negatively-sized images.
     error?: string;
   }
   ```
-- **429**: 
+- **429**:
 - **502**: The remote content is too large for the server to thumbnail.
   ```typescript
   {
@@ -216,14 +216,14 @@ for negatively-sized images.
     error?: string;
   }
   ```
-- **504**: 
+- **504**:
 
 ### GET /media/preview_url
 **Summary:** Get information about a URL for a client
 Get information about a URL for the client. Typically this is called when a
 client sees a URL in a message and wants to render a preview for the user.
 
-> **Note:** 
+> **Note:**
 Clients should consider avoiding this endpoint for URLs posted in encrypted
 rooms. Encrypted rooms often contain more sensitive information the users
 do not want to share with the homeserver, and this can mean that the URLs
@@ -253,7 +253,7 @@ described here.
     og:image?: string /* uri */;
   }
   ```
-- **429**: 
+- **429**:
 
 ### GET /media/config
 **Summary:** Get the configuration for the content repository.
@@ -263,7 +263,7 @@ Clients SHOULD use this as a guide when using content repository endpoints.
 All values are intentionally left optional. Clients SHOULD follow
 the advice given in the field description when the field is not available.
 
-> **Note:** 
+> **Note:**
 Both clients and server administrators should be aware that proxies
 between the client and the server may affect the apparent behaviour of content
 repository APIs, for example, proxies may enforce a lower upload size limit
@@ -282,7 +282,7 @@ than is advertised by the server on this endpoint.
     m.upload.size?: number /* int64 */;
   }
   ```
-- **429**: 
+- **429**:
 
 ### POST /media/v3/upload
 **Summary:** Upload some content to the content repository.
@@ -317,8 +317,8 @@ than is advertised by the server on this endpoint.
     error?: string;
   }
   ```
-- **413**: 
-- **429**: 
+- **413**:
+- **429**:
 
 ### PUT /media/v3/upload/{serverName}/{mediaId}
 **Summary:** Upload content to an `mxc://` URI that was created earlier.
@@ -396,8 +396,8 @@ will be returned with the `errcode` `M_CANNOT_OVERWRITE_MEDIA`.
     error?: string;
   }
   ```
-- **413**: 
-- **429**: 
+- **413**:
+- **429**:
 
 ### POST /media/v1/create
 **Summary:** Create a new `mxc://` URI without uploading the content.
@@ -457,16 +457,16 @@ server should respond with an HTTP 429 error with an errcode of
     error?: string;
   }
   ```
-- **429**: 
+- **429**:
 
 ### GET /media/v3/download/{serverName}/{mediaId}
 **Summary:** Download content from the content repository.
 
-> **Note:** 
+> **Note:**
 Replaced by [`GET /_matrix/client/v1/media/download/{serverName}/{mediaId}`](/client-server-api/#get_matrixclientv1mediadownloadservernamemediaid)
 (requires authentication).
 
-> **Note:** 
+> **Note:**
 *(Changed in v1.11)* This endpoint MAY return `404 M_NOT_FOUND`
 for media which exists, but is after the server froze unauthenticated
 media access. See [Client Behaviour](/client-server-api/#content-repo-client-behaviour) for more
@@ -474,16 +474,16 @@ information.
 
 **Responses:**
 - **200**: The content that was previously uploaded.
-- **307**: 
-- **308**: 
-- **429**: 
-- **502**: 
-- **504**: 
+- **307**:
+- **308**:
+- **429**:
+- **502**:
+- **504**:
 
 ### GET /media/v3/download/{serverName}/{mediaId}/{fileName}
 **Summary:** Download content from the content repository overriding the file name
 
-> **Note:** 
+> **Note:**
 Replaced by [`GET /_matrix/client/v1/media/download/{serverName}/{mediaId}/{fileName}`](/client-server-api/#get_matrixclientv1mediadownloadservernamemediaidfilename)
 (requires authentication).
 
@@ -491,7 +491,7 @@ This will download content from the content repository (same as
 the previous endpoint) but replace the target file name with the one
 provided by the caller.
 
-> **Note:** 
+> **Note:**
 *(Changed in v1.11)* This endpoint MAY return `404 M_NOT_FOUND`
 for media which exists, but is after the server froze unauthenticated
 media access. See [Client Behaviour](/client-server-api/#content-repo-client-behaviour) for more
@@ -501,23 +501,23 @@ information.
 - `fileName` (Required): `string` - A filename to give in the `Content-Disposition` header.
 **Responses:**
 - **200**: The content that was previously uploaded.
-- **307**: 
-- **308**: 
-- **429**: 
-- **502**: 
-- **504**: 
+- **307**:
+- **308**:
+- **429**:
+- **502**:
+- **504**:
 
 ### GET /media/v3/thumbnail/{serverName}/{mediaId}
 **Summary:** Download a thumbnail of content from the content repository
 
-> **Note:** 
+> **Note:**
 Replaced by [`GET /_matrix/client/v1/media/thumbnail/{serverName}/{mediaId}`](/client-server-api/#get_matrixclientv1mediathumbnailservernamemediaid)
 (requires authentication).
 
 Download a thumbnail of content from the content repository.
 See the [Thumbnails](/client-server-api/#thumbnails) section for more information.
 
-> **Note:** 
+> **Note:**
 *(Changed in v1.11)* This endpoint MAY return `404 M_NOT_FOUND`
 for media which exists, but is after the server froze unauthenticated
 media access. See [Client Behaviour](/client-server-api/#content-repo-client-behaviour) for more
@@ -546,8 +546,8 @@ When `true` and the media cannot be animated, such as in the case of a JPEG or P
 server SHOULD behave as though `animated` is `false`.
 **Responses:**
 - **200**: A thumbnail of the requested content.
-- **307**: 
-- **308**: 
+- **307**:
+- **308**:
 - **400**: The request does not make sense to the server, or the server cannot thumbnail
 the content. For example, the client requested non-integer dimensions or asked
 for negatively-sized images.
@@ -584,7 +584,7 @@ for negatively-sized images.
     error?: string;
   }
   ```
-- **429**: 
+- **429**:
 - **502**: The remote content is too large for the server to thumbnail.
   ```typescript
   {
@@ -602,12 +602,12 @@ for negatively-sized images.
     error?: string;
   }
   ```
-- **504**: 
+- **504**:
 
 ### GET /media/v3/preview_url
 **Summary:** Get information about a URL for a client
 
-> **Note:** 
+> **Note:**
 Replaced by [`GET /_matrix/client/v1/media/preview_url`](/client-server-api/#get_matrixclientv1mediapreview_url).
 
 Get information about a URL for the client. Typically this is called when a
@@ -642,12 +642,12 @@ described here.
     og:image?: string /* uri */;
   }
   ```
-- **429**: 
+- **429**:
 
 ### GET /media/v3/config
 **Summary:** Get the configuration for the content repository.
 
-> **Note:** 
+> **Note:**
 Replaced by [`GET /_matrix/client/v1/media/config`](/client-server-api/#get_matrixclientv1mediaconfig).
 
 This endpoint allows clients to retrieve the configuration of the content
@@ -673,7 +673,7 @@ than is advertised by the server on this endpoint.
     m.upload.size?: number /* int64 */;
   }
   ```
-- **429**: 
+- **429**:
 
 ##### Thumbnails
 

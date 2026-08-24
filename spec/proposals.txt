@@ -456,7 +456,7 @@ Unstable endpoints MUST use `/unstable` as the endpoint version and a
 vendor prefix in Java package naming format. For example:
 `/_matrix/client/unstable/com.example.mscxxxx/login`.
 
-> **Note:** 
+> **Note:**
 Proposal authors operating with a Matrix.org Foundation mandate SHOULD use
 a vendor prefix within the `org.matrix` namespace. This namespace is otherwise
 restricted. Authors who don't own a domain MAY use the `io.github` namespace
@@ -500,7 +500,7 @@ This flag shows up in the `unstable_features` section of
 [`/_matrix/client/versions`](/client-server-api/#get_matrixclientversions)
 as, for example, `com.example.mscxxxx.new_login`.
 
-> **Note:** 
+> **Note:**
 MSCs MUST still describe what the stable endpoints/feature looks like
 with a note towards the bottom for what the unstable feature
 flag/prefixes are. For example, an MSC would propose `/_matrix/client/v1/new/endpoint`,

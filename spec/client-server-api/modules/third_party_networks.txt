@@ -64,7 +64,7 @@ Fetches the metadata from the homeserver about a particular third-party protocol
     * The type definitions for the fields defined in `user_fields` and
     * `location_fields`. Each entry in those arrays MUST have an entry here.
     * The `string` key for this object is the field name itself.
-    * 
+    *
     * May be an empty object if no fields are defined.
     * @example {"network": {"regexp": "([a-z0-9]+\\.)*[a-z0-9]+", "placeholder": "irc.example.org"}, "nickname": {"regexp": "[^\\s#]+", "placeholder": "username"}, "channel": {"regexp": "#[^\\s]+", "placeholder": "#foobar"}}
      */
@@ -74,7 +74,7 @@ Fetches the metadata from the homeserver about a particular third-party protocol
     * A list of objects representing independent instances of configuration.
     * For example, multiple networks on IRC if multiple are provided by the
     * same application service.
-    * 
+    *
     * The instances are modified by the homeserver from the response of
     * [`GET /_matrix/app/v1/thirdparty/protocol/{protocol}`](/application-service-api/#get_matrixappv1thirdpartyprotocolprotocol)
     * to include an `instance_id` to serve as a unique identifier for each
@@ -111,7 +111,7 @@ Fetches the metadata from the homeserver about a particular third-party protocol
       * A unique identifier for this instance on the homeserver. This field is added
       * to the response of [`GET /_matrix/app/v1/thirdparty/protocol/{protocol}`](/application-service-api/#get_matrixappv1thirdpartyprotocolprotocol)
       * by the homeserver.
-      * 
+      *
       * This is the identifier to use as the `third_party_instance_id` in a request to
       * [`POST /_matrix/client/v3/publicRooms`](/client-server-api/#post_matrixclientv3publicrooms).
       * @example "irc-freenode"

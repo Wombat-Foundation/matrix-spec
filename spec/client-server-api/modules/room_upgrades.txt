@@ -94,11 +94,11 @@ Upgrades the given room to a particular room version.
   * When upgrading to a [room version](/rooms) which supports additional creators,
   * the [user IDs](/appendices#user-identifiers) which should be considered room
   * creators in addition to the user performing the upgrade.
-  * 
+  *
   * If the room being upgraded has additional creators, they are *not* automatically
   * copied to the new room. The full set of additional creators needs to be set to
   * retain (or add/remove) more room creators.
-  * 
+  *
   * When upgrading to a room version which doesn't support additional creators, this
   * field is ignored and has no effect during the upgrade process.
    */
@@ -166,12 +166,12 @@ server:
     previous room, no `type` is specified on the new room's create event
     either.
 
-> **Note:** 
+> **Note:**
 *(Added in v1.16)* If both the new and old [room version](/rooms) support
 additional creators, the server will not transfer those additional creators automatically.
 They must be explicitly set during the `/upgrade` call.
 
-> **Note:** 
+> **Note:**
 *(Added in v1.16)* When upgrading to room version 12 or later, the `event_id` property inside
 `predecessor` MAY be omitted.
 

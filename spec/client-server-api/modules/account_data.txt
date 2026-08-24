@@ -60,7 +60,7 @@ or `M_NOT_JSON`.
     error?: string;
   }
   ```
-- **403**: The access token provided is not authorised to modify this user's account 
+- **403**: The access token provided is not authorised to modify this user's account
 data. Errcode: `M_FORBIDDEN`.
   ```typescript
   {
@@ -111,7 +111,7 @@ namespaced to avoid clashes.
   ```typescript
   {}
   ```
-- **403**: The access token provided is not authorised to retrieve this user's account 
+- **403**: The access token provided is not authorised to retrieve this user's account
 data. Errcode: `M_FORBIDDEN`.
   ```typescript
   {
@@ -187,7 +187,7 @@ namespaced to avoid clashes.
     error?: string;
   }
   ```
-- **403**: The access token provided is not authorised to modify this user's account 
+- **403**: The access token provided is not authorised to modify this user's account
 data. Errcode: `M_FORBIDDEN`.
   ```typescript
   {
@@ -256,7 +256,7 @@ namespaced to avoid clashes.
     error?: string;
   }
   ```
-- **403**: The access token provided is not authorised to retrieve this user's account 
+- **403**: The access token provided is not authorised to retrieve this user's account
 data. Errcode: `M_FORBIDDEN`.
   ```typescript
   {
@@ -274,7 +274,7 @@ data. Errcode: `M_FORBIDDEN`.
     error?: string;
   }
   ```
-- **404**: No account data has been provided for this user and this room with the 
+- **404**: No account data has been provided for this user and this room with the
 given `type`. Errcode: `M_NOT_FOUND`.
   ```typescript
   {
@@ -301,7 +301,7 @@ Currently, this only includes [`m.fully_read`](#mfully_read)
 and [`m.push_rules`](#push-rules-events). This applies to
 both global and room-specific account data.
 
-> **Note:** 
+> **Note:**
 *(Changed in v1.10)* `m.push_rules` was added to the rejection
 list.
 

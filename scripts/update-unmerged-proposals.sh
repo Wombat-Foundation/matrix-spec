@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SOURCE_REPO="${SOURCE_REPO:-../proposals}"
 TARGET_DIR="${TARGET_DIR:-proposals/unmerged}"
-UPSTREAM_REMOTE="${UPSTREAM_REMOTE:-upstream}"
-UPSTREAM_MAIN="${UPSTREAM_MAIN:-upstream/main}"
+UPSTREAM_REMOTE="${UPSTREAM_REMOTE:-origin}"
+UPSTREAM_MAIN="${UPSTREAM_MAIN:-origin/main}"
 GH_REPO="${GH_REPO:-matrix-org/matrix-spec-proposals}"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="$(cd "$script_dir/.." && pwd)"
+SOURCE_REPO="${SOURCE_REPO:-$repo_root/ext/proposals}"
+cd "$repo_root"
 
 if ! command -v gh >/dev/null 2>&1; then
 	echo "error: gh is required" >&2
@@ -23,8 +26,8 @@ mkdir -p "$TARGET_DIR"
 
 echo "fetching upstream main and PR heads from $SOURCE_REPO"
 git -C "$SOURCE_REPO" fetch "$UPSTREAM_REMOTE" \
-	'+refs/heads/main:refs/remotes/upstream/main' \
-	'+refs/pull/*/head:refs/pr/upstream/*'
+	"+refs/heads/main:refs/remotes/$UPSTREAM_REMOTE/main" \
+	'+refs/pull/*/head:refs/pr/source/*'
 
 tmp_dir="$(mktemp -d "${TARGET_DIR}.tmp.XXXXXX")"
 trap 'rm -rf "$tmp_dir"' EXIT
@@ -46,7 +49,7 @@ echo "processing $pr_count open PRs"
 while read -r pr; do
 	[[ -n "$pr" ]] || continue
 
-	ref="refs/pr/upstream/$pr"
+	ref="refs/pr/source/$pr"
 
 	git -C "$SOURCE_REPO" rev-parse --verify --quiet "$ref" >/dev/null || continue
 

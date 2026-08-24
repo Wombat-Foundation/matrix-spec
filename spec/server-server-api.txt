@@ -148,7 +148,7 @@ to send. The process overall is as follows:
     8448 and a `Host` header containing the `<hostname>`. The target
     server must present a valid certificate for `<hostname>`.
 
-> **Note:** 
+> **Note:**
 The reasons we require `<hostname>` rather than `<delegated_hostname>` for SRV
 delegation are:
   1. DNS is insecure (not all domains have DNSSEC), so the target of the delegation
@@ -156,13 +156,13 @@ delegation are:
   2. Consistency with the recommendations in [RFC6125](https://datatracker.ietf.org/doc/html/rfc6125#section-6.2.1)
      and other applications using SRV records such [XMPP](https://datatracker.ietf.org/doc/html/rfc6120#section-13.7.2.1).
 
-> **Note:** 
+> **Note:**
 Note that the target of a SRV record may *not* be a CNAME, as
 mandated by [RFC2782](https://www.rfc-editor.org/rfc/rfc2782.html):
 
 > the name MUST NOT be an alias (in the sense of RFC 1034 or RFC 2181)
 
-> **Note:** 
+> **Note:**
 Steps 3.4 and 5 are deprecated because they use a service name not registered by IANA.
 They may be removed in a future version of the specification. Server admins are encouraged
 to use `.well-known` over any form of SRV records.
@@ -175,7 +175,7 @@ Gets information about the delegated server for server-server communication
 between Matrix homeservers. Servers should follow 30x redirects, carefully
 avoiding redirect loops, and use normal X.509 certificate validation.
 
-> **Note:** 
+> **Note:**
 This endpoint should be accessed with the hostname of the homeserver's
 [server name](/appendices/#server-name) by making a
 GET request to `https://hostname/.well-known/matrix/server`.
@@ -220,7 +220,7 @@ Get the implementation name and version of this homeserver.
 
 ### Retrieving server keys
 
-> **Note:** 
+> **Note:**
 There was once a "version 1" of the key exchange. It has been removed
 from the specification due to lack of significance. It may be reviewed
 [from the historical
@@ -281,7 +281,7 @@ checked.
 
     /**
     * Public keys of the homeserver for verifying digital signatures.
-    * 
+    *
     * The object's key is the algorithm and version combined (`ed25519` being the
     * algorithm and `abc123` being the version in the example below). Together,
     * this forms the Key ID. The version must have characters matching the regular
@@ -292,7 +292,7 @@ checked.
 
     /**
     * The public keys that the server used to use and when it stopped using them.
-    * 
+    *
     * The object's key is the algorithm and version combined (`ed25519` being the
     * algorithm and `0ldK3y` being the version in the example below). Together,
     * this forms the Key ID. The version must have characters matching the regular
@@ -303,7 +303,7 @@ checked.
 
     /**
     * Digital signatures for this object signed using the `verify_keys`.
-    * 
+    *
     * The signature is calculated using the process described at [Signing JSON](/appendices/#signing-json).
      */
     signatures: {};
@@ -313,7 +313,7 @@ checked.
     * This field MUST be ignored in room versions 1, 2, 3, and 4. Keys used beyond this
     * timestamp MUST be considered invalid, depending on the
     * [room version specification](/rooms).
-    * 
+    *
     * Servers MUST use the lesser of this field and 7 days into the future when
     * determining if a key is valid. This is to avoid a situation where an attacker
     * publishes a key which is valid for a significant amount of time without a way
@@ -367,7 +367,7 @@ and no cached keys were available.
 
       /**
       * Public keys of the homeserver for verifying digital signatures.
-      * 
+      *
       * The object's key is the algorithm and version combined (`ed25519` being the
       * algorithm and `abc123` being the version in the example below). Together,
       * this forms the Key ID. The version must have characters matching the regular
@@ -378,7 +378,7 @@ and no cached keys were available.
 
       /**
       * The public keys that the server used to use and when it stopped using them.
-      * 
+      *
       * The object's key is the algorithm and version combined (`ed25519` being the
       * algorithm and `0ldK3y` being the version in the example below). Together,
       * this forms the Key ID. The version must have characters matching the regular
@@ -389,7 +389,7 @@ and no cached keys were available.
 
       /**
       * Digital signatures for this object signed using the `verify_keys`.
-      * 
+      *
       * The signature is calculated using the process described at [Signing JSON](/appendices/#signing-json).
        */
       signatures: {};
@@ -399,7 +399,7 @@ and no cached keys were available.
       * This field MUST be ignored in room versions 1, 2, 3, and 4. Keys used beyond this
       * timestamp MUST be considered invalid, depending on the
       * [room version specification](/rooms).
-      * 
+      *
       * Servers MUST use the lesser of this field and 7 days into the future when
       * determining if a key is valid. This is to avoid a situation where an attacker
       * publishes a key which is valid for a significant amount of time without a way
@@ -426,7 +426,7 @@ server must sign the keys returned by the queried servers.
   * to be queried, the notary server should query for all keys. If no
   * servers are given, the notary server must return an empty `server_keys`
   * array in the response.
-  * 
+  *
   * The notary server may return multiple keys regardless of the Key IDs
   * given.
    */
@@ -453,7 +453,7 @@ may result in an empty array.
 
       /**
       * Public keys of the homeserver for verifying digital signatures.
-      * 
+      *
       * The object's key is the algorithm and version combined (`ed25519` being the
       * algorithm and `abc123` being the version in the example below). Together,
       * this forms the Key ID. The version must have characters matching the regular
@@ -464,7 +464,7 @@ may result in an empty array.
 
       /**
       * The public keys that the server used to use and when it stopped using them.
-      * 
+      *
       * The object's key is the algorithm and version combined (`ed25519` being the
       * algorithm and `0ldK3y` being the version in the example below). Together,
       * this forms the Key ID. The version must have characters matching the regular
@@ -475,7 +475,7 @@ may result in an empty array.
 
       /**
       * Digital signatures for this object signed using the `verify_keys`.
-      * 
+      *
       * The signature is calculated using the process described at [Signing JSON](/appendices/#signing-json).
        */
       signatures: {};
@@ -485,7 +485,7 @@ may result in an empty array.
       * This field MUST be ignored in room versions 1, 2, 3, and 4. Keys used beyond this
       * timestamp MUST be considered invalid, depending on the
       * [room version specification](/rooms).
-      * 
+      *
       * Servers MUST use the lesser of this field and 7 days into the future when
       * determining if a key is valid. This is to avoid a situation where an attacker
       * publishes a key which is valid for a significant amount of time without a way
@@ -612,7 +612,7 @@ The authorisation parameters to include are:
 
 Unknown parameters are ignored.
 
-> **Note:** 
+> **Note:**
 *(Changed in v1.11)*
 This section used to reference [RFC 7235](https://datatracker.ietf.org/doc/html/rfc7235#section-2.1)
 and [RFC 7230](https://datatracker.ietf.org/doc/html/rfc9110#section-5.6.2), that
@@ -799,7 +799,7 @@ Target User
 : For an [`m.room.member`](/client-server-api/#mroommember) state event, the
   user given by the `state_key` of the event.
 
-> **Note:** 
+> **Note:**
 Some [room versions](/rooms) accept power level values to be represented as
 strings rather than integers. This is strictly for backwards compatibility.
 A homeserver should take reasonable precautions to prevent users from sending
@@ -857,18 +857,18 @@ rejected event where it is a state event.
 If an event in an incoming transaction is rejected, this should not
 cause the transaction request to be responded to with an error response.
 
-> **Note:** 
+> **Note:**
 This means that events may be included in the room DAG even though they
 should be rejected.
 
-> **Note:** 
+> **Note:**
 This is in contrast to redacted events which can still affect the state
 of the room. For example, a redacted `join` event will still result in
 the user being considered joined.
 
 #### Soft failure
 
-> **Note:** 
+> **Note:**
 It is important that we prevent users from evading bans (or other power
 restrictions) by creating events which reference old parts of the DAG.
 For example, a banned user could continue to send messages to a room by
@@ -902,20 +902,20 @@ nor be referenced by new events created by the homeserver (i.e. they
 should not be added to the server's list of forward extremities of the
 room). Soft failed events are otherwise handled as usual.
 
-> **Note:** 
+> **Note:**
 Soft failed events participate in state resolution as normal if further
 events are received which reference it. It is the job of the state
 resolution algorithm to ensure that malicious events cannot be injected
 into the room state via this mechanism.
 
-> **Note:** 
+> **Note:**
 Because soft failed state events participate in state resolution as
 normal, it is possible for such events to appear in the current state of
 the room. In that case the client should be told about the soft failed
 event in the usual way (e.g. by sending it down in the `state` section
 of a sync response).
 
-> **Note:** 
+> **Note:**
 A soft failed event should be returned in response to federation
 requests where appropriate (e.g. in `/event/<event_id>`). Note that soft
 failed events are returned in `/backfill` and `/get_missing_events`
@@ -978,7 +978,7 @@ then any new event `D'` will not reference `C`:
     |
     D'
 
-> **Note:** 
+> **Note:**
 *(Added in v1.18)*
 Events can also be soft failed if they fail [Policy Server checks](#validating-policy-server-signatures).
 
@@ -1588,7 +1588,7 @@ required fields for a PDU.**
         * Required if the room is [restricted](/client-server-api/#restricted-rooms)
         * and is joining through one of the conditions available. If the
         * user is responding to an invite, this is not required.
-        * 
+        *
         * An arbitrary user ID belonging to the resident server in
         * the room being joined that is able to issue invites to other
         * users. This is used in later validation of the auth rules for
@@ -1767,12 +1767,12 @@ membership events in the response `auth_chain` field.
     * Required if the room is [restricted](/client-server-api/#restricted-rooms)
     * and is joining through one of the conditions available. If the
     * user is responding to an invite, this is not required.
-    * 
+    *
     * An arbitrary user ID belonging to the resident server in
     * the room being joined that is able to issue invites to other
     * users. This is used in later validation of the auth rules for
     * the `m.room.member` event.
-    * 
+    *
     * The resident server which owns the provided user ID must have a
     * valid signature on the event. If the resident server is receiving
     * the `/send_join` request, the signature must be added before sending
@@ -1796,12 +1796,12 @@ membership events in the response `auth_chain` field.
     * All events in the auth chain for the new join event, as well
     * as those in the auth chains for any events returned in
     * `state`.
-    * 
+    *
     * If the `omit_members` query parameter was set to `true`, then
     * any events that are returned in `state` may be omitted from
     * `auth_chain`, whether or not membership events are omitted
     * from `state`.
-    * 
+    *
     * Note that events have a different format depending on the room version - check the
     * [room version specification](/rooms) for precise event formats.
      */
@@ -1809,7 +1809,7 @@ membership events in the response `auth_chain` field.
 
     /**
     * The resolved current room state prior to the join event.
-    * 
+    *
     * If the request had `omit_members` set to `true`, events of
     * type `m.room.member` may be omitted from the response to
     * reduce the size of the response. If this is done,
@@ -1826,7 +1826,7 @@ membership events in the response `auth_chain` field.
 
     /**
     * **Required** if `members_omitted` is true.
-    * 
+    *
     * A list of the servers active in the room (ie, those with joined members) before the join.
      */
     servers_in_room?: string[];
@@ -2166,15 +2166,15 @@ knock.
     * A list of state events to help the initiator of the knock identify
     * the room. Translated as [stripped state events](/client-server-api/#stripped-state)
     * over the Client-Server API.
-    * 
+    *
     * MUST contain the `m.room.create` event for the room. All events
     * listed MUST additionally be formatted according to the room
     * version specification.
-    * 
+    *
     * Entries which are [improperly signed](/server-server-api/#validating-hashes-and-signatures-on-received-events)
     * or formatted SHOULD be removed by the server prior to supplying
     * them over the Client-Server API.
-    * 
+    *
     * Note that events have a different format depending on the room
     * version - check the [room version specification](/rooms) for
     * precise event formats.
@@ -2249,7 +2249,7 @@ Note that invites are used to indicate that knocks were accepted. As such,
 receiving servers should be prepared to manually link up a previous knock
 to an invite if the invite event does not directly reference the knock.
 
-> **Note:** 
+> **Note:**
 *(Added in v1.16)* `invite_room_state` MUST now have its entries formatted
 according to the room's version (see [room version specification](/rooms)). However,
 servers SHOULD consider their local ecosystems before returning the described
@@ -2361,13 +2361,13 @@ SHOULD return `M_INVALID_PARAM` if:
     * A list of state events to help the receiver of the invite identify the room.
     * Translated as [stripped state events](/client-server-api/#stripped-state)
     * over the Client-Server API.
-    * 
+    *
     * MUST contain the `m.room.create` event for the room. All events listed
     * MUST additionally be formatted according to the room version specification.
-    * 
+    *
     * Servers might need to apply validation to the `invite_room_state` depending
     * on room version. See endpoint description for more information.
-    * 
+    *
     * Note that events have a different format depending on the room
     * version - check the [room version specification](/rooms) for
     * precise event formats.
@@ -2540,13 +2540,13 @@ SHOULD return `M_INVALID_PARAM` if:
   * A list of state events to help the receiver of the invite identify the room.
   * Translated as [stripped state events](/client-server-api/#stripped-state)
   * over the Client-Server API.
-  * 
+  *
   * MUST contain the `m.room.create` event for the room. All events listed
   * MUST additionally be formatted according to the room version specification.
-  * 
+  *
   * Servers might need to apply validation to the `invite_room_state` depending
   * on room version. See the endpoint description for more information.
-  * 
+  *
   * Note that events have a different format depending on the room
   * version - check the [room version specification](/rooms) for
   * precise event formats.
@@ -2897,7 +2897,7 @@ the receiving homeserver.
 
 ## Third-party invites
 
-> **Note:** 
+> **Note:**
 More information about third-party invites is available in the Client-Server API
 under the [Third-party invites](/client-server-api/#third-party-invites) module.
 
@@ -3027,7 +3027,7 @@ response to this request.
         /**
         * The identity server signatures for this block. This is a map of identity
         * server name to signing key identifier to base64-encoded signature.
-        * 
+        *
         * The signatures are calculated using the process described at
         * [Signing JSON](/appendices/#signing-json).
         * @example {"magic.forest": {"ed25519:3": "fQpGIW1Snz+pwLZu6sTy2aHy/DYWWTspTJRPyNp0PKkymfIsNffysMl6ObMMFdIJhk6g6pwlIqZ54rxo8SLmAg"}}
@@ -3038,7 +3038,7 @@ response to this request.
         * The token generated by the identity server at the
         * [`/store_invite`](/identity-service-api/#post_matrixidentityv2store-invite)
         * endpoint.
-        * 
+        *
         * It matches the `state_key` of the corresponding [`m.room.third_party_invite`](/client-server-api/#mroomthird_party_invite)
         * event.
         * @example "abc123"
@@ -3135,7 +3135,7 @@ room invites the identity server has been made aware of.
       /**
       * The identity server signatures for this block. This is a map of identity
       * server name to signing key identifier to base64-encoded signature.
-      * 
+      *
       * The signatures are calculated using the process described at
       * [Signing JSON](/appendices/#signing-json).
       * @example {"magic.forest": {"ed25519:3": "fQpGIW1Snz+pwLZu6sTy2aHy/DYWWTspTJRPyNp0PKkymfIsNffysMl6ObMMFdIJhk6g6pwlIqZ54rxo8SLmAg"}}
@@ -3146,7 +3146,7 @@ room invites the identity server has been made aware of.
       * The token generated by the identity server at the
       * [`/store_invite`](/identity-service-api/#post_matrixidentityv2store-invite)
       * endpoint.
-      * 
+      *
       * It matches the `state_key` of the corresponding [`m.room.third_party_invite`](/client-server-api/#mroomthird_party_invite)
       * event.
       * @example "abc123"
@@ -3277,7 +3277,7 @@ This is the `instance_id` of a `Protocol Instance` returned by
       * The URL for the room's avatar, if one is set.
       * @example "mxc://example.org/abcdef"
        */
-      avatar_url?: string /* uri */;
+      avatar_url?: string /* mx-mxc-uri */;
 
       /**
       * The room's join rule. When not present, the room is assumed to
@@ -3371,7 +3371,7 @@ stable order is recommended.
   /**
   * The specific third-party network/protocol to request from the
   * homeserver. Can only be used if `include_all_networks` is false.
-  * 
+  *
   * This is the `instance_id` of a `Protocol Instance` returned by
   * [`GET /_matrix/client/v3/thirdparty/protocols`](/client-server-api/#get_matrixclientv3thirdpartyprotocols).
   * @example "irc-freenode"
@@ -3438,7 +3438,7 @@ stable order is recommended.
       * The URL for the room's avatar, if one is set.
       * @example "mxc://example.org/abcdef"
        */
-      avatar_url?: string /* uri */;
+      avatar_url?: string /* mx-mxc-uri */;
 
       /**
       * The room's join rule. When not present, the room is assumed to
@@ -3556,7 +3556,7 @@ contents.
       * The URL for the room's avatar, if one is set.
       * @example "mxc://example.org/abcdef"
        */
-      avatar_url?: string /* uri */;
+      avatar_url?: string /* mx-mxc-uri */;
 
       /**
       * The room's join rule. When not present, the room is assumed to
@@ -3578,7 +3578,7 @@ contents.
       * The [`m.space.child`](/client-server-api/#mspacechild) events of the space-room, represented
       * as [Stripped State Events](/client-server-api/#stripped-state) with an added
       * `origin_server_ts` key.
-      * 
+      *
       * If the room is not a space-room, this should be empty.
        */
       children_state: Array<{
@@ -3665,7 +3665,7 @@ contents.
       * The URL for the room's avatar, if one is set.
       * @example "mxc://example.org/abcdef"
        */
-      avatar_url?: string /* uri */;
+      avatar_url?: string /* mx-mxc-uri */;
 
       /**
       * The room's join rule. When not present, the room is assumed to
@@ -3687,7 +3687,7 @@ contents.
     /**
     * The list of room IDs the requesting server doesn't have a viable way to peek/join. Rooms which
     * the responding server cannot provide details on will be outright excluded from the response instead.
-    * 
+    *
     * Assuming both the requesting and responding server are well behaved, the requesting server should
     * consider these room IDs as not accessible from anywhere. They should not be re-requested.
      */
@@ -3970,7 +3970,7 @@ MUST either exclude it from the response body or give it the value `null`.
     * `null` if the user does not have an avatar set.
     * @example "mxc://example.org/MyC00lAvatar"
      */
-    avatar_url?: string;
+    avatar_url?: string /* mx-mxc-uri */;
 
     /**
     * The name of the user's time zone. The name SHOULD be registered in the [IANA Time Zone Database](https://www.iana.org/time-zones). Requesting servers MUST tolerate invalid or unknown values.
@@ -4016,9 +4016,10 @@ MUST either exclude it from the response body or give it the value `null`.
 ## OpenID
 
 Third-party services can exchange an access token previously generated
-by the <span class="title-ref">Client-Server API</span> for information
-about a user. This can help verify that a user is who they say they are
-without granting full access to the user's account.
+by the [OpenID module of the Client-Server
+API](/client-server-api/#openid) for information about a user. This can
+help verify that a user is who they say they are without granting full
+access to the user's account.
 
 Access tokens generated by the OpenID API are only good for the OpenID
 API and nothing else.
@@ -4028,6 +4029,10 @@ API and nothing else.
 Exchanges an OpenID access token for information about the user
 who generated the token. Currently this only exposes the Matrix
 User ID of the owner.
+
+The access token is obtained by the Client-Server API's
+[`POST /_matrix/client/v3/user/{userId}/openid/request_token`](/client-server-api/#post_matrixclientv3useruseridopenidrequest_token)
+endpoint.
 **Query Parameters:**
 - `access_token` (Required): `string` - The OpenID access token to get information about the owner for.
 **Responses:**
@@ -4037,7 +4042,7 @@ User ID of the owner.
 
     /**
     * The Matrix User ID who generated the token.
-    * 
+    *
     * The caller MUST validate that the returned user ID is on the server they
     * called (i.e. if you make a request to example.com and it returns
     * `@alice:matrix.org`, the result is invalid).
@@ -4155,7 +4160,7 @@ receiving homeserver.
         * when logging in.
         * @example "@alice:example.com"
          */
-        user_id: string;
+        user_id: string /* mx-user-id */;
 
         /**
         * The ID of the device these keys belong to. Must match the device ID used
@@ -4181,7 +4186,7 @@ receiving homeserver.
         /**
         * Signatures for the device key object. A map from user ID, to a map from
         * `<algorithm>:<device_id>` to the signature.
-        * 
+        *
         * The signature is calculated using the process described at [Signing JSON](/appendices/#signing-json).
         * @example {"@alice:example.com": {"ed25519:JLAFKJWSCS": "dSO80A01XiigH3uBiDVx/EjzaoycHcjq9lfQX0uWsqxl2giMIiSPR8a4d291W1ihKJL/a+myXS367WT6NAIcBA"}}
          */
@@ -4332,7 +4337,7 @@ type m.device_list_update = {
       * when logging in.
       * @example "@alice:example.com"
        */
-      user_id: string;
+      user_id: string /* mx-user-id */;
 
       /**
       * The ID of the device these keys belong to. Must match the device ID used
@@ -4358,7 +4363,7 @@ type m.device_list_update = {
       /**
       * Signatures for the device key object. A map from user ID, to a map from
       * `<algorithm>:<device_id>` to the signature.
-      * 
+      *
       * The signature is calculated using the process described at [Signing JSON](/appendices/#signing-json).
       * @example {"@alice:example.com": {"ed25519:JLAFKJWSCS": "dSO80A01XiigH3uBiDVx/EjzaoycHcjq9lfQX0uWsqxl2giMIiSPR8a4d291W1ihKJL/a+myXS367WT6NAIcBA"}}
        */
@@ -4417,7 +4422,7 @@ the same key.
     /**
     * One-time keys for the queried devices. A map from user ID, to a
     * map from devices to a map from `<algorithm>:<key_id>` to the key object.
-    * 
+    *
     * See the [Client-Server Key Algorithms](/client-server-api/#key-algorithms) section for more information on
     * the Key Object format.
     * @example {"@alice:example.com": {"JLAFKJWSCS": {"signed_curve25519:AAAAHg": {"key": "zKbLg+NrIjpnagy+pIY6uPL4ZwEG2v+8F9lmgsnlZzs", "signatures": {"@alice:example.com": {"ed25519:JLAFKJWSCS": "FLWxXqGbwrb8SM3Y795eB6OA8bwBcoMZFXBqnTn58AYWZSqiD45tlBVcDa2L7RwdKXebW/VzDlnfVJ+9jok1Bw"}}}}}}
@@ -4649,7 +4654,7 @@ be sure to set `allow_remote` to `false`.
 **Summary:** Download content from the content repository.
 **Responses:**
 - **200**: The content that was previously uploaded.
-- **429**: 
+- **429**:
 - **502**: The content is too large for the server to serve.
   ```typescript
   {
@@ -4667,7 +4672,7 @@ be sure to set `allow_remote` to `false`.
     error?: string;
   }
   ```
-- **504**: 
+- **504**:
 
 ### GET /media/thumbnail/{mediaId}
 **Summary:** Download a thumbnail of content from the content repository
@@ -4733,7 +4738,7 @@ for negatively-sized images.
     error?: string;
   }
   ```
-- **429**: 
+- **429**:
 - **502**: The remote content is too large for the server to thumbnail.
   ```typescript
   {
@@ -4751,7 +4756,7 @@ for negatively-sized images.
     error?: string;
   }
   ```
-- **504**: 
+- **504**:
 
 ## Server Access Control Lists (ACLs)
 
@@ -4824,7 +4829,7 @@ of the Server-Server API:
 
 All other functionality and endpoints are optional for a Policy Server.
 
-> **Note:** 
+> **Note:**
 Though a Policy Server is not required to implement the full Server-Server API
 surface, some functionality may be desirable to implement anyway:
 
@@ -4835,7 +4840,7 @@ surface, some functionality may be desirable to implement anyway:
 * Receiving [device lookups](#get_matrixfederationv1userdevicesuserid) can also
   help reduce remote servers flagging the Policy Server as "offline".
 
-> **Note:** 
+> **Note:**
 Policy Servers are *not* required to track the DAG for a room. Policy Servers
 might be optimized for content moderation and therefore do not need knowledge of
 the DAG.
@@ -4859,10 +4864,10 @@ Policy Server](#asking-for-a-policy-server-signature-on-an-event) for a signatur
 before sending an event. If the Policy Server refuses to sign the event being
 sent, servers SHOULD fail to send that event as per the [validation rules](#validating-policy-server-signatures).
 
-> **Note:** 
+> **Note:**
 "Current state" shares the same definition as [soft failure](#soft-failure).
 
-> **Note:** 
+> **Note:**
 Policy Servers MUST have at least one joined user in the room to give the Policy
 Server agency in whether it serves that role for the room. Otherwise, a room
 would be able to force a Policy Server to participate and then overwhelm it.
@@ -4877,7 +4882,7 @@ affect the authorization rules for an event, but does affect whether homeservers
 If a room has disabled (or never enabled) a Policy Server, events are recommended
 for inclusion and subject to normal authorization rules.
 
-> **Note:** 
+> **Note:**
 Because the Policy Server is not asked to sign [`m.room.policy`](/client-server-api/#mroompolicy)
 state events with empty string `state_key`s, those events will not have a Policy
 Server signature. Those events are by default recommended for inclusion and still
@@ -4892,16 +4897,16 @@ If a room has enabled a Policy Server, the Policy Server's signature appears
 alongside the normal [event signatures](#signing-events), though uses a public
 key from the room's `m.room.policy` state event.
 
-> **Note:** 
+> **Note:**
 Currently, only Ed25519 keys are supported by homeservers. The Key ID for the
 `ed25519` key in `m.room.policy` is *always* `ed25519:policy_server`.
 
-> **Note:** 
+> **Note:**
 By embedding the Policy Server's public key into room state, the Policy Server
 does not need to be online or have its keys cached by a notary in order to validate
 an event.
 
-> **Note:** 
+> **Note:**
 The Policy Server's [published signing key](#publishing-keys) SHOULD NOT be the
 same key contained in the `m.room.policy` state event. This is to keep "can send
 federation traffic" and "can recommend events for inclusion" separate, and to
@@ -4927,11 +4932,11 @@ recommended for inclusion and the homeserver SHOULD:
 * If the event was received over federation or the homeserver sends a local client's
   event anyway, [soft fail](#soft-failure) the event.
 
-> **Note:** 
+> **Note:**
 For clarity, an event which lacks a valid Policy Server signature is still subject
 to normal authorization rules.
 
-> **Note:** 
+> **Note:**
 When a Policy Server's signature is invalid, a new one is requested because the
 Policy Server's key may have rotated between the event being signed and the event
 being checked.
@@ -4965,7 +4970,7 @@ non-empty string `state_key`s are processed by this endpoint.
 Whether a signature is required by a Policy Server further depends on whether
 the room has [enabled a Policy Server](#determining-if-a-policy-server-is-enabled-in-a-room).
 
-> **Note:** 
+> **Note:**
 The Policy Server MAY respond with *any* of the defined errors to indicate
 failure. For example, if it wishes to hide whether it knows about a room,
 it MAY return `400 M_FORBIDDEN` instead (or, it MAY sign the event anyway).
@@ -4973,7 +4978,7 @@ it MAY return `400 M_FORBIDDEN` instead (or, it MAY sign the event anyway).
 What the Policy Server checks for when calling this endpoint is left as an
 implementation detail.
 
-> **Note:** 
+> **Note:**
 The policy server name might be the same as the event's origin, and therefore the event might
 have existing signatures. Those existing signatures might not be returned by the policy server,
 but should be retained to validate the event.
@@ -4991,7 +4996,7 @@ is to be added to the event before sending or processing the event further.
   ```typescript
   {}
   ```
-- **429**: 
+- **429**:
 - **400**: The request is invalid or the Policy Server refuses to sign the event.
 
 Error codes include:
@@ -5017,7 +5022,7 @@ Error codes include:
   ```
 - **403**: The calling server is [ACL'd](/server-server-api/#server-access-control-lists-acls).
 
-> **Note:** 
+> **Note:**
 This endpoint is optionally affected by server ACLs. The Policy Server
 MAY NOT apply an ACL to the request, especially if the Policy Server
 is not tracking the room DAG.
@@ -5083,7 +5088,7 @@ The signature is then copied back to the original event object.
 For an example of a signed event, see the [room version
 specification](/rooms).
 
-> **Note:** 
+> **Note:**
 *(Added in v1.18)*
 Events sent in rooms with [Policy Servers](#policy-servers) MUST [ask](#asking-for-a-policy-server-signature-on-an-event)
 the Policy Server for a signature too.
@@ -5118,7 +5123,7 @@ expected to be published and therefore should be skipped at this stage.
 Additionally, any keys that are known to have expired prior to the event's
 `origin_server_ts` are ignored.
 
-> **Note:** 
+> **Note:**
 *(Added in v1.18)*
 Events sent in rooms with [Policy Servers](#policy-servers) have [additional](#validating-policy-server-signatures)
 signature validation requirements.

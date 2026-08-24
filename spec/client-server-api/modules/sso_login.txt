@@ -88,7 +88,7 @@ These steps are illustrated as follows:
         |<-------------access token-------------|                   |
 ```
 
-> **Note:** 
+> **Note:**
 In the older [r0.4.0
 version](https://matrix.org/docs/spec/client_server/r0.4.0.html#cas-based-client-login)
 of this specification it was possible to authenticate via CAS when the
@@ -136,19 +136,19 @@ type m.login.ssoflowschema = {
     /**
     * Optional `mxc://` URI to provide an image/icon representing the IdP.
     * Intended to be shown alongside the `name` if provided.
-    * 
-    * 
-> **Note:** 
+    *
+    *
+> **Note:**
     * Clients SHOULD use the deprecated [`/download`](/client-server-api/#get_matrixmediav3downloadservernamemediaid)
     * and [`/thumbnail`](/client-server-api/#get_matrixmediav3thumbnailservernamemediaid)
     * endpoints to retrieve this media item because clients will not have
     * an access token they can authenticate with yet. Servers SHOULD ensure
     * media used for IdP icons is excluded from the freeze described by the
     * [Content Repository module's Client Behaviour section](/client-server-api/#content-repo-client-behaviour).
-    * 
+    *
     * This may be addressed in the future with proposals like [MSC4148](https://github.com/matrix-org/matrix-spec-proposals/pull/4148),
     * or removed entirely through the transition to OIDC.
-    * 
+    *
 
     * @example "mxc://example.org/abc123"
      */
@@ -159,12 +159,12 @@ type m.login.ssoflowschema = {
     * described in this IdP. Matrix maintains a registry of identifiers
     * [in the matrix-spec repo](https://github.com/matrix-org/matrix-spec/blob/main/informal/idp-brands.md)
     * to ensure clients and servers are aligned on major/common brands.
-    * 
+    *
     * Clients should prefer the `brand` over the `icon`, when both are
     * provided. Clients are not required to support any particular `brand`,
     * including those in the registry, though are expected to be able to
     * present any IdP based off the `name`/`icon` to the user regardless.
-    * 
+    *
     * Unregistered brands are permitted using the [Common Namespaced Identifier Grammar](/appendices/#common-namespaced-identifier-grammar),
     * though excluding the namespace requirements. For example, `examplesso`
     * is a valid brand which is not in the registry but still permitted.

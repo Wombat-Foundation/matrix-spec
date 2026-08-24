@@ -172,19 +172,18 @@ of access tokens to authenticate users. The access tokens provided by an
 Identity Server cannot be used to authenticate Client-Server API
 requests.
 
+An Identity Service access token may be obtained as follows:
+ 1. The user's client requests an OpenID token from the homeserver using the
+     Client-Server API's [OpenID module](/client-server-api/#openid).
+ 2. The OpenID token is exchanged for an Identity Service access token via the
+     [`POST /_matrix/identity/v2/account/register`](#post_matrixidentityv2accountregister) endpoint.
+
 Access tokens may be provided via a request header, using the
 Authentication Bearer scheme: `Authorization: Bearer TheTokenHere`.
 
-Clients may alternatively provide the access token via a query string
-parameter: `access_token=TheTokenHere`. This method is deprecated to
-prevent the access token being leaked in access/HTTP logs and SHOULD NOT
-be used by clients.
-
-Identity Servers MUST support both methods.
-
-> **Note:** 
-*(Changed in v1.11)*
-Sending the access token as a query string parameter is now deprecated.
+> **Note:**
+*(Changed in v1.20)*
+Sending the access token as a query string parameter is no longer supported.
 
 When credentials are required but missing or invalid, the HTTP call will
 return with a status of 401 and the error code `M_UNAUTHORIZED`.
@@ -193,7 +192,9 @@ return with a status of 401 and the error code `M_UNAUTHORIZED`.
 **Summary:** Exchanges an OpenID token for an access token.
 Exchanges an OpenID token from the homeserver for an access token to
 access the identity server. The request body is the same as the values
-returned by `/openid/request_token` in the Client-Server API.
+returned by
+[`POST /_matrix/client/v3/user/{userId}/openid/request_token`](/client-server-api/#post_matrixclientv3useruseridopenidrequest_token)
+in the Client-Server API.
 **Request Body (JSON):**
 ```typescript
 {
@@ -201,7 +202,8 @@ returned by `/openid/request_token` in the Client-Server API.
   /**
   * An access token the consumer may use to verify the identity of
   * the person who generated the token. This is given to the federation
-  * API `GET /openid/userinfo` to verify the user's identity.
+  * API [`GET /_matrix/federation/v1/openid/userinfo`](/server-server-api/#get_matrixfederationv1openiduserinfo)
+  * to verify the user's identity.
    */
   access_token: string;
 
@@ -520,7 +522,7 @@ any of the algorithms defined in this specification.
     /**
     * The pepper the client MUST use in hashing identifiers, and MUST
     * supply to the `/lookup` endpoint when performing lookups.
-    * 
+    *
     * Servers SHOULD rotate this string often.
      */
     lookup_pepper: string;
@@ -559,7 +561,7 @@ later in this specification.
   * The addresses to look up. The format of the entries here depend on
   * the `algorithm` used. Note that queries which have been incorrectly
   * hashed or formatted will lead to no matches.
-  * 
+  *
   * Note that addresses are case sensitive: review the
   * [3PID Types](/appendices#3pid-types) to verify the intended case an
   * identifier should be prior to submission/hashing.
@@ -637,7 +639,7 @@ the 3PID to search for. For example, if the client wanted to know about
 `alice@example.org`'s bindings, it would first format the query as
 `alice@example.org email ThePepperGoesHere`.
 
-> **Note:** 
+> **Note:**
 Mediums and peppers are appended to the address to prevent a common
 prefix for each 3PID, helping prevent attackers from pre-computing the
 internal state of the hash function.
@@ -678,7 +680,7 @@ the client has made an appropriate request to `/hash_details` first.
 
 ### Security considerations
 
-> **Note:** 
+> **Note:**
 [MSC2134](https://github.com/matrix-org/matrix-spec-proposals/blob/main/proposals/2134-identity-hash-lookup.md) has much
 more information about the security considerations made for this section
 of the specification. This section covers the high-level details for why
@@ -694,7 +696,7 @@ protect the privacy of users who might not have a Matrix identifier
 bound to their 3PID addresses, the specification attempts to make it
 difficult to harvest 3PIDs.
 
-> **Note:** 
+> **Note:**
 Hashing identifiers, while not perfect, helps make the effort required
 to harvest identifiers significantly higher. Phone numbers in particular
 are still difficult to protect with hashing, however hashing is

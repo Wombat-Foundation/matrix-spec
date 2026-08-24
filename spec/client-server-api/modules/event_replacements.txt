@@ -91,13 +91,13 @@ For example, a replacement for an encrypted event might look like this:
         "sender_key": "<sender_curve25519_key>",
         "device_id": "<sender_device_id>",
         "session_id": "<outbound_group_session_id>",
-        "ciphertext": "<encrypted_payload_base_64>"
+        "ciphertext": "<base64_encoded_megolm_message>"
     }
     // irrelevant fields not shown
 }
 ```
 
-... and, once decrypted, the payload might look like this:
+... and the plaintext body of the Megolm message might look like this:
 
 ```json
 {
@@ -119,7 +119,7 @@ Note that:
  * There is no `m.relates_to` property in the encrypted payload. If there was, it would be ignored.
  * There is no `m.new_content` property in the cleartext content of the `m.room.encrypted` event. As above, if there was then it would be ignored.
 
-> **Note:** 
+> **Note:**
 The payload of an encrypted replacement event must be encrypted as normal, including
 ratcheting any [Megolm](#mmegolmv1aes-sha2) session as normal. The original Megolm
 ratchet entry should **not** be re-used.
@@ -247,7 +247,7 @@ events](#redactions-of-edited-events) below.
 **Note:** the `content` of the original event is left intact. In particular servers
 should **not** replace the content with that of the replacement event.
 
-> **Note:** 
+> **Note:**
 In previous versions of the specification, servers were expected to replace the
 content of an edited event whenever it was served to clients (with the
 exception of the
@@ -372,7 +372,7 @@ original event's `m.relates_to` is preserved), as well as being contrary to the
 spirit of the event relationships mechanism which expects only one "parent" per
 event.
 
-> **Note:** 
+> **Note:**
 *(Changed in v1.13)*
 In previous versions of the specification, events which replace a [reply](#rich-replies)
 could include a fallback in the `content`. This is no longer the case.

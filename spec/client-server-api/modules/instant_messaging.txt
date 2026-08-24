@@ -240,7 +240,7 @@ support an additional `format` parameter of `org.matrix.custom.html`. When this
 field is present, a `formatted_body` with the HTML must be provided. The plain
 text version of the HTML should be provided in the `body`.
 
-> **Note:** 
+> **Note:**
 *(Changed in v1.10)*
 In previous versions of the specification, the `format` and `formatted` fields
 were limited to `m.text`, `m.emote`, `m.notice`, and
@@ -255,13 +255,13 @@ tags to permit, denying the use and rendering of anything else, is:
 `hr`, `br`, `div`, `table`, `thead`, `tbody`, `tr`, `th`, `td`,
 `caption`, `pre`, `span`, `img`, `details`, `summary`.
 
-> **Note:** 
+> **Note:**
 *(Added in v1.10)*
 HTML features MAY be deprecated and replaced by their modern equivalent without
 requiring a [Spec Change Proposal](/proposals) when they are deprecated in the
 [WHATWG HTML Living Standard](https://html.spec.whatwg.org/multipage/).
 
-> **Note:** 
+> **Note:**
 *(Changed in v1.10)*
 In previous versions of the specification, the `font` tag was suggested with the
 `data-mx-bg-color`, `data-mx-color` and `color` attributes. This tag is now
@@ -307,13 +307,13 @@ having appropriate closing tags, appropriate attributes (considering the
 custom ones defined in this specification), and generally valid
 structure.
 
-> **Note:** 
+> **Note:**
 *(Changed in v1.13)*
 In previous versions of the specification, [rich replies](#rich-replies) could
 use a special tag, `mx-reply`. This is no longer the case. Clients SHOULD strip
 this tag and its content. See the "Rich replies" section for more information.
 
-> **Note:** 
+> **Note:**
 A future iteration of the specification will support more powerful and
 extensible message formatting options, such as the proposal
 [MSC1767](https://github.com/matrix-org/matrix-spec-proposals/pull/1767).
@@ -562,7 +562,7 @@ If the `filename` is present, and its value is different than `body`, then
 `body` is considered to be a caption, otherwise `body` is a filename. `format`
 and `formatted_body` are only used for captions.
 
-> **Note:** 
+> **Note:**
 In previous versions of the specification, `body` was usually used to set the
 filename of the uploaded file, and `filename` was only present on `m.file` with
 the same purpose.
@@ -634,7 +634,7 @@ basic [LaTeX2e](https://www.latex-project.org/) maths commands and the
 [TeX](https://tug.org/) maths commands, with the possible exception of commands
 that could be security risks.
 
-> **Note:** 
+> **Note:**
 In general, LaTeX places a heavy burden on client authors to ensure that it is
 processed safely. Certain commands, such as [those that can create macros](https://katex.org/docs/supported#macros),
 are potentially dangerous. Clients should either decline to process those

@@ -19,7 +19,7 @@ the same as past room versions.
 
 ## Server implementation components
 
-> **Note:** 
+> **Note:**
 The information contained in this section is strictly for server
 implementors. Applications which use the Client-Server API are generally
 unaffected by the intricacies contained here. The section above
@@ -62,12 +62,12 @@ The types of state events that affect authorisation are:
 -   [`m.room.power_levels`](/client-server-api#mroompower_levels)
 -   [`m.room.third_party_invite`](/client-server-api#mroomthird_party_invite)
 
-> **Note:** 
+> **Note:**
 Power levels are inferred from defaults when not explicitly supplied.
 For example, mentions of the `sender`'s power level can also refer to
 the default power level for users in the room.
 
-> **Note:** 
+> **Note:**
 `m.room.redaction` events are subject to auth rules in the same way as any other event.
 In practice, that means they will normally be allowed by the auth rules, unless the
 `m.room.power_levels` event sets a power level requirement for `m.room.redaction`
@@ -205,7 +205,7 @@ The rules are as follows:
     8. Otherwise, allow.
 10. Otherwise, allow.
 
-> **Note:** 
+> **Note:**
 Some consequences of these rules:
 
 -   Unless you are a member of the room, the only permitted operations

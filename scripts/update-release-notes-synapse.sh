@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SYNAPSE_REPO="${SYNAPSE_REPO:-../synapse}"
-SYNAPSE_REF="${SYNAPSE_REF:-upstream/develop}"
-UPSTREAM_REMOTE="${UPSTREAM_REMOTE:-upstream}"
+SYNAPSE_REF="${SYNAPSE_REF:-origin/develop}"
+UPSTREAM_REMOTE="${UPSTREAM_REMOTE:-origin}"
 TARGET_DIR="${TARGET_DIR:-release-notes-synapse}"
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "$script_dir/.." && pwd)"
+SYNAPSE_REPO="${SYNAPSE_REPO:-$repo_root/ext/synapse}"
 cd "$repo_root"
 
 if ! command -v git >/dev/null 2>&1; then
@@ -19,7 +19,7 @@ git -C "$SYNAPSE_REPO" rev-parse --git-dir >/dev/null
 
 echo "fetching Synapse release notes from $SYNAPSE_REPO"
 git -C "$SYNAPSE_REPO" fetch "$UPSTREAM_REMOTE" \
-	'+refs/heads/develop:refs/remotes/upstream/develop'
+	"+refs/heads/develop:refs/remotes/$UPSTREAM_REMOTE/develop"
 
 tmp_dir="$(mktemp -d "synapse-release-notes.tmp.XXXXXX")"
 trap 'rm -rf "$tmp_dir"' EXIT

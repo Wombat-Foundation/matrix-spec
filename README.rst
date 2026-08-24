@@ -42,15 +42,19 @@ Individual sync workflows:
 
 * ``scripts/update-issues.sh`` fetches GitHub issues and updates ``issues/`` with JSON, TSV, and YAML-frontmatter Markdown files.
 * ``scripts/update-unmerged-proposals.sh`` refreshes ``proposals/unmerged``
-  from open proposal PRs in a sibling ``matrix-spec-proposals`` checkout (or defaults to ``../proposals``).
+  from open proposal PRs using ``ext/proposals``.
 * ``scripts/update-merged-proposals.sh`` refreshes upstream-managed files under
-  ``proposals/`` from the ``main`` branch of a sibling ``matrix-spec-proposals``
-  checkout, including proposal images and other sidecar assets.
+  ``proposals/`` from the ``main`` branch of ``ext/proposals``, including
+  proposal images and other sidecar assets.
 * ``scripts/update-spec.sh`` refreshes the checked-in plain-text corpus under
-  ``spec/``. If ``SOURCE_REPO`` is unset, it auto-detects a unique sibling plain-text
-  checkout or defaults to the current repository root. You can also specify
-  ``SOURCE_REPO=/path/to/plain-text-spec-checkout`` explicitly.
+  ``spec/`` from ``ext/spec``.
 * ``scripts/update-release-notes-synapse.sh`` refreshes ``CHANGES.md``, the
   archived release notes under ``docs/changelogs/``, and pending
-  ``changelog.d/`` fragments under ``release-notes-synapse/`` from a sibling
-  Synapse checkout (default: ``../synapse``).
+  ``changelog.d/`` fragments under ``release-notes-synapse/`` from
+  ``ext/synapse``.
+
+Upstream repositories are pinned as submodules under ``ext/``. Initialize them
+with ``git submodule update --init --recursive``. ``ext/web`` preserves the
+Matrix website source used by the supporting-document archive. The updater
+source paths can still be overridden explicitly with ``SOURCE_REPO`` or
+``SYNAPSE_REPO``.

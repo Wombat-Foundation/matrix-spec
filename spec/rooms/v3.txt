@@ -22,7 +22,7 @@ section below for a full overview.
 
 ## Server implementation components
 
-> **Note:** 
+> **Note:**
 The information contained in this section is strictly for server
 implementors. Applications which use the Client-Server API are generally
 unaffected by the intricacies contained here. The section above
@@ -38,7 +38,7 @@ all the remaining behaviour described by [room version 2](/rooms/v2).
 
 ### Event IDs
 
-> **Note:** 
+> **Note:**
 In other room versions (namely version 1 and 2) the event ID is a
 distinct field from the remainder of the event, which must be tracked as
 such. This leads to complications where servers receive multiple events
@@ -162,7 +162,7 @@ type PersistentDataUnit = {
   /**
   * Event IDs for the authorisation events that would
   * allow this event to be in the room.
-  * 
+  *
   * Must contain less than or equal to 10 events. Note that if the relevant
   * auth event selection rules are used, this restriction should never be
   * encountered.
@@ -173,7 +173,7 @@ type PersistentDataUnit = {
   /**
   * Event IDs for the most recent events in the room
   * that the homeserver was aware of when it made this event.
-  * 
+  *
   * Must contain less than or equal to 20 events.
   * @example ["$base64EncodedHash", "$AnotherEvent"]
    */
@@ -191,7 +191,7 @@ type PersistentDataUnit = {
 
 ### Authorisation rules
 
-> **Note:** 
+> **Note:**
 {{% added-in v=3 %}} `m.room.redaction` events are subject to auth rules in
 the same way as any other event. In practice, that means they will normally be allowed
 by the auth rules, unless the `m.room.power_levels` event sets a power level requirement

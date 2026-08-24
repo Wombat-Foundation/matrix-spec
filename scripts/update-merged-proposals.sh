@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SOURCE_REPO="${SOURCE_REPO:-../proposals}"
 TARGET_DIR="${TARGET_DIR:-proposals}"
-UPSTREAM_REMOTE="${UPSTREAM_REMOTE:-upstream}"
-UPSTREAM_MAIN="${UPSTREAM_MAIN:-upstream/main}"
+UPSTREAM_REMOTE="${UPSTREAM_REMOTE:-origin}"
+UPSTREAM_MAIN="${UPSTREAM_MAIN:-origin/main}"
 MANIFEST_PATH="${MANIFEST_PATH:-$TARGET_DIR/SOURCES.tsv}"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="$(cd "$script_dir/.." && pwd)"
+SOURCE_REPO="${SOURCE_REPO:-$repo_root/ext/proposals}"
+cd "$repo_root"
 
 if ! command -v git >/dev/null 2>&1; then
 	echo "error: git is required" >&2
@@ -23,7 +26,7 @@ mkdir -p "$TARGET_DIR"
 
 echo "fetching upstream main from $SOURCE_REPO"
 git -C "$SOURCE_REPO" fetch "$UPSTREAM_REMOTE" \
-	'+refs/heads/main:refs/remotes/upstream/main'
+	"+refs/heads/main:refs/remotes/$UPSTREAM_REMOTE/main"
 
 tmp_dir="$(mktemp -d "${TARGET_DIR}.tmp.XXXXXX")"
 trap 'rm -rf "$tmp_dir"' EXIT

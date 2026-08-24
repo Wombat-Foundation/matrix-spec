@@ -308,6 +308,7 @@ def _render_markdown_file(src_path):
 
     content = _strip_front_matter(content)
     processed = process_shortcodes(content)
+    processed = re.sub(r"[ \t]+$", "", processed, flags=re.MULTILINE)
     return re.sub(r"\n{3,}", "\n\n", processed)
 
 

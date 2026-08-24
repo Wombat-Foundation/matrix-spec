@@ -1,148 +1,49 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SOURCE_REPO="${SOURCE_REPO:-}"
-SOURCE_REF="${SOURCE_REF:-HEAD}"
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "$script_dir/.." && pwd)"
-parent_dir="$(dirname "$repo_root")"
+SOURCE_REPO="${SOURCE_REPO:-$repo_root/ext/spec}"
+SOURCE_REF="${SOURCE_REF:-HEAD}"
 cd "$repo_root"
-
-managed_paths=(
-	appendices.txt
-	application-service-api.txt
-	changelog
-	client-server-api
-	identity-service-api.txt
-	index.txt
-	olm-megolm
-	proposals.txt
-	push-gateway-api.txt
-	rooms
-	server-server-api.txt
-)
 
 if ! command -v git >/dev/null 2>&1; then
 	echo "error: git is required" >&2
 	exit 1
 fi
 
-infer_source_repo() {
-	local candidate
-	local matches=()
-
-	for candidate in "$parent_dir"/*; do
-		[[ -d "$candidate" ]] || continue
-		[[ "$candidate" != "$repo_root" ]] || continue
-		git -C "$candidate" rev-parse --git-dir >/dev/null 2>&1 || continue
-		if [[ -f "$candidate/spec/appendices.txt" ]]; then
-			candidate_spec_root="$candidate/spec"
-		else
-			candidate_spec_root="$candidate"
-		fi
-		[[ -f "$candidate_spec_root/appendices.txt" ]] || continue
-		[[ -f "$candidate_spec_root/index.txt" ]] || continue
-		[[ -f "$candidate_spec_root/server-server-api.txt" ]] || continue
-		[[ -d "$candidate_spec_root/client-server-api" ]] || continue
-		matches+=("$candidate")
-	done
-
-	case "${#matches[@]}" in
-	0)
-		return 1
-		;;
-	1)
-		printf '%s\n' "${matches[0]}"
-		;;
-	*)
-		echo "error: multiple candidate plain-text spec checkouts found:" >&2
-		printf '  %s\n' "${matches[@]}" >&2
-		echo "set SOURCE_REPO explicitly" >&2
-		return 1
-		;;
-	esac
+git -C "$SOURCE_REPO" rev-parse --git-dir >/dev/null
+git -C "$SOURCE_REPO" cat-file -e "$SOURCE_REF:content" 2>/dev/null || {
+	echo "error: no Matrix spec content found in $SOURCE_REPO at $SOURCE_REF" >&2
+	echo "initialize submodules with: git submodule update --init --recursive" >&2
+	exit 1
 }
 
-UPSTREAM_REMOTE="${UPSTREAM_REMOTE:-upstream}"
-UPSTREAM_MAIN="${UPSTREAM_MAIN:-upstream/main}"
-
-if [[ -z "$SOURCE_REPO" ]]; then
-	if SOURCE_REPO="$(infer_source_repo)"; then
-		echo "auto-detected SOURCE_REPO=$SOURCE_REPO"
-	else
-		echo "no unique sibling plain-text checkout found; using current repository ($repo_root)"
-		SOURCE_REPO="$repo_root"
-	fi
-fi
-
-git -C "$SOURCE_REPO" rev-parse --git-dir >/dev/null
-
-if git -C "$SOURCE_REPO" cat-file -e "$SOURCE_REF:spec/index.txt" 2>/dev/null; then
-	source_prefix="spec/"
-else
-	source_prefix=""
-fi
-
-tmp_dir="$(mktemp -d "merged-spec.tmp.XXXXXX")"
+tmp_dir="$(mktemp -d "$repo_root/merged-spec.tmp.XXXXXX")"
 trap 'rm -rf "$tmp_dir"' EXIT
+source_tree="$tmp_dir/source"
+output_tree="$tmp_dir/output"
+mkdir -p "$source_tree" "$output_tree"
 
-manifest="$tmp_dir/files.txt"
-: >"$manifest"
+echo "exporting Matrix spec sources from $SOURCE_REPO ($SOURCE_REF)"
+git -C "$SOURCE_REPO" archive "$SOURCE_REF" |
+	tar -x -C "$source_tree"
 
-for path in "${managed_paths[@]}"; do
-	source_path="${source_prefix}${path}"
-	obj_type="$(git -C "$SOURCE_REPO" cat-file -t "$SOURCE_REF:$source_path" 2>/dev/null || true)"
-	if [[ "$obj_type" == "blob" ]]; then
-		printf '%s\n' "$path" >>"$manifest"
-	elif [[ "$obj_type" == "tree" ]]; then
-		git -C "$SOURCE_REPO" ls-tree -r --name-only "$SOURCE_REF" "$source_path" |
-			sed "s|^${source_prefix}||" >>"$manifest"
-	fi
-done
+(
+	cd "$source_tree"
+	python3 "$repo_root/scripts/generate_txt_spec_tree.py" \
+		--source-root content \
+		--output-root "$output_tree"
+)
 
-sort -u "$manifest" -o "$manifest"
-
-count="$(wc -l <"$manifest")"
-if [[ "$count" -eq 0 ]]; then
-	echo "error: no managed spec files found in $SOURCE_REPO at $SOURCE_REF" >&2
-	echo "refusing to delete local files" >&2
+if ! find "$output_tree" -type f -name '*.txt' -print -quit | grep -q .; then
+	echo "error: generator produced no spec files; refusing to replace spec/" >&2
 	exit 1
 fi
 
-echo "syncing plain-text spec files from $SOURCE_REPO ($SOURCE_REF)"
+echo "replacing generated plain-text corpus"
+rm -rf -- spec
+mv -- "$output_tree" spec
 
-mkdir -p spec
-find spec -type f -print |
-	while read -r path; do
-		trimmed="${path#spec/}"
-		case "$trimmed" in
-		appendices.txt | application-service-api.txt | identity-service-api.txt | index.txt | proposals.txt | push-gateway-api.txt | server-server-api.txt)
-			grep -Fxq "$trimmed" "$manifest" || rm -f -- "spec/$trimmed"
-			;;
-		changelog/* | client-server-api/* | olm-megolm/* | rooms/*)
-			grep -Fxq "$trimmed" "$manifest" || rm -f -- "spec/$trimmed"
-			;;
-		esac
-	done
-
-echo "copying refreshed spec files"
-while read -r path; do
-	[[ -n "$path" ]] || continue
-	dest_path="spec/$path"
-	mkdir -p "$(dirname "$dest_path")"
-	git -C "$SOURCE_REPO" show "$SOURCE_REF:${source_prefix}${path}" >"$dest_path"
-done <"$manifest"
-
-if git -C "$SOURCE_REPO" cat-file -e "$SOURCE_REF:scripts/generate_txt_spec_tree.py" 2>/dev/null; then
-	generator_source="scripts/generate_txt_spec_tree.py"
-elif git -C "$SOURCE_REPO" cat-file -e "$SOURCE_REF:generate_txt_spec_tree.py" 2>/dev/null; then
-	generator_source="generate_txt_spec_tree.py"
-else
-	generator_source=""
-fi
-
-if [[ -n "$generator_source" ]]; then
-	git -C "$SOURCE_REPO" show "$SOURCE_REF:$generator_source" >scripts/generate_txt_spec_tree.py
-fi
-
-echo "wrote $count merged spec files from $SOURCE_REPO"
+count="$(find spec -type f -name '*.txt' | wc -l)"
+echo "wrote $count generated spec files from $SOURCE_REPO"

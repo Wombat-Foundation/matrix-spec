@@ -4,7 +4,7 @@ This room version builds on [version 7](/rooms/v7) to introduce a new
 join rule that allows members to join the room based on membership in
 another room.
 
-> **Note:** 
+> **Note:**
 This room version is known to have issues relating to redactions of member
 join events. [Room version 9](/rooms/v9) should be preferred over v8 when
 creating rooms.
@@ -25,7 +25,7 @@ Clients which implement the redaction algorithm locally should refer to the
 {{% added-in v=8 %}} `m.room.join_rules` events now keep `allow` in addition to other
 keys in `content` when being redacted.
 
-> **Note:** 
+> **Note:**
 [Room version 9](/rooms/v9) adds additional cases of protected properties for behaviour
 related to restricted rooms (the functionality introduced in v8). v9 is preferred over
 v8 when creating new rooms.
@@ -63,7 +63,7 @@ of one of the following event types:
 
 ## Server implementation components
 
-> **Note:** 
+> **Note:**
 The information contained in this section is strictly for server
 implementors. Applications which use the Client-Server API are generally
 unaffected by the intricacies contained here. The section above

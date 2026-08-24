@@ -4,14 +4,15 @@
 This module allows users to verify their identity with a third-party
 service. The third-party service does need to be matrix-aware in that it
 will need to know to resolve matrix homeservers to exchange the user's
-token for identity information.
+token for identity information, using the [OpenID section of the
+Server-Server API](/server-server-api/#openid).
 
 ### POST /user/{userId}/openid/request_token
 **Summary:** Get an OpenID token object to verify the requester's identity.
 Gets an OpenID token object that the requester may supply to another
 service to verify their identity in Matrix. The generated token is only
-valid for exchanging for user information from the federation API for
-OpenID.
+valid for exchanging for user information from the
+[federation API for OpenID](/server-server-api/#get_matrixfederationv1openiduserinfo).
 
 The access token generated is only valid for the OpenID API. It cannot
 be used to request another OpenID access token or call `/sync`, for
@@ -35,7 +36,8 @@ the Matrix homeserver's name is provided.
     /**
     * An access token the consumer may use to verify the identity of
     * the person who generated the token. This is given to the federation
-    * API `GET /openid/userinfo` to verify the user's identity.
+    * API [`GET /_matrix/federation/v1/openid/userinfo`](/server-server-api/#get_matrixfederationv1openiduserinfo)
+    * to verify the user's identity.
      */
     access_token: string;
 

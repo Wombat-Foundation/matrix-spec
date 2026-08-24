@@ -28,7 +28,7 @@ An example `m.annotation` relationship is shown below:
 }
 ```
 
-> **Note:** 
+> **Note:**
 Any `type` of event is eligible for an annotation, including state events.
 
 #### Events
@@ -108,14 +108,14 @@ When performing this count:
 
  * When an annotation is redacted, it is removed from the count.
 
-> **Note:** 
+> **Note:**
 It is not possible to edit a reaction, since replacement events do not change
 `m.relates_to` (see [Applying `m.new_content`](#applying-mnew_content)), and
 there is no other meaningful content within `m.reaction`.  If a user wishes to
 change their reaction, the original reaction should be redacted and a new one
 sent in its place.
 
-> **Note:** 
+> **Note:**
 The `key` field in `m.reaction` can be any string so clients must take care to
 render long reactions in a sensible manner. For example, clients can elide
 overly-long reactions.

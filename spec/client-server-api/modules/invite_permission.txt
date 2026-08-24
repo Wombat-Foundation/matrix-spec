@@ -16,7 +16,7 @@ type m_invite_permission_config = {
     /**
     * When set to `block`, the user does not wish to receive *any* room invites, and they
     * should be rejected automatically by the homeserver.
-    * 
+    *
     * A missing, invalid or unsupported value means that the user wants to receive invites
     * as normal. Other parts of the specification might still have effects on invites, like
     * [ignoring users](/client-server-api/#ignoring-users).
@@ -61,12 +61,12 @@ is invited:
 
 In addition, invite events for this user already in the database, or received over federation, MUST
 NOT be served over client synchronisation endpoints such as [`GET /sync`](#get_matrixclientv3sync).
- 
+
 Servers MAY return any suppressed invite events over `GET /sync` if invite blocking is later
 disabled.
- 
+
 Other endpoints, such as [`GET /rooms/{roomId}/state`](#get_matrixclientv3roomsroomidstate), are not
 affected by invite blocking: invite events are returned as normal.
- 
+
 The Application Services API is also unaffected by invite blocking: invite events are sent over
 [`PUT /_matrix/app/v1/transactions/{txnId}`](/application-service-api/#put_matrixappv1transactionstxnid).

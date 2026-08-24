@@ -2,7 +2,7 @@
 
 ## API Standards
 
-> **Note:** 
+> **Note:**
 These standards only apply to the APIs defined in the Matrix specification. APIs
 used by this specification but defined in other specifications, like the [OAuth
 2.0 API](#oauth-20-api), use their own rules.
@@ -45,8 +45,9 @@ requirements for server responses.
 
 ### Standard error response
 
-Any errors which occur at the Matrix API level MUST return a "standard
-error response". This is a JSON object which looks like:
+Any errors which occur at the Matrix API level (for requests that are within
+scope of these [API Standards](#api-standards)) MUST return a "standard error
+response". This is a JSON object which looks like:
 
 ```json
 {
@@ -336,7 +337,7 @@ Some API endpoints may allow or require the use of `POST` requests
 without a transaction ID. Where this is optional, the use of a `PUT`
 request is strongly recommended.
 
-> **Note:** 
+> **Note:**
 Prior to `v1.7`, transaction IDs were scoped to "client sessions" rather than
 devices.
 
@@ -361,7 +362,7 @@ headers to be returned by servers on all requests are:
     Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
     Access-Control-Allow-Headers: X-Requested-With, Content-Type, Authorization
 
-> **Note:** 
+> **Note:**
 *(Added in v1.13)* The recommended value of the `Access-Control-Allow-Methods`
 header only covers the existing endpoints in the specification. Servers which
 support additional endpoints or methods should add those methods as well.
@@ -402,20 +403,23 @@ valid data was obtained, but no server is available to serve the client.
 No further guess should be attempted and the user should make a
 conscientious decision what to do next.
 
-### Well-known URIs
+### <a id="well-known-uri" /> Well-known URIs
+
+<!-- NB: `#well-known-uri` is linked to from https://www.iana.org/assignments/well-known-uris -->
 
 Matrix facilitates automatic discovery for the Client-Server API base URL and more via the
 [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615) "Well-Known URI" method.
 This method uses JSON files at a predetermined location on the root path `/.well-known/` to
 specify parameter values.
 
-> **Note:** 
+> **Note:**
 Diverging from the rest of the endpoints in the Client-Server spec, these files can not be provided
 on the base URL that the Client-Server API is reachable on, as it is yet to be discovered.
 Instead, they can be reached via HTTPS on the [server name](/appendices/#server-name)'s hostname as domain.
 
 Servers hosting the `.well-known` JSON file SHOULD offer CORS headers,
 as per the [CORS](#web-browser-clients) section in this specification.
+*(Added in v1.20)* Servers SHOULD also ensure that each 30x redirect, if any, offers such CORS headers.
 
 The flow for auto-discovery is as follows:
 
@@ -423,6 +427,7 @@ The flow for auto-discovery is as follows:
     Matrix ID at the first colon.
 2.  Extract the hostname from the server name as described by the [grammar](/appendices/#server-name).
 3.  Make a GET request to `https://hostname/.well-known/matrix/client`.
+    *(Added in v1.20)* 30x redirects SHOULD be followed, however redirection loops should be avoided.
     1.  If the returned status code is 404, then `IGNORE`.
     2.  If the returned status code is not 200, or the response body is
         empty, then `FAIL_PROMPT`.
@@ -453,13 +458,17 @@ The flow for auto-discovery is as follows:
 
 ### GET /matrix/client
 **Summary:** Gets Matrix server discovery information about the domain.
-Gets discovery information about the domain. The file may include
+Gets discovery information about the domain.
+*(Added in v1.20)* Clients SHOULD follow 30x redirects, carefully
+avoiding redirect loops, and use normal X.509 certificate validation.
+
+The file may include
 additional keys, which MUST follow the Java package naming convention,
 e.g. `com.example.myapp.property`. This ensures property names are
 suitably namespaced for each application and reduces the risk of
 clashes.
 
-> **Note:** 
+> **Note:**
 This endpoint should be accessed with the hostname of the homeserver's
 [server name](/appendices/#server-name) by making a
 GET request to `https://hostname/.well-known/matrix/client`.
@@ -502,7 +511,7 @@ but by another webserver, to be used for discovering the homeserver URL.
 **Summary:** Gets homeserver contacts and support details.
 Gets server admin contact and support page of the domain.
 
-> **Note:** 
+> **Note:**
 Like the [well-known discovery URI](/client-server-api/#well-known-uris),
 this endpoint should be accessed with the hostname of the homeserver's
 [server name](/appendices/#server-name) by making a
@@ -518,7 +527,7 @@ information for the homeserver.
 
     /**
     * Ways to contact the server administrator.
-    * 
+    *
     * At least one of `contacts` or `support_page` is required.
     * If only `contacts` is set, it must contain at least one
     * item.
@@ -528,11 +537,11 @@ information for the homeserver.
       /**
       * A [Matrix User ID](/appendices/#user-identifiers)
       * representing the administrator.
-      * 
+      *
       * It could be an account registered on a different
       * homeserver so the administrator can be contacted
       * when the homeserver is down.
-      * 
+      *
       * At least one of `matrix_id` or `email_address` is
       * required.
        */
@@ -540,7 +549,7 @@ information for the homeserver.
 
       /**
       * An email address to reach the administrator.
-      * 
+      *
       * At least one of `matrix_id` or `email_address` is
       * required.
        */
@@ -549,11 +558,11 @@ information for the homeserver.
       /**
       * An informal description of what the contact methods
       * are used for.
-      * 
+      *
       * `m.role.admin` is a catch-all role for any queries
       * and `m.role.security` is intended for sensitive
       * requests.
-      * 
+      *
       * Unspecified roles are permitted through the use of
       * [Namespaced Identifiers](/appendices/#common-namespaced-identifier-grammar).
        */
@@ -563,7 +572,7 @@ information for the homeserver.
     /**
     * The URL of a page to give users help specific to the
     * homeserver, like extra login/registration steps.
-    * 
+    *
     * At least one of `contacts` or `support_page` is required.
     * @example "https://example.org/support.html"
      */
@@ -576,7 +585,7 @@ information for the homeserver.
 **Summary:** Gets information about a Policy Server's configuration, if available.
 Gets public key information for a [Policy Server](/client-server-api/#policy-servers).
 
-> **Note:** 
+> **Note:**
 Like the [well-known discovery URI](/client-server-api/#well-known-uris),
 this endpoint should be accessed with the hostname of the Policy Server's
 [server name](/appendices/#server-name) by making a
@@ -665,7 +674,7 @@ An access token is typically obtained via the [Login](#login) or
 [Registration](#account-registration) processes. Access tokens
 can expire; a new access token can be generated by using a refresh token.
 
-> **Note:** 
+> **Note:**
 This specification does not mandate a particular format for the access
 token. Clients should treat it as an opaque byte sequence. Servers are
 free to choose an appropriate format. Server implementors may like to
@@ -686,11 +695,11 @@ A homeserver may support one of those two APIs, or both. The two APIs are
 mutually incompatible, which means that after logging in, clients MUST only use
 the API that was used to obtain their current access token.
 
-> **Note:** 
+> **Note:**
 Currently the OAuth 2.0 API doesn't cover all the use cases of the legacy API,
 such as automated applications that cannot use a web browser.
 
-> **Note:** 
+> **Note:**
 *(Added in v1.18)*
 A compatibility feature, called [OAuth 2.0 aware clients](#oauth-20-aware-clients),
 is available to ease the transition to the OAuth 2.0 API for clients that only
@@ -717,7 +726,7 @@ user must do that directly in the homeserver's web UI. However, the client can
 signal to the homeserver that the user wishes to create a new account with the
 [`prompt=create`](#user-registration) parameter during authorisation.
 
-> **Note:** 
+> **Note:**
 *(Added in v1.17)*
 Application services can use the `/register` endpoint to create users regardless
 of the authentication API supported by the homeserver.
@@ -739,15 +748,9 @@ invalidate the access token the client must use [token revocation](#token-revoca
 Access tokens may be provided via a request header, using the Authentication
 Bearer scheme: `Authorization: Bearer TheTokenHere`.
 
-Clients may alternatively provide the access token via a query string parameter:
-`access_token=TheTokenHere`. This method is deprecated to prevent the access
-token being leaked in access/HTTP logs and SHOULD NOT be used by clients.
-
-Homeservers MUST support both methods.
-
-> **Note:** 
-*(Changed in v1.11)*
-Sending the access token as a query string parameter is now deprecated.
+> **Note:**
+*(Changed in v1.20)*
+Sending the access token as a query string parameter is no longer supported.
 
 When credentials are required but missing or invalid, the HTTP call will
 return with a status of 401 and the error code, `M_MISSING_TOKEN` or
@@ -1066,7 +1069,7 @@ to complete an auth state normally, i.e. the request will either
 complete or request auth, with the presence or absence of that auth type
 in the 'completed' array indicating whether that stage is complete.
 
-> **Note:** 
+> **Note:**
 A request to an endpoint that uses User-Interactive Authentication never
 succeeds without auth. Homeservers may allow requests that don't require
 auth by offering a stage with only the `m.login.dummy` auth type, but they
@@ -1304,7 +1307,7 @@ just the type and session, if provided:
 |-------------------------------|-------------------------------------------------------------------|
 | `m.login.registration_token`  | Registers an account with a pre-shared token for authentication   |
 
-> **Note:** 
+> **Note:**
 The `m.login.registration_token` authentication type is only valid on the
 [`/register`](#post_matrixclientv3register) endpoint.
 
@@ -1411,7 +1414,7 @@ considered invalid.
 |--------------------------|--------------------------------------------------------------------------|
 | `m.login.terms`          | Authentication requires the user to accept a set of policy documents. |
 
-> **Note:** 
+> **Note:**
 The `m.login.terms` authentication type is only valid on the
 [`/register`](#post_matrixclientv3register) endpoint.
 
@@ -1542,7 +1545,7 @@ type m.login.termsparams = {
 |-------------------------------|-------------------------------------------------------------------|
 | `m.oauth`                     | Authentication is supported by authorising via the homeserver's OAuth account management web UI. |
 
-> **Note:** 
+> **Note:**
 The `m.oauth` authentication type is currently only valid on the
 [`/keys/device_signing/upload`](/client-server-api/#post_matrixclientv3keysdevice_signingupload) endpoint.
 
@@ -1908,7 +1911,7 @@ invalidate any access token previously associated with that device. See
 
   /**
   * The login type being used.
-  * 
+  *
   * This must be a type returned in one of the flows of the
   * response of the [`GET /login`](/client-server-api/#get_matrixclientv3login)
   * endpoint, like `m.login.password` or `m.login.token`.
@@ -2011,7 +2014,7 @@ invalidate any access token previously associated with that device. See
     /**
     * The server_name of the homeserver on which the account has
     * been registered.
-    * 
+    *
     * **Deprecated**. Clients should extract the server_name from
     * `user_id` (by splitting at the first colon) if they require
     * it. Note also that `homeserver` is not spelt this way.
@@ -2418,7 +2421,7 @@ this way.
 An appservice can log in by providing a valid appservice token and a user within the appservice's
 namespace.
 
-> **Note:** 
+> **Note:**
 Appservices do not need to log in as individual users in all cases, as they
 can perform [Identity Assertion](/application-service-api#identity-assertion)
 using the appservice token. However, if the appservice needs a scoped token
@@ -2515,7 +2518,7 @@ regardless of input.
 Any user ID returned by this API must conform to the grammar given in the
 [Matrix specification](/appendices/#user-identifiers).
 
-> **Note:** 
+> **Note:**
 *(Added in v1.17)*
 Even if the server doesn't support the Legacy authentication API, it
 MUST support this endpoint for application services to be able to
@@ -2526,7 +2529,7 @@ parameter as they cannot use it to log in as users. If the
 `inhibit_login` parameter is not set to `true`, the server MUST return a
 400 HTTP status code with an `M_APPSERVICE_LOGIN_UNSUPPORTED` error code.
 
-> **Note:** 
+> **Note:**
 *(Added in v1.18)* [OAuth 2.0 aware clients](/client-server-api/#oauth-20-aware-clients)
 MUST NOT use this endpoint when the server offers the [`m.login.sso`
 authentication flow](/client-server-api/#client-login-via-sso) with
@@ -2612,7 +2615,7 @@ endpoint, adding the `action=register` parameter.
 
     /**
     * The fully-qualified Matrix user ID (MXID) that has been registered.
-    * 
+    *
     * Any user ID returned by this API must conform to the grammar given in the
     * [Matrix specification](/appendices/#user-identifiers).
      */
@@ -2629,7 +2632,7 @@ endpoint, adding the `action=register` parameter.
     * A refresh token for the account. This token can be used to
     * obtain a new access token when it expires by calling the
     * `/refresh` endpoint.
-    * 
+    *
     * Omitted if the `inhibit_login` option is true.
      */
     refresh_token?: string;
@@ -2641,7 +2644,7 @@ endpoint, adding the `action=register` parameter.
     * refresh token is provided, the client will need to re-log in
     * to obtain a new access token. If not given, the client can
     * assume that the access token will not expire.
-    * 
+    *
     * Omitted if the `inhibit_login` option is true.
      */
     expires_in_ms?: number;
@@ -2649,7 +2652,7 @@ endpoint, adding the `action=register` parameter.
     /**
     * The server_name of the homeserver on which the account has
     * been registered.
-    * 
+    *
     * **Deprecated**. Clients should extract the server_name from
     * `user_id` (by splitting at the first colon) if they require
     * it. Note also that `homeserver` is not spelt this way.
@@ -2831,7 +2834,7 @@ itself or by using a service it has control over.
   * The hostname of the identity server to communicate with. May optionally
   * include a port. This parameter is ignored when the homeserver handles
   * 3PID verification.
-  * 
+  *
   * This parameter is deprecated with a plan to be removed in a future specification
   * version for `/account/password` and `/register` requests.
   * @example "id.example.com"
@@ -2842,7 +2845,7 @@ itself or by using a service it has control over.
   * An access token previously registered with the identity server. Servers
   * can treat this as optional to distinguish between r0.5-compatible clients
   * and this specification version.
-  * 
+  *
   * Required if an `id_server` is supplied.
    */
   id_access_token?: string;
@@ -2872,7 +2875,7 @@ informing the user of an error.
     * endpoints (without the requirement for an access token). The homeserver
     * must send this token to the user (if applicable), who should then be
     * prompted to provide it to the client.
-    * 
+    *
     * If this field is not present, the client can assume that verification
     * will happen without the client's involvement provided the homeserver
     * advertises a sufficiently recent version in the [`GET /versions`](/client-server-api/#get_matrixclientversions)
@@ -2981,7 +2984,7 @@ message itself or by using a service it has control over.
   * The hostname of the identity server to communicate with. May optionally
   * include a port. This parameter is ignored when the homeserver handles
   * 3PID verification.
-  * 
+  *
   * This parameter is deprecated with a plan to be removed in a future specification
   * version for `/account/password` and `/register` requests.
   * @example "id.example.com"
@@ -2992,7 +2995,7 @@ message itself or by using a service it has control over.
   * An access token previously registered with the identity server. Servers
   * can treat this as optional to distinguish between r0.5-compatible clients
   * and this specification version.
-  * 
+  *
   * Required if an `id_server` is supplied.
    */
   id_access_token?: string;
@@ -3022,7 +3025,7 @@ it may be informing the user of an error.
     * endpoints (without the requirement for an access token). The homeserver
     * must send this token to the user (if applicable), who should then be
     * prompted to provide it to the client.
-    * 
+    *
     * If this field is not present, the client can assume that verification
     * will happen without the client's involvement provided the homeserver
     * advertises a sufficiently recent version in the [`GET /versions`](/client-server-api/#get_matrixclientversions)
@@ -3155,7 +3158,7 @@ include one of the following error codes:
 
 ##### Password management
 
-> **Note:** 
+> **Note:**
 Clients SHOULD enforce that the password provided is suitably complex.
 The password SHOULD include a lower-case letter, an upper-case letter, a
 number and a symbol and be at a minimum 8 characters in length. Servers
@@ -3193,7 +3196,7 @@ to determine if this endpoint is available.
   /**
   * Whether the user's other access tokens, and their associated devices, should be
   * revoked if the request succeeds. Defaults to `true`.
-  * 
+  *
   * When `false`, the server can still take advantage of the [soft logout method](/client-server-api/#soft-logout)
   * for the user's remaining devices.
   * @example true
@@ -3350,7 +3353,7 @@ validation email itself or by using a service it has control over.
   * The hostname of the identity server to communicate with. May optionally
   * include a port. This parameter is ignored when the homeserver handles
   * 3PID verification.
-  * 
+  *
   * This parameter is deprecated with a plan to be removed in a future specification
   * version for `/account/password` and `/register` requests.
   * @example "id.example.com"
@@ -3361,7 +3364,7 @@ validation email itself or by using a service it has control over.
   * An access token previously registered with the identity server. Servers
   * can treat this as optional to distinguish between r0.5-compatible clients
   * and this specification version.
-  * 
+  *
   * Required if an `id_server` is supplied.
    */
   id_access_token?: string;
@@ -3389,7 +3392,7 @@ validation email itself or by using a service it has control over.
     * endpoints (without the requirement for an access token). The homeserver
     * must send this token to the user (if applicable), who should then be
     * prompted to provide it to the client.
-    * 
+    *
     * If this field is not present, the client can assume that verification
     * will happen without the client's involvement provided the homeserver
     * advertises a sufficiently recent version in the [`GET /versions`](/client-server-api/#get_matrixclientversions)
@@ -3505,7 +3508,7 @@ validation message itself or by using a service it has control over.
   * The hostname of the identity server to communicate with. May optionally
   * include a port. This parameter is ignored when the homeserver handles
   * 3PID verification.
-  * 
+  *
   * This parameter is deprecated with a plan to be removed in a future specification
   * version for `/account/password` and `/register` requests.
   * @example "id.example.com"
@@ -3516,7 +3519,7 @@ validation message itself or by using a service it has control over.
   * An access token previously registered with the identity server. Servers
   * can treat this as optional to distinguish between r0.5-compatible clients
   * and this specification version.
-  * 
+  *
   * Required if an `id_server` is supplied.
    */
   id_access_token?: string;
@@ -3544,7 +3547,7 @@ validation message itself or by using a service it has control over.
     * endpoints (without the requirement for an access token). The homeserver
     * must send this token to the user (if applicable), who should then be
     * prompted to provide it to the client.
-    * 
+    *
     * If this field is not present, the client can assume that verification
     * will happen without the client's involvement provided the homeserver
     * advertises a sufficiently recent version in the [`GET /versions`](/client-server-api/#get_matrixclientversions)
@@ -3612,7 +3615,7 @@ Unlike other endpoints, this endpoint does not take an `id_access_token`
 parameter because the homeserver is expected to sign the request to the
 identity server instead.
 
-> **Note:** 
+> **Note:**
 *(Added in v1.18)* [OAuth 2.0 aware clients](/client-server-api/#oauth-20-aware-clients)
 MUST NOT use this endpoint when the server supports the [OAuth 2.0 API](/client-server-api/#oauth-20-api).
 Instead they MUST refer the user to the [account management URL](/client-server-api/#oauth-20-account-management),
@@ -3656,7 +3659,7 @@ parameter.
   /**
   * Whether the user would like their content to be erased as
   * much as possible from the server.
-  * 
+  *
   * Erasure means that any users (or servers) which join the
   * room after the erasure request are served redacted copies of
   * the events sent by this account. Users which had visibility
@@ -3664,11 +3667,11 @@ parameter.
   * unredacted copies. No redactions are sent and the erasure
   * request is not shared over federation, so other servers
   * might still serve unredacted copies.
-  * 
+  *
   * The server should additionally erase any non-event data
   * associated with the user, such as [account data](/client-server-api/#client-config)
   * and [contact 3PIDs](/client-server-api/#adding-account-administrative-contact-information).
-  * 
+  *
   * Defaults to `false` if not present.
    */
   erase?: boolean;
@@ -3846,7 +3849,7 @@ because they don't have access to the user's credentials anymore.
 The best practices from [RFC 9700](https://datatracker.ietf.org/doc/html/rfc9700)
 are applicable to this API and are recommended reading for implementors.
 
-> **Note:** 
+> **Note:**
 The [User-Interactive Authentication API](#user-interactive-authentication-api)
 is not compatible with the OAuth 2.0 API, so the endpoints that depend on it for
 authentication can't be used when an access token is obtained with this API.
@@ -3964,7 +3967,8 @@ A successful authorisation will have a `code` value, for example:
 https://app.example.com/oauth2-callback#state=ewubooN9weezeewah9fol4oothohroh3&code=iuB7Eiz9heengah1joh2ioy9ahChuP6R
 ```
 
-A failed authorisation will have the following values:
+A failed authorisation will have the following values as defined by
+[RFC 6749 section 4.1.2.1](https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1):
 
 - `error`: the error code
 - `error_description`: the error description (optional)
@@ -3994,6 +3998,11 @@ parameters, encoded as `application/x-www-form-urlencoded` in the body:
 
 The server replies with a JSON object containing the access token, the token
 type, the expiration time, and the refresh token.
+
+> **Note:**
+Error responses to this request do not follow the Matrix [standard error
+response](#standard-error-response) structure and are instead defined by
+[RFC 6749 section 5.2](https://datatracker.ietf.org/doc/html/rfc6749#section-5.2).
 
 Sample token request:
 
@@ -4082,6 +4091,11 @@ containing:
 
 It is RECOMMENDED that the server provides a `verification_uri_complete` such
 that the user does not need to type in the `user_code`.
+
+> **Note:**
+Error responses do not follow the Matrix [standard error response](#standard-error-response)
+structure and are instead defined by [RFC 6749 section 5.2](https://datatracker.ietf.org/doc/html/rfc6749#section-5.2),
+as required by [RFC 8628 section 3.2](https://datatracker.ietf.org/doc/html/rfc8628#section-3.2).
 
 Sample response:
 
@@ -4181,6 +4195,11 @@ The server replies with a JSON object containing the new access token, the token
 type, the expiration time, and a new refresh token, like in the authorisation
 flow.
 
+> **Note:**
+Error responses to this request do not follow the Matrix [standard error
+response](#standard-error-response) structure and are instead defined by
+[RFC 6749 section 5.2](https://datatracker.ietf.org/doc/html/rfc6749#section-5.2).
+
 #### Server metadata discovery
 
 ### GET /auth_metadata
@@ -4197,7 +4216,7 @@ registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xht
 and normative definitions of them are available in their respective
 RFCs.
 
-> **Note:** 
+> **Note:**
 The authorisation server metadata is relatively large and may change
 over time. Clients should:
 
@@ -4212,7 +4231,7 @@ over time. Clients should:
     /**
     * The authorisation server's issuer identifier, which is a URL that uses the
     * `https` scheme and has no query or fragment components.
-    * 
+    *
     * This is not used in the context of the Matrix specification, but is required
     * by [RFC 8414](https://datatracker.ietf.org/doc/html/rfc8414).
      */
@@ -4244,7 +4263,7 @@ over time. Clients should:
     /**
     * List of OAuth 2.0 response type strings that the server supports at the
     * authorisation endpoint.
-    * 
+    *
     * This array MUST contain at least the `code` value, for clients to be able to
     * use the authorisation code grant.
      */
@@ -4253,11 +4272,11 @@ over time. Clients should:
     /**
     * List of OAuth 2.0 grant type strings that the server supports at the token
     * endpoint.
-    * 
+    *
     * This array MUST contain at least the `authorization_code` and `refresh_token`
     * values, for clients to be able to use the authorisation code grant and refresh
     * token grant, respectively.
-    * 
+    *
     * *(Added in v1.18)* It MAY also contain
     * `urn:ietf:params:oauth:grant-type:device_code` to indicate support for the
     * [device authorisation grant](/client-server-api/#device-authorisation-grant).
@@ -4267,7 +4286,7 @@ over time. Clients should:
     /**
     * List of OAuth 2.0 response mode strings that the server supports at the
     * authorisation endpoint.
-    * 
+    *
     * This array MUST contain at least the `query` and `fragment` values, for
     * improved security in the authorisation code grant.
      */
@@ -4276,7 +4295,7 @@ over time. Clients should:
     /**
     * List of OAuth 2.0 Proof Key for Code Exchange (PKCE) code challenge methods
     * that the server supports at the authorisation endpoint.
-    * 
+    *
     * This array MUST contain at least the `S256` value, for improved security in
     * the authorisation code grant.
      */
@@ -4285,7 +4304,7 @@ over time. Clients should:
     /**
     * List of OpenID Connect prompt values that the server supports at the
     * authorisation endpoint.
-    * 
+    *
     * Only the `create` value defined in [Initiating User Registration via OpenID
     * Connect](https://openid.net/specs/openid-connect-prompt-create-1_0.html) is
     * supported, for a client to signal to the server that the user desires to
@@ -4296,14 +4315,14 @@ over time. Clients should:
     /**
     * The URL where the user is able to access the account management capabilities
     * of the homeserver.
-    * 
+    *
     * This is an extension [defined in this specification](/client-server-api/#oauth-20-account-management).
      */
     account_management_uri?: string /* uri */;
 
     /**
     * List of actions that the account management URL supports.
-    * 
+    *
     * This is an extension [defined in this specification](/client-server-api/#oauth-20-account-management).
      */
     account_management_actions_supported?: Array<"org.matrix.profile" | "org.matrix.devices_list" | "org.matrix.device_view" | "org.matrix.device_delete" | "org.matrix.account_deactivate" | "org.matrix.cross_signing_reset">;
@@ -4357,18 +4376,18 @@ type OAuthClientMetadata = {
   /**
   * A URL to a valid web page that SHOULD give the user more information about
   * the client.
-  * 
+  *
   * This URL MUST use the `https` scheme and SHOULD NOT require authentication
   * to access. It MUST NOT use a user or password in the authority component
   * of the URI.
-  * 
+  *
   * The server MAY reject client registrations if this field is invalid or
   * missing.
-  * 
+  *
   * This URI is a common base for all the other URIs in the metadata: those
   * MUST be either on the same host or on a subdomain of the host of the
   * `client_uri`. The port number, path and query components MAY be different.
-  * 
+  *
   * For example, if the `client_uri` is `https://example.com/`, then one of
   * the `redirect_uris` can be `https://example.com/callback` or
   * `https://app.example.com/callback`, but not `https://app.com/callback`.
@@ -4377,16 +4396,16 @@ type OAuthClientMetadata = {
 
   /**
   * Human-readable name of the client to be presented to the user.
-  * 
+  *
   * This field can be [localized](/client-server-api/#metadata-localization).
    */
   client_name?: string;
 
   /**
   * URL that references a logo for the client.
-  * 
+  *
   * This URL MUST use the `https` scheme.
-  * 
+  *
   * This field can be [localized](/client-server-api/#metadata-localization).
    */
   logo_uri?: string /* uri */;
@@ -4394,55 +4413,55 @@ type OAuthClientMetadata = {
   /**
   * URL that points to a human-readable terms of service document for the
   * client.
-  * 
+  *
   * This URL MUST use the `https` scheme and SHOULD NOT require authentication
   * to access. It MUST NOT use a user or password in the authority component
   * of the URI.
-  * 
+  *
   * If this field is set, the server SHOULD show or link to this URL.
-  * 
+  *
   * This field can be [localized](/client-server-api/#metadata-localization).
    */
   tos_uri?: string /* uri */;
 
   /**
   * URL that points to a human-readable policy document for the client.
-  * 
+  *
   * This URL MUST use the `https` scheme and SHOULD NOT require authentication
   * to access. It MUST NOT use a user or password in the authority component
   * of the URI.
-  * 
+  *
   * If this field is set, the server SHOULD show or link to this URL.
-  * 
+  *
   * This field can be [localized](/client-server-api/#metadata-localization).
    */
   policy_uri?: string /* uri */;
 
   /**
   * Array of redirection URIs for use in redirect-based flows.
-  * 
+  *
   * At least one URI is required to use the authorisation code grant.
-  * 
+  *
   * The server MUST perform [validation on redirect URIs](/client-server-api/#redirect-uri-validation).
    */
   redirect_uris?: string /* uri */[];
 
   /**
   * Array of the OAuth 2.0 response types that the client may use.
-  * 
+  *
   * This MUST include the `code` value to use the authorisation code grant.
-  * 
+  *
   * The server MUST ignore values that it does not understand.
    */
   response_types?: string[];
 
   /**
   * Array of the OAuth 2.0 grant types that the client may use.
-  * 
+  *
   * This MUST include:
   * - the `authorization_code` value to use the authorisation code grant,
   * - the `refresh_token` value to use the refresh token grant.
-  * 
+  *
   * The server MUST ignore values that it does not understand.
    */
   grant_types?: string[];
@@ -4450,7 +4469,7 @@ type OAuthClientMetadata = {
   /**
   * String indicator of the requested authentication method for the token
   * endpoint.
-  * 
+  *
   * The homeserver MUST support the `none` value, as most Matrix clients are
   * client-side only, do not have a server component, and therefore are public
   * clients.
@@ -4459,10 +4478,10 @@ type OAuthClientMetadata = {
 
   /**
   * Kind of the application.
-  * 
+  *
   * The homeserver MUST support the `web` and `native` values to be able to
   * perform [redirect URI validation](/client-server-api/#redirect-uri-validation).
-  * 
+  *
   * Defaults to `web` if omitted.
    */
   application_type?: string;
@@ -4610,6 +4629,11 @@ Upon successful registration, the server replies with an `HTTP 201 Created`
 response, with a JSON object containing the allocated `client_id` and all the
 registered metadata values.
 
+> **Note:**
+Error responses to this request do not follow the Matrix [standard error
+response](#standard-error-response) structure and are instead defined by
+[RFC 7591 section 3.2.2](https://datatracker.ietf.org/doc/html/rfc7591#section-3.2.2).
+
 With the registration request above, the server might reply with:
 
 ```json
@@ -4643,7 +4667,7 @@ server MUST NOT delete client registrations that have an active session.
 Clients MUST perform a new client registration at the start of each
 authorisation flow.
 
-> **Note:** 
+> **Note:**
 Because each client on each user device will do its own registration, they may
 all have different `client_id`s. This means that the server may store the same
 client registration multiple times, which could lead to a large number of client
@@ -4663,7 +4687,7 @@ for obtaining user consent.
 A scope is defined in [RFC 6749 section 3.3](https://datatracker.ietf.org/doc/html/rfc6749#section-3.3)
 as a string containing a list of space-separated scope tokens.
 
-> **Note:** 
+> **Note:**
 The framework encourages the practice of obtaining additional user consent when
 a client asks for a new scope that was not granted previously. This could be
 used by future MSCs to replace the legacy [User-Interactive Authentication API](#user-interactive-authentication-api).
@@ -4676,7 +4700,7 @@ All scope tokens related to Matrix should start with `urn:matrix:` and use the
 Scope tokens related to mapping of Client-Server API access levels should start
 with `urn:matrix:client:`.
 
-> **Note:** 
+> **Note:**
 For MSCs that build on this namespace, unstable subdivisions should be used
 whilst in development. For example, if MSCXXXX wants to introduce the
 `urn:matrix:client:foo` scope, it could use
@@ -4698,7 +4722,7 @@ This specification defines the following scope tokens:
 |---------------------------|---------------------------------------------|
 | `urn:matrix:client:api:*` | Grants full access to the Client-Server API. |
 
-> **Note:** 
+> **Note:**
 This token matches the behavior of the legacy authentication API. Future MSCs
 could introduce more fine-grained scope tokens like
 `urn:matrix:client:api:read:*` for read-only access.
@@ -4914,6 +4938,11 @@ The server SHOULD return one of the following responses:
 - For other errors, the server returns a `400 Bad Request` response with error
   details
 
+> **Note:**
+Error responses to this request do not follow the Matrix [standard error
+response](#standard-error-response) structure and are instead defined by
+[RFC 7009 section 2.2.1](https://datatracker.ietf.org/doc/html/rfc7009#section-2.2.1).
+
 #### User registration
 
 Clients can signal to the server that the user desires to register a new account
@@ -4982,7 +5011,7 @@ type OAuth2.0AccountManagementURLQueryParameters = {
   /**
   * For Matrix-specific actions, the user's device ID. Actions which don't support the device ID
   * will ignore it.
-  * 
+  *
   * If the `org.matrix.device_view` or `org.matrix.device_delete` actions are advertised as
   * supported by the server then the server SHOULD support the `device_id` parameter.
    */
@@ -5134,7 +5163,7 @@ A homeserver may keep some contact information for administrative use.
 This is independent of any information kept by any identity servers,
 though can be proxied (bound) to the identity server in many cases.
 
-> **Note:** 
+> **Note:**
 This section deals with two terms: "add" and "bind". Where "add" (or
 "remove") is used, it is speaking about an identifier that was not bound
 to an identity server. As a result, "bind" (or "unbind") references an
@@ -5243,7 +5272,7 @@ to determine if this endpoint is available.
     * for an access token). The homeserver must send this token to the
     * user (if applicable), who should then be prompted to provide it
     * to the client.
-    * 
+    *
     * If this field is not present, the client can assume that
     * verification will happen without the client's involvement
     * provided the homeserver advertises this specification version
@@ -5285,7 +5314,7 @@ This endpoint uses [capabilities negotiation](/client-server-api/#capabilities-n
 Clients SHOULD check the value of the [`m.3pid_changes` capability](/client-server-api/#m3pid_changes-capability)
 to determine if this endpoint is available.
 
-> **Note:** 
+> **Note:**
 Since this endpoint uses User-Interactive Authentication, it cannot be used when the access token was obtained
 via the [OAuth 2.0 API](/client-server-api/#oauth-20-api).
 
@@ -5622,7 +5651,7 @@ a service it has control over.
   * The hostname of the identity server to communicate with. May optionally
   * include a port. This parameter is ignored when the homeserver handles
   * 3PID verification.
-  * 
+  *
   * This parameter is deprecated with a plan to be removed in a future specification
   * version for `/account/password` and `/register` requests.
   * @example "id.example.com"
@@ -5633,7 +5662,7 @@ a service it has control over.
   * An access token previously registered with the identity server. Servers
   * can treat this as optional to distinguish between r0.5-compatible clients
   * and this specification version.
-  * 
+  *
   * Required if an `id_server` is supplied.
    */
   id_access_token?: string;
@@ -5663,7 +5692,7 @@ user of an error.
     * endpoints (without the requirement for an access token). The homeserver
     * must send this token to the user (if applicable), who should then be
     * prompted to provide it to the client.
-    * 
+    *
     * If this field is not present, the client can assume that verification
     * will happen without the client's involvement provided the homeserver
     * advertises a sufficiently recent version in the [`GET /versions`](/client-server-api/#get_matrixclientversions)
@@ -5776,7 +5805,7 @@ a service it has control over.
   * The hostname of the identity server to communicate with. May optionally
   * include a port. This parameter is ignored when the homeserver handles
   * 3PID verification.
-  * 
+  *
   * This parameter is deprecated with a plan to be removed in a future specification
   * version for `/account/password` and `/register` requests.
   * @example "id.example.com"
@@ -5787,7 +5816,7 @@ a service it has control over.
   * An access token previously registered with the identity server. Servers
   * can treat this as optional to distinguish between r0.5-compatible clients
   * and this specification version.
-  * 
+  *
   * Required if an `id_server` is supplied.
    */
   id_access_token?: string;
@@ -5815,7 +5844,7 @@ a service it has control over.
     * endpoints (without the requirement for an access token). The homeserver
     * must send this token to the user (if applicable), who should then be
     * prompted to provide it to the client.
-    * 
+    *
     * If this field is not present, the client can assume that verification
     * will happen without the client's involvement provided the homeserver
     * advertises a sufficiently recent version in the [`GET /versions`](/client-server-api/#get_matrixclientversions)
@@ -5899,7 +5928,7 @@ body.
 
     /**
     * When `true`, the user is a [Guest User](/client-server-api/#guest-access).
-    * When not present or `false`, the user is presumed to be a 
+    * When not present or `false`, the user is presumed to be a
     * non-guest user.
      */
     is_guest?: boolean;
@@ -6097,7 +6126,7 @@ and other relevant capabilities.
       /**
       * **Deprecated:** Capability to indicate if the user can change their display name.
       * Refer to `m.profile_fields` for extended profile management.
-      * 
+      *
       * For backwards compatibility, servers that directly or indirectly include the
       * `displayname` profile field in the `m.profile_fields` capability MUST also
       * set this capability accordingly.
@@ -6107,7 +6136,7 @@ and other relevant capabilities.
       /**
       * **Deprecated:** Capability to indicate if the user can change their avatar.
       * Refer to `m.profile_fields` for extended profile management.
-      * 
+      *
       * For backwards compatibility, servers that directly or indirectly include the
       * `avatar_url` profile field in the `m.profile_fields` capability MUST also
       * set this capability accordingly.
@@ -6132,7 +6161,7 @@ and other relevant capabilities.
         /**
         * If present, a list of profile fields that clients are allowed to create, modify or delete,
         * provided `enabled` is `true`; no other profile fields may be changed.
-        * 
+        *
         * If absent, clients may set all profile fields except those forbidden by the `disallowed`
         * list, where present.
         * @example ["m.example_field", "org.example.job_title"]
@@ -6141,7 +6170,7 @@ and other relevant capabilities.
 
         /**
         * This property has no meaning if `allowed` is also specified.
-        * 
+        *
         * Otherwise, if present, a list of profile fields that clients are _not_ allowed to create, modify or delete.
         * Provided `enabled` is `true`, clients MAY assume that they can set any profile field which is not
         * included in this list.
@@ -6160,7 +6189,7 @@ and other relevant capabilities.
       * Capability to indicate if the user can perform account moderation actions
       * via [server administration](/client-server-api/#server-administration)
       * endpoints.
-      * 
+      *
       * This property should be omitted altogether if `suspend` and `lock` would
       * be `false`.
        */
@@ -6169,7 +6198,7 @@ and other relevant capabilities.
         /**
         * `true` if the user can suspend a user via [`PUT /admin/suspend/{userId}`](/client-server-api/#put_matrixclientv1adminsuspenduserid),
         * `false` otherwise.
-        * 
+        *
         * Defaults to `false`.
         * @example true
          */
@@ -6178,7 +6207,7 @@ and other relevant capabilities.
         /**
         * `true` if the user can lock a user via [`PUT /admin/lock/{userId}`](/client-server-api/#put_matrixclientv1adminlockuserid),
         * `false` otherwise.
-        * 
+        *
         * Defaults to `false`.
         * @example true
          */
@@ -6356,7 +6385,7 @@ An example of the capability API's response for this capability is:
 
 ### `m.set_displayname` capability
 
-> **Note:** 
+> **Note:**
 *(Changed in v1.16)*
 This capability is now deprecated. Clients SHOULD use the
 [`m.profile_fields`](/client-server-api/#mprofile_fields-capability)
@@ -6390,7 +6419,7 @@ An example of the capability API's response for this capability is:
 
 ### `m.set_avatar_url` capability
 
-> **Note:** 
+> **Note:**
 *(Changed in v1.16)*
 This capability is now deprecated. Clients SHOULD use the
 [`m.profile_fields`](/client-server-api/#mprofile_fields-capability)
@@ -6562,7 +6591,7 @@ restrict which events are returned to the client.
 
     /**
     * The maximum number of events to return, must be an integer greater than 0.
-    * 
+    *
     * Servers should apply a default value, and impose a maximum value to avoid
     * resource exhaustion.
      */
@@ -6596,7 +6625,7 @@ restrict which events are returned to the client.
 
     /**
     * The maximum number of events to return, must be an integer greater than 0.
-    * 
+    *
     * Servers should apply a default value, and impose a maximum value to avoid
     * resource exhaustion.
      */
@@ -6645,7 +6674,7 @@ restrict which events are returned to the client.
 
       /**
       * The maximum number of events to return, must be an integer greater than 0.
-      * 
+      *
       * Servers should apply a default value, and impose a maximum value to avoid
       * resource exhaustion.
        */
@@ -6721,7 +6750,7 @@ restrict which events are returned to the client.
 
       /**
       * The maximum number of events to return, must be an integer greater than 0.
-      * 
+      *
       * Servers should apply a default value, and impose a maximum value to avoid
       * resource exhaustion.
        */
@@ -6792,7 +6821,7 @@ restrict which events are returned to the client.
 
       /**
       * The maximum number of events to return, must be an integer greater than 0.
-      * 
+      *
       * Servers should apply a default value, and impose a maximum value to avoid
       * resource exhaustion.
        */
@@ -6863,7 +6892,7 @@ restrict which events are returned to the client.
 
       /**
       * The maximum number of events to return, must be an integer greater than 0.
-      * 
+      *
       * Servers should apply a default value, and impose a maximum value to avoid
       * resource exhaustion.
        */
@@ -6972,7 +7001,7 @@ restrict which events are returned to the client.
 
       /**
       * The maximum number of events to return, must be an integer greater than 0.
-      * 
+      *
       * Servers should apply a default value, and impose a maximum value to avoid
       * resource exhaustion.
        */
@@ -7006,7 +7035,7 @@ restrict which events are returned to the client.
 
       /**
       * The maximum number of events to return, must be an integer greater than 0.
-      * 
+      *
       * Servers should apply a default value, and impose a maximum value to avoid
       * resource exhaustion.
        */
@@ -7055,7 +7084,7 @@ restrict which events are returned to the client.
 
         /**
         * The maximum number of events to return, must be an integer greater than 0.
-        * 
+        *
         * Servers should apply a default value, and impose a maximum value to avoid
         * resource exhaustion.
          */
@@ -7131,7 +7160,7 @@ restrict which events are returned to the client.
 
         /**
         * The maximum number of events to return, must be an integer greater than 0.
-        * 
+        *
         * Servers should apply a default value, and impose a maximum value to avoid
         * resource exhaustion.
          */
@@ -7202,7 +7231,7 @@ restrict which events are returned to the client.
 
         /**
         * The maximum number of events to return, must be an integer greater than 0.
-        * 
+        *
         * Servers should apply a default value, and impose a maximum value to avoid
         * resource exhaustion.
          */
@@ -7273,7 +7302,7 @@ restrict which events are returned to the client.
 
         /**
         * The maximum number of events to return, must be an integer greater than 0.
-        * 
+        *
         * Servers should apply a default value, and impose a maximum value to avoid
         * resource exhaustion.
          */
@@ -7372,7 +7401,7 @@ follow the Java package naming convention, e.g.
 `com.example.myapp.event`. This ensures event types are suitably
 namespaced for each application and reduces the risk of clashes.
 
-> **Note:** 
+> **Note:**
 Events are not limited to the types defined in this specification. New
 or custom event types can be created on a whim using the Java package
 naming convention. For example, a `com.example.game.score` event can be
@@ -7391,7 +7420,7 @@ However, it is unusual that a Matrix client would encounter this event
 format. Instead, homeservers are responsible for converting events into the
 format shown below so that they can be easily parsed by clients.
 
-> **Note:** 
+> **Note:**
 Event bodies are considered untrusted data. This means that any application using
 Matrix must validate that the event body is of the expected shape/schema
 before using the contents verbatim.
@@ -7422,7 +7451,7 @@ type ClientEvent = {
   * Present if, and only if, this event is a *state* event. The key making
   * this piece of state unique in the room. Note that it is often an empty
   * string.
-  * 
+  *
   * State keys starting with an `@` are reserved for referencing user IDs, such
   * as room members. With the exception of a few events, state events set with a
   * given user's ID as the state key MUST only be set by that user.
@@ -7504,12 +7533,12 @@ the following places:
 * On [`m.room.member`](#mroommember) events, the `invite_room_state`
   and `knock_room_state` under `unsigned` on the event.
 
-> **Note:** 
+> **Note:**
 Clients should inspect the list of stripped state events and not assume any
 particular event is present. The server might include events not described
 here as well.
 
-> **Note:** 
+> **Note:**
 The name, avatar, topic, and aliases are presented as aesthetic information
 about the room, allowing users to make decisions about whether or not they
 want to join the room.
@@ -7525,13 +7554,13 @@ invite in a different area of the application as a result.
 Similar to join rules, the encryption information is given to help clients
 decorate the room with appropriate iconography or messaging.
 
-> **Note:** 
+> **Note:**
 Although stripped state is usually generated and provided by the server, it
 is still possible to be incorrect on the receiving end. The stripped state
 events are not signed and could theoretically be modified, or outdated due to
 updates not being sent.
 
-> **Note:** 
+> **Note:**
 *(Added in v1.16)* Servers cannot pass through what they receive over
 federation to clients as stripped state. Servers are expected to prune the events
 into the stripped state schema below before passing the details onto clients.
@@ -7558,7 +7587,7 @@ than that implied by the total 64 KiB limit on events.
 
 ### Room Events
 
-> **Note:** 
+> **Note:**
 This section is a work in progress.
 
 This specification outlines several standard event types, all of which
@@ -7921,7 +7950,7 @@ prior to returned timeline (i.e. at `E7`) from the state the client knows
 [`/rooms/{roomId}/messages`](#get_matrixclientv3roomsroomidmessages)
 with the query parameters `from=x-y-z` and `to=d-e-f`.
 
-> **Note:** 
+> **Note:**
 Events are ordered in this API according to the arrival time of the
 event on the homeserver. This can conflict with other APIs which order
 events based on their partial ordering in the event graph. This can
@@ -7929,7 +7958,7 @@ result in duplicate events being received (once per distinct API
 called). Clients SHOULD de-duplicate events based on the event ID when
 this happens.
 
-> **Note:** 
+> **Note:**
 The `/sync` API returns a `state` list which is separate from the
 `timeline`. This `state` list allows clients to keep their model of the
 room state in sync with that on the server. In the case of an initial
@@ -7948,7 +7977,7 @@ In both cases, it should be noted that the events returned in the
 `timeline`, so clients should not display them to the user in the
 timeline.
 
-> **Note:** 
+> **Note:**
 An early design of this specification made the `state` list represent
 the room state at the end of the returned timeline, instead of the
 start. This was unsatisfactory because it led to duplication of events
@@ -8201,7 +8230,7 @@ request to this API or from the initial sync API.
       * Present if, and only if, this event is a *state* event. The key making
       * this piece of state unique in the room. Note that it is often an empty
       * string.
-      * 
+      *
       * State keys starting with an `@` are reserved for referencing user IDs, such
       * as room members. With the exception of a few events, state events set with a
       * given user's ID as the state key MUST only be set by that user.
@@ -8320,7 +8349,7 @@ included as well. By default this is `false`.
         * Present if, and only if, this event is a *state* event. The key making
         * this piece of state unique in the room. Note that it is often an empty
         * string.
-        * 
+        *
         * State keys starting with an `@` are reserved for referencing user IDs, such
         * as room members. With the exception of a few events, state events set with a
         * given user's ID as the state key MUST only be set by that user.
@@ -8371,7 +8400,7 @@ included as well. By default this is `false`.
         * Can be passed to
         * [`/rooms/<room_id>/messages`](/client-server-api/#get_matrixclientv3roomsroomidmessages)
         * to retrieve earlier events.
-        * 
+        *
         * If no earlier events are available, this property may be omitted from
         * the response.
          */
@@ -8410,7 +8439,7 @@ included as well. By default this is `false`.
           * Present if, and only if, this event is a *state* event. The key making
           * this piece of state unique in the room. Note that it is often an empty
           * string.
-          * 
+          *
           * State keys starting with an `@` are reserved for referencing user IDs, such
           * as room members. With the exception of a few events, state events set with a
           * given user's ID as the state key MUST only be set by that user.
@@ -8476,7 +8505,7 @@ included as well. By default this is `false`.
         * Present if, and only if, this event is a *state* event. The key making
         * this piece of state unique in the room. Note that it is often an empty
         * string.
-        * 
+        *
         * State keys starting with an `@` are reserved for referencing user IDs, such
         * as room members. With the exception of a few events, state events set with a
         * given user's ID as the state key MUST only be set by that user.
@@ -8592,7 +8621,7 @@ or the [/rooms/{roomId}/context/{eventId}](/client-server-api/#get_matrixclientv
     * Present if, and only if, this event is a *state* event. The key making
     * this piece of state unique in the room. Note that it is often an empty
     * string.
-    * 
+    *
     * State keys starting with an `@` are reserved for referencing user IDs, such
     * as room members. With the exception of a few events, state events set with a
     * given user's ID as the state key MUST only be set by that user.
@@ -8667,7 +8696,7 @@ retrieve this event e.g. by being a member in the room for this event.
     * Present if, and only if, this event is a *state* event. The key making
     * this piece of state unique in the room. Note that it is often an empty
     * string.
-    * 
+    *
     * State keys starting with an `@` are reserved for referencing user IDs, such
     * as room members. With the exception of a few events, state events set with a
     * given user's ID as the state key MUST only be set by that user.
@@ -8777,7 +8806,7 @@ Get the state events for the current state of a room.
     * Present if, and only if, this event is a *state* event. The key making
     * this piece of state unique in the room. Note that it is often an empty
     * string.
-    * 
+    *
     * State keys starting with an `@` are reserved for referencing user IDs, such
     * as room members. With the exception of a few events, state events set with a
     * given user's ID as the state key MUST only be set by that user.
@@ -8860,7 +8889,7 @@ room then this will be the members of the room when you left.
       * Present if, and only if, this event is a *state* event. The key making
       * this piece of state unique in the room. Note that it is often an empty
       * string.
-      * 
+      *
       * State keys starting with an `@` are reserved for referencing user IDs, such
       * as room members. With the exception of a few events, state events set with a
       * given user's ID as the state key MUST only be set by that user.
@@ -8966,7 +8995,7 @@ order, again starting at `from`.
     /**
     * A token corresponding to the end of `chunk`. This token can be passed
     * back to this endpoint to request further events.
-    * 
+    *
     * If no further events are available (either because we have
     * reached the start of the timeline, or because the user does
     * not have permission to see any more events), this property
@@ -8979,7 +9008,7 @@ order, again starting at `from`.
     * For `dir=b` events will be in reverse-chronological order,
     * for `dir=f` in chronological order. (The exact definition of `chronological`
     * is dependent on the server implementation.)
-    * 
+    *
     * Note that an empty `chunk` does not *necessarily* imply that no more events
     * are available. Clients should continue to paginate until no `end` property
     * is returned.
@@ -9002,7 +9031,7 @@ order, again starting at `from`.
       * Present if, and only if, this event is a *state* event. The key making
       * this piece of state unique in the room. Note that it is often an empty
       * string.
-      * 
+      *
       * State keys starting with an `@` are reserved for referencing user IDs, such
       * as room members. With the exception of a few events, state events set with a
       * given user's ID as the state key MUST only be set by that user.
@@ -9047,7 +9076,7 @@ order, again starting at `from`.
     * A list of state events relevant to showing the `chunk`. For example, if
     * `lazy_load_members` is enabled in the filter then this may contain
     * the membership events for the senders of events in the `chunk`.
-    * 
+    *
     * Unless `include_redundant_members` is `true`, the server
     * may remove membership events which would have already been
     * sent to the client in prior calls to this endpoint, assuming
@@ -9071,7 +9100,7 @@ order, again starting at `from`.
       * Present if, and only if, this event is a *state* event. The key making
       * this piece of state unique in the room. Note that it is often an empty
       * string.
-      * 
+      *
       * State keys starting with an `@` are reserved for referencing user IDs, such
       * as room members. With the exception of a few events, state events set with a
       * given user's ID as the state key MUST only be set by that user.
@@ -9243,7 +9272,7 @@ The relevant information for syncing is now returned by the
       * A token which correlates to the start of `chunk`. Can be passed to
       * [`/rooms/<room_id>/messages`](/client-server-api/#get_matrixclientv3roomsroomidmessages)
       * to retrieve earlier events.
-      * 
+      *
       * If no earlier events are available, this property may be omitted from
       * the response.
        */
@@ -9281,7 +9310,7 @@ The relevant information for syncing is now returned by the
         * Present if, and only if, this event is a *state* event. The key making
         * this piece of state unique in the room. Note that it is often an empty
         * string.
-        * 
+        *
         * State keys starting with an `@` are reserved for referencing user IDs, such
         * as room members. With the exception of a few events, state events set with a
         * given user's ID as the state key MUST only be set by that user.
@@ -9347,7 +9376,7 @@ The relevant information for syncing is now returned by the
       * Present if, and only if, this event is a *state* event. The key making
       * this piece of state unique in the room. Note that it is often an empty
       * string.
-      * 
+      *
       * State keys starting with an `@` are reserved for referencing user IDs, such
       * as room members. With the exception of a few events, state events set with a
       * given user's ID as the state key MUST only be set by that user.
@@ -9415,7 +9444,7 @@ The relevant information for syncing is now returned by the
 
 ### Sending events to a room
 
-> **Note:** 
+> **Note:**
 *(Added in v1.3)*
 
 Servers might need to post-process some events if they
@@ -9635,7 +9664,7 @@ homeserver.
 When a client receives an `m.room.redaction` event, it SHOULD change
 the affected event in the same way a server does.
 
-> **Note:** 
+> **Note:**
 Redacted events can still affect the state of the room. When redacted,
 state events behave as though their properties were simply not
 specified, except those protected by the redaction algorithm. For
@@ -9767,7 +9796,7 @@ any other event, including another child event, to build the relationship so lon
 as both events are in the same room, however additional restrictions might be imposed
 by the type of the relationship (the `rel_type`).
 
-> **Note:** 
+> **Note:**
 Child events can point at other child events, forming a chain of events. These chains
 can naturally take the shape of a tree if two independent children point at a single
 parent event, for example.
@@ -9777,7 +9806,7 @@ key of an event MUST be included in the cleartext portion of the event. It canno
 exclusively recorded in the encrypted payload as the server cannot decrypt the event
 for processing.
 
-> **Note:** 
+> **Note:**
 If an encrypted event contains an `m.relates_to` in its payload, it should be
 ignored and instead favour the cleartext `m.relates_to` copy (including when there
 is no cleartext copy). This is to ensure the client's behaviour matches the server's
@@ -9798,7 +9827,7 @@ type m.relates_to = {
   /**
   * The namespaced relationship type. Values must use the
   * [Common Namespaced Identifier Grammar](/appendices/#common-namespaced-identifier-grammar).
-  * 
+  *
   * The relationship type determines how clients should perceive the event, and in what
   * context. Some relationship types are processed server-side for "bundling", though not
   * all relationships require such behaviour. For example, an [`m.thread` relationship type](/client-server-api/#threading)
@@ -9840,7 +9869,7 @@ The actual aggregation format depends on the `rel_type`.
 
 When an event is served to the client through the APIs listed below, a
 `m.relations` property is included under `unsigned` if the event has child
-events which can be aggregated and point at it. The `m.relations` property is
+events which can be aggregated. The `m.relations` property is
 an object keyed by `rel_type` and value being the type-specific aggregated
 format for that `rel_type`. This `m.relations` property is known as a "bundled
 aggregation".
@@ -9884,7 +9913,7 @@ Note how the `org.example.possible_annotations` aggregation is an array, while i
 the relationship in a single object. Both are valid ways to aggregate: the format of an
 aggregation depends on the `rel_type`.
 
-> **Note:** 
+> **Note:**
 State events do not currently receive bundled aggregations. This is not
 necessarily a deliberate design decision, and MSCs which aim to fix this are welcome.
 
@@ -9901,7 +9930,7 @@ The endpoints where the server *should* include bundled aggregations are:
 * [`POST /search`](#post_matrixclientv3search) for any matching events under `room_events`.
 * *(Added in v1.4)* [`GET /rooms/{roomId}/threads`](#get_matrixclientv1roomsroomidthreads)
 
-> **Note:** 
+> **Note:**
 The server is **not** required to return bundled aggregations on deprecated endpoints
 such as [`/initialSync`](#get_matrixclientv3roomsroomidinitialsync).
 
@@ -9916,7 +9945,7 @@ with the parent and multiple child events the child events would have already be
 included on the parent's `m.relations` field. Events received in future syncs would
 need to be aggregated manually by the client.
 
-> **Note:** 
+> **Note:**
 Events from [ignored users](#ignoring-users) do not appear in the aggregation
 from the server, however clients might still have events from ignored users cached. Like
 with normal events, clients will need to de-aggregate child events sent by ignored users to
@@ -9936,7 +9965,7 @@ it has already optimistically aggregated the event. Clients are encouraged to ta
 a step further to additionally track child events which target unsent/pending events,
 likely using the transaction ID as a temporary event ID until a proper event ID is known.
 
-> **Note:** 
+> **Note:**
 Due to history visibility restrictions, child events might not be visible to the user
 if they are in a section of history the user cannot see. This means any aggregations which would
 normally include those events will be lacking them and the client will not be able to
@@ -9969,7 +9998,7 @@ parameter of `m.thread` is not appropriate for fetching all events in a thread s
 relations to the threaded events would be filtered out. For this purpose, clients should
 omit the `rel_type` parameter and perform any necessary filtering on the client side.
 
-> **Note:** 
+> **Note:**
 Because replies do not use `rel_type`, they will not be accessible via this API.
 
 ### GET /rooms/{roomId}/relations/{eventId}
@@ -10011,7 +10040,7 @@ is returned.
       * Present if, and only if, this event is a *state* event. The key making
       * this piece of state unique in the room. Note that it is often an empty
       * string.
-      * 
+      *
       * State keys starting with an `@` are reserved for referencing user IDs, such
       * as room members. With the exception of a few events, state events set with a
       * given user's ID as the state key MUST only be set by that user.
@@ -10053,7 +10082,7 @@ is returned.
     }>;
   }
   ```
-- **404**: 
+- **404**:
 
 ### GET /rooms/{roomId}/relations/{eventId}/{relType}
 **Summary:** Get the child events for a given parent event, with a given `relType`.
@@ -10097,7 +10126,7 @@ is returned.
       * Present if, and only if, this event is a *state* event. The key making
       * this piece of state unique in the room. Note that it is often an empty
       * string.
-      * 
+      *
       * State keys starting with an `@` are reserved for referencing user IDs, such
       * as room members. With the exception of a few events, state events set with a
       * given user's ID as the state key MUST only be set by that user.
@@ -10139,7 +10168,7 @@ is returned.
     }>;
   }
   ```
-- **404**: 
+- **404**:
 
 ### GET /rooms/{roomId}/relations/{eventId}/{relType}/{eventType}
 **Summary:** Get the child events for a given parent event, with a given `relType` and `eventType`.
@@ -10188,7 +10217,7 @@ is returned.
       * Present if, and only if, this event is a *state* event. The key making
       * this piece of state unique in the room. Note that it is often an empty
       * string.
-      * 
+      *
       * State keys starting with an `@` are reserved for referencing user IDs, such
       * as room members. With the exception of a few events, state events set with a
       * given user's ID as the state key MUST only be set by that user.
@@ -10230,7 +10259,7 @@ is returned.
     }>;
   }
   ```
-- **404**: 
+- **404**:
 
 ## Rooms
 
@@ -10251,6 +10280,7 @@ the create room request.
 In this specification the following room types are specified:
 
 * [`m.space`](#spaces)
+* [`m.policy`](#moderation-policy-lists) *(Added in v1.20)*
 
 Unspecified room types are permitted through the use of
 [Namespaced Identifiers](/appendices/#common-namespaced-identifier-grammar).
@@ -10346,7 +10376,7 @@ requesting user as the creator, alongside other keys provided in the
   * created the room. For example, if this was set to "foo" and
   * sent to the homeserver "example.com" the complete room alias
   * would be `#foo:example.com`.
-  * 
+  *
   * The complete room alias will become the canonical alias for
   * the room and an `m.room.canonical_alias` event will be sent
   * into the room.
@@ -10417,11 +10447,11 @@ requesting user as the creator, alongside other keys provided in the
   /**
   * Extra keys, such as `m.federate`, to be added to the content
   * of the [`m.room.create`](/client-server-api/#mroomcreate) event.
-  * 
+  *
   * The server will overwrite the following
   * keys: `creator`, `room_version`. Future versions of the specification
   * may allow the server to overwrite other keys.
-  * 
+  *
   * When using the `trusted_private_chat` preset, the server SHOULD combine
   * `additional_creators` specified here and the `invite` array into the
   * eventual `m.room.create` event's `additional_creators`, deduplicating
@@ -10434,7 +10464,7 @@ requesting user as the creator, alongside other keys provided in the
   * the user to override the default state events set in the new
   * room. The expected format of the state events are an object
   * with type, state_key and content keys set.
-  * 
+  *
   * Takes precedence over events set by `preset`, but gets
   * overridden by `name` and `topic` keys.
    */
@@ -10459,7 +10489,7 @@ requesting user as the creator, alongside other keys provided in the
   /**
   * Convenience parameter for setting various default state events
   * based on a preset.
-  * 
+  *
   * If unspecified, the server should use the `visibility` to determine
   * which preset to use. A visibility of `public` equates to a preset of
   * `public_chat` and `private` visibility equates to a preset of
@@ -10942,7 +10972,7 @@ This API returns a list of the user's current rooms.
 
 #### Joining rooms
 
-### POST /rooms/{roomId}/invite 
+### POST /rooms/{roomId}/invite
 **Summary:** Invite a user to participate in a particular room.
 *Note that there are two forms of this API, which are documented separately.
 This version of the API requires that the inviter knows the Matrix
@@ -11304,7 +11334,7 @@ and description error text will be returned. Example reasons for rejection are:
 *(Added in v1.1)*
 *(Changed in v1.3)*
 
-> **Note:** 
+> **Note:**
 As of `v1.3`, it is possible to knock on a [restricted room](#restricted-rooms)
 if the room supports and is using the `knock_restricted` join rule.
 
@@ -11458,7 +11488,7 @@ and description error text will be returned. Example reasons for rejection are:
 *(Added in v1.2)*
 *(Changed in v1.3)*
 
-> **Note:** 
+> **Note:**
 As of `v1.3`, it is possible to [knock](#knocking-on-rooms) on a restricted
 room if the room supports and is using the `knock_restricted` join rule.
 
@@ -11851,7 +11881,7 @@ parameter in [`/createRoom`](#post_matrixclientv3createroom). Irrespective of ro
 creation, clients can query and change a room's visibility in the directory through
 the endpoints listed below, provided that the server permits this.
 
-> **Note:** 
+> **Note:**
 The visibility setting merely defines whether a room is included in the published
 room directory or not. It doesn't make any guarantees about the room's
 [join rule](#mroomjoin_rules) or [history visibility](#room-history-visibility).
@@ -12022,7 +12052,7 @@ to the local server. Case sensitive.
       * The URL for the room's avatar, if one is set.
       * @example "mxc://example.org/abcdef"
        */
-      avatar_url?: string /* uri */;
+      avatar_url?: string /* mx-mxc-uri */;
 
       /**
       * The room's join rule. When not present, the room is assumed to
@@ -12119,7 +12149,7 @@ to the local server. Case sensitive.
   /**
   * The specific third-party network/protocol to request from the
   * homeserver. Can only be used if `include_all_networks` is false.
-  * 
+  *
   * This is the `instance_id` of a `Protocol Instance` returned by
   * [`GET /_matrix/client/v3/thirdparty/protocols`](/client-server-api/#get_matrixclientv3thirdpartyprotocols).
   * @example "irc"
@@ -12186,7 +12216,7 @@ to the local server. Case sensitive.
       * The URL for the room's avatar, if one is set.
       * @example "mxc://example.org/abcdef"
        */
-      avatar_url?: string /* uri */;
+      avatar_url?: string /* mx-mxc-uri */;
 
       /**
       * The room's join rule. When not present, the room is assumed to
@@ -12302,7 +12332,7 @@ it has no local user in the room).
     * The URL for the room's avatar, if one is set.
     * @example "mxc://example.org/abcdef"
      */
-    avatar_url?: string /* uri */;
+    avatar_url?: string /* mx-mxc-uri */;
 
     /**
     * The room's join rule. When not present, the room is assumed to
@@ -12424,7 +12454,7 @@ names preferably using a collation determined based upon the
       * The avatar url, as an [`mxc://` URI](/client-server-api/#matrix-content-mxc-uris), if one exists.
       * @example "mxc://bar.com/foo"
        */
-      avatar_url?: string /* uri */;
+      avatar_url?: string /* mx-mxc-uri */;
     }>;
 
     /**
@@ -12810,6 +12840,7 @@ that profile.
 | [Event Replacements](#event-replacements)                  | Optional  | Optional | Optional | Optional | Optional |
 | [Read and Unread Markers](#read-and-unread-markers)        | Optional  | Optional | Optional | Optional | Optional |
 | [Guest Access](#guest-access)                              | Optional  | Optional | Optional | Optional | Optional |
+| [Image Packs](#image-packs)                                | Optional  | Optional | Optional | Optional | Optional |
 | [Moderation Policy Lists](#moderation-policy-lists)        | Optional  | Optional | Optional | Optional | Optional |
 | [Policy Servers](#policy-servers)                          | Optional  | Optional | Optional | Optional | Optional |
 | [OpenID](#openid)                                          | Optional  | Optional | Optional | Optional | Optional |
@@ -12920,6 +12951,7 @@ systems.
 {{% cs-module name="Event replacements" filename="event_replacements" %}}
 {{% cs-module name="Event annotations and reactions" filename="event_annotations" %}}
 {{% cs-module name="Recently used emoji" filename="recent_emoji" %}}
+{{% cs-module name="Image packs" filename="image_packs" %}}
 {{% cs-module name="Threading" filename="threading" %}}
 {{% cs-module name="Reference relations" filename="reference_relations" %}}
 {{% cs-module name="Mutual Rooms" filename="mutual_rooms" %}}

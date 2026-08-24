@@ -11,7 +11,7 @@ which implement the redaction algorithm locally should refer to the
 
 ## Server implementation components
 
-> **Note:** 
+> **Note:**
 The information contained in this section is strictly for server
 implementors. Applications which use the Client-Server API are generally
 unaffected by the intricacies contained here. The section above

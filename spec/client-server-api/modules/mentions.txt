@@ -50,12 +50,12 @@ Additionally, see the [`.m.rule.is_user_mention`](#_m_rule_is_user_mention) and
 Users should not add their own Matrix ID to the `m.mentions` property as outgoing
 messages cannot self-notify.
 
-> **Note:** 
+> **Note:**
 If an encrypted event contains an `m.mentions` in its payload, it should be
 encrypted as normal. To properly process mentions in encrypted rooms, events
 must be decrypted first. See [receiving notifications](#receiving-notifications).
 
-> **Note:** 
+> **Note:**
 In previous versions of the specification, mentioning users was done by
 including the user's display name or the localpart of their Matrix ID and room
 mentions were done by including the string "@room" in the plaintext `body` of

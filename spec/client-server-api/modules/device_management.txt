@@ -138,11 +138,11 @@ except when used by an application service.
 
 Deletes the given device, and invalidates any access token associated with it.
 
-> **Note:** 
+> **Note:**
 When this endpoint requires User-Interactive Authentication, it cannot be used when the access token was obtained
 via the [OAuth 2.0 API](/client-server-api/#oauth-20-api).
 
-> **Note:** 
+> **Note:**
 *(Added in v1.18)* [OAuth 2.0 aware clients](/client-server-api/#oauth-20-aware-clients)
 MUST NOT use this endpoint when the server supports the [OAuth 2.0 API](/client-server-api/#oauth-20-api).
 Instead they MUST refer the user to the [account management URL](/client-server-api/#oauth-20-account-management),
@@ -228,11 +228,11 @@ except when used by an application service.
 
 Deletes the given devices, and invalidates any access token associated with them.
 
-> **Note:** 
+> **Note:**
 When this endpoint requires User-Interactive Authentication, it cannot be used when the access token was obtained
 via the [OAuth 2.0 API](/client-server-api/#oauth-20-api).
 
-> **Note:** 
+> **Note:**
 *(Added in v1.18)* [OAuth 2.0 aware clients](/client-server-api/#oauth-20-aware-clients)
 MUST NOT use this endpoint when the server supports the [OAuth 2.0 API](/client-server-api/#oauth-20-api).
 Instead they MUST refer the user to the [account management URL](/client-server-api/#oauth-20-account-management),

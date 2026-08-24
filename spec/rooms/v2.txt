@@ -11,7 +11,7 @@ which implement the redaction algorithm locally should refer to the
 
 ## Server implementation components
 
-> **Note:** 
+> **Note:**
 The information contained in this section is strictly for server
 implementors. Applications which use the Client-Server API are generally
 unaffected by the details contained here, and can safely ignore their
@@ -139,7 +139,7 @@ type PersistentDataUnit = {
   /**
   * Event IDs and reference hashes for the authorisation events that would
   * allow this event to be in the room.
-  * 
+  *
   * Must contain less than or equal to 10 events. Note that if the relevant
   * auth event selection rules are used, this restriction should never be
   * encountered.
@@ -149,7 +149,7 @@ type PersistentDataUnit = {
   /**
   * Event IDs and reference hashes for the most recent events in the room
   * that the homeserver was aware of when it made this event.
-  * 
+  *
   * Must contain less than or equal to 20 events.
    */
   prev_events: {}[][];

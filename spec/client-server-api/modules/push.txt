@@ -223,7 +223,7 @@ If the property specified by `key` is completely absent from the event, or does
 not have a string value, then the condition will not match, even if `pattern`
 is `*`.
 
-> **Note:** 
+> **Note:**
 For example, if `key` is `content.topic`, and `pattern` is `lunc?*`, then
 the following event will match:
 
@@ -254,7 +254,7 @@ match any substring of the value of the property which starts and ends at a
 word boundary. A word boundary is defined as the start or end of the value, or
 any character not in the sets `[A-Z]`, `[a-z]`, `[0-9]` or `_`.
 
-> **Note:** 
+> **Note:**
 For example, if `key` is `content.body` and `pattern` is `ex*ple`, the
 following event will match:
 
@@ -276,7 +276,7 @@ Other `body` values which will match are:
  * `"An exciting triple-whammy"` (the pattern can span multiple words, and `-`
    acts as a word separator.)
 
-> **Note:** 
+> **Note:**
 Note that there is no implicit condition for `state_key`. In other words, push
 rules which should match only state events must include an explicit condition
 for `state_key`.
@@ -301,7 +301,7 @@ If the property specified by `key` is completely absent from the event, or does
 not have a string, integer, boolean, or `null` value, then the condition will not
 match.
 
-> **Note:** 
+> **Note:**
 For example, if `key` is `content.m\.federate`, and `value` is `true`, then
 the following event will match:
 
@@ -344,7 +344,7 @@ and `null`. Array values not of those types are ignored.
 If the property specified by `key` is completely absent from the event, or is not
 an array, then the condition will not match.
 
-> **Note:** 
+> **Note:**
 For example, if `key` is `content.alt_aliases`, and `value` is `"#myroom:example.com"`,
 then the following event will match:
 
@@ -905,7 +905,7 @@ defined is `global`.
           /**
           * Required for `event_match`, `event_property_is` and `event_property_contains`
           * conditions. The dot-separated field of the event to match.
-          * 
+          *
           * Required for `sender_notification_permission` conditions. The field in
           * the power level event the user needs a minimum power level for. Fields
           * must be specified under the `notifications` property in the power level
@@ -980,7 +980,7 @@ defined is `global`.
           /**
           * Required for `event_match`, `event_property_is` and `event_property_contains`
           * conditions. The dot-separated field of the event to match.
-          * 
+          *
           * Required for `sender_notification_permission` conditions. The field in
           * the power level event the user needs a minimum power level for. Fields
           * must be specified under the `notifications` property in the power level
@@ -1055,7 +1055,7 @@ defined is `global`.
           /**
           * Required for `event_match`, `event_property_is` and `event_property_contains`
           * conditions. The dot-separated field of the event to match.
-          * 
+          *
           * Required for `sender_notification_permission` conditions. The field in
           * the power level event the user needs a minimum power level for. Fields
           * must be specified under the `notifications` property in the power level
@@ -1130,7 +1130,7 @@ defined is `global`.
           /**
           * Required for `event_match`, `event_property_is` and `event_property_contains`
           * conditions. The dot-separated field of the event to match.
-          * 
+          *
           * Required for `sender_notification_permission` conditions. The field in
           * the power level event the user needs a minimum power level for. Fields
           * must be specified under the `notifications` property in the power level
@@ -1205,7 +1205,7 @@ defined is `global`.
           /**
           * Required for `event_match`, `event_property_is` and `event_property_contains`
           * conditions. The dot-separated field of the event to match.
-          * 
+          *
           * Required for `sender_notification_permission` conditions. The field in
           * the power level event the user needs a minimum power level for. Fields
           * must be specified under the `notifications` property in the power level
@@ -1291,7 +1291,7 @@ Retrieve all push rules for this user.
         /**
         * Required for `event_match`, `event_property_is` and `event_property_contains`
         * conditions. The dot-separated field of the event to match.
-        * 
+        *
         * Required for `sender_notification_permission` conditions. The field in
         * the power level event the user needs a minimum power level for. Fields
         * must be specified under the `notifications` property in the power level
@@ -1366,7 +1366,7 @@ Retrieve all push rules for this user.
         /**
         * Required for `event_match`, `event_property_is` and `event_property_contains`
         * conditions. The dot-separated field of the event to match.
-        * 
+        *
         * Required for `sender_notification_permission` conditions. The field in
         * the power level event the user needs a minimum power level for. Fields
         * must be specified under the `notifications` property in the power level
@@ -1441,7 +1441,7 @@ Retrieve all push rules for this user.
         /**
         * Required for `event_match`, `event_property_is` and `event_property_contains`
         * conditions. The dot-separated field of the event to match.
-        * 
+        *
         * Required for `sender_notification_permission` conditions. The field in
         * the power level event the user needs a minimum power level for. Fields
         * must be specified under the `notifications` property in the power level
@@ -1516,7 +1516,7 @@ Retrieve all push rules for this user.
         /**
         * Required for `event_match`, `event_property_is` and `event_property_contains`
         * conditions. The dot-separated field of the event to match.
-        * 
+        *
         * Required for `sender_notification_permission` conditions. The field in
         * the power level event the user needs a minimum power level for. Fields
         * must be specified under the `notifications` property in the power level
@@ -1591,7 +1591,7 @@ Retrieve all push rules for this user.
         /**
         * Required for `event_match`, `event_property_is` and `event_property_contains`
         * conditions. The dot-separated field of the event to match.
-        * 
+        *
         * Required for `sender_notification_permission` conditions. The field in
         * the power level event the user needs a minimum power level for. Fields
         * must be specified under the `notifications` property in the power level
@@ -1679,7 +1679,7 @@ rule itself such as the rule's `actions` and `conditions` if set.
       /**
       * Required for `event_match`, `event_property_is` and `event_property_contains`
       * conditions. The dot-separated field of the event to match.
-      * 
+      *
       * Required for `sender_notification_permission` conditions. The field in
       * the power level event the user needs a minimum power level for. Fields
       * must be specified under the `notifications` property in the power level
@@ -1819,7 +1819,7 @@ to a predefined server rule.
     /**
     * Required for `event_match`, `event_property_is` and `event_property_contains`
     * conditions. The dot-separated field of the event to match.
-    * 
+    *
     * Required for `sender_notification_permission` conditions. The field in
     * the power level event the user needs a minimum power level for. Fields
     * must be specified under the `notifications` property in the power level
@@ -2247,7 +2247,7 @@ user is deleted.
   * for APNS or the Registration ID for GCM. If your notification
   * client has no such concept, use any unique identifier.
   * Max length, 512 bytes.
-  * 
+  *
   * If the `kind` is `"email"`, this is the email address to
   * send notifications to.
    */
@@ -2265,7 +2265,7 @@ user is deleted.
   * It is recommended that this end with the platform, such that
   * different platform versions get different app identifiers.
   * Max length, 64 chars.
-  * 
+  *
   * If the `kind` is `"email"`, this is `"m.email"`.
    */
   app_id: string;
@@ -2297,7 +2297,7 @@ user is deleted.
   /**
   * Required if `kind` is not `null`. A dictionary of information
   * for the pusher implementation itself.
-  * 
+  *
   * If `kind` is `http`, this MUST contain `url` which is the URL
   * to use for sending notifications. Clients MAY use this object
   * to pass custom data to their push gateway. Servers MUST forward
@@ -2443,7 +2443,7 @@ tweak set.
         * Present if, and only if, this event is a *state* event. The key making
         * this piece of state unique in the room. Note that it is often an empty
         * string.
-        * 
+        *
         * State keys starting with an `@` are reserved for referencing user IDs, such
         * as room members. With the exception of a few events, state events set with a
         * given user's ID as the state key MUST only be set by that user.
@@ -2503,6 +2503,14 @@ tweak set.
           prev_content?: {};
 
           /**
+          * The user ID of the sender of the previous state event that was replaced
+          * by this event. This field is generated by the local homeserver, and is
+          * only returned if the event is a state event.
+          * Unlike `prev_content`, this field is included regardless of history visibility.
+           */
+          prev_sender?: string /* mx-user-id */;
+
+          /**
           * The event ID of the state event replaced by this event. This field is generated
           * by the local homeserver, and is only returned if the event is a state event.
           * Unlike `prev_content`, this field is included regardless of history visibility.
@@ -2511,14 +2519,14 @@ tweak set.
 
           /**
           * The room membership of the user making the request, at the time of the event.
-          * 
+          *
           * This property is the value of the `membership` property of the
           * requesting user's [`m.room.member`](/client-server-api#mroommember)
           * state at the point of the event, including any changes caused by the
           * event. If the user had yet to join the room at the time of the event
           * (i.e, they have no `m.room.member` state), this property is set to
           * `leave`.
-          * 
+          *
           * Homeservers SHOULD populate this property
           * wherever practical, but they MAY omit it if necessary (for example,
           * if calculating the value is expensive, servers might choose to only

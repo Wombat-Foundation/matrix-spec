@@ -15,7 +15,7 @@ Threads are established using a `rel_type` of `m.thread` and reference the
 *thread root* (the main timeline event to which the thread events refer). It is not possible to create a thread from an event which itself
 is the child of an event relationship (i.e., one with an `m.relates_to`
 property with a `rel_type` property - see [Relationship types](#relationship-types)).
-It is therefore also not possible to nest threads. 
+It is therefore also not possible to nest threads.
 
 Unlike rich reply chains, all events in a thread reference the thread root
 instead of the most recent message.
@@ -106,7 +106,7 @@ flag to `true`.
 }
 ```
 
-> **Note:** 
+> **Note:**
 Clients which are aware of threads (they do not render threads, but are otherwise
 aware of the feature existing in the spec) can treat rich replies to an event with a `rel_type`
 of `m.thread` as a threaded reply, for conversation continuity on the threaded client's side.
@@ -133,7 +133,7 @@ has an `m.relates_to` property, then it should receive a HTTP 400 error
 response with appropriate error message, as per the [standard error
 response](#standard-error-response) structure.
 
-> **Note:** 
+> **Note:**
 A specific error code is not currently available for this case: servers should use `M_UNKNOWN`
 alongside the HTTP 400 status code.
 
@@ -189,7 +189,7 @@ Note that, as in the example above, child events of the `latest_event` should
 themselves be aggregated and included under `m.relations` for that event. The
 server should be careful to avoid loops, though loops are not currently
 possible due to `m.thread` not being permitted to target an event with an
-`m.relates_to` property.
+`m.relates_to` property with a `rel_type`.
 
 `count` is simply the number of events using `m.thread` as a `rel_type` pointing to the target event.
 It does not include events sent by [ignored users](#ignoring-users).
@@ -206,7 +206,7 @@ however getting all threads in a room is done through a dedicated API:
 
 ### GET /rooms/{roomId}/threads
 **Summary:** Fetches a list of the threads in a room.
-This API is used to paginate through the list of the thread roots in a given room. 
+This API is used to paginate through the list of the thread roots in a given room.
 
 Optionally, the returned list may be filtered according to whether the requesting
 user has participated in the thread.
@@ -231,7 +231,7 @@ the most recent event visible to the user (as per history visibility rules; topo
     /**
     * The thread roots, ordered by the `latest_event` in each event's aggregated children. All events
     * returned include bundled [aggregations](/client-server-api/#aggregations-of-child-events).
-    * 
+    *
     * If the thread root event was sent by an [ignored user](/client-server-api/#ignoring-users), the
     * event is returned redacted to the caller. This is to simulate the same behaviour of a client doing
     * aggregation locally on the thread.
@@ -254,7 +254,7 @@ the most recent event visible to the user (as per history visibility rules; topo
       * Present if, and only if, this event is a *state* event. The key making
       * this piece of state unique in the room. Note that it is often an empty
       * string.
-      * 
+      *
       * State keys starting with an `@` are reserved for referencing user IDs, such
       * as room members. With the exception of a few events, state events set with a
       * given user's ID as the state key MUST only be set by that user.

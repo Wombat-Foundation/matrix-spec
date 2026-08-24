@@ -7,7 +7,7 @@ before they are sent to the room/users. Rooms are not required to use a Policy
 Server (PS). Rooms which do use a Policy Server can prevent unwanted events from
 reaching users.
 
-> **Note:** 
+> **Note:**
 Room operators might prefer to use a "moderation bot" instead of a Policy Server.
 Moderation bots are reactive because they typically [redact](#redactions) events
 after they've already been sent.
@@ -28,7 +28,7 @@ and non-state or non-empty `state_key` `m.room.policy` events.
 
 What a Policy Server checks for on an event is left as an implementation detail.
 
-> **Note:** 
+> **Note:**
 More information about how a Policy Server operates precisely is available in
 the [Server-Server API](/server-server-api/#policy-servers). Most notably, not
 every homeserver is a Policy Server, and not every Policy Server is a full
@@ -96,7 +96,7 @@ can attempt to call [`/.well-known/matrix/policy_server`](#getwell-knownmatrixpo
 on a user-provided server name. The returned information can then be used to
 populate the `m.room.policy` state event.
 
-> **Note:** 
+> **Note:**
 Clients are *not* required to use `/.well-known/matrix/policy_server` to populate the
 `m.room.policy` state event. If they have the required information from elsewhere,
 they can simply send the state event.
@@ -105,13 +105,13 @@ they can simply send the state event.
 
 See the [Policy Servers section of the Server-Server API](/server-server-api/#policy-servers).
 
-> **Note:** 
+> **Note:**
 If implementing your own Policy Server, see [MSC4284: Policy Servers](https://github.com/matrix-org/matrix-spec-proposals/blob/main/proposals/4284-policy-servers.md)
 for additional security, implementation, and safety considerations.
 
 #### Security considerations
 
-> **Note:** 
+> **Note:**
 Portions of this section rely on context from the [Policy Servers section of the Server-Server API](/server-server-api/#policy-servers).
 
 By nature of being a proactive tool for a room, Policy Server can expect to be
