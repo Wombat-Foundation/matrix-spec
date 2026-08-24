@@ -1,4 +1,4 @@
-"""Module to generate a mirrored, token-minimized, LLM-friendly Matrix Spec tree.
+"""Module to generate a mirrored, compact plain-text Matrix Spec tree.
 
 This script parses raw markdown files and replaces Hugo shortcodes with inline,
 fully resolved schema and event definitions translated into clean TypeScript.
@@ -13,7 +13,7 @@ from pathlib import Path
 import yaml
 
 DATA_DIR = Path("data")
-DEFAULT_OUTPUT_ROOT = Path("matrix_spec_llm")
+DEFAULT_OUTPUT_ROOT = Path("matrix_spec_txt")
 DEFAULT_SOURCE_ROOTS = (Path("content"), Path("proposals"))
 
 
@@ -74,7 +74,7 @@ def resolve_all_of(schema):
 
 
 def json_schema_to_typescript(schema, depth=0):
-    """Translates a resolved JSON Schema into an LLM-friendly TS interface."""
+    """Translate a resolved JSON Schema into a compact TypeScript interface."""
     if not isinstance(schema, dict):
         return "any"
 
@@ -302,7 +302,7 @@ def _rel_output_path(src_path, source_root):
 
 
 def _render_markdown_file(src_path):
-    """Convert a markdown source file to compact, LLM-friendly text."""
+    """Convert a Markdown source file to compact plain text."""
     with open(src_path, "r", encoding="utf-8") as f:
         content = f.read()
 
@@ -316,7 +316,7 @@ def generate_spec_tree(source_roots=None, output_root=DEFAULT_OUTPUT_ROOT):
     roots = [Path(root) for root in (source_roots or DEFAULT_SOURCE_ROOTS)]
     output_root = Path(output_root)
 
-    print("Generating mirrored LLM-friendly Matrix Spec tree...")
+    print("Generating mirrored plain-text Matrix Spec tree...")
     written = 0
 
     for source_root in roots:

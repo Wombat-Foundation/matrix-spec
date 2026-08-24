@@ -12,7 +12,7 @@ managed_paths=(
 	application-service-api.txt
 	changelog
 	client-server-api
-	generate_llm_spec_tree.py
+	generate_txt_spec_tree.py
 	identity-service-api.txt
 	index.txt
 	olm-megolm
@@ -104,7 +104,7 @@ find . \
 	while read -r path; do
 		trimmed="${path#./}"
 		case "$trimmed" in
-		appendices.txt | application-service-api.txt | generate_llm_spec_tree.py | identity-service-api.txt | index.txt | proposals.txt | push-gateway-api.txt | server-server-api.txt)
+		appendices.txt | application-service-api.txt | generate_txt_spec_tree.py | identity-service-api.txt | index.txt | proposals.txt | push-gateway-api.txt | server-server-api.txt)
 			grep -Fxq "$trimmed" "$manifest" || rm -f -- "$trimmed"
 			;;
 		changelog/* | client-server-api/* | olm-megolm/* | rooms/*)
