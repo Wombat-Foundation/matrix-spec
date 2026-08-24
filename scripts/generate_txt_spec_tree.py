@@ -13,7 +13,7 @@ from pathlib import Path
 import yaml
 
 DATA_DIR = Path("data")
-DEFAULT_OUTPUT_ROOT = Path("matrix_spec_txt")
+DEFAULT_OUTPUT_ROOT = Path("spec")
 DEFAULT_SOURCE_ROOTS = (Path("content"), Path("proposals"))
 
 

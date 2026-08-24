@@ -6,13 +6,13 @@ SOURCE_REF="${SOURCE_REF:-HEAD}"
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "$script_dir/.." && pwd)"
 parent_dir="$(dirname "$repo_root")"
+cd "$repo_root"
 
 managed_paths=(
 	appendices.txt
 	application-service-api.txt
 	changelog
 	client-server-api
-	generate_txt_spec_tree.py
 	identity-service-api.txt
 	index.txt
 	olm-megolm
@@ -35,10 +35,15 @@ infer_source_repo() {
 		[[ -d "$candidate" ]] || continue
 		[[ "$candidate" != "$repo_root" ]] || continue
 		git -C "$candidate" rev-parse --git-dir >/dev/null 2>&1 || continue
-		[[ -f "$candidate/appendices.txt" ]] || continue
-		[[ -f "$candidate/index.txt" ]] || continue
-		[[ -f "$candidate/server-server-api.txt" ]] || continue
-		[[ -d "$candidate/client-server-api" ]] || continue
+		if [[ -f "$candidate/spec/appendices.txt" ]]; then
+			candidate_spec_root="$candidate/spec"
+		else
+			candidate_spec_root="$candidate"
+		fi
+		[[ -f "$candidate_spec_root/appendices.txt" ]] || continue
+		[[ -f "$candidate_spec_root/index.txt" ]] || continue
+		[[ -f "$candidate_spec_root/server-server-api.txt" ]] || continue
+		[[ -d "$candidate_spec_root/client-server-api" ]] || continue
 		matches+=("$candidate")
 	done
 
@@ -72,6 +77,12 @@ fi
 
 git -C "$SOURCE_REPO" rev-parse --git-dir >/dev/null
 
+if git -C "$SOURCE_REPO" cat-file -e "$SOURCE_REF:spec/index.txt" 2>/dev/null; then
+	source_prefix="spec/"
+else
+	source_prefix=""
+fi
+
 tmp_dir="$(mktemp -d "merged-spec.tmp.XXXXXX")"
 trap 'rm -rf "$tmp_dir"' EXIT
 
@@ -79,11 +90,13 @@ manifest="$tmp_dir/files.txt"
 : >"$manifest"
 
 for path in "${managed_paths[@]}"; do
-	obj_type="$(git -C "$SOURCE_REPO" cat-file -t "$SOURCE_REF:$path" 2>/dev/null || true)"
+	source_path="${source_prefix}${path}"
+	obj_type="$(git -C "$SOURCE_REPO" cat-file -t "$SOURCE_REF:$source_path" 2>/dev/null || true)"
 	if [[ "$obj_type" == "blob" ]]; then
 		printf '%s\n' "$path" >>"$manifest"
 	elif [[ "$obj_type" == "tree" ]]; then
-		git -C "$SOURCE_REPO" ls-tree -r --name-only "$SOURCE_REF" "$path" >>"$manifest"
+		git -C "$SOURCE_REPO" ls-tree -r --name-only "$SOURCE_REF" "$source_path" |
+			sed "s|^${source_prefix}||" >>"$manifest"
 	fi
 done
 
@@ -98,17 +111,16 @@ fi
 
 echo "syncing plain-text spec files from $SOURCE_REPO ($SOURCE_REF)"
 
-find . \
-	\( -path './.git' -o -path './.ruff_cache' -o -path './proposals' -o -path './scripts' \) -prune -o \
-	-type f -print |
+mkdir -p spec
+find spec -type f -print |
 	while read -r path; do
-		trimmed="${path#./}"
+		trimmed="${path#spec/}"
 		case "$trimmed" in
-		appendices.txt | application-service-api.txt | generate_txt_spec_tree.py | identity-service-api.txt | index.txt | proposals.txt | push-gateway-api.txt | server-server-api.txt)
-			grep -Fxq "$trimmed" "$manifest" || rm -f -- "$trimmed"
+		appendices.txt | application-service-api.txt | identity-service-api.txt | index.txt | proposals.txt | push-gateway-api.txt | server-server-api.txt)
+			grep -Fxq "$trimmed" "$manifest" || rm -f -- "spec/$trimmed"
 			;;
 		changelog/* | client-server-api/* | olm-megolm/* | rooms/*)
-			grep -Fxq "$trimmed" "$manifest" || rm -f -- "$trimmed"
+			grep -Fxq "$trimmed" "$manifest" || rm -f -- "spec/$trimmed"
 			;;
 		esac
 	done
@@ -116,11 +128,21 @@ find . \
 echo "copying refreshed spec files"
 while read -r path; do
 	[[ -n "$path" ]] || continue
-	dest_dir="$(dirname "$path")"
-	if [[ "$dest_dir" != "." ]]; then
-		mkdir -p "$dest_dir"
-	fi
-	git -C "$SOURCE_REPO" show "$SOURCE_REF:$path" >"$path"
+	dest_path="spec/$path"
+	mkdir -p "$(dirname "$dest_path")"
+	git -C "$SOURCE_REPO" show "$SOURCE_REF:${source_prefix}${path}" >"$dest_path"
 done <"$manifest"
+
+if git -C "$SOURCE_REPO" cat-file -e "$SOURCE_REF:scripts/generate_txt_spec_tree.py" 2>/dev/null; then
+	generator_source="scripts/generate_txt_spec_tree.py"
+elif git -C "$SOURCE_REPO" cat-file -e "$SOURCE_REF:generate_txt_spec_tree.py" 2>/dev/null; then
+	generator_source="generate_txt_spec_tree.py"
+else
+	generator_source=""
+fi
+
+if [[ -n "$generator_source" ]]; then
+	git -C "$SOURCE_REPO" show "$SOURCE_REF:$generator_source" >scripts/generate_txt_spec_tree.py
+fi
 
 echo "wrote $count merged spec files from $SOURCE_REPO"

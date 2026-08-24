@@ -2,7 +2,8 @@
  Matrix Spec - plain text edition
 **********************************
 
-Enclosed you will find ``.txt`` files, easily `ripgrep`'d by keyword or idea.
+The generated protocol specification lives under ``spec/`` as ``.txt`` files,
+easily `ripgrep`'d by keyword or idea.
 I suggest using `rg` not traditional `grep`.
 
 Some conversions are a work in progress and not truly minimal,
@@ -21,6 +22,13 @@ organized/categorized by name and subject, and the text files are small
 enough for you to individually slurp up entirely if needed for one or
 two relevant documents/subjects.
 
+The top-level datasets are organized separately:
+
+* ``spec/`` contains the generated plain-text protocol specification.
+* ``proposals/`` contains merged and unmerged Matrix Spec Changes.
+* ``issues/`` contains the Matrix specification issue archive.
+* ``release-notes-synapse/`` contains Synapse release notes.
+
 ----
 
 Update helpers
@@ -38,7 +46,7 @@ Individual sync workflows:
 * ``scripts/update-merged-proposals.sh`` refreshes upstream-managed files under
   ``proposals/`` from the ``main`` branch of a sibling ``matrix-spec-proposals``
   checkout, including proposal images and other sidecar assets.
-* ``scripts/update-spec.sh`` refreshes the checked-in plain-text spec
-  corpus. If ``SOURCE_REPO`` is unset, it auto-detects a unique sibling plain-text
+* ``scripts/update-spec.sh`` refreshes the checked-in plain-text corpus under
+  ``spec/``. If ``SOURCE_REPO`` is unset, it auto-detects a unique sibling plain-text
   checkout or defaults to the current repository root. You can also specify
   ``SOURCE_REPO=/path/to/plain-text-spec-checkout`` explicitly.
