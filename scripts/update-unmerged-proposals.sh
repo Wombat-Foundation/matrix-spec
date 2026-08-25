@@ -57,7 +57,7 @@ while read -r pr; do
 		--name-only \
 		--diff-filter=AMR \
 		"$UPSTREAM_MAIN...$ref" 2>/dev/null |
-		rg '^proposals/[0-9][^/]*\.md$' || true)"
+		rg '^proposals/[^/]+\.md$' || true)"
 
 	while read -r path; do
 		[[ -n "$path" ]] || continue
@@ -83,5 +83,5 @@ fi
 echo "copying refreshed files to $TARGET_DIR"
 find "$tmp_dir" -maxdepth 1 -type f -exec cp -- '{}' "$TARGET_DIR/" ';'
 
-count="$(find "$tmp_dir" -maxdepth 1 -type f -name '[0-9]*.md' | wc -l)"
+count="$(find "$tmp_dir" -maxdepth 1 -type f -name '*.md' | wc -l)"
 echo "wrote $count proposal files to $TARGET_DIR"
