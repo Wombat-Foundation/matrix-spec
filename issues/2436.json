@@ -1,14 +1,14 @@
 {
-  "url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/2431",
+  "url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/2436",
   "repository_url": "https://api.github.com/repos/matrix-org/matrix-spec",
-  "labels_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/2431/labels{/name}",
-  "comments_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/2431/comments",
-  "events_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/2431/events",
-  "html_url": "https://github.com/matrix-org/matrix-spec/issues/2431",
-  "id": 5070789159,
-  "node_id": "I_kwDOG7btIc8AAAABLj4aJw",
-  "number": 2431,
-  "title": "Add necessity to check MSCs for clear requirement levels to checklist",
+  "labels_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/2436/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/2436/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/2436/events",
+  "html_url": "https://github.com/matrix-org/matrix-spec/issues/2436",
+  "id": 5249691199,
+  "node_id": "I_kwDOG7btIc8AAAABOOfuPw",
+  "number": 2436,
+  "title": "Missing example for m.key.verification.start$m.reciprocate.v1",
   "user": {
     "login": "HarHarLinks",
     "id": 2803622,
@@ -30,14 +30,24 @@
     "user_view_type": "public",
     "site_admin": false
   },
-  "labels": [],
+  "labels": [
+    {
+      "id": 3883764666,
+      "node_id": "MDU6TGFiZWwzODgzNzY0NjY2",
+      "url": "https://api.github.com/repos/matrix-org/matrix-spec/labels/clarification",
+      "name": "clarification",
+      "color": "98e6ae",
+      "default": false,
+      "description": "An area where the expected behaviour is understood, but the spec could do with being more explicit"
+    }
+  ],
   "state": "open",
   "locked": false,
   "assignees": [],
   "milestone": null,
-  "comments": 2,
-  "created_at": "2026-08-05T12:22:32Z",
-  "updated_at": "2026-08-25T19:19:08Z",
+  "comments": 0,
+  "created_at": "2026-08-25T19:21:03Z",
+  "updated_at": "2026-08-25T19:21:38Z",
   "closed_at": null,
   "assignee": null,
   "author_association": "CONTRIBUTOR",
@@ -55,10 +65,10 @@
     "blocking": 0,
     "total_blocking": 0
   },
-  "body": "I suggest adding a point to the https://github.com/matrix-org/matrix-spec-proposals/blob/main/MSC_CHECKLIST.md along the lines of\n\n- [ ] requirement levels for the proposed change and all its aspects are clearly stated\n\nThis should improve clarity and avoid situations such as https://github.com/matrix-org/matrix-spec/pull/2410#discussion_r3586691433",
+  "body": "**Link to problem area**: https://spec.matrix.org/latest/client-server-api/#mkeyverificationstartmreciprocatev1\n\n**Issue**\nthere is no `data/event-schemas/examples/m.key.verification.start$m.reciprocate.v1.yaml`, resulting in:\n\n<img width=\"2157\" height=\"676\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/58f88802-e88f-4daf-bb86-bd038c5cb004\" />",
   "closed_by": null,
   "reactions": {
-    "url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/2431/reactions",
+    "url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/2436/reactions",
     "total_count": 0,
     "+1": 0,
     "-1": 0,
@@ -69,7 +79,7 @@
     "rocket": 0,
     "eyes": 0
   },
-  "timeline_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/2431/timeline",
+  "timeline_url": "https://api.github.com/repos/matrix-org/matrix-spec/issues/2436/timeline",
   "performed_via_github_app": null,
   "state_reason": null,
   "pinned_comment": null

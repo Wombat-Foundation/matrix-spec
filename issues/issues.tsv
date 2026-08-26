@@ -1,5 +1,6 @@
+2436	open	2026-08-25T19:21:03Z	2026-08-25T19:21:38Z	Missing example for m.key.verification.start$m.reciprocate.v1	https://api.github.com/repos/matrix-org/matrix-spec/issues/2436
 2434	open	2026-08-11T18:12:10Z	2026-08-16T21:39:48Z	State resolution when one (or more) `prev_events` is unknown, unresolvable, or external	https://api.github.com/repos/matrix-org/matrix-spec/issues/2434
-2431	open	2026-08-05T12:22:32Z	2026-08-11T09:45:14Z	Add necessity to check MSCs for clear requirement levels to checklist	https://api.github.com/repos/matrix-org/matrix-spec/issues/2431
+2431	open	2026-08-05T12:22:32Z	2026-08-25T19:19:08Z	Add necessity to check MSCs for clear requirement levels to checklist	https://api.github.com/repos/matrix-org/matrix-spec/issues/2431
 2425	closed	2026-07-24T06:02:50Z	2026-08-11T14:23:07Z	Our IANA .well-known reference has a broken link	https://api.github.com/repos/matrix-org/matrix-spec/issues/2425
 2424	open	2026-07-21T22:34:27Z	2026-07-21T22:34:27Z	Spec requires support for exponential notation in JSON	https://api.github.com/repos/matrix-org/matrix-spec/issues/2424
 2423	open	2026-07-20T17:32:15Z	2026-07-20T17:35:51Z	`X-Matrix` authentication header makes request buffering necessary, but it doesn't actually need to depend on the request content	https://api.github.com/repos/matrix-org/matrix-spec/issues/2423
