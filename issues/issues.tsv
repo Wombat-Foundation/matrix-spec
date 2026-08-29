@@ -1,3 +1,4 @@
+2437	open	2026-08-26T11:07:48Z	2026-08-26T11:07:48Z	Spec's `NACL` allusions are ambiguous to ZIP-215 vs. strict RFC 8032 `ed25519` signing key algos	https://api.github.com/repos/matrix-org/matrix-spec/issues/2437
 2436	open	2026-08-25T19:21:03Z	2026-08-25T19:21:38Z	Missing example for m.key.verification.start$m.reciprocate.v1	https://api.github.com/repos/matrix-org/matrix-spec/issues/2436
 2434	open	2026-08-11T18:12:10Z	2026-08-16T21:39:48Z	State resolution when one (or more) `prev_events` is unknown, unresolvable, or external	https://api.github.com/repos/matrix-org/matrix-spec/issues/2434
 2431	open	2026-08-05T12:22:32Z	2026-08-25T19:19:08Z	Add necessity to check MSCs for clear requirement levels to checklist	https://api.github.com/repos/matrix-org/matrix-spec/issues/2431

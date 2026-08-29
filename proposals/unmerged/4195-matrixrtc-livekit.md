@@ -1,228 +1,219 @@
-# MSC4195: MatrixRTC Transport Using LiveKit Backend
+# MSC4195: LiveKit transport for MatrixRTC
 
-This MSC defines a LiveKit-based transport for MatrixRTC, allowing clients to publish and subscribe
-to real-time media via LiveKit SFUs while maintaining Matrix-native session and membership
-semantics.
+[MSC4143] introduces MatrixRTC as an extensible framework for real-time communication in Matrix.
+MatrixRTC uses so called transports to transfer the actual RTC data between RTC members. This
+proposal introduces a transport based on the [LiveKit] Selective Forwarding Unit (SFU). The SFU
+intelligently relays RTC data between members without them having to connect to each other directly.
 
-This proposal defines a new [MSC4143](https://github.com/matrix-org/matrix-spec-proposals/pull/4143)
-compliant MatrixRTC Transport using [LiveKit](https://github.com/livekit/livekit) Selective
-Forwarding Units (SFUs).
+The LiveKit SFU is integrated into Matrix in a multi-SFU configuration. In this setup, a homeserver
+may operate one or more SFUs. RTC members always publish their RTC data to a local SFU and announce
+their SFU choice via their `m.rtc.member` event. Other members then subscribe to the RTC data on the
+publishing member's SFU – which might be different from the SFU they're publishing on themselves.
+The homeserver provides mechanisms for discovering local SFUs and for acquiring access tokens for
+both local and remote SFUs. This approach removes the need for an SFU election process and allows
+servers to guard access to their SFUs.
 
-In real-time communication environments, managing media streams among multiple participants can be
-complex. This transport proposal uses a **Multi-SFU approach** where each participant publishes
-their media directly to a LiveKit SFU, while others subscribe to streams they need. This removes the
-need for an SFU election and preserves clear ownership of media.
-
-Example for two participants from different homeservers A and B
+The example below illustrates how two members from different homeservers A and B publish and
+subscribe to each other's RTC streams.
 
 ```
-      +------------------+
-      |  Participant A   |
-      |  (Matrix Client) |
-      +------------------+
-        |             ^
-        |             |
-        | publishes   | subscribes
-        v             |
-      +-------+  +-------+
-      | SFU A |  | SFU B |
-      +-------+  +-------+
-        |             ^
-        |             |
-        | subscribes  | publishes
-        v             |
-      +------------------+
-      |  Participant B   |
-      |  (Matrix Client) |
-      +------------------+
+                  ┌─────────────────────────────────┐
+          ┌───────┤            Client A             │◀──────┐
+          │       └──┬──────────────────────────────┘       │
+          │          │                                      │
+  publish │          │ discover SFU                         │ subscribe
+          │          │ get SFU authorisation                │
+          │          │                                      │
+          ▼          ▼                                      │
+      ┌───────┐ ┌──────────┐   federation  ┌──────────┐ ┌───┴───┐
+      │ SFU A │ │ Server A │◀─────────────▶│ Server B │ │ SFU B │
+      └───┬───┘ └──────────┘               └──────────┘ └───────┘
+          │                                      ▲          ▲
+          │                                      │          │
+subscribe │                         discover SFU │          │ publish
+          │                get SFU authorisation │          │
+          │                                      │          │
+          │       ┌──────────────────────────────┴──┐       │
+          └──────▶│            Client B             ├───────┘
+                  └─────────────────────────────────┘
 ```
+
+[MSC4143]: https://github.com/matrix-org/matrix-spec-proposals/pull/4143
+[LiveKit]: https://github.com/livekit/livekit
 
 ## Proposal
 
-This MSC defines the **LiveKit RTC Transport**, which can appear as one of the **RTC Transports**
-offered by a homeserver and being used as transport by clients, as per [MSC4519](https://github.com/matrix-org/matrix-spec-proposals/pull/4519).
+### Discovering and announcing transports
 
-### Canonical JSON Serialization
+A new transport type `m.livekit` is introduced. Homeservers that support this transport announce it
+to clients by including a dedicated object in the response of the`/_matrix/client/v1/rtc/transports`
+endpoint from [MSC4519]. The object has the following schema:
 
-This proposal uses JSON arrays and Canonical JSON encoding to ensure stable hashing inputs.
-All uses of `JSON.serialize(...)` in the following text MUST use the Canonical JSON encoding as
-defined by the [Matrix specification](https://spec.matrix.org/v1.18/appendices/#canonical-json).
+- `type` (required, string): The transport's type identifier. MUST be `m.livekit`.
+- `url` (required, string): The SFU's WebSocket URL. This allows differentiating SFUs when the
+  server operates more than one SFU.
 
-Additionally, implementations MUST ensure that:
-
-* The array elements appear in the exact specified order.
-* Each element is encoded as a JSON string.
-* The resulting byte sequence used for hashing is the UTF-8 encoding of the canonical JSON output.
-
-For example:
-```json5
-["@user:matrix.example.com","DEVICEID","abcd12345"]
-```
-
-Any deviation (e.g. additional whitespace or different encoding) will result in a different hash 
-and is therefore non-compliant.
-
-### LiveKit room alias
-
-The name of a LiveKit room is referred to as the **LiveKit alias** (`livekit_alias`). The alias MUST
-be globally unique and dependent on a given MatrixRTC slot in a Matrix room. A minimal
-implementation that ensures a baseline of pseudonymity is given by the
-[unpadded base64 encoding](https://spec.matrix.org/v1.17/appendices/#unpadded-base64) of the SHA-256
-hash of the JSON serialization of an array containing the Matrix `room_id` and the `slot_id`, i.e.  
-`base64(SHA256(JSON.serialize([room_id, slot_id])))`, where `JSON.serialize` is the canonical JSON
-serialization defined [above](#canonical-json-serialization).
-
-For improved metadata protection, the `livekit_alias` SHOULD be derived as
-`base64(SHA256(JSON.serialize([room_id, slot_id, truly_random_bits])))`, where the `truly random bits`
-are maintained by the server.
-
-The resulting value is opaque to the MatrixRTC application. Within the LiveKit namespace, the
-`livekit_alias` uniquely represents a MatrixRTC slot. Participants from the same Matrix deployment
-(using the same SFU to publish their media) are considered to use the same `livekit_alias` in order
-to limit the number of active LiveKit SFU connections. 
-
-The `livekit_alias` is shared with clients as part of their JWT token issued by the server.
-
-### Transport type: `livekit`
-
-This section defines the JSON format for the LiveKit SFU Transport, covering both homeserver-side
-advertisement and client-side consumption.
-
-#### Transport Advertisement (homeserver)
-
-The mechanism for advertising available RTC transports by homeservers is already defined in
-[MSC4143](https://github.com/matrix-org/matrix-spec-proposals/pull/4143).
-
-The homeserver announces available LiveKit Transport as a JSON object with the following fields:
-
-* `type` — required `string`: this MUST be `livekit`  
-* `url` - required `string`: WebSocket URL of the LiveKit SFU. This enables running more than one SFU
-  per homeserver.
-
-An example for  `GET /_matrix/client/v1/rtc/transports`
+Below is an example of a response from `/_matrix/client/v1/rtc/transports`:
 
 ```json5
 {
-  "rtc_transports": [
-    {
-      "type": "livekit",
-      "url": "ws://livekit.example.com
-    }
-  ]
+  "transports": [{
+    "type": "m.livekit",
+    "url": "ws://livekit.example.com"
+  }]
 }
 ```
 
-#### Transport Usage (client)
+Once a client decides to publish media under a discovered transport, it includes the same object
+in the `transports` array of its respective `m.rtc.member` event. This gives other clients in the
+same RTC slot, the information required to subscribe to the published media.
 
-The mechanism for discovering available RTC transports by clients is already defined in
-[MSC4143](https://github.com/matrix-org/matrix-spec-proposals/pull/4143).
-
-Clients declare the RTC Transport(s) they use to publish RTC data in their `m.rtc.member` state
-event by adding a JSON object to the `rtc_transports` array.
-
-Other clients in the same MatrixRTC slot discover and subscribe to each other’s media by inspecting
-`m.rtc.member` events. Clients use this information to connect to the appropriate SFU and subscribe
-to the published media.
-
-Field Descriptions:
-
-* `type` — required `string`: this MUST be `"livekit"`  
-* `url` - required `string`: WebSocket URL of the LiveKit SFU.
+Below is an example of an appropriate membership event:
 
 ```json5
 {
-  // rest of the m.rtc.member event
-  "rtc_transports": [
-    {
-      "type": "livekit",
-      "url": "ws://livekit.example.com
-    }
-  ]
+  "type": "m.rtc.member",
+  "content": {
+    "slot_id": "the_id",
+    "member": {
+      "id": "xyzABCDEF10123",
+      "membership": "join"
+    },
+    "application": {
+      ...
+    },
+    "transports": {
+      "published": [{
+        "type": "m.livekit",
+        "url": "ws://livekit.example.com"
+      }],
+      "can_subscribe": [ "m.livekit" ]
+    },
+    "sticky_key": "xyzABCDEF10123"
+  },
+  ...
 }
 ```
 
-### Additions to the Client-Server and Server-Server API
+[MSC4519]: https://github.com/matrix-org/matrix-spec-proposals/pull/4519
 
-#### Acquiring a token for the SFU
+### Mapping MatrixRTC members to LiveKit
 
-LiveKit SFUs require a JWT `access_token` to be provided when 
-[connecting to the WebSocket](https://docs.livekit.io/reference/internals/client-protocol/#WebSocket-Parameters).  
-This section standardises the method by which a MatrixRTC application obtains the LiveKit JWT
-token. A high level overview is depicted in the following diagram
+LiveKit encapsulates RTC sessions in so called [LiveKit rooms]. Within a LiveKit room,
+[LiveKit participants] can publish and subscribe to RTC data streams through a WebSocket
+connection that is guarded with an access token. A LiveKit room is identified by a unique
+room "name" string while a LiveKit participant is identified by a unique "identity" string.
+These LiveKit primitives need to be mapped to the `m.rtc.member` events for MatrixRTC members
+from [MSC4143].
 
-```mermaid
-sequenceDiagram
-    autonumber
+#### LiveKit room names
 
-    participant U as 🧑 Alice
+LiveKit room names are derived by homeservers and shared with clients as part of the
+LiveKit access token issued by the homeserver (see [below]). To ensures a baseline of
+pseudonymity and avoid exposing unnecessary metadata to the SFU, the derivation is
+performed using the following steps:
 
-    box floralwhite alice.com
-        participant H as 🏢 Homeserver
-        participant L as 📡 LiveKit SFU
-    end
+1. Construct a JSON array containing the `room_id` and `slot_id` of the `m.rtc.member`
+   event (in that precise order).
+1. Perform a [Canonical JSON] serialization of the array.
+1. Take the UTF-8 encoding of the canonicalization output and hash it with SHA-256.
+1. Encode the result using [unpadded base64].
 
-    box floralwhite bob.com
-        participant H2 as 🏢 Homeserver
-    end
-
-
-    participant O as 👨‍🦰 Bob
-
-    U->>H: /get_token
-    activate H
-    H->>H: Verify user's<br>room membership
-    H->>L: Request token
-    activate L
-    L-->>H: Return token & URL
-    deactivate L
-    H-->>U: Return token & URL
-    deactivate H
-
-    U->>L: Publish media stream
-
-    O->>H2: /get_token
-    activate H2
-    H2->>H2: Verify user's<br>room membership
-    H2->>H: /get_token
-    activate H
-    H->>H: Verify servers's<br>room membership
-    H->>L: Request token
-    activate L
-    L-->>H: Return token & URL
-    deactivate L
-    H-->>H2: Return token & URL
-    deactivate H
-    H2-->>O: Return token & URL
-    deactivate H2
-  
-    O->>L: Subscribe to media streams
+```
+livekit_room_name = Base64( SHA256( Canonicalize( [ room_id, slot_id ] ) ) )
 ```
 
-The JWT token is obtained by making an authenticated `POST` request to a new Client-Server endpoint
-`/_matrix/client/v1/rtc/livekit/get_token`.
+This procedure ensures that each MatrixRTC slot unambiguously maps to one LiveKit room on
+each involved SFU. As a result, the number of WebSocket connections required to participate
+in an RTC session scales with the number of participating SFUs which should commonly mean
+the number of participating homeservers. This is much more efficient for clients compared to
+using separate LiveKit rooms per MatrixRTC member where the number of required WebSocket
+connections would scale with the number of session members.
 
-The `Content-Type` of the request is `application/json` and the JSON body contains the following
-fields:
+For improved metadata protection, servers MAY add a `salt` generated from a cryptographically
+secure random number generator to the input JSON array when deriving LiveKit room names.
 
-  * `server_name` — `string`: the [server name](https://spec.matrix.org/v1.19/appendices/#server-name)
-    of the `m.rtc.member` event's `sender`. Defaults to the server's own server name if omitted.
-  * `url` - required `string`: WebSocket URL of the LiveKit SFU.
-  * `room_id` — required `string`: the Matrix room ID where the `m.rtc.member` event is present. 
-  * `slot_id` — required `string`: the slot ID from the `m.rtc.member` event.
-  * `member` — required `object`: the contents of the `member` field from the `m.rtc.member` event.
+```
+livekit_room_name = Base64( SHA256( Canonicalize( [ room_id, slot_id, salt ] ) ) )
+```
+
+The value of `salt` MUST be persisted on the server and SHOULD be rotated once all
+LiveKit participants have left the LiveKit room. This ensures that a different LiveKit
+room is used for the next MatrixRTC session in the same slot and further reduces the
+amount of metadata exposed to the SFU.
+
+### LiveKit participant identities
+
+LiveKit participant identities are derived by both homeservers and clients. Homeservers require
+the identity to generate LiveKit access tokens (see [below]). Clients use the identity to map
+MXIDs to LiveKit participants, for instance, to display a user name and avatar on a video stream.
+To avoid exposing unnecessary metadata to the SFU, the derivation process uses the following steps:
+
+1. Construct a JSON array containing the `sender` and `member.id` properties from the `m.rtc.member`
+   event (in that precise order).
+1. Perform a [Canonical JSON] serialization of the array.
+1. Take the UTF-8 encoding of the canonicalization output and hash it with SHA-256.
+1. Encode the result using [unpadded base64].
+
+```
+livekit_participant_identity = Base64( SHA256( Canonicalize( [ sender, member.id ] ) ) )
+```
+
+Note that `sender` is included here because according to [MSC4143], member IDs are unique per
+member and session for a single user only. Due to these uniqueness properties, additional salting
+is not required here.
+
+[LiveKit rooms]: https://docs.livekit.io/intro/basics/rooms-participants-tracks/rooms/
+[LiveKit participants]: https://docs.livekit.io/intro/basics/rooms-participants-tracks/participants/
+[below]: #acquiring-livekit-access-tokens
+[Canonical JSON]: (https://spec.matrix.org/v1.18/appendices/#canonical-json)
+[unpadded base64]: https://spec.matrix.org/v1.17/appendices/#unpadded-base64
+
+### Acquiring LiveKit access tokens
+
+As mentioned above, [WebSocket] connections to LiveKit rooms are needed for publishing and subscribing
+to RTC streams. The LiveKit SFU requires an access token in the form of a JWT for these connections.
+In order to enable additional access control checks, responsibility for issuing these tokens is
+assigned to home servers.
+
+Servers can [generate] the tokens by using one of the LiveKit SDKs and inputting a set of parameters
+including the LiveKit room name and the LiveKit participant identifier. The procedure also requires
+secrets agreed upon between the homeserver and the respective SFU. This means homeservers can
+only generate tokens for their own SFUs. To allow clients to request tokens for both local and
+remote SFUs, a new pair of authenticated Client-Server and Server-Server endpoints is introduced:
+
+- `POST /_matrix/client/v1/rtc/livekit/get_token`
+- `POST /_matrix/federation/v1/rtc/livekit/get_token`
+
+To request a token, a client `POST`s to `/get_token` including in the body a JSON object with the
+following schema:
+
+- `server_name` (string): The [server name](https://spec.matrix.org/v1.19/appendices/#server-name)
+  for which a token is requested. Defaults to the server's own server name if omitted.
+- `url` (required, string): The WebSocket URL of the LiveKit SFU for which a token is requested.
+- `room_id` (required, string): The room ID where the associated `m.rtc.member` event (see below) was sent.
+- `slot_id` (required, string): The contents of the `slot_id` property of the associated `m.rtc.member` event.
+- `member_id` (required, string): The `member.id` property of the associated `m.rtc.member` event.
+
+When requesting a token for publishing, the associated `m.rtc.member` event is the member's own event.
+The client uses its own server name for `server_name` and the WebSocket URL discovered from
+`/_matrix/client/v1/rtc/transports` for `url`.
+
+If, on the other hand, the token is requested for subscribing, the associated `m.rtc.member` event is
+another member's event. In this case, the client derives the value for `server_name` from the `sender`
+of that event and takes `url` from the respective `transports` array element in the event.
+
+Below is an example of a token request for the `m.rtc.membership` example given further up.
 
 ```http
-POST /_matrix/client/v1/rtc/livekit/get_token HTTP/1.1
+POST /_matrix/client/v1/rtc/livekit/get_token
 
 {
   "server_name": "example.com",
   "url": "ws://livekit.example.com,
   "room_id": "!tDLCaLXijNtYcJZEey:example.com",
   "slot_id": "the_id",
-  "member": {
-    "id": "xyzABCDEF10123",
-    "claimed_device_id": "DEVICEID"
-  }
+  "member_id": "xyzABCDEF10123"
 }
 ```
 
@@ -233,82 +224,112 @@ identified by `room_id`. If the user is not joined, the request MUST be rejected
 If `server_name` is the server's own name and `url` does not match one of the server's own SFUs,
 the request is rejected with HTTP 400 / `M_INVALID_PARAM`.
 
-If `server_name` is the server's own name and `url` matches one of the server's own SFUs, it obtains a
-token from that SFU. If successful, the server returns an HTTP `200 OK` response with `Content-Type: application/json`. The response body contains:
-
-* `jwt` — `string`: the JWT token to use for authentication with the SFU.  
+If `server_name` is the server's own name and `url` matches one of the server's own SFUs, the server
+generates a token for the SFU and responds with HTTP 200 and a JSON object with a single required
+property `jwt` holding the token.
 
 ```http
-HTTP/1.1 200 OK
+200 OK
 
 {
   "jwt": "thejwt"
 }
 ```
 
-If `server_name` points to a remote server, the server triggers a `POST` request to a new authenticated
-Server-Server endpoint `/_matrix/federation/v1/rtc/livekit/get_token`. The `Content-Type` of the
-request is `application/json` and the JSON body contains the following fields:
-
-  * `url` - required `string`: WebSocket URL of the LiveKit SFU.
-  * `room_id` — required `string`: the Matrix room ID where the `m.rtc.member` event is present.  
-  * `slot_id` — required `string`: the slot ID from the `m.rtc.member` event.  
-  * `member` — required `object`: the contents of the `member` field from the `m.rtc.member` event.
+If, converserly, `server_name` points to a remote server, the server triggers a `POST` request to
+the `/get_token` federation endpoint on that server. The body of the request contains the same JSON
+object received in the client request but with `server_name` omitted. An example is given below:
 
 ```http
-POST /_matrix/federation/v1/rtc/livekit/get_token HTTP/1.1
+POST /_matrix/federation/v1/rtc/livekit/get_token
 
 {
   "url": "ws://livekit.example.com,
   "room_id": "!tDLCaLXijNtYcJZEey:example.com",
   "slot_id": "the_id",
-  "member": {
-    "id": "xyzABCDEF10123",
-    "claimed_device_id": "DEVICEID"
-  }
+  "member_id": "xyzABCDEF10123"
 }
 ```
 
-The receiving server verifies that the requesting server is joined to the room identified by `room_id`.
-If either the receiving server or the requesting server are not joined, the request MUST be rejected with
-HTTP 403 / `M_FORBIDDEN`.
+Upon receiving the request, the remote server verifies that the origin server is joined to the room
+identified by `room_id`. If the origin server is not joined or the remote server doesn't know the room,
+the request MUST be rejected with HTTP 403 / `M_FORBIDDEN`.
 
 If `url` does not match one of the receiving server's own SFUs, the request is rejected with
 HTTP 400 / `M_INVALID_PARAM`.
 
-Otherwise, if `url` matches one of the receiving server's SFUs, it obtains a token from that SFU. If successful,
-an HTTP `200 OK` response is returned with `Content-Type: application/json`. The response body
-contains:
-
-* `jwt` — `string`: the JWT token to use for authentication with the SFU.  
+Otherwise, the remote server generates a token for its SFU and returns it in the same response format
+used for the Client-Server endpoint.
 
 ```http
-HTTP/1.1 200 OK
+200 OK
 
 {
   "jwt": "thejwt"
 }
 ```
 
-The requesting server then forwards the response to its client as above.
+The origin server then forwards the token to its client as above.
 
-#### Optional Delegated MatrixRTC Membership Lifecycle Tracking using Cancellable Delayed Events
+#### Access token properties
 
-As described in [MSC4143](https://github.com/matrix-org/matrix-spec-proposals/pull/4143), clients
-SHOULD use cancellable delayed events to implement a "deadman switch" for precise MatrixRTC
-membership tracking. This involves sending a disconnect event ahead of the connect event as a
-delayed event with a reasonable timeout (e.g., 15--30 seconds), and periodically restart the
-delayed event's timer. If the timer expires due to a missing restart, the disconnect event is
-automatically emitted, marking the participant as disconnected and ensuring accurate session state
-even in cases of sudden disconnection, crashes, or network failures. However, relying on clients to
-restart the delayed event timer can be error-prone in adverse network conditions, particularly due to
-TCP connection instability.
+Different properties and grants can be applied when generating tokens using LiveKit's SDKs. Servers need
+to ensure these are set appropriately so that clients can connect correctly and securely. In particular,
+servers MUST apply the following settings:
 
-Since the LiveKit SFU, which is tied to the homeserver, already maintains authoritative knowledge of
-each participant's connection state, the management of cancellable delayed events MAY be delegated
-to the homeserver. This delegation allows the RTC transport layer to accurately manage and
-maintain MatrixRTC membership lifecycles across transient disconnects, ensuring a consistent and
-reliable view of session state.
+- `sub`: The LiveKit participant identity, derived as described above.
+- `video.room`: The LiveKit room name, derived as described above.
+- `video.roomCreate`: Always `true`. This allows clients to create the LiveKit room if it doesn't yet
+  exist on the SFU.
+- `video.roomJoin`: Always `true`. This enables clients to join the LiveKit room if it exists.
+- `video.canPublish`: `true` if the token was requested by a local user. `false` otherwise. This enforces
+  the multi-SFU configuration and ensures clients can only publish RTC data on a local SFU.
+- `video.canSubscribe`: Always `true`. This lets clients subscribe to RTC data on both local and
+  remote SFUs.
+- `video.canUpdateOwnMetadata`: Always `true`. This lets clients update their own metadata. The latter is
+  a single string that can store any data.
+
+Below is an example of a LiveKit JWT for a local user:
+
+```json5
+{
+  "exp": 1726764439,
+  "iss": "API2bYPYMoVqjcE",
+  "nbf": 1726760839,
+  "sub": "{livekit_participant_identity}",
+  "video": {
+    "room": "{livekit_room_name}",
+    "roomCreate": true,
+    "roomJoin": true,
+    "canPublish": true,
+    "canSubscribe": true,
+    "canUpdateOwnMetadata": true
+  }
+}
+```
+
+[generate]: https://docs.livekit.io/frontends/build/authentication/custom/
+
+### Optional delegated delayed leave events
+
+As described in [MSC4143], clients SHOULD use delayed events to implement a "deadman switch"
+for precise MatrixRTC membership tracking. This involves scheduling a delayed leave event and
+periodically restarting it. If the client unexpectedly loses connectivity, the server triggers
+the sending of the leave event once the delay expires. However, relying on clients to restart
+the delayed event can be error-prone in adverse network conditions, particularly due to TCP
+connection instability.
+
+The LiveKit SFU, on the other hand, maintains authoritative knowledge of each member's real-time
+connection state through its WebSocket connections. Additionally, the SFU is able to trigger
+[webhooks] upon connection state changes. These features can be used to create a delegation
+mechanism for delayed leave events on the homeserver. A client first schedules its delayed leave
+event and then delegates management of the event to its homeserver. The homeserver keeps restarting
+the event while the participant is connected to the SFU and triggers sending the event once it finds the
+participant disconnected from the SFU. This mechanism allows for higher reliability and accuracy
+when compared to client-maintained delayed leave events.
+
+The following sequence diagram illustrates the conceptual procedure which is described in more detail
+below.
 
 ```mermaid
 sequenceDiagram
@@ -321,159 +342,87 @@ sequenceDiagram
         participant L as 📡 LiveKit SFU
     end
 
-    U->>H: Send m.rtc.member event<br>to join session
-    activate H
-    H-->>U: ​
-    deactivate H
-  
     U->>H: Schedule delayed m.rtc.member event<br>to leave session
     activate H
-    H-->>U: ​
+    H-->>U: ​Confirm scheduling
     deactivate H
-  
-    Note over U,L: Obtain SFU token and URL as shown in the chart above
-  
-    U->>L: Publish media stream
   
     U->>H: /delegate_delayed_leave
     activate H
     H-->>U: Confirm delegation
-    H->>H: Reschedule delayed<br>leave event
-    H->>H: Reschedule delayed<br>leave event
-    H->>H: Reschedule delayed<br>leave event
+
+    H->>L: Wait for connection
+    L-->>H: Participant connected
+    
+    H->>H: Restart delayed<br>leave event
+    H->>H: Restart delayed<br>leave event
+
+    H->>L: Sanity check connection state
+    L-->>H: Participant still connected
+
+    H->>H: Restart delayed<br>leave event
   
     U->>U: Loses connectivity
   
-    L->>H: Trigger disconnect webhook
+    L->>H: Participant disconnected webhook
     H->>H: Trigger sending<br>leave event
     deactivate H
 ```
 
-##### Request
+Clients delegate delayed leave events to their homeserver by `POST`ing to a new authenticated endpoint
+`/_matrix/client/v1/rtc/livekit/delegate_delayed_leave`. The body of the request contains a JSON
+object with the following schema:
 
-The delegation is carried out by making a `POST` request to a new authenticated endpoint
-`/_matrix/client/v1/rtc/livekit/delegate_delayed_leave`.
+- `room_id` (required, `string`): The room ID in which the delayed `m.rtc.member` event was scheduled.
+- `slot_id` (required, `string`): The contents of the `slot_id` property of the `m.rtc.member` event.
+- `member_id` (required, `string`): The `member.id` property of the `m.rtc.member` event.
+- `delay_id` (required, `string`): The delayed event ID obtained when scheduling the `m.rtc.member` event.
 
-The `Content-Type` of the request is `application/json` and the JSON body contains the following
-fields:
-
-  * `room_id` — required `string`: the Matrix room ID where the `m.rtc.member` event is present.  
-  * `slot_id` — required `string`: the slot ID from the `m.rtc.member` event.  
-  * `member` — required `object`: the contents of the `member` field from the `m.rtc.member` event.
-  * `delay_id` — required `string`: the delayed event id of the MatrixRTC member leave event.
+Below is an example of a request:
 
 ```http
-POST /_matrix/client/v1/rtc/livekit/delegate_delayed_leave HTTP/1.1
+POST /_matrix/client/v1/rtc/livekit/delegate_delayed_leave
 
 {
   "room_id": "!tDLCaLXijNtYcJZEey:example.com",
   "slot_id": "the_id",
-  "member": {
-    "id": "xyzABCDEF10123",
-    "claimed_device_id": "DEVICEID"
-  },
+  "member_id": "id",
   "delay_id": "1234567890"
 }
 ```
 
-When delegating delayed events, Clients SHOULD NOT use values smaller than 1 hour for the `delay_timeout`
-to avoid unnecessarily frequent restarts of the delayed event. Servers MAY reject requests when the delegated
-event has a timeout below 1 hour with `M_BAD_JSON`.
+When scheduling delayed events that are meant to be delegated, clients SHOULD use a `delay_timeout` of
+at least 1 hour. This avoids unnecessarily frequent restarts of the delayed event. Servers MAY reject
+delegation requests with HTTP 400 / `M_INVALID_PARAM` when the delegated event has a lower timeout.
 
-##### Successful response
-
-The server MUST only maintain a single delegated event per `room_id`, `slot_id`,
-`member` and MXID. Requests to delegate a different `delay_id` MUST invalidate earlier
-delegations for the same parameters.
-
-If the delegation request is successful, an HTTP `200 OK` response is returned with
-`Content-Type: application/json`. The response body contains an empty JSON object
-for future extension.
+Otherwise, if the request parameters are valid, the server responds with HTTP 200 and an empty JSON
+object to confirm the delegation.
 
 ```http
-HTTP/1.1 200 OK
+200 OK
 
 {}
 ```
 
-Once the homeserver observes the client's SFU connection (either by receiving a
-[webhook](https://docs.livekit.io/intro/basics/rooms-participants-tracks/webhooks-events/)
-from the SFU or by polling the connection status from the SFU), identified by
-the LiveKit room `livekit_alias` and the LiveKit identity as specified in the next section
-(`base64(SHA256(JSON.serialize([user_id, claimed_device_id, member.id])))`), it SHOULD issue
-a restart of the delayed event.
+The server then derives the LiveKit room alias and LiveKit participant identity from the `room_id`,
+`slot_id` and `member_id` parameters as well as the request's authorization as described above. The
+server then waits for the participant to connect to the SFU. How long the server waits before giving
+up is left as an implementation detail. If it waits longer than the delegated event's `delay_timeout`,
+it MUST restart the event periodically and with sufficient headroom to the expiration time.
 
-It then starts a timer corresponding to the delayed event's `delay_timeout`. The timer is periodically
-restarted while the client remains connected with sufficient headroom (e.g., 80% of `delay_timeout`) to
-ensure the restart occurs well before `delay_timeout` expires. If the homeserver detects that the client
-has disconnected  before the timer is restarted (either by receiving a
-[webhook](https://docs.livekit.io/intro/basics/rooms-participants-tracks/webhooks-events/)
-from the SFU or by polling the connection status from the SFU), the server MUST trigger sending of the
-delegated delayed leave event. This ensures that the MatrixRTC membership state remains accurate and
-consistent, even in the presence of network interruptions or client crashes.
+Once the server observes the LiveKit participant's connection on the SFU, it MUST begin (or continue)
+restarting the delayed event periodically – again, with sufficient headroom. The server then continues
+to monitor the participants connection state. Once the server detects that the participant has
+disconnected, it MUST trigger the sending of the delegated leave event.
 
-### Pseudonymous LiveKit Participant Identity
+For maximum reliability, it is RECOMMENDED to use a combination of polling and listening to SFU [webhooks]
+to monitor for SFU (dis)connections.
 
-To protect user privacy, a pseudonymous LiveKit participant identity is used, so the Matrix user ID
-is not exposed to the LiveKit SFU backend. 
+The server MUST only maintain a single delegated event per `room_id`, `slot_id`, `member` and MXID.
+Requests to delegate a different `delay_id` MUST invalidate earlier delegations for the same parameters.
 
-This pseudonymous identity is equal to the unpadded base64 encoding of the SHA-256 hash of the JSON
-serialization of an array containing the Matrix `user_id`, the `claimed_device_id`, and the
-`member.id` field, i.e. `base64(SHA256(JSON.serialize([user_id, claimed_device_id, member.id])))`,
-using canonical JSON serialization as defined [above](#canonical-json-serialization).
+[webhooks]: https://docs.livekit.io/intro/basics/rooms-participants-tracks/webhooks-events/
 
-### LiveKit JWT Permission Grants
-
-As well as being a valid [LiveKit JWT](https://docs.livekit.io/home/get-started/authentication/) the
-following constraints are applied:
-
-- `sub`: This is the pseudonymous LiveKit participant identity as described above.  
-- `video`.`room`: `livekit_alias` as defined above
-
-In a Multi-SFU setup, where participants may publish to one SFU and consume from others, the JWT
-SHOULD encode access permissions according to the user’s homeserver and their relationship to
-the MatrixRTC backend.
-
-The permissions SHOULD be just sufficient for the MatrixRTC application to operate in a LiveKit
-room. Permissions SHOULD be scoped according to the user’s role (publishing or subscribing) and
-their relationship to the MatrixRTC backend. All users MUST be able to join the LiveKit room for
-which they are authorised. The `roomCreate` permission SHOULD only be granted to users who are
-related to the MatrixRTC backend and are allowed to publish media.
-
-Example for publishing RTC data using a full-access grant:
-```json5
-{
-  "exp": 1726764439,
-  "iss": "API2bYPYMoVqjcE",
-  "nbf": 1726760839,
-  "sub": "xyzABCDEF0123",    // member.id
-  "video": {
-    "canPublish": true,
-    "canSubscribe": true,
-    "room": "base64(SHA256(JSON.serialize([\"!gIpOlaUSrXBmgtveWK:call.ems.host\", \"m.call#ROOM\"])))",
-    "roomCreate": true,
-    "roomJoin": true
-  }
-}
-```
-
-Example for subscribing RTC data with restricted-access grant
-
-```json5
-{
-  "exp": 1726764439,
-  "iss": "API2bYPYMoVqjcE",
-  "nbf": 1726760839,
-  "sub": "xyzABCDEF0123",    // member.id
-  "video": {
-    "canPublish": false,
-    "canSubscribe": true,
-    "room": "base64(SHA256(JSON.serialize([\"!gIpOlaUSrXBmgtveWK:call.ems.host\", \"m.call#ROOM\"])))",
-    "roomCreate": false,
-    "roomJoin": true
-  }
-}
-```
 
 ### End-to-end encryption
 
@@ -647,7 +596,7 @@ leakage about users, rooms, or federation trust relationships.
 
 Assuming that this is accepted at the same time as
 [MSC4143](https://github.com/matrix-org/matrix-spec-proposals/pull/4143) no unstable prefix is
-required for the `livekit` type indentifier as it will only be accessed via some other unstable prefix.
+required for the `livekit` type identifier as it will only be accessed via some other unstable prefix.
 
 Apart from this, the endpoints introduced should be referred to as follows:
 

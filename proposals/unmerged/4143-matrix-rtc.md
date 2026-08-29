@@ -155,8 +155,9 @@ chosen transports.
 `m.rtc.member` events MUST be sent as sticky events as per [MSC4354: Sticky Events][MSC4354]. This
 results in the same delivery guarantee that state events have which is highly desirable for RTC
 experiences. At the same time, it avoids the drawbacks associated with state events. Further details
-on this can be found in [MSC4354]. Clients MUST also implement the ephemeral map algorithm as defined
-in the addendum of [MSC4354] to construct a state-like store of membership events.
+on this can be found in [MSC4354]. The RECOMMENDED sticky duration is 1 hour. Clients MUST also
+implement the ephemeral map algorithm as defined in the addendum of [MSC4354] to construct a
+state-like store of membership events.
 
 [MSC4354]: https://github.com/matrix-org/matrix-spec-proposals/pull/4354
 
@@ -166,7 +167,7 @@ Within `m.rtc.member` events, `content` contains the following properties:
 - `member` (required, object): Information to identify the member.
   - `id` (required, string): Identifier to distinguish multiple members, even for the same user
     and device. MUST be unique for each join of the same user. This means that clients need to use a different
-    identifier when leaving and then rejoining a slot.
+    identifier when leaving and then rejoining a slot, and that the identifier must be unique across different devices.
   - `membership` (required, string): The intended membership status. One of `join`, `leave`.
 - `application` (object): Describes the application that is running in the slot. REQUIRED if `membership = join`.
   - `type` (required, string): The application's globally unique identifier; same as in `m.rtc.slot`.
@@ -187,7 +188,11 @@ Within `m.rtc.member` events, `content` contains the following properties:
       are defined by the transport's specification. This could, for instance, include WebSocket URLs.
       The transport's specification would be as per its [MSC4519] registration.
   - `can_subscribe` (array): An array of transport types that the member is able to subscribe to.
-    Other members can use this as cue for deciding which transports to use to accommodate this member.
+    Since publishing transorts will usually incur a certain performance cost on the client, clients
+    SHOULD strive to only publish transports that are actually required, using `can_subscribe` as cue.
+    Given that the only currently known transport is [MSC4195], the question of choosing transports
+    is academic for now. A future MSC that introdcues the second transport type will have to cover
+    any required negotiation or consensus mechanism to agree on transports.
 - `leave_reason` (object): If `membership = leave`, optionally provides context on why the client left.
   This SHOULD only be used by clients if the user has actually attempted to join the slot before.
   This ensures that the `leave_reason` reflects a real join lifecycle rather
@@ -252,7 +257,8 @@ joined if all of the following conditions apply:
   This is to ensure that the membership view is as consistent as possible across all members.
 
 If these conditions are not fulfilled, clients MUST treat the member as left and refrain
-from connecting to their transports.
+from connecting to their transports. The conditions above also imply that redacted `m.rtc.member`
+events are treated as left which enables moderators to kick participants.
 
 #### Leaving a slot
 
@@ -363,7 +369,9 @@ members to agree on key material, at a minimum. To support this, MatrixRTC provi
 for establishing shared key material between members. Transports can then define how to actually use
 this key material, which may involve deriving further secrets from it. The concrete mechanism for
 agreeing on the shared key material within a slot is prescribed through the `encryption` object in
-`m.rtc.slot` events.
+`m.rtc.slot` events. This approach avoids each transport having to design a new key agreement and
+distribution procedure. The small downside is that the generic shared key material needs to have enough
+entropy to be suitable for any transport.
 
 [existing mechanisms]: https://spec.matrix.org/v1.19/client-server-api/#end-to-end-encryption
 
@@ -395,7 +403,7 @@ distributed among session members. Other devices, even if in the room, never get
 
 #### Distributing keys
 
-When joining a slot, clients generate a 32-byte key by using a cryptographically secure pseudorandom
+When joining a slot, clients generate a 32-byte key by using a cryptographically secure random
 number generator. They then share the key with other clients joined to the slot by sending encrypted
 to-device messages of the type `m.rtc.encryption_key`.
 
@@ -457,6 +465,9 @@ the members have changed. This limits the impact of compromised keys.
 In order to account for the delivery latency of to-device messages, clients SHOULD add a short
 delay after sending a new key before starting to use it. Otherwise, receiving members may
 be unable to decrypt the sender's streams temporarily. The RECOMMENDED delay duration is 5 seconds.
+Similarly, clients SHOULD store received keys even if they cannot identify the associated
+`m.rtc.member` event in order to account for the to-device message arriving before the membership
+event.
 
 Furthermore, resending to-device messages to all members can be expensive when multiple
 members join and/or leave in short succession. To mitigate this, clients MAY apply
