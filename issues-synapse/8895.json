@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/8895",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/8895/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/8895/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/8895/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/8895",
+  "id": 759431548,
+  "node_id": "MDU6SXNzdWU3NTk0MzE1NDg=",
+  "number": 8895,
+  "title": "/createRoom creates an empty room when there is an error sending events",
+  "user": {
+    "login": "t3chguy",
+    "id": 2403652,
+    "node_id": "MDQ6VXNlcjI0MDM2NTI=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/2403652?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/t3chguy",
+    "html_url": "https://github.com/t3chguy",
+    "followers_url": "https://api.github.com/users/t3chguy/followers",
+    "following_url": "https://api.github.com/users/t3chguy/following{/other_user}",
+    "gists_url": "https://api.github.com/users/t3chguy/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/t3chguy/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/t3chguy/subscriptions",
+    "organizations_url": "https://api.github.com/users/t3chguy/orgs",
+    "repos_url": "https://api.github.com/users/t3chguy/repos",
+    "events_url": "https://api.github.com/users/t3chguy/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/t3chguy/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 3232177309,
+      "node_id": "MDU6TGFiZWwzMjMyMTc3MzA5",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/P4",
+      "name": "P4",
+      "color": "d1e5f0",
+      "default": false,
+      "description": "(OBSOLETE: use S- labels.) Okay backlog: will not schedule, will accept patches"
+    },
+    {
+      "id": 4137756475,
+      "node_id": "LA_kwDOAVyVwM72oSc7",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Create-Room",
+      "name": "A-Create-Room",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2020-12-08T13:07:52Z",
+  "updated_at": "2022-08-07T07:30:39Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "If somehow your createRoom request is too large, like if for example you send a base64 encoded avatar instead of an mxc URL (wrongly) then the request fails with a 413 but a new Empty room is created and sent to the user with none of the parameters the user asked for.\r\n\r\nExample request payload:\r\n\r\n```json\r\n{\r\n  \"visibility\": \"public\",\r\n  \"name\": \"Test Space 17\",\r\n  \"creation_content\": {\r\n    \"type\": \"m.space\"\r\n  },\r\n  \"initial_state\": [\r\n    {\r\n      \"type\": \"m.room.avatar\",\r\n      \"content\": {\r\n        \"avatar\": \"data:image/png;base64,iVBOR..............AAAAASUVORK5CYII=\"\r\n      }\r\n    },\r\n    {\r\n      \"type\": \"m.room.guest_access\",\r\n      \"state_key\": \"\",\r\n      \"content\": {\r\n        \"guest_access\": \"can_join\"\r\n      }\r\n    }\r\n  ],\r\n  \"power_level_content_override\": {\r\n    \"events_default\": 100\r\n  },\r\n  \"preset\": \"private_chat\"\r\n}\r\n```\r\n\r\n(avatar truncated Github would not let me post)\r\n\r\n![image](https://user-images.githubusercontent.com/2403652/101487372-ffb53080-3955-11eb-889b-5e1868dd4b46.png)\r\n\r\nExpectation: Empty room is not created.\r\n\r\nPossibly related to https://github.com/matrix-org/synapse/issues/8625 but am operating in Monolith mode.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/8895/reactions",
+    "total_count": 2,
+    "+1": 2,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/8895/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

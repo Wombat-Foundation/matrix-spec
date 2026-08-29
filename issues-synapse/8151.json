@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/8151",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/8151/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/8151/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/8151/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/8151",
+  "id": 684672039,
+  "node_id": "MDU6SXNzdWU2ODQ2NzIwMzk=",
+  "number": 8151,
+  "title": "Room and group names should be limited to a sensible length",
+  "user": {
+    "login": "anoadragon453",
+    "id": 1342360,
+    "node_id": "MDQ6VXNlcjEzNDIzNjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1342360?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/anoadragon453",
+    "html_url": "https://github.com/anoadragon453",
+    "followers_url": "https://api.github.com/users/anoadragon453/followers",
+    "following_url": "https://api.github.com/users/anoadragon453/following{/other_user}",
+    "gists_url": "https://api.github.com/users/anoadragon453/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/anoadragon453/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/anoadragon453/subscriptions",
+    "organizations_url": "https://api.github.com/users/anoadragon453/orgs",
+    "repos_url": "https://api.github.com/users/anoadragon453/repos",
+    "events_url": "https://api.github.com/users/anoadragon453/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/anoadragon453/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086032,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMzI=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Help-Wanted",
+      "name": "Z-Help-Wanted",
+      "color": "006B0F",
+      "default": false,
+      "description": "We know exactly how to fix this issue, and would be grateful for any contribution"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2020-08-24T13:29:39Z",
+  "updated_at": "2023-12-04T10:49:42Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nYou can set room names and topics to absurdly long strings, which don't fit in a matrix state event. As a result, when you create a room in Element doing so, you get a room with no name/topic as the state event failed to send.\r\n\r\nSynapse should fail the `/createRoom` call instead immediately instead of creating a room with no name/topic.\r\n\r\nThere's a similar issue with groups, though while the group is created successfully, being able to create groups with unlimited-length names is not ideal.\r\n\r\nWe already [limit the size of usernames](https://github.com/matrix-org/synapse/blob/8c7d0f163d8247297dbcfd5f257b652ebe417fff/synapse/rest/admin/users.py#L376) to 512 characters, returning a 400 `M_UNKNOWN`. We can do this again for now, but it'd be nice to get an appropriate error code to return so that clients can show a helpful reason as to why creating the room failed. Related spec issue: https://github.com/matrix-org/matrix-doc/issues/1646 \r\n\r\n### Steps to reproduce\r\n\r\n- Create a room with a reaaaaaaally long name (>65K chars)\r\n- The `/createRoom` call fails with a 500\r\n- Notice that a room is created anyways\r\n\r\n### Version information\r\n\r\nv1.19.0",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/8151/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/8151/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

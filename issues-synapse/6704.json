@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/6704",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/6704/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/6704/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/6704/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/6704",
+  "id": 549626499,
+  "node_id": "MDU6SXNzdWU1NDk2MjY0OTk=",
+  "number": 6704,
+  "title": "UIA stages can be completed out-of-order",
+  "user": {
+    "login": "Sorunome",
+    "id": 2433620,
+    "node_id": "MDQ6VXNlcjI0MzM2MjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/2433620?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Sorunome",
+    "html_url": "https://github.com/Sorunome",
+    "followers_url": "https://api.github.com/users/Sorunome/followers",
+    "following_url": "https://api.github.com/users/Sorunome/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Sorunome/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Sorunome/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Sorunome/subscriptions",
+    "organizations_url": "https://api.github.com/users/Sorunome/orgs",
+    "repos_url": "https://api.github.com/users/Sorunome/repos",
+    "events_url": "https://api.github.com/users/Sorunome/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Sorunome/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477043173,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p2",
+      "name": "z-p2",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 828678284,
+      "node_id": "MDU6TGFiZWw4Mjg2NzgyODQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spec-Compliance",
+      "name": "A-Spec-Compliance",
+      "color": "5319E7",
+      "default": false,
+      "description": "places where synapse does not conform to the spec"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2020-01-14T15:05:21Z",
+  "updated_at": "2022-08-10T16:34:25Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\nUser-Interactive auth stages can be completed out-of-order, which is not spec-conform.\r\n\r\n### Steps to reproduce\r\n- POST to `/register` to get a session id\r\n- POST to `/register`, completing the `m.login.dummy` auth, even though taht is out of order\r\n\r\n```\r\nsorunome@sorunome-desktop ~ $ curl -X POST -H \"Content-Type: application/json\" -d '{}' https://matrix.org/_matrix/client/r0/register\r\n{\r\n    \"flows\": [\r\n        {\r\n            \"stages\": [\r\n                \"m.login.recaptcha\",\r\n                \"m.login.terms\",\r\n                \"m.login.dummy\"\r\n            ]\r\n        },\r\n        {\r\n            \"stages\": [\r\n                \"m.login.recaptcha\",\r\n                \"m.login.terms\",\r\n                \"m.login.email.identity\"\r\n            ]\r\n        }\r\n    ],\r\n    \"params\": {\r\n        \"m.login.recaptcha\": {\r\n            \"public_key\": \"6LcgI54UAAAAABGdGmruw6DdOocFpYVdjYBRe4zb\"\r\n        },\r\n        \"m.login.terms\": {\r\n            \"policies\": {\r\n                \"privacy_policy\": {\r\n                    \"en\": {\r\n                        \"name\": \"Terms and Conditions\",\r\n                        \"url\": \"https://matrix-client.matrix.org/_matrix/consent?v=1.0\"\r\n                    },\r\n                    \"version\": \"1.0\"\r\n                }\r\n            }\r\n        }\r\n    },\r\n    \"session\": \"EhIvEQDoTuGsTKhslrPQJMpE\"\r\n}\r\nsorunome@sorunome-desktop ~ $ curl -X POST -H \"Content-Type: application/json\" -d '{\"auth\": {\"type\": \"m.login.dummy\", \"session\": \"EhIvEQDoTuGsTKhslrPQJMpE\"}}' https://matrix.org/_matrix/client/r0/register\r\n{\r\n    \"completed\": [\r\n        \"m.login.dummy\"\r\n    ],\r\n    \"flows\": [\r\n        {\r\n            \"stages\": [\r\n                \"m.login.recaptcha\",\r\n                \"m.login.terms\",\r\n                \"m.login.dummy\"\r\n            ]\r\n        },\r\n        {\r\n            \"stages\": [\r\n                \"m.login.recaptcha\",\r\n                \"m.login.terms\",\r\n                \"m.login.email.identity\"\r\n            ]\r\n        }\r\n    ],\r\n    \"params\": {\r\n        \"m.login.recaptcha\": {\r\n            \"public_key\": \"6LcgI54UAAAAABGdGmruw6DdOocFpYVdjYBRe4zb\"\r\n        },\r\n        \"m.login.terms\": {\r\n            \"policies\": {\r\n                \"privacy_policy\": {\r\n                    \"en\": {\r\n                        \"name\": \"Terms and Conditions\",\r\n                        \"url\": \"https://matrix-client.matrix.org/_matrix/consent?v=1.0\"\r\n                    },\r\n                    \"version\": \"1.0\"\r\n                }\r\n            }\r\n        }\r\n    },\r\n    \"session\": \"EhIvEQDoTuGsTKhslrPQJMpE\"\r\n}\r\n```\r\n\r\n### Version information\r\n\r\ncurrent live matrix.org instance\r\n```\r\nsorunome@sorunome-desktop ~ $ curl https://matrix.org/_matrix/federation/v1/version\r\n{\r\n    \"server\": {\r\n        \"name\": \"Synapse\",\r\n        \"version\": \"1.8.0 (b=matrix-org-hotfixes,a099ab7d3)\"\r\n    }\r\n}\r\n```\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/6704/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/6704/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

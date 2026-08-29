@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/6894",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/6894/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/6894/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/6894/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/6894",
+  "id": 563570601,
+  "node_id": "MDU6SXNzdWU1NjM1NzA2MDE=",
+  "number": 6894,
+  "title": "Text for 405 errors is a lie",
+  "user": {
+    "login": "richvdh",
+    "id": 1389908,
+    "node_id": "MDQ6VXNlcjEzODk5MDg=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1389908?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/richvdh",
+    "html_url": "https://github.com/richvdh",
+    "followers_url": "https://api.github.com/users/richvdh/followers",
+    "following_url": "https://api.github.com/users/richvdh/following{/other_user}",
+    "gists_url": "https://api.github.com/users/richvdh/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/richvdh/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/richvdh/subscriptions",
+    "organizations_url": "https://api.github.com/users/richvdh/orgs",
+    "repos_url": "https://api.github.com/users/richvdh/repos",
+    "events_url": "https://api.github.com/users/richvdh/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/richvdh/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086029,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMjk=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-bug",
+      "name": "z-bug",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 477050471,
+      "node_id": "MDU6TGFiZWw0NzcwNTA0NzE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p3",
+      "name": "z-p3",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2020-02-11T22:59:16Z",
+  "updated_at": "2023-09-18T07:36:59Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "When you send a GET request to an endpoint that only supports POST, or vice versa, synapse sends back an error that looks like:\r\n\r\n> # Method Not Allowed\r\n> Your browser approached me (at /_matrix/saml2/authn_response) with the method \"GET\". I only allow the method HEAD here.\r\n\r\nWe hardly support HEAD anywhere, and it doesn't say anything about POST.\r\n\r\n(This actually only happens on a subset of endpoints, such as the media repo ones. For others we give back a 400, which I think is fine).\r\n\r\nRelated: https://github.com/matrix-org/synapse/issues/6746\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/6894/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/6894/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

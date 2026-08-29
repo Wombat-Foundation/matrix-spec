@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/5455",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/5455/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/5455/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/5455/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/5455",
+  "id": 455936586,
+  "node_id": "MDU6SXNzdWU0NTU5MzY1ODY=",
+  "number": 5455,
+  "title": "[Feature] Support i2p",
+  "user": {
+    "login": "ghbjklhv",
+    "id": 50426427,
+    "node_id": "MDQ6VXNlcjUwNDI2NDI3",
+    "avatar_url": "https://avatars.githubusercontent.com/u/50426427?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/ghbjklhv",
+    "html_url": "https://github.com/ghbjklhv",
+    "followers_url": "https://api.github.com/users/ghbjklhv/followers",
+    "following_url": "https://api.github.com/users/ghbjklhv/following{/other_user}",
+    "gists_url": "https://api.github.com/users/ghbjklhv/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/ghbjklhv/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/ghbjklhv/subscriptions",
+    "organizations_url": "https://api.github.com/users/ghbjklhv/orgs",
+    "repos_url": "https://api.github.com/users/ghbjklhv/repos",
+    "events_url": "https://api.github.com/users/ghbjklhv/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/ghbjklhv/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477043174,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-feature",
+      "name": "z-feature",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 477050471,
+      "node_id": "MDU6TGFiZWw0NzcwNTA0NzE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p3",
+      "name": "z-p3",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2019-06-13T20:25:12Z",
+  "updated_at": "2023-11-23T16:39:52Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Objective**: Implement and Support i2p in Matrix\r\n**Description**: Explore the possibility of using Matrix over i2p.\r\nWould non-i2p users be able to still communicate? Would you need to craft a bridge?\r\n**Why?**: Many reasons, mainly for privacy and security but also to support decentralized communications. \r\n\r\n________________________________\r\n\r\nWant to support this issue? Post a [bounty on it](https://www.bountysource.com/issues/75484734-feature-support-i2p)! We accept bounties via [BountySource](https://www.wikipedia.org/wiki/Bountysource).\r\n\r\n[![Bountysource](https://api.bountysource.com/badge/issue?issue_id=75484734)](https://www.bountysource.com/issues/75484734-feature-support-i2p)",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/5455/reactions",
+    "total_count": 7,
+    "+1": 7,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/5455/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

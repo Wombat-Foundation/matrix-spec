@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15750",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15750/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15750/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15750/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15750",
+  "id": 1749738090,
+  "node_id": "I_kwDOAVyVwM5oSuJq",
+  "number": 15750,
+  "title": "Complement `TestRestrictedRoomsRemoteJoinLocalUserInMSC3787Room` flake",
+  "user": {
+    "login": "squahtx",
+    "id": 8349537,
+    "node_id": "MDQ6VXNlcjgzNDk1Mzc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8349537?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/squahtx",
+    "html_url": "https://github.com/squahtx",
+    "followers_url": "https://api.github.com/users/squahtx/followers",
+    "following_url": "https://api.github.com/users/squahtx/following{/other_user}",
+    "gists_url": "https://api.github.com/users/squahtx/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/squahtx/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/squahtx/subscriptions",
+    "organizations_url": "https://api.github.com/users/squahtx/orgs",
+    "repos_url": "https://api.github.com/users/squahtx/repos",
+    "events_url": "https://api.github.com/users/squahtx/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/squahtx/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406413,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDEz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Task",
+      "name": "T-Task",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Refactoring, removal, replacement, enabling or disabling functionality, other engineering tasks."
+    },
+    {
+      "id": 4302892012,
+      "node_id": "LA_kwDOAVyVwM8AAAABAHjr7A",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Flake",
+      "name": "Z-Flake",
+      "color": "aa5522",
+      "default": false,
+      "description": "Tests that give intermittent failures"
+    },
+    {
+      "id": 4316622437,
+      "node_id": "LA_kwDOAVyVwM8AAAABAUpuZQ",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Dev-Wishlist",
+      "name": "Z-Dev-Wishlist",
+      "color": "FBCA04",
+      "default": false,
+      "description": "Makes developers' lives better, but doesn't have direct user impact"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 4459600960,
+      "node_id": "LA_kwDOAVyVwM8AAAABCdAcQA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Testing",
+      "name": "A-Testing",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues related to testing in complement, synapse, etc"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2023-06-09T11:44:47Z",
+  "updated_at": "2023-06-09T11:44:47Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "https://github.com/matrix-org/synapse/actions/runs/5219185927/jobs/9420734656\r\n\r\n```\r\n  2023/06/09 07:33:42 Sharing [SERVER_NAME=hs1 SYNAPSE_WORKER_TYPES= SYNAPSE_LOG_TESTING=1 SYNAPSE_COMPLEMENT_USE_WORKERS=true SYNAPSE_COMPLEMENT_DATABASE=postgres] host environment variables with container\r\n  2023/06/09 07:33:42 Sharing [SERVER_NAME=hs2 SYNAPSE_WORKER_TYPES= SYNAPSE_LOG_TESTING=1 SYNAPSE_COMPLEMENT_USE_WORKERS=true SYNAPSE_COMPLEMENT_DATABASE=postgres] host environment variables with container\r\n      restricted_rooms_test.go:230: Deploy times: 27.295222ms blueprints, 18.102995982s containers\r\n      client.go:740: [CSAPI] POST hs2/_matrix/client/v3/createRoom => 200 OK (982.812319ms)\r\n      client.go:740: [CSAPI] POST hs2/_matrix/client/v3/createRoom => 200 OK (901.180753ms)\r\n      client.go:740: [CSAPI] POST hs2/_matrix/client/v3/rooms/!RNbMtrFvXVNGXdnxkL:hs2/invite => 200 OK (1.937303493s)\r\n      client.go:740: [CSAPI] POST hs1/_matrix/client/v3/join/!RNbMtrFvXVNGXdnxkL:hs2 => 200 OK (1.902639747s)\r\n      client.go:740: [CSAPI] POST hs1/_matrix/client/v3/rooms/!RNbMtrFvXVNGXdnxkL:hs2/invite => 403 Forbidden (156.64856ms)\r\n      client.go:740: [CSAPI] POST hs1/_matrix/client/v3/join/!RNbMtrFvXVNGXdnxkL:hs2 => 502 Bad Gateway (79.363191ms)\r\n      client.go:740: [CSAPI] POST hs1/_matrix/client/v3/join/!PGWzBHOhHxrJlRQlPa:hs2 => 200 OK (695.280724ms)\r\n      client.go:740: [CSAPI] POST hs1/_matrix/client/v3/join/!RNbMtrFvXVNGXdnxkL:hs2 => 502 Bad Gateway (44.26954ms)\r\n      restricted_rooms_test.go:292: CSAPI.MustDoFunc POST http://127.0.0.1:33430/_matrix/client/v3/join/%21RNbMtrFvXVNGXdnxkL:hs2?server_name=hs1 returned non-2xx code: 502 Bad Gateway - body: {\"errcode\":\"M_UNKNOWN\",\"error\":\"Failed to make_join via any server\"}\r\n```",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15750/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15750/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

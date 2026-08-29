@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13507",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13507/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13507/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13507/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13507",
+  "id": 1336234931,
+  "node_id": "I_kwDOAVyVwM5PpVOz",
+  "number": 13507,
+  "title": "Status messages aren't included in initial syncs if the sender is offline",
+  "user": {
+    "login": "babolivier",
+    "id": 5547783,
+    "node_id": "MDQ6VXNlcjU1NDc3ODM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/5547783?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/babolivier",
+    "html_url": "https://github.com/babolivier",
+    "followers_url": "https://api.github.com/users/babolivier/followers",
+    "following_url": "https://api.github.com/users/babolivier/following{/other_user}",
+    "gists_url": "https://api.github.com/users/babolivier/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/babolivier/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/babolivier/subscriptions",
+    "organizations_url": "https://api.github.com/users/babolivier/orgs",
+    "repos_url": "https://api.github.com/users/babolivier/repos",
+    "events_url": "https://api.github.com/users/babolivier/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/babolivier/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2038475067,
+      "node_id": "MDU6TGFiZWwyMDM4NDc1MDY3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Sync",
+      "name": "A-Sync",
+      "color": "5319E7",
+      "default": false,
+      "description": "defects related to /sync"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2022-08-11T16:55:33Z",
+  "updated_at": "2022-08-24T15:53:40Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "This means if a user sets their status message while another user is logged out of all of their devices, that other user won't get the (new) status message. This is causing issues with deployments relying on status messages being distributed reliably.\r\n\r\nA fix could be:\r\n\r\n```diff\r\ndiff --git a/synapse/handlers/presence.py b/synapse/handlers/presence.py\r\nindex 741504ba9f..dcca322b56 100644\r\n--- a/synapse/handlers/presence.py\r\n+++ b/synapse/handlers/presence.py\r\n@@ -1814,7 +1814,10 @@ class PresenceEventSource(EventSource[int, UserPresenceState]):\r\n         return [\r\n             update\r\n             for update in presence_updates\r\n-            if update.state != PresenceState.OFFLINE\r\n+            if (\r\n+                update.state != PresenceState.OFFLINE\r\n+                or update.status_msg\r\n+            )\r\n         ]\r\n \r\n     def get_current_key(self) -> int:\r\n```\r\n\r\nThough I'm not fully sure of the performance implications and what it would mean in terms of the increase in the size of initial sync responses.\r\n\r\nWe could technically add a configuration setting to switch to this behaviour but it doesn't sound like the right solution to me.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13507/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13507/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

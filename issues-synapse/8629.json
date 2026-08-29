@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/8629",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/8629/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/8629/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/8629/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/8629",
+  "id": 727367562,
+  "node_id": "MDU6SXNzdWU3MjczNjc1NjI=",
+  "number": 8629,
+  "title": "state resets still happen in v2 rooms",
+  "user": {
+    "login": "richvdh",
+    "id": 1389908,
+    "node_id": "MDQ6VXNlcjEzODk5MDg=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1389908?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/richvdh",
+    "html_url": "https://github.com/richvdh",
+    "followers_url": "https://api.github.com/users/richvdh/followers",
+    "following_url": "https://api.github.com/users/richvdh/following{/other_user}",
+    "gists_url": "https://api.github.com/users/richvdh/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/richvdh/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/richvdh/subscriptions",
+    "organizations_url": "https://api.github.com/users/richvdh/orgs",
+    "repos_url": "https://api.github.com/users/richvdh/repos",
+    "events_url": "https://api.github.com/users/richvdh/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/richvdh/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    },
+    {
+      "id": 5432722667,
+      "node_id": "LA_kwDOAVyVwM8AAAABQ9DE6w",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-State-Resolution",
+      "name": "A-State-Resolution",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 23,
+  "created_at": "2020-10-22T13:00:20Z",
+  "updated_at": "2023-11-14T02:51:07Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "I just upgraded `#synapse:matrix.org` because I got fed up of losing my ops bit. It was a v4 room.\r\n\r\nEDIT 2022-08-03 by @DMRobertson: if you suspect you have seen a state reset, please provide:\r\n\r\n- the `room_id` of the room with the reset\r\n- the `type` and ` state_key` that suffered a reset\r\n- the event_id of the piece of state after the reset\r\n- ideally, the event_id of the piece of state _before_ the reset\r\n  - failing that, a rough time range before and after the reset occurred (including timezone information)\r\n\r\nTo confirm if this really is a server-side state reset (rather than e.g. matrix-org/matrix-spec#1209), server administrators can run the following queries.\r\n\r\n```sql\r\nSELECT *\r\nFROM current_state_delta_stream \r\nWHERE\r\n\troom_id ='<room id>'\r\n\tand type='<type of event>'' \r\n    and state_key='<state key>'\r\nORDER BY stream_id asc;\r\n\r\nSELECT *\r\nFROM current_state_events\r\nWHERE\r\n\troom_id ='<room id>'\r\n\tand type='<type of event>'' \r\n    and state_key='<state key>';\r\n```\r\n\r\nThe last row in the `event_id` columns from these two queries should match. It represents the event which currently describes the relevant piece of state from your server's point of view.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/8629/reactions",
+    "total_count": 8,
+    "+1": 5,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 3
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/8629/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

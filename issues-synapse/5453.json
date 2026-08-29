@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/5453",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/5453/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/5453/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/5453/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/5453",
+  "id": 455857935,
+  "node_id": "MDU6SXNzdWU0NTU4NTc5MzU=",
+  "number": 5453,
+  "title": "old events retrieved via get_missing_events can be incorrectly rejected and break room state",
+  "user": {
+    "login": "richvdh",
+    "id": 1389908,
+    "node_id": "MDQ6VXNlcjEzODk5MDg=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1389908?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/richvdh",
+    "html_url": "https://github.com/richvdh",
+    "followers_url": "https://api.github.com/users/richvdh/followers",
+    "following_url": "https://api.github.com/users/richvdh/following{/other_user}",
+    "gists_url": "https://api.github.com/users/richvdh/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/richvdh/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/richvdh/subscriptions",
+    "organizations_url": "https://api.github.com/users/richvdh/orgs",
+    "repos_url": "https://api.github.com/users/richvdh/repos",
+    "events_url": "https://api.github.com/users/richvdh/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/richvdh/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2019-06-13T17:15:19Z",
+  "updated_at": "2023-05-23T15:15:41Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "matrix.org received an event `$b3jshYEAbEzWDq59fBAH5uAgahkixRzH7siauucqDYU` (depth 64), one of whose `prev_event`s `$B85oucGHA3dkCUZRFM8Oph3kerpMX_EBnVjqcb2KH24` (depth 63) was unknown (because it had been created on a third server which didn't yet know about matrix.org's join, incidentally, though I don't think that is relevant).\r\n\r\nmatrix.org therefore called `get_missing_events` to fetch missing events. The implementation of `get_missing_events` is simply to do a breadth-first walk of the `prev_events` chain until the limit (of 10 events) is reached. (The algorithm stops if it encounters an event mentioned in `earliest_events` in the request, but that's not relevant here.) In this case, we encountered an event `$hXn_OY2NWvBllJh8J1YM1bG6m3JPkEy9SHqPEDa9v4s` (depth 61) which had a prev_event link to `$sjhYxI2p-zzfjYcG-RpYZdSxxnng78X-MSaoVBacB5E` (depth 42), so the results included three events from that area of the dag, the earliest of which was `$uNwva8-n5XSYELKA2B4EptNuBakditcVgg5u1q2pcBQ` (depth 40).\r\n\r\nNow, I *think* that at this point, the room's min_depth was greater than 42, since this was the first PDU received after matrix.org's join (at depth 56). So the received events were flagged as outliers at https://github.com/matrix-org/synapse/blob/v1.0.0/synapse/handlers/federation.py#L239. \r\n\r\nWe then call `_process_received_pdu` (normally with `state=None`), which in turn [calls](https://github.com/matrix-org/synapse/blob/v1.0.0/synapse/handlers/federation.py#L586) [`_handle_new_event`](https://github.com/matrix-org/synapse/blob/v1.0.0/synapse/handlers/federation.py#L1622) (NB with no `auth_events` param), which then calls [`prep_event`](https://github.com/matrix-org/synapse/blob/v1.0.0/synapse/handlers/federation.py#L1798).\r\n\r\n`_prep_event` first attempts to calculate the `auth_events` (since none were passed in), however it does this based on the state at the event and `compute_event_context` assumes (probably correctly) that we do not have the state for an outlier. We therefore end up with an empty `auth_events`, so auth fails immediately because that's nonsense.\r\n\r\nSo I think the essence of the problem here is that it's an outlier which arrives via a different code path to normal, and it just generally not being handled correctly. But oh boy, this code is an impenetrable, poorly-commented mess.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/5453/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/5453/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

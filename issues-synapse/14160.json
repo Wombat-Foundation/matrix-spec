@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14160",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14160/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14160/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14160/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14160",
+  "id": 1406328373,
+  "node_id": "I_kwDOAVyVwM5T0t41",
+  "number": 14160,
+  "title": "We should stop putting `invite_room_state` and `knock_room_state` into the `unsigned` field of events",
+  "user": {
+    "login": "anoadragon453",
+    "id": 1342360,
+    "node_id": "MDQ6VXNlcjEzNDIzNjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1342360?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/anoadragon453",
+    "html_url": "https://github.com/anoadragon453",
+    "followers_url": "https://api.github.com/users/anoadragon453/followers",
+    "following_url": "https://api.github.com/users/anoadragon453/following{/other_user}",
+    "gists_url": "https://api.github.com/users/anoadragon453/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/anoadragon453/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/anoadragon453/subscriptions",
+    "organizations_url": "https://api.github.com/users/anoadragon453/orgs",
+    "repos_url": "https://api.github.com/users/anoadragon453/repos",
+    "events_url": "https://api.github.com/users/anoadragon453/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/anoadragon453/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137743886,
+      "node_id": "LA_kwDOAVyVwM72oPYO",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Invite",
+      "name": "A-Invite",
+      "color": "5319E7",
+      "default": false,
+      "description": "Inviting users to rooms and accepting invites"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2022-10-12T14:35:34Z",
+  "updated_at": "2022-10-12T14:36:41Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "`invite_room_state` and `knock_room_state` are both an array of events that contain some room prejoin state - [stripped state events](https://spec.matrix.org/v1.4/client-server-api/#stripped-state) which are given to a user when they are invited to a room, or knock on a room.\r\n\r\nToday in Synapse we attach these events to the user's invite or knock membership event, in an `unsigned.invite_room_state` or `unsigned.knock_room_state` field respectively. This allows us to easily pass these events around - specifically to the sync code, where they are extracted into `invite_state` and `knock_state` fields for the recipient user, and application service code, where they are supposed to be included  in `unsigned.invite_room_state` and `unsigned.knock_room_state`.\r\n\r\nThey shouldn't be appearing anywhere else though, yet attaching them to the event in the database can end up with us missing a spot where we forget to remove it (such as #14064).\r\n\r\nI think a better solution would be to not store this field in the event at all. Instead, we should either:\r\n\r\n* generate the stripped state events when needed, or\r\n* store them in a separate database table and only pull from them when needed.\r\n\r\nThe latter has the advantage of being able to quickly pull the state at the point in the room when the invite/knock was generated. Though I don't think the spec actually mandates that the stripped state be the state of the room at the membership event...\r\n\r\nThere's also the question of removing the fields from past events before we remove any of the code that strips these fields before sending them to clients.\r\n\r\nRelated: https://github.com/matrix-org/matrix-spec/pull/1273",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14160/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14160/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

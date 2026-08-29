@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15346",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15346/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15346/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15346/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15346",
+  "id": 1645053530,
+  "node_id": "I_kwDOAVyVwM5iDYZa",
+  "number": 15346,
+  "title": "Add timestamp massaging to `/createRoom`",
+  "user": {
+    "login": "MadLittleMods",
+    "id": 558581,
+    "node_id": "MDQ6VXNlcjU1ODU4MQ==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/558581?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/MadLittleMods",
+    "html_url": "https://github.com/MadLittleMods",
+    "followers_url": "https://api.github.com/users/MadLittleMods/followers",
+    "following_url": "https://api.github.com/users/MadLittleMods/following{/other_user}",
+    "gists_url": "https://api.github.com/users/MadLittleMods/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/MadLittleMods/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/MadLittleMods/subscriptions",
+    "organizations_url": "https://api.github.com/users/MadLittleMods/orgs",
+    "repos_url": "https://api.github.com/users/MadLittleMods/repos",
+    "events_url": "https://api.github.com/users/MadLittleMods/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/MadLittleMods/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4137756475,
+      "node_id": "LA_kwDOAVyVwM72oSc7",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Create-Room",
+      "name": "A-Create-Room",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 4459600960,
+      "node_id": "LA_kwDOAVyVwM8AAAABCdAcQA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Testing",
+      "name": "A-Testing",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues related to testing in complement, synapse, etc"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2023-03-29T05:19:48Z",
+  "updated_at": "2023-04-13T20:06:22Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "As propsed by [MSC3997](https://github.com/matrix-org/matrix-spec-proposals/pull/3997), following in the footsteps of [MSC3316](https://github.com/matrix-org/matrix-spec-proposals/pull/3316)'s timestamp massaging query parameter for `/send?ts=123`, add the same thing to the `/createRoom` endpoint\r\n\r\n```\r\nPOST /_matrix/client/v3/createRoom?ts=123\r\n```\r\n\r\n### Why\r\n\r\nWhen writing end-to-end tests, it's useful to have your room appear as though it was created back in time before your messages were sent and to have stable/consistent timestamps. If you start using the timestamp massaging with messages, it can appear as though those events occurred before the `m.room.create` and other primordial events.\r\n\r\nSo this issue, proposes being able to modify the `origin_server_ts` of all of the primordial room creation events.\r\n\r\nThis could also apply to other endpoints (`/join`, `/ban`) but I'm mostly concerned with the `/createRoom` endpoint because that's the hairy area in my [Matrix Public Archive](https://github.com/matrix-org/matrix-public-archive) tests at the moment. And `/ban`, etc can be emulated with the normal `/send` endpoint and sending the appropriate events.\r\n\r\n`/join` can only be emulated for local joins as joins against rooms the server doesn't know about doesn't work since there is no way to specify `via` servers`. Created [MSC3998](https://github.com/matrix-org/matrix-spec-proposals/pull/3998)\r\n\r\n\r\n### Todo\r\n\r\n - [x] Create MSC -> https://github.com/matrix-org/matrix-spec-proposals/pull/3997\r\n    - Also see [MSC3998](https://github.com/matrix-org/matrix-spec-proposals/pull/3998)",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15346/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15346/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

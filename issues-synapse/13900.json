@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13900",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13900/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13900/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13900/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13900",
+  "id": 1384974201,
+  "node_id": "I_kwDOAVyVwM5SjQd5",
+  "number": 13900,
+  "title": "Allow to limit federation on a user level",
+  "user": {
+    "login": "schiessle",
+    "id": 1589737,
+    "node_id": "MDQ6VXNlcjE1ODk3Mzc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1589737?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/schiessle",
+    "html_url": "https://github.com/schiessle",
+    "followers_url": "https://api.github.com/users/schiessle/followers",
+    "following_url": "https://api.github.com/users/schiessle/following{/other_user}",
+    "gists_url": "https://api.github.com/users/schiessle/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/schiessle/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/schiessle/subscriptions",
+    "organizations_url": "https://api.github.com/users/schiessle/orgs",
+    "repos_url": "https://api.github.com/users/schiessle/repos",
+    "events_url": "https://api.github.com/users/schiessle/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/schiessle/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2022-09-25T10:31:31Z",
+  "updated_at": "2022-12-18T15:53:47Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "It would be great if the admin of a homeserver could limit/configure the federation capabilities on a per user basis.\r\n\r\nPossible Use Cases:\r\n\r\n1. In a school you might want to allow teachers and maybe pupils from the secondary school to federate with people outside of the school. Pupils from the primary school should only be able to interact with people from the same school/homeserver. In a second step it could be even more fine-grained, for example teachers have no federation limits at all, pupils from the secondary school can federate with a list of \"trusted homeservers\", e.g. other schools you collaborate with, primary school pupils have federation disabled and can only chat with pupils on the same home server.\r\n\r\n2. Another usecase might be a private homeserver for a single family. The parents want to use the full capabilities of Matrix and the federation features while for the children it should be a save place where they can only communicate with the family members (no federation)",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13900/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13900/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

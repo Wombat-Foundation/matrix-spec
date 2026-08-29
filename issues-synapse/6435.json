@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/6435",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/6435/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/6435/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/6435/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/6435",
+  "id": 529968259,
+  "node_id": "MDU6SXNzdWU1Mjk5NjgyNTk=",
+  "number": 6435,
+  "title": "Silent fail when generating remote thumbnails for pictures over homeserver's `max_image_pixels`",
+  "user": {
+    "login": "GovanifY",
+    "id": 6375438,
+    "node_id": "MDQ6VXNlcjYzNzU0Mzg=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/6375438?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/GovanifY",
+    "html_url": "https://github.com/GovanifY",
+    "followers_url": "https://api.github.com/users/GovanifY/followers",
+    "following_url": "https://api.github.com/users/GovanifY/following{/other_user}",
+    "gists_url": "https://api.github.com/users/GovanifY/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/GovanifY/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/GovanifY/subscriptions",
+    "organizations_url": "https://api.github.com/users/GovanifY/orgs",
+    "repos_url": "https://api.github.com/users/GovanifY/repos",
+    "events_url": "https://api.github.com/users/GovanifY/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/GovanifY/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045806,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDY=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Media-Repository",
+      "name": "A-Media-Repository",
+      "color": "5319E7",
+      "default": false,
+      "description": "Uploading, downloading images and video, thumbnailing"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 4463284662,
+      "node_id": "LA_kwDOAVyVwM8AAAABCghRtg",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Profiles",
+      "name": "A-Profiles",
+      "color": "5319E7",
+      "default": false,
+      "description": "Displaynames, avatars"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2019-11-28T15:15:59Z",
+  "updated_at": "2022-11-23T17:02:25Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\nLet's say a homeserver A have a limit of 70M for its `max_pixels` (called `max_image_pixels` nowadays) thumbnailing scheme, while homeserver B have a limit, say, twice as low. A picture could be accepted as an avatar in homeserver A while homeserver B wouldn't be able to view this avatar as it wouldn't be able to generate thumbnails for this file.\r\n\r\nMore concrete example: https://matrix.org/_matrix/media/r0/download/matrix.org/JLjvxdzheErDJmtsHkbJraNQ is a 8192x8192 avatar. The default configuration for homeservers sets `max_pixels` as `32M`, which is below matrix.org limit. This makes the avatar unviewable and it either reverts to the standard letter one or shows a broken image altogether in Riot.\r\n\r\nAt the very least we should make it so homeserver B does not return a `M_NOT_FOUND` but an actual error message. We might want to either force generation of thumbnails for avatars or add an UI to notify the user that it failed and to contact his system administrator.\r\n\r\n\r\n### Steps to reproduce\r\n\r\n - Upload an avatar in homeserver A < max_pixels(A) but > max_pixels(B)\r\n - See that avatar federation is broken on homeserver B\r\n### Version information\r\n\r\n- **Version**:\r\n```\r\n{\r\n    \"python_version\": \"3.6.9\",\r\n    \"server_version\": \"1.6.1\"\r\n}\r\n```",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/6435/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/6435/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

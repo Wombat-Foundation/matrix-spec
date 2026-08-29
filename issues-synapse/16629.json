@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16629",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16629/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16629/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16629/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16629",
+  "id": 1991884925,
+  "node_id": "I_kwDOAVyVwM52ucB9",
+  "number": 16629,
+  "title": "Yet another case of state reset in State Resolution v2",
+  "user": {
+    "login": "wj25czxj47bu6q",
+    "id": 96372288,
+    "node_id": "U_kgDOBb6GQA",
+    "avatar_url": "https://avatars.githubusercontent.com/u/96372288?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/wj25czxj47bu6q",
+    "html_url": "https://github.com/wj25czxj47bu6q",
+    "followers_url": "https://api.github.com/users/wj25czxj47bu6q/followers",
+    "following_url": "https://api.github.com/users/wj25czxj47bu6q/following{/other_user}",
+    "gists_url": "https://api.github.com/users/wj25czxj47bu6q/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/wj25czxj47bu6q/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/wj25czxj47bu6q/subscriptions",
+    "organizations_url": "https://api.github.com/users/wj25czxj47bu6q/orgs",
+    "repos_url": "https://api.github.com/users/wj25czxj47bu6q/repos",
+    "events_url": "https://api.github.com/users/wj25czxj47bu6q/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/wj25czxj47bu6q/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    },
+    {
+      "id": 5432722667,
+      "node_id": "LA_kwDOAVyVwM8AAAABQ9DE6w",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-State-Resolution",
+      "name": "A-State-Resolution",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2023-11-14T02:49:26Z",
+  "updated_at": "2023-11-23T16:07:13Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nI have encountered yet another [room state reset](https://github.com/matrix-org/synapse/issues/8629).\r\n\r\nI suspect that the reset of `m.room.join_rules` was the root cause of the 51 `m.room.member` resets, as the latter would now be rejected events. There is no obvious explanation for the `m.room.join_rules` reset.\r\n\r\nNo state events were sent or redacted in the time immediately preceding the state reset. The last state event before the reset was sent approximately 2 hours prior.\r\n\r\n### Steps to reproduce\r\n\r\n1. Use the room as normal.\r\n2. Observe 51 members spontaneously dropped from the room.\r\n\r\n### Homeserver\r\n\r\narcticfoxes.net\r\n\r\n### Synapse Version\r\n\r\n1.96.0rc1\r\n\r\n### Installation Method\r\n\r\nDebian packages from packages.matrix.org\r\n\r\n### Database\r\n\r\nPostgreSQL 15.4, single server, not ported, restored a very long time ago\r\n\r\n### Workers\r\n\r\nSingle process\r\n\r\n### Platform\r\n\r\n- Ubuntu 22.04.3 LTS\r\n- [Hetzner EX101](https://www.hetzner.com/dedicated-rootserver/ex101)\r\n  - Intel Core i9-13900\r\n  - 64 GB DDR5 ECC\r\n  - Dual Samsung PM9A3 1.92 TB NVMe datacenter SSDs in ZFS mirror configuration\r\n  - 1 Gbps symmetric internet connection\r\n- Synapse and PostgreSQL run directly on the host OS, no containerization or virtualization involved.\r\n\r\n### Configuration\r\n\r\n- Presence is enabled.\r\n- The Mjölnir antispam Synapse module is in use.\r\n- [Several experimental features are enabled.](https://github.com/ArcticFoxes-net/Synapse-Ubuntu-ZFS/blob/a4d7a789bd1e17c66f95a3ecc794d38a102f3a65/etc/matrix-synapse/conf.d/experimental_features.yaml)\r\n\r\n### Relevant log output\r\n\r\n<details open>\r\n<summary><code>SELECT * FROM current_state_delta_stream WHERE room_id='!frWBWOPyriepLexnsA:arcticfoxes.net' AND stream_id=25794806;</code></summary>\r\n\r\n```\r\n stream_id |               room_id               |       type        |              state_key              |                   event_id                   |                prev_event_id                 | instance_name \r\n-----------+-------------------------------------+-------------------+-------------------------------------+----------------------------------------------+----------------------------------------------+---------------\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @aldorithms:matrix.org              |                                              | $74_XqgpHw_D18w0Xq0Lrc7_nmBvzDx1UajEn9yKc3Qc | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @jhs177992f:arcticfoxes.net         |                                              | $rFYpIiFmMMFHYqY_835sCFOEpJVUyLpEDM5Xoqr4uPc | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @ariyaro:matrix.org                 |                                              | $JqoI5tf1YrjoifsPEdxT67IeLJW6BCAdhIsFgxIJQ9Y | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @andreus:matrix.org                 |                                              | $CUryaK8LXBZxMsDlVohrahm3LaiBC-uCoHHOot0UWS4 | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @heliopolis:nitro.chat              |                                              | $utSCExwz0EzMAD5eIpCZ9BeEcinoslMFKTjgLO-H6rU | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @backpack:matrix.org                |                                              | $cCS3Ry7EFHCXQHTyMrJLratjz0GYRGsyCqU5AkDcnQ4 | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @tfox42:matrix.org                  |                                              | $93-srvPW852lSXze_r-y5VsDsi32Jf6H0GbXxrI8zFo | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @houndvoyager:matrix.org            |                                              | $5XMMvwgqdHpX6eyBzamDKpTADycXXvdUhMAIKhtPbTY | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @mercifulrage:converser.eu          |                                              | $EDFgLxKC6dz2cG7BYk7gO5xY2NNIKKRcMr7bM9XrPyA | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @crypticangel:pragma-messenger.ch   |                                              | $QG5tHgkzolxZAS0E3auilaPTjZqssp5fFr3NPgiwex0 | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @coalminecanary:arcticfoxes.net     |                                              | $SG_cN3tHXhg9_7_mRHe5Qt4wFlQO7o8hvoV1XPepkTA | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @vovafreeman:matrix.org             |                                              | $r9YGaq9q9dbye19fLlO09TO-IC9k6bfOWl-unkJRNNw | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @qoijjj:arcticfoxes.net             |                                              | $XbGI2ynAn3WC5hGRrmsBmRbW6f3l5mzzyXoDsqp_C00 | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @mebious:tchncs.de                  |                                              | $zYy_smuirJ0TDeYdC5vgbyQQRxHqxTTF9OTdQ1-cjhs | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @windystone:matrix.org              |                                              | $Qa-UYRrnev1cof2voq4VrjlmnDmvEn7cF6QgIYomxFA | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @user0761:matrix.org                |                                              | $4w8S40ugloh8ixEufM0tj-_QvnR3oaiXXqdBIPicZDg | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @matrixruinedmylife:arcticfoxes.net |                                              | $Q0mg0Le1GBwXh_H2tFLvwCM97Kf-njC0tW5GcqyFVPU | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @suicidalprincess:nitro.chat        |                                              | $Jv4B2FBIDgxkMR93mc9CNE88aTJqG8NrB79tMeVqhJY | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @hat:arcticfoxes.net                |                                              | $IDqAum_6ytZX_u0tz-8JglUBjwD39edl329bmExXrzo | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @iustitia:4d2.org                   |                                              | $86lLB5SWm9xB93vZroSDU4hfjGQ-ZYrJr9fbnE2DZRE | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @beyiyaf450:matrix.org              |                                              | $DgRnGVumPcveQGtNWGLKrMzBwowHRJwtrRggmA_ndFo | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @fpmksoba:matrix.org                |                                              | $2GtIIACc89vvMrYb1AKJeF0ky4IgDtsZpsFCy_trBTM | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @sneber:nope.chat                   |                                              | $9mpOqALVoUK1SQ6BbV4H0wKaiooTXbbHnmAIyDjXlvw | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @austin:tchncs.de                   |                                              | $zg1FQYQk3pTix5UOY7PRxSCmE6Q-94lbXnpgMbByoys | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @bhydden:matrix.org                 |                                              | $tp1MSrvb4KOEPtxqtJNQ6bKRMdzOVs7puBihkkI6d_4 | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @masterrank:matrix.org              |                                              | $GJ4SZsaZuJg0NOS0GauO9DcNX3Qa1ESTSP-C84YbSYQ | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @w14:matrix.org                     |                                              | $i-ZGHSTUJuRLjw6y7IZVSxAbxYZFi42AgYK_xkzEeOA | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @cyri:matrix.org                    |                                              | $hxptXTV6_m2O4ZoP0w69HOIc1FQ22GC-UnJUz6d0HwQ | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @ilove9999:matrix.org               |                                              | $k3C1PKERqlnX3ulqHe5qzpzZKfTVWQrknX1z5avD2Dc | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @quietlyjaded:matrix.org            |                                              | $NRY6fXAazYFaVa0kLpYWIhy2gfqJW8tVCFyZxVul01E | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @green_sheep:matrix.org             |                                              | $cGwRLAiQxivw7d3h9uMca5egIkDOhRVgZnD2Gl_zWVk | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @tisktisk:monero.social             |                                              | $lZ01gtBU50UhZ8sacAtpp6Ia5h6Gd54jON7o6Rxu9mc | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @loliloli:arcticfoxes.net           |                                              | $iPSlyT37ecv2ZqGH4yOAhkJ6_C51_J-muduqoeSf7PU | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @chili1803:matrix.org               |                                              | $jUwmF9DuNmdb56KzAP_D364QM7aocojUY-O95j6hx0c | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @sclanchy:matrix.org                |                                              | $27hLXs_qKe4WIgGqy6GigIV6TuknsBmzDSgBHn4c3TI | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @faxex:matrix.org                   |                                              | $tz3qjuYJnJTHQBaUotnXXVQOEeoUAyGIQTd-1sdhKXc | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @ghr89sb:matrix.org                 |                                              | $UgsO3HsBuDnYVpxzpda-7WUH5vh9AujnN7dEcXX7L5A | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @poisonivy:arcticfoxes.net          |                                              | $pVH8QOPHfNfuv1cILOOSELlOuLAPKbliYYbflMkOg-g | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @johan942:matrix.org                |                                              | $jjKcZyb7w2DcbYvaKWf5c_052nutBDxcMbM3FJI5V5o | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @carlfriedrich:tchncs.de            |                                              | $CeMBICUBs6UPB1hpKooo7YjiTsbevuzC7IRjxihiOxU | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @2nami:matrix.org                   |                                              | $MEz7DkYNjmX1dXW4aJoiGN8kkNnQ1zjmGekNh3fQijU | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @un32:matrix.org                    |                                              | $JAAIV6FTLNgANKHyi1dhxskos-RngW_0tr44roqbRL4 | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @ancloadi:matrix.org                |                                              | $Dw7r7MLjd3JqLzzVdHKuXe0eVsO4wXQzNpOUvoCGtAQ | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @losintos:matrix.org                |                                              | $Viw3Yw_2fyjF6Jnk4-ozYMOq6JWrt2TasbEhagy7jyE | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @xyhhx:arcticfoxes.net              |                                              | $F6xBiS5WgeyYB7-R4B8eOMKWOD9LA0yNjGj_mDDJEX0 | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.join_rules |                                     | $AxE3gEzTLPT_hy7ML1MJKsX7DI6XkqujWP50LTDBODM | $P2FwR8kpzW1LDIZU2lKRc_wmghbXlIQZpwvE5D82d5Q | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @dahustlah:matrix.org               | $8GW8hJvAHAGPTQIsPysF_mePLpd-GtZyqYIb4VzfoiU | $aGradtN72do5IOaG1dvRExtW4PAwFfjdlTNZVyOP6sQ | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @gvl7bcq6dn2xrbl:matrix.org         | $_s6-w6-v0tE3-tYkWYQ1bbukUs844bn_9bUkttYCXF0 | $iNV97F-d1DnI0dGqj7L23a2pTtRmvSCNPpfDfGbGbg4 | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @masayuki:wired.rehab               | $yMVmIFtT_hpeMh-9GLSdY84NrNYSRhn8rUX2Z2AD5_g | $egJIEy0PhxdUfdDCAPAVJDSrIYTLYtdAIIWCQ3zvsNA | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @matchboxbananasynergy:matrix.org   | $A4R_VVl2TaN53EWiLBoipPyigkEZodgWOiceeieshaQ | $s-1rvX3ldLsL5Azxj7mSjkhWxboqaEuQiJlMCglMIYk | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @skull_gap:archoslinux.cz           | $MX2EhPV0TYzMxegHKJX1U1KKvqTrAp8vwS5DwqqDlNw | $_0SGO3HGR2RgYWYAxczIkwXzCl7e3PLuZgrO_HTgj6Y | master\r\n  25794806 | !frWBWOPyriepLexnsA:arcticfoxes.net | m.room.member     | @slate-module:matrix.org            | $xM6Y-mUyvW9yOZf_lODJOdqLI0Ao1nYuaYQYonysi84 | $2IUW5LONVOx_k1I5nxRv9AuF8BFAp5NL8I_KxFa16Zk | master\r\n(52 rows)\r\n```\r\n</details>\r\n\r\n### Anything else that would be useful to know?\r\n\r\nIn addition to arcticfoxes.net documented above, this state reset was confirmed via the C&#8209;S API on matrix.org (Synapse 1.96.0rc1) and a third server (Synapse 1.95.1). I do not know the exact details of their deployments.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16629/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16629/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

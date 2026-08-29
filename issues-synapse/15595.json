@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15595",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15595/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15595/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15595/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15595",
+  "id": 1709701539,
+  "node_id": "I_kwDOAVyVwM5l5_mj",
+  "number": 15595,
+  "title": "An idle event persister can hold up outbound federation of PDUs and other processes",
+  "user": {
+    "login": "squahtx",
+    "id": 8349537,
+    "node_id": "MDQ6VXNlcjgzNDk1Mzc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8349537?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/squahtx",
+    "html_url": "https://github.com/squahtx",
+    "followers_url": "https://api.github.com/users/squahtx/followers",
+    "following_url": "https://api.github.com/users/squahtx/following{/other_user}",
+    "gists_url": "https://api.github.com/users/squahtx/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/squahtx/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/squahtx/subscriptions",
+    "organizations_url": "https://api.github.com/users/squahtx/orgs",
+    "repos_url": "https://api.github.com/users/squahtx/repos",
+    "events_url": "https://api.github.com/users/squahtx/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/squahtx/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1056680564,
+      "node_id": "MDU6TGFiZWwxMDU2NjgwNTY0",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Workers",
+      "name": "A-Workers",
+      "color": "5319E7",
+      "default": false,
+      "description": "Problems related to running Synapse in Worker Mode (or replication)"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2023-05-15T09:35:30Z",
+  "updated_at": "2023-05-18T14:29:33Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "During a recent federation outage on matrix.org, where federation senders would get stuck for minutes, @\\richvdh noticed that  the minimum stream position of `RoomStreamToken`s was stuck because event_persister-4 wasn't advancing.\r\n\r\nhttps://matrix.to/#/!yHWhpxlXVaLcsgDUKb:matrix.org/$mve7Xf2PoCru5c6wrcWsNUXQEf_4rtqXRv3Gbyi6E8M?via=matrix.org&via=element.io&via=vector.modular.im\r\n\r\n---\r\n\r\nWhen an event persister is idle, the minimum stream position in `RoomStreamToken`s will be stuck at the last persisted stream position of the idle event persister plus any continuous run of stream positions seen over replication after that. That is, the minimum stream position gets stuck at the first gap. See [here](https://github.com/matrix-org/synapse/blob/36df9c5e36cbad2a378d922085453726a21ae80c/synapse/storage/util/id_generators.py#L759-L794) for how the minimum stream position is calculated.\r\n\r\nFor an explanation of the fields in a RoomStreamToken, see\r\nhttps://github.com/matrix-org/synapse/blob/36df9c5e36cbad2a378d922085453726a21ae80c/synapse/types/__init__.py#L476-L496\r\n\r\nThe federation senders use this minimum stream position to determine where it is safe to process up to (since new events can't appear with an earlier stream position). Thus when the minimum stream position gets stuck, the federation senders stop making progress even when there are new events from local users needing to be sent.\r\n\r\nhttps://github.com/matrix-org/synapse/blob/3bf973edc7ecf911daab6d8c58d1264891f3ed39/synapse/replication/tcp/client.py#L176-L188\r\nhttps://github.com/matrix-org/synapse/blob/36df9c5e36cbad2a378d922085453726a21ae80c/synapse/federation/sender/__init__.py#L444-L453\r\nhttps://github.com/matrix-org/synapse/blob/36df9c5e36cbad2a378d922085453726a21ae80c/synapse/federation/sender/__init__.py#L467-L473\r\n\r\n---\r\n\r\nThe idle event persister could likely do something to fix the problem, since it can tell when it is behind.\r\nhttps://github.com/matrix-org/synapse/blob/36df9c5e36cbad2a378d922085453726a21ae80c/synapse/storage/util/id_generators.py#L759-L794\r\nNote that `_persisted_upto_position` can end up ahead of the event persister's own position in `_current_positions` if it has nothing in flight. However, the event persister's own position doesn't appear to be updated and `_persisted_upto_position` isn't broadcast over replication.\r\n\r\nEven if we did broadcast `_persisted_upto_position` over replication, this would only work for a single idle event persister. When there are two or more idle event persisters, we would just get stuck.\r\n\r\nNote that the second half of the code is responsible for advancing the minimum stream position up to the first gap in stream positions.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15595/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15595/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15145",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15145/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15145/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15145/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15145",
+  "id": 1597412737,
+  "node_id": "I_kwDOAVyVwM5fNpWB",
+  "number": 15145,
+  "title": "`/join` with a \"via\" `server_name` query parameter pointing to a server that is down gives CORS error",
+  "user": {
+    "login": "JeanPaulLucien",
+    "id": 24779886,
+    "node_id": "MDQ6VXNlcjI0Nzc5ODg2",
+    "avatar_url": "https://avatars.githubusercontent.com/u/24779886?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/JeanPaulLucien",
+    "html_url": "https://github.com/JeanPaulLucien",
+    "followers_url": "https://api.github.com/users/JeanPaulLucien/followers",
+    "following_url": "https://api.github.com/users/JeanPaulLucien/following{/other_user}",
+    "gists_url": "https://api.github.com/users/JeanPaulLucien/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/JeanPaulLucien/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/JeanPaulLucien/subscriptions",
+    "organizations_url": "https://api.github.com/users/JeanPaulLucien/orgs",
+    "repos_url": "https://api.github.com/users/JeanPaulLucien/repos",
+    "events_url": "https://api.github.com/users/JeanPaulLucien/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/JeanPaulLucien/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1771241792,
+      "node_id": "MDU6TGFiZWwxNzcxMjQxNzky",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federated-Join",
+      "name": "A-Federated-Join",
+      "color": "5319E7",
+      "default": false,
+      "description": "joins over federation generally suck"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2023-02-23T19:30:21Z",
+  "updated_at": "2023-04-25T21:50:27Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\n*Spawning from https://github.com/vector-im/element-web/issues/24617*\r\n\r\nGiven two links to join the same room:\r\n\r\n```\r\nhttps://matrix.to/#/!gjhRIJfdhgjd:google.com\r\nhttps://matrix.to/#/!gjhRIJfdhgjd:google.com?via=feneas.org\r\n```\r\n\r\nWithout `via`, Element Desktop 1.11.23 shows a error dialog with `404` error code (it's okay, because server does not exist more, just links exist in chats). But with `via`, the error dialog is empty and there is a `502` CORS error (unexpected)\r\n\r\nIn the case where a Matrix server where room was being hosted does not exist more, in my opinion, we should return a 404 to the user. (I expect a 404 response for the link with `via`)\r\n\r\n\r\n### Steps to reproduce\r\n\r\nSee above.\r\n\r\n### Homeserver\r\n\r\n`matrix.org`\r\n\r\n### Synapse Version\r\n\r\n`matrix.org`\r\n\r\n### Installation Method\r\n\r\nI don't know\r\n\r\n### Database\r\n\r\n`matrix.org`\r\n\r\n### Workers\r\n\r\nI don't know\r\n\r\n### Platform\r\n\r\n`matrix.org`\r\n\r\n### Configuration\r\n\r\n_No response_\r\n\r\n### Relevant log output\r\n\r\n```shell\r\nabove\r\n```\r\n\r\n\r\n### Anything else that would be useful to know?\r\n\r\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15145/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15145/timeline",
+  "performed_via_github_app": null,
+  "state_reason": "reopened",
+  "pinned_comment": null
+}

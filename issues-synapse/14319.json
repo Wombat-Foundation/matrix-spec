@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14319",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14319/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14319/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14319/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14319",
+  "id": 1427859379,
+  "node_id": "I_kwDOAVyVwM5VG2ez",
+  "number": 14319,
+  "title": "Exception running callback for LaterGauge(synapse_rate_limit_reject_affected_hosts)",
+  "user": {
+    "login": "DMRobertson",
+    "id": 8614563,
+    "node_id": "MDQ6VXNlcjg2MTQ1NjM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8614563?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/DMRobertson",
+    "html_url": "https://github.com/DMRobertson",
+    "followers_url": "https://api.github.com/users/DMRobertson/followers",
+    "following_url": "https://api.github.com/users/DMRobertson/following{/other_user}",
+    "gists_url": "https://api.github.com/users/DMRobertson/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/DMRobertson/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/DMRobertson/subscriptions",
+    "organizations_url": "https://api.github.com/users/DMRobertson/orgs",
+    "repos_url": "https://api.github.com/users/DMRobertson/repos",
+    "events_url": "https://api.github.com/users/DMRobertson/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/DMRobertson/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 3537729900,
+      "node_id": "LA_kwDOAVyVwM7S3Xls",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Metrics",
+      "name": "A-Metrics",
+      "color": "5319E7",
+      "default": false,
+      "description": "metrics, measures, stuff we put in Prometheus"
+    },
+    {
+      "id": 4618619241,
+      "node_id": "LA_kwDOAVyVwM8AAAABE0qJaQ",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Sentry",
+      "name": "Z-Sentry",
+      "color": "ffffff",
+      "default": false,
+      "description": "Issue was discovered by looking at Sentry reports on Matrix.org"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2022-10-28T21:32:05Z",
+  "updated_at": "2022-10-31T19:03:28Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Like #12078 and #12079.\r\n\r\nhttps://sentry.tools.element.io/organizations/element/issues/33651/?project=2&query=is%3Aunresolved\r\n\r\n```\r\n2022-10-28 10:58:54,711 - synapse.metrics - 100 - ERROR - sentinel - Exception running callback for LaterGauge(synapse_rate_limit_reject_affected_hosts)\r\nCapture point (most recent call last):\r\n  File \"/home/synapse/pyston_2.3.3/lib/python3.8-pyston2.3/threading.py\", line 890, in _bootstrap\r\n    self._bootstrap_inner()\r\n  File \"/home/synapse/pyston_2.3.3/lib/python3.8-pyston2.3/threading.py\", line 932, in _bootstrap_inner\r\n    self.run()\r\n  File \"/home/synapse/env-pyston-poetry/lib/python3.8-pyston2.3/site-packages/sentry_sdk/integrations/threading.py\", line 67, in run\r\n    return old_run_func(self, *a, **kw)\r\n  File \"/home/synapse/pyston_2.3.3/lib/python3.8-pyston2.3/threading.py\", line 870, in run\r\n    self._target(*self._args, **self._kwargs)\r\n  File \"/home/synapse/pyston_2.3.3/lib/python3.8-pyston2.3/socketserver.py\", line 683, in process_request_thread\r\n    self.finish_request(request, client_address)\r\n  File \"/home/synapse/pyston_2.3.3/lib/python3.8-pyston2.3/socketserver.py\", line 360, in finish_request\r\n    self.RequestHandlerClass(request, client_address, self)\r\n  File \"/home/synapse/pyston_2.3.3/lib/python3.8-pyston2.3/socketserver.py\", line 747, in __init__\r\n    self.handle()\r\n  File \"/home/synapse/pyston_2.3.3/lib/python3.8-pyston2.3/wsgiref/simple_server.py\", line 134, in handle\r\n    handler.run(self.server.get_app())\r\n  File \"/home/synapse/pyston_2.3.3/lib/python3.8-pyston2.3/wsgiref/handlers.py\", line 137, in run\r\n    self.result = application(self.environ, self.start_response)\r\n  File \"/home/synapse/env-pyston-poetry/lib/python3.8-pyston2.3/site-packages/prometheus_client/exposition.py\", line 127, in prometheus_app\r\n    status, headers, output = _bake_output(registry, accept_header, accept_encoding_header, params, disable_compression)\r\n  File \"/home/synapse/env-pyston-poetry/lib/python3.8-pyston2.3/site-packages/prometheus_client/exposition.py\", line 103, in _bake_output\r\n    output = formatter(registry)\r\n  File \"/home/synapse/env-pyston-poetry/lib/python3.8-pyston2.3/site-packages/prometheus_client/openmetrics/exposition.py\", line 21, in generate_latest\r\n    for metric in registry.collect():\r\n  File \"/home/synapse/src/synapse/metrics/__init__.py\", line 70, in collect\r\n    for metric in REGISTRY.collect():\r\n  File \"/home/synapse/env-pyston-poetry/lib/python3.8-pyston2.3/site-packages/prometheus_client/registry.py\", line 97, in collect\r\n    yield from collector.collect()\r\nTraceback (most recent call last):\r\n  File \"/home/synapse/src/synapse/metrics/__init__.py\", line 98, in collect\r\n    calls = self.caller()\r\n  File \"/home/synapse/src/synapse/util/ratelimitutils.py\", line 135, in <lambda>\r\n    lambda: _get_counts_from_rate_limiter_instance(\r\n  File \"/home/synapse/src/synapse/util/ratelimitutils.py\", line 112, in _get_counts_from_rate_limiter_instance\r\n    counts[key] = count_func(rate_limiter_instance)\r\n  File \"/home/synapse/src/synapse/util/ratelimitutils.py\", line 136, in <lambda>\r\n    lambda rate_limiter_instance: sum(\r\n  File \"/home/synapse/src/synapse/util/ratelimitutils.py\", line 136, in <genexpr>\r\n    lambda rate_limiter_instance: sum(\r\nRuntimeError: dictionary changed size during iteration\r\n\r\n```",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14319/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14319/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

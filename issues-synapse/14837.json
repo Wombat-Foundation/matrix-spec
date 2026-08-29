@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14837",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14837/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14837/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14837/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14837",
+  "id": 1532448570,
+  "node_id": "I_kwDOAVyVwM5bV086",
+  "number": 14837,
+  "title": "Room marked as unread when I was the last person to speak",
+  "user": {
+    "login": "andybalaam",
+    "id": 76812,
+    "node_id": "MDQ6VXNlcjc2ODEy",
+    "avatar_url": "https://avatars.githubusercontent.com/u/76812?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/andybalaam",
+    "html_url": "https://github.com/andybalaam",
+    "followers_url": "https://api.github.com/users/andybalaam/followers",
+    "following_url": "https://api.github.com/users/andybalaam/following{/other_user}",
+    "gists_url": "https://api.github.com/users/andybalaam/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/andybalaam/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/andybalaam/subscriptions",
+    "organizations_url": "https://api.github.com/users/andybalaam/orgs",
+    "repos_url": "https://api.github.com/users/andybalaam/repos",
+    "events_url": "https://api.github.com/users/andybalaam/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/andybalaam/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045805,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDU=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Push",
+      "name": "A-Push",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues related to push/notifications"
+    },
+    {
+      "id": 828678284,
+      "node_id": "MDU6TGFiZWw4Mjg2NzgyODQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spec-Compliance",
+      "name": "A-Spec-Compliance",
+      "color": "5319E7",
+      "default": false,
+      "description": "places where synapse does not conform to the spec"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 9,
+  "created_at": "2023-01-13T15:08:44Z",
+  "updated_at": "2023-08-04T16:00:26Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nI have a room on matrix.org where the sync response shows me as the last person to send an event, but also has `notification_count: 1`.  @gsouquet tells me that should never happen: if I sent the last event, the room should not be unread.\r\n\r\n```\r\n    \"unread_notifications\": {\r\n          \"notification_count\": 1,\r\n          \"highlight_count\": 0\r\n    },\r\n```\r\n\r\nThe room ID is `!KCcFbqJHMQscdVsFTa:element.io`\r\n\r\nThe URL I used to sync was: `https://matrix-client.matrix.org/_matrix/client/r0/sync?filter=%7B%22room%22%3A%7B%22timeline%22%3A%7B%22unread_thread_notifications%22%3Atrue%2C%22limit%22%3A20%7D%2C%22state%22%3A%7B%22lazy_load_members%22%3Atrue%7D%7D%7D&timeout=0&_cacheBuster=1673621386081`\r\n\r\nMy username is `@andybalaam:matrix.org`\r\n\r\nThe full sync response for this room is:\r\n\r\n```\r\n      \"!KCcFbqJHMQscdVsFTa:element.io\": {\r\n        \"timeline\": {\r\n          \"events\": [\r\n            {\r\n              \"content\": {\r\n                \"creator\": \"@lgian:element.io\",\r\n                \"room_version\": \"9\"\r\n              },\r\n              \"origin_server_ts\": 1669207170409,\r\n              \"sender\": \"@lgian:element.io\",\r\n              \"state_key\": \"\",\r\n              \"type\": \"m.room.create\",\r\n              \"unsigned\": {\r\n                \"age\": 1651989\r\n              },\r\n              \"event_id\": \"$T4yQFiEjK1NwvniRWmyjzdJQeJwSvz2TVh55BbPuhw8\"\r\n            },\r\n            {\r\n              \"content\": {\r\n                \"avatar_url\": \"mxc://element.io/079b96b843c4fe3f75712533f31233038d0d53d8\",\r\n                \"displayname\": \"lgian\",\r\n                \"membership\": \"join\"\r\n              },\r\n              \"origin_server_ts\": 1669207170696,\r\n              \"sender\": \"@lgian:element.io\",\r\n              \"state_key\": \"@lgian:element.io\",\r\n              \"type\": \"m.room.member\",\r\n              \"unsigned\": {\r\n                \"age\": 1651702\r\n              },\r\n              \"event_id\": \"$STEseiYuCwtuJgj2nJH4_l2mq-b7aZJGMXefty9Yki4\"\r\n            },\r\n            {\r\n              \"content\": {\r\n                \"ban\": 50,\r\n                \"events\": {\r\n                  \"m.room.avatar\": 50,\r\n                  \"m.room.canonical_alias\": 50,\r\n                  \"m.room.encryption\": 100,\r\n                  \"m.room.history_visibility\": 100,\r\n                  \"m.room.name\": 50,\r\n                  \"m.room.power_levels\": 100,\r\n                  \"m.room.server_acl\": 100,\r\n                  \"m.room.tombstone\": 100\r\n                },\r\n                \"events_default\": 0,\r\n                \"historical\": 100,\r\n                \"invite\": 0,\r\n                \"kick\": 50,\r\n                \"redact\": 50,\r\n                \"state_default\": 50,\r\n                \"users\": {\r\n                  \"@andybalaam:matrix.org\": 100,\r\n                  \"@lgian:element.io\": 100\r\n                },\r\n                \"users_default\": 0\r\n              },\r\n              \"origin_server_ts\": 1669207170782,\r\n              \"sender\": \"@lgian:element.io\",\r\n              \"state_key\": \"\",\r\n              \"type\": \"m.room.power_levels\",\r\n              \"unsigned\": {\r\n                \"age\": 1651616\r\n              },\r\n              \"event_id\": \"$DoEVRqa-hHhg1GJdnlT7X_BPXgWpvv3ACp9akZ6pjc8\"\r\n            },\r\n            {\r\n              \"content\": {\r\n                \"join_rule\": \"invite\"\r\n              },\r\n              \"origin_server_ts\": 1669207170814,\r\n              \"sender\": \"@lgian:element.io\",\r\n              \"state_key\": \"\",\r\n              \"type\": \"m.room.join_rules\",\r\n              \"unsigned\": {\r\n                \"age\": 1651584\r\n              },\r\n              \"event_id\": \"$5XX9KB-PNpUmp_zphOKtNVRdSiPPDwKO-zo1TWrsQDQ\"\r\n            },\r\n            {\r\n              \"content\": {\r\n                \"history_visibility\": \"shared\"\r\n              },\r\n              \"origin_server_ts\": 1669207170820,\r\n              \"sender\": \"@lgian:element.io\",\r\n              \"state_key\": \"\",\r\n              \"type\": \"m.room.history_visibility\",\r\n              \"unsigned\": {\r\n                \"age\": 1651578\r\n              },\r\n              \"event_id\": \"$AoRJeIFLou1NpTPo8ydqXFV-5LyeXCDnT8NhJfot7nY\"\r\n            },\r\n            {\r\n              \"content\": {\r\n                \"guest_access\": \"can_join\"\r\n              },\r\n              \"origin_server_ts\": 1669207170829,\r\n              \"sender\": \"@lgian:element.io\",\r\n              \"state_key\": \"\",\r\n              \"type\": \"m.room.guest_access\",\r\n              \"unsigned\": {\r\n                \"age\": 1651569\r\n              },\r\n              \"event_id\": \"$10LzQqIAeVJd6m5jbQ5iFZuIdUmNcCnj0k3-Yqkl6GE\"\r\n            },\r\n            {\r\n              \"content\": {\r\n                \"algorithm\": \"m.megolm.v1.aes-sha2\"\r\n              },\r\n              \"origin_server_ts\": 1669207170837,\r\n              \"sender\": \"@lgian:element.io\",\r\n              \"state_key\": \"\",\r\n              \"type\": \"m.room.encryption\",\r\n              \"unsigned\": {\r\n                \"age\": 1651561\r\n              },\r\n              \"event_id\": \"$ZGp0VZGbACUCESNl8F7k2GM_w3umBFrhzPD17eR834Q\"\r\n            },\r\n            {\r\n              \"content\": {\r\n                \"avatar_url\": \"mxc://matrix.org/yqsMYtlqLZIlMOnqBRAXnkUm\",\r\n                \"displayname\": \"andybalaam\",\r\n                \"is_direct\": true,\r\n                \"membership\": \"invite\"\r\n              },\r\n              \"origin_server_ts\": 1669207171121,\r\n              \"sender\": \"@lgian:element.io\",\r\n              \"state_key\": \"@andybalaam:matrix.org\",\r\n              \"type\": \"m.room.member\",\r\n              \"unsigned\": {\r\n                \"age\": 22\r\n              },\r\n              \"event_id\": \"$rWoSNtthPJ1WHmoO_qqvX-Q-Jmy9dTqKfKZFTw4idPg\"\r\n            },\r\n            {\r\n              \"content\": {\r\n                \"algorithm\": \"m.megolm.v1.aes-sha2\",\r\n                \"ciphertext\": \"AwgAEuABEy11curBDRBMoSJ7GLUujtDjycv2JXuIIqTrWNwVZr3tW4/YKBxUcD1SnBmffgoHDFlo9dTq03YAjg/sv2r/rcVb1xBwTJejQdOyVmL/QdLPLSWj3vgFWpA+jw1bV57sYyfawONZ5+hfemlZLClOjxZgD/IZ2/PmXlbStamj2uXbo2MrUiA4y/VhLCzvXZIeh5gs7WdxZXoanh0l9TAFISZtSr4GO60xL6GrbZ/oXf63WtDjZQ293eGr7xDMaMoF2qRycimZGQ3FX1+2N/peOM+p0PM0cgekP0rSqcLuRg3pq+dtF8guo9T/IhTIny25SmOSvmawc6pqXRO5WQI4hyfpNEmWLKTO9z/zU6nUGsDZMJMLFNnlGEwjpHZGO4ogQ1tyK8KWcQc\",\r\n                \"device_id\": \"RJPFIRDZYD\",\r\n                \"sender_key\": \"HlpwBwe9UsFhQ+WO7nJHI1CwjeXxPOOVCXE7zgzbCGg\",\r\n                \"session_id\": \"gAQxX0A0RM2b+up0ibRb68u0gEm8pDQgrtw9w9F9hCo\"\r\n              },\r\n              \"origin_server_ts\": 1669207174410,\r\n              \"sender\": \"@lgian:element.io\",\r\n              \"type\": \"m.room.encrypted\",\r\n              \"unsigned\": {\r\n                \"age\": 1648859\r\n              },\r\n              \"event_id\": \"$MK3coNBUiKdbiwJbX3BZnYQsRFJE2DE5K7LSy5RBfYg\"\r\n            },\r\n            {\r\n              \"content\": {\r\n                \"algorithm\": \"m.megolm.v1.aes-sha2\",\r\n                \"ciphertext\": \"AwgBEqABuFUjuZZaYZ0sd4tKqwZ3KBI1ULzLvINFHtPF053Bh8QqGDTx/Tgn6t5MFY/R1Oa7j1jNz6o5nH2kvj/30J5/w2e+R2ieZzjGhxzW1WsSu7DY+QTNipH4euorYp2R0BdawL+UHElQYZoYMg4ytVY+1fJRSF0aTPlXUjy4Wd1ZS9uzV9GtqMx4ImFtXmOeQSTUNEvllOEZxI4BAS5vuJt6HYrcLtuld7jiZlnvHHc8zuKLKqorMP06vuu4Bwx3OSy2zg5gf4ruXcAbP/jIv0mADpr2EK/Ez/eOmPlnKiDmCUUK6dfmNSnkAQ\",\r\n                \"device_id\": \"RJPFIRDZYD\",\r\n                \"sender_key\": \"HlpwBwe9UsFhQ+WO7nJHI1CwjeXxPOOVCXE7zgzbCGg\",\r\n                \"session_id\": \"gAQxX0A0RM2b+up0ibRb68u0gEm8pDQgrtw9w9F9hCo\"\r\n              },\r\n              \"origin_server_ts\": 1669207397906,\r\n              \"sender\": \"@lgian:element.io\",\r\n              \"type\": \"m.room.encrypted\",\r\n              \"unsigned\": {\r\n                \"age\": 1425363\r\n              },\r\n              \"event_id\": \"$XO_0WwJAi40qcMUdOFqB4xvdY1mQP7jjdiKPKIkdS9k\"\r\n            },\r\n            {\r\n              \"content\": {\r\n                \"avatar_url\": \"mxc://matrix.org/yqsMYtlqLZIlMOnqBRAXnkUm\",\r\n                \"displayname\": \"andybalaam\",\r\n                \"membership\": \"join\"\r\n              },\r\n              \"origin_server_ts\": 1669208822225,\r\n              \"sender\": \"@andybalaam:matrix.org\",\r\n              \"state_key\": \"@andybalaam:matrix.org\",\r\n              \"type\": \"m.room.member\",\r\n              \"unsigned\": {\r\n                \"age\": 3,\r\n                \"replaces_state\": \"$rWoSNtthPJ1WHmoO_qqvX-Q-Jmy9dTqKfKZFTw4idPg\",\r\n                \"prev_content\": {\r\n                  \"avatar_url\": \"mxc://matrix.org/yqsMYtlqLZIlMOnqBRAXnkUm\",\r\n                  \"displayname\": \"andybalaam\",\r\n                  \"is_direct\": true,\r\n                  \"membership\": \"invite\"\r\n                },\r\n                \"prev_sender\": \"@lgian:element.io\"\r\n              },\r\n              \"event_id\": \"$Wk2qUVwqsb8ive4l75sISoivifuXdm1l3iGEODpmm1s\"\r\n            },\r\n            {\r\n              \"content\": {\r\n                \"algorithm\": \"m.megolm.v1.aes-sha2\",\r\n                \"ciphertext\": \"AwgAEqABvDb35eiTzLREumzMNc9nezQNMwKRlh9r9nHaPg8F4EBrVh6YIp+lgEpzhuUHYqCDIVF0j9jRZ693IsUxemQnN4cJbwGo/1GAqFovLZNXV6Q7MYxukgtPiVnyFNsYnd8yGHG90TiGRO5Wl8BJQ+gzqRqKjt6Ums3c8iNeSDmmwYrYxA+LcRGVTaFiey+ixg49XQ+R8Y8msVFnNzF1e48F/ZKBNs+ToaA3ks0younKFNIK0UEV0/z/evDcBsSqUf9W/23u/9RodXEswHHhUS6eE44HC9iOi7m6LZBt0YFMWfteBsE9gxMSDw\",\r\n                \"device_id\": \"MKBDKTQJQJ\",\r\n                \"sender_key\": \"Ss6eaJGA82Uc9TQn1BbcLqpm6jtjGGwqMBadf/8Y+WY\",\r\n                \"session_id\": \"8RV7u4xrlnPO5yvqZpx/aqiHbq3+KTTYg193IpzzFPY\"\r\n              },\r\n              \"origin_server_ts\": 1669208839345,\r\n              \"sender\": \"@andybalaam:matrix.org\",\r\n              \"type\": \"m.room.encrypted\",\r\n              \"unsigned\": {\r\n                \"age\": 4412625253\r\n              },\r\n              \"event_id\": \"$dER5V1RCMxzAhHXQJoMjqyuoxpPtK2X6hCb9T8Jg2wU\"\r\n            }\r\n          ],\r\n          \"prev_batch\": \"s3615474541_757284974_4801760_1841502201_1869275239_3913936_731927069_6351869257_0\",\r\n          \"limited\": false\r\n        },\r\n        \"state\": {\r\n          \"events\": []\r\n        },\r\n        \"account_data\": {\r\n          \"events\": [\r\n            {\r\n              \"type\": \"m.fully_read\",\r\n              \"content\": {\r\n                \"event_id\": \"$dER5V1RCMxzAhHXQJoMjqyuoxpPtK2X6hCb9T8Jg2wU\"\r\n              }\r\n            }\r\n          ]\r\n        },\r\n        \"ephemeral\": {\r\n          \"events\": [\r\n            {\r\n              \"type\": \"m.receipt\",\r\n              \"content\": {\r\n                \"$XO_0WwJAi40qcMUdOFqB4xvdY1mQP7jjdiKPKIkdS9k\": {\r\n                  \"m.read\": {\r\n                    \"@andybalaam:matrix.org\": {\r\n                      \"ts\": 1669208824249\r\n                    }\r\n                  },\r\n                  \"m.read.private\": {\r\n                    \"@andybalaam:matrix.org\": {\r\n                      \"ts\": 1669208824233\r\n                    }\r\n                  }\r\n                },\r\n                \"$dER5V1RCMxzAhHXQJoMjqyuoxpPtK2X6hCb9T8Jg2wU\": {\r\n                  \"m.read\": {\r\n                    \"@lgian:element.io\": {\r\n                      \"ts\": 1669208845306\r\n                    }\r\n                  }\r\n                }\r\n              }\r\n            }\r\n          ]\r\n        },\r\n        \"unread_notifications\": {\r\n          \"notification_count\": 1,\r\n          \"highlight_count\": 0\r\n        },\r\n        \"summary\": {\r\n          \"m.joined_member_count\": 2,\r\n          \"m.invited_member_count\": 0,\r\n          \"m.heroes\": [\r\n            \"@lgian:element.io\"\r\n          ]\r\n        }\r\n      },\r\n```\n\n### Steps to reproduce\n\n.\n\n### Homeserver\n\nmatrix.org\n\n### Synapse Version\n\n{\"server_version\":\"1.75.0rc1 (b=matrix-org-hotfixes,6a185c8b17)\",\"python_version\":\"3.8.12\"}\n\n### Installation Method\n\nI don't know\n\n### Database\n\n.\n\n### Workers\n\nMultiple workers\n\n### Platform\n\n.\n\n### Configuration\n\n.\n\n### Relevant log output\n\n```shell\n.\n```\n\n\n### Anything else that would be useful to know?\n\n.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14837/reactions",
+    "total_count": 2,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 1
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14837/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

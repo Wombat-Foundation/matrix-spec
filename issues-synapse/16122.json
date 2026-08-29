@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16122",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16122/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16122/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16122/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16122",
+  "id": 1853316303,
+  "node_id": "I_kwDOAVyVwM5ud1zP",
+  "number": 16122,
+  "title": "Leaving or posting into a specific room results into an error",
+  "user": {
+    "login": "cbrand",
+    "id": 2278288,
+    "node_id": "MDQ6VXNlcjIyNzgyODg=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/2278288?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/cbrand",
+    "html_url": "https://github.com/cbrand",
+    "followers_url": "https://api.github.com/users/cbrand/followers",
+    "following_url": "https://api.github.com/users/cbrand/following{/other_user}",
+    "gists_url": "https://api.github.com/users/cbrand/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/cbrand/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/cbrand/subscriptions",
+    "organizations_url": "https://api.github.com/users/cbrand/orgs",
+    "repos_url": "https://api.github.com/users/cbrand/repos",
+    "events_url": "https://api.github.com/users/cbrand/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/cbrand/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1920863622,
+      "node_id": "MDU6TGFiZWwxOTIwODYzNjIy",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Validation",
+      "name": "A-Validation",
+      "color": "5319E7",
+      "default": false,
+      "description": "500 (mostly) errors due to lack of event/parameter validation"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 2674406491,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDkx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/X-Regression",
+      "name": "X-Regression",
+      "color": "ff7979",
+      "default": false,
+      "description": "Something broke which worked on a previous release"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 5432652643,
+      "node_id": "LA_kwDOAVyVwM8AAAABQ8-zYw",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Leave",
+      "name": "A-Leave",
+      "color": "5319E7",
+      "default": false,
+      "description": "Leaving a room"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 7,
+  "created_at": "2023-08-16T14:02:09Z",
+  "updated_at": "2023-08-29T16:20:22Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nWhen leaving or posting into one specific room Synapse returns an error.\r\n\r\n Seems like an invalid state for this specific room / contact.\r\n\r\nThe room is on another server which does not run synapse but dendrite.\n\n### Steps to reproduce\n\n- Not sure if this is reproducable.\n\n### Homeserver\n\nPrivate one\n\n### Synapse Version\n\n1.90.0\n\n### Installation Method\n\nDocker (matrixdotorg/synapse)\n\n### Database\n\nPostgreSQL single server 15.0-alpine docker\n\n### Workers\n\nSingle process\n\n### Platform\n\nLinux with a Kubernetes cluster\n\n### Configuration\n\n_No response_\n\n### Relevant log output\n\n```shell\n2023-08-16 14:00:29,996 - synapse.http.server - 134 - ERROR - POST-60649 - Failed handle request via 'RoomMembershipRestServlet': <XForwardedForRequest at 0x7f7eb9f93b10 method='POST' uri='/_matrix/client/r0/rooms/{room_id}/leave' clientproto= │\r\n│ Traceback (most recent call last):                                                                                                                                                                                                                                        │\r\n│   File \"/usr/local/lib/python3.11/site-packages/synapse/http/server.py\", line 320, in _async_render_wrapper                                                                                                                                                               │\r\n│     callback_return = await self._async_render(request)                                                                                                                                                                                                                   │\r\n│   File \"/usr/local/lib/python3.11/site-packages/synapse/http/server.py\", line 532, in _async_render                                                                                                                                                                       │\r\n│     callback_return = await raw_callback_return                                                                                                                                                                                                                           │\r\n│   File \"/usr/local/lib/python3.11/site-packages/synapse/rest/client/room.py\", line 1072, in on_POST                                                                                                                                                                       │\r\n│     return await self._do(request, requester, room_id, membership_action, None)                                                                                                                                                                                           │\r\n│   File \"/usr/local/lib/python3.11/site-packages/synapse/rest/client/room.py\", line 1045, in _do                                                                                                                                                                           │\r\n│     await self.room_member_handler.update_membership(                                                                                                                                                                                                                     │\r\n│   File \"/usr/local/lib/python3.11/site-packages/synapse/handlers/room_member.py\", line 627, in update_membership                                                                                                                                                          │\r\n│     result = await self.update_membership_locked(                                                                                                                                                                                                                         │\r\n│   File \"/usr/local/lib/python3.11/site-packages/synapse/handlers/room_member.py\", line 1088, in update_membership_locked                                                                                                                                                  │\r\n│     return await self._local_membership_update(                                                                                                                                                                                                                           │\r\n│   File \"/usr/local/lib/python3.11/site-packages/synapse/handlers/room_member.py\", line 482, in _local_membership_update                                                                                                                                                   │\r\n│     await self.event_creation_handler.handle_new_client_event(                                                                                                                                                                                                            │\r\n│   File \"/usr/local/lib/python3.11/site-packages/synapse/util/metrics.py\", line 113, in measured_func                                                                                                                                                                      │\r\n│     r = await func(self, *args, **kwargs)                                                                                                                                                                                                                                 │\r\n│   File \"/usr/local/lib/python3.11/site-packages/synapse/handlers/message.py\", line 1478, in handle_new_client_event                                                                                                                                                       │\r\n│     result, _ = await make_deferred_yieldable(                                                                                                                                                                                                                            │\r\n│   File \"/usr/local/lib/python3.11/site-packages/twisted/internet/defer.py\", line 1697, in _inlineCallbacks                                                                                                                                                                │\r\n│     result = context.run(gen.send, result)                                                                                                                                                                                                                                │\r\n│   File \"/usr/local/lib/python3.11/site-packages/synapse/handlers/message.py\", line 1514, in _persist_events                                                                                                                                                               │\r\n│     await self._bulk_push_rule_evaluator.action_for_events_by_user(                                                                                                                                                                                                       │\r\n│   File \"/usr/local/lib/python3.11/site-packages/synapse/push/bulk_push_rule_evaluator.py\", line 314, in action_for_events_by_user                                                                                                                                         │\r\n│     await self._action_for_event_by_user(event, context, event_id_to_event)                                                                                                                                                                                               │\r\n│   File \"/usr/local/lib/python3.11/site-packages/synapse/util/metrics.py\", line 113, in measured_func                                                                                                                                                                      │\r\n│     r = await func(self, *args, **kwargs)                                                                                                                                                                                                                                 │\r\n│   File \"/usr/local/lib/python3.11/site-packages/synapse/push/bulk_push_rule_evaluator.py\", line 379, in _action_for_event_by_user                                                                                                                                         │\r\n│     keys = list(notification_levels.keys())                                                                                                                                                                                                                               │\r\n│ AttributeError: 'NoneType' object has no attribute 'keys'\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16122/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16122/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

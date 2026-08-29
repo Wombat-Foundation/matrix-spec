@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/5955",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/5955/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/5955/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/5955/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/5955",
+  "id": 487812085,
+  "node_id": "MDU6SXNzdWU0ODc4MTIwODU=",
+  "number": 5955,
+  "title": "implement 'new accounts cannot talk for more than N minutes after joining this room' semantics",
+  "user": {
+    "login": "ara4n",
+    "id": 1294269,
+    "node_id": "MDQ6VXNlcjEyOTQyNjk=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1294269?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/ara4n",
+    "html_url": "https://github.com/ara4n",
+    "followers_url": "https://api.github.com/users/ara4n/followers",
+    "following_url": "https://api.github.com/users/ara4n/following{/other_user}",
+    "gists_url": "https://api.github.com/users/ara4n/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/ara4n/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/ara4n/subscriptions",
+    "organizations_url": "https://api.github.com/users/ara4n/orgs",
+    "repos_url": "https://api.github.com/users/ara4n/repos",
+    "events_url": "https://api.github.com/users/ara4n/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/ara4n/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477043173,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p2",
+      "name": "z-p2",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 1554244657,
+      "node_id": "MDU6TGFiZWwxNTU0MjQ0NjU3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Moderation",
+      "name": "A-Moderation",
+      "color": "5319E7",
+      "default": false,
+      "description": "Tools for moderating HSes: event redaction, media removal, purge admin API, reports from users, ..."
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458764864,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNaQA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Frequent",
+      "name": "O-Frequent",
+      "color": "0052CC",
+      "default": false,
+      "description": "Affects or can be seen by most users regularly or impacts most users' first experience"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2019-08-31T21:15:24Z",
+  "updated_at": "2023-05-23T15:37:37Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "to slow down spammers",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/5955/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/5955/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

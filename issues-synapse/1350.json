@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/1350",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/1350/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/1350/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/1350/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/1350",
+  "id": 187782899,
+  "node_id": "MDU6SXNzdWUxODc3ODI4OTk=",
+  "number": 1350,
+  "title": "M_UNAUTHORIZED if 'Authorization' header value contains optional whitespace for federation requests (SYN-437)",
+  "user": {
+    "login": "matrixbot",
+    "id": 10127976,
+    "node_id": "MDQ6VXNlcjEwMTI3OTc2",
+    "avatar_url": "https://avatars.githubusercontent.com/u/10127976?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/matrixbot",
+    "html_url": "https://github.com/matrixbot",
+    "followers_url": "https://api.github.com/users/matrixbot/followers",
+    "following_url": "https://api.github.com/users/matrixbot/following{/other_user}",
+    "gists_url": "https://api.github.com/users/matrixbot/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/matrixbot/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/matrixbot/subscriptions",
+    "organizations_url": "https://api.github.com/users/matrixbot/orgs",
+    "repos_url": "https://api.github.com/users/matrixbot/repos",
+    "events_url": "https://api.github.com/users/matrixbot/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/matrixbot/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 828678284,
+      "node_id": "MDU6TGFiZWw4Mjg2NzgyODQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spec-Compliance",
+      "name": "A-Spec-Compliance",
+      "color": "5319E7",
+      "default": false,
+      "description": "places where synapse does not conform to the spec"
+    },
+    {
+      "id": 2674406235,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MjM1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/good%20first%20issue",
+      "name": "good first issue",
+      "color": "0E8A16",
+      "default": true,
+      "description": "Good for newcomers"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2015-07-14T17:36:22Z",
+  "updated_at": "2023-08-14T05:11:37Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "It's a little unclear from the spec, but I believe the intention is that the federation `Authorization` header is supposed to follow RFC7235 format. To quote:\n\n```\n Authorization = credentials\n\n  credentials = auth-scheme [ 1*SP ( token68 / [ ( \",\" / auth-param )\n    *( OWS \",\" [ OWS auth-param ] ) ] ) ]\n```\n\nThe `OWS` parts in there suggest that \"optional whitespace\" is allowed between comma-separated `auth-param` components.\n\nHowever, while synapse is happy with\n\n```\nAuthorization: X-Matrix origin=\"localhost:33515\",key=\"ed25519:1\",sig=\"hNMLqNd1T+JUVc53JxpRUtV8uTeAFiz/H8ewf5BffPz4Pem3EiIOq7L06B3fNHmWrW+ZVBkdG1tGEU9Fyl+lAA\"\n```\n\nit breaks with\n\n```\nAuthorization: X-Matrix origin=\"localhost:48078\", key=\"ed25519:1\", sig=\"24xkXS8iJE9dCdU5j0GRym4eps+vzUYvYaPosjdjU/G2etNQGVc1erInpmjJJHlJoJu1GDb8H3JzXQga47oADg\"\n```\n\nIn the latter case, the resulting error message is:\n\n```\n400 Bad Request\n{\"errcode\":\"M_UNAUTHORIZED\",\"error\":\"Malformed Authorization header\"}\n```\n\n(Imported from https://matrix.org/jira/browse/SYN-437)\n\n(Reported by @leonerd)",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/1350/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/1350/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

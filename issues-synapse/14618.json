@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14618",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14618/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14618/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14618/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14618",
+  "id": 1476076972,
+  "node_id": "I_kwDOAVyVwM5X-yWs",
+  "number": 14618,
+  "title": "Optionally hide online status",
+  "user": {
+    "login": "MomentQYC",
+    "id": 62551256,
+    "node_id": "MDQ6VXNlcjYyNTUxMjU2",
+    "avatar_url": "https://avatars.githubusercontent.com/u/62551256?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/MomentQYC",
+    "html_url": "https://github.com/MomentQYC",
+    "followers_url": "https://api.github.com/users/MomentQYC/followers",
+    "following_url": "https://api.github.com/users/MomentQYC/following{/other_user}",
+    "gists_url": "https://api.github.com/users/MomentQYC/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/MomentQYC/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/MomentQYC/subscriptions",
+    "organizations_url": "https://api.github.com/users/MomentQYC/orgs",
+    "repos_url": "https://api.github.com/users/MomentQYC/repos",
+    "events_url": "https://api.github.com/users/MomentQYC/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/MomentQYC/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045943,
+      "node_id": "MDU6TGFiZWw0NzcwNDU5NDM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Presence",
+      "name": "A-Presence",
+      "color": "5319e7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2022-12-05T09:11:04Z",
+  "updated_at": "2022-12-07T11:25:05Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\n\r\n<!-- Describe here the feature you are requesting. -->\r\nFor privacy reasons, many people do not like to expose their online status.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14618/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14618/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

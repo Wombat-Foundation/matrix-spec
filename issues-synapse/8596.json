@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/8596",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/8596/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/8596/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/8596/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/8596",
+  "id": 725338487,
+  "node_id": "MDU6SXNzdWU3MjUzMzg0ODc=",
+  "number": 8596,
+  "title": "Failing to join a remote room invite",
+  "user": {
+    "login": "jaywink",
+    "id": 1174866,
+    "node_id": "MDQ6VXNlcjExNzQ4NjY=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1174866?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/jaywink",
+    "html_url": "https://github.com/jaywink",
+    "followers_url": "https://api.github.com/users/jaywink/followers",
+    "following_url": "https://api.github.com/users/jaywink/following{/other_user}",
+    "gists_url": "https://api.github.com/users/jaywink/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/jaywink/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/jaywink/subscriptions",
+    "organizations_url": "https://api.github.com/users/jaywink/orgs",
+    "repos_url": "https://api.github.com/users/jaywink/repos",
+    "events_url": "https://api.github.com/users/jaywink/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/jaywink/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137743886,
+      "node_id": "LA_kwDOAVyVwM72oPYO",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Invite",
+      "name": "A-Invite",
+      "color": "5319E7",
+      "default": false,
+      "description": "Inviting users to rooms and accepting invites"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2020-10-20T08:27:14Z",
+  "updated_at": "2022-05-16T21:11:59Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nGot an invite to a remote room. On clicking invite in Element web and desktop, got `{\"errcode\":\"M_NOT_FOUND\",\"error\":\"Unknown room !foobar:elokapina.fi\"}` as the reply to the join.\r\n\r\nThe Element Web screenshot is rather unhelpful. The person has not left the room and the server is also not unavailable. Have done multiple attempts to ensure it's not a fluke network issue.\r\n\r\n![Selection_785](https://user-images.githubusercontent.com/1174866/96559438-b89baf00-12c5-11eb-8c17-897c9339be90.png)\r\n\r\nFor the inviter in the remote room (also a remote server user), I look like joining the room. When I click accept again after the above, Synapse returns 200 to the join and the spinner just spins forever. Clearing cache and reloading does not help, the invite is still there, the room not. Told remote user to kick and re-invite, but same result.\r\n\r\nI am in lots of rooms on with the users on the remote server. I have previously been in the room I am being invited to but having done a `/part` at some point.\r\n\r\nHave also tried this on Element Android, the same issue except that the error is directly from the API response (ie unknown room).\r\n\r\nIf after the first unsuccessful join error on either client, I click reject invite, the remote room shows me leaving the room.\r\n\r\nWill update Element debug logs. For Synapse debug logs, they can be found in the EMS logs.\r\n\r\nHave tested a join from another staging Synapse in EMS and it worked. \r\n\r\nLogging in to the Synapse tracker since I've tested this on Element desktop nightly, Element web 1.7.9 and Element Android - so it smells like a Synapse issue related to my history with the room.\r\n\r\n### Version information\r\n\r\n- **Homeserver**: my: federator.dev - remote: elokapina.fi\r\n\r\n- **Version**: Both v1.21.0\r\n\r\n- **Install method**: both Docker, official images",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/8596/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/8596/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

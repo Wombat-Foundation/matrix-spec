@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16118",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16118/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16118/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16118/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16118",
+  "id": 1852288980,
+  "node_id": "I_kwDOAVyVwM5uZ6_U",
+  "number": 16118,
+  "title": "Unexpectedly did not have cached prev group for <Event ID>",
+  "user": {
+    "login": "stratacast",
+    "id": 14900584,
+    "node_id": "MDQ6VXNlcjE0OTAwNTg0",
+    "avatar_url": "https://avatars.githubusercontent.com/u/14900584?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/stratacast",
+    "html_url": "https://github.com/stratacast",
+    "followers_url": "https://api.github.com/users/stratacast/followers",
+    "following_url": "https://api.github.com/users/stratacast/following{/other_user}",
+    "gists_url": "https://api.github.com/users/stratacast/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/stratacast/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/stratacast/subscriptions",
+    "organizations_url": "https://api.github.com/users/stratacast/orgs",
+    "repos_url": "https://api.github.com/users/stratacast/repos",
+    "events_url": "https://api.github.com/users/stratacast/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/stratacast/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    },
+    {
+      "id": 4459612007,
+      "node_id": "LA_kwDOAVyVwM8AAAABCdBHZw",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-E2EE",
+      "name": "A-E2EE",
+      "color": "5319E7",
+      "default": false,
+      "description": "End-to-end encryption for Matrix clients"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2023-08-15T23:40:31Z",
+  "updated_at": "2023-08-29T13:32:35Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nSome messages end up not being able to be decrypted by clients. The event ID that is not decryptable by clients corresponds with the message `Unexpectedly did not have cached prev group for <Event ID>` in the log.\n\n### Steps to reproduce\n\nEnd-to-end encrypted rooms\n\n### Homeserver\n\npasswordclass.xyz\n\n### Synapse Version\n\n{\"server_version\":\"1.89.0\",\"python_version\":\"3.10.12\"}\n\n### Installation Method\n\nOther (please mention below)\n\n### Database\n\nPostgreSQL, single server, did not port from SQLite, have previously restored from a backup (dump & restore to upgrade from PostgreSQL 14 -> 15)\n\n### Workers\n\nSingle process\n\n### Platform\n\nOpenBSD 7.3-CURRENT\n\n### Configuration\n\nNo unusual configs. \n\n### Relevant log output\n\n```shell\n2023-08-15 21:03:42,769 - synapse.federation.sender - 586 - INFO - process_event_queue_for_federation-276 - Unexpectedly did not have cached prev group for <EventID>\r\n\r\nFollowing log info doesn't appear to be immediately relevant. But it is followed by:\r\n\r\n2023-08-15 21:03:42,782 - synapse.push.httppusher - 230 - INFO - httppush.process-316 - Processing 1 unprocessed push actions for\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16118/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16118/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

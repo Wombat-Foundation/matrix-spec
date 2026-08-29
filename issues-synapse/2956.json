@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/2956",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/2956/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/2956/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/2956/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/2956",
+  "id": 303033104,
+  "node_id": "MDU6SXNzdWUzMDMwMzMxMDQ=",
+  "number": 2956,
+  "title": "joining #neb:matrix.org often fails",
+  "user": {
+    "login": "richvdh",
+    "id": 1389908,
+    "node_id": "MDQ6VXNlcjEzODk5MDg=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1389908?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/richvdh",
+    "html_url": "https://github.com/richvdh",
+    "followers_url": "https://api.github.com/users/richvdh/followers",
+    "following_url": "https://api.github.com/users/richvdh/following{/other_user}",
+    "gists_url": "https://api.github.com/users/richvdh/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/richvdh/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/richvdh/subscriptions",
+    "organizations_url": "https://api.github.com/users/richvdh/orgs",
+    "repos_url": "https://api.github.com/users/richvdh/repos",
+    "events_url": "https://api.github.com/users/richvdh/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/richvdh/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1771241792,
+      "node_id": "MDU6TGFiZWwxNzcxMjQxNzky",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federated-Join",
+      "name": "A-Federated-Join",
+      "color": "5319E7",
+      "default": false,
+      "description": "joins over federation generally suck"
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2018-03-07T09:58:28Z",
+  "updated_at": "2022-10-05T17:27:35Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "The first attempt gives:\r\n\r\n```\r\n2018-03-06 17:48:50,126 - synapse.handlers.federation - 1578 - WARNING - POST-237286- Rejecting $1416421111999gtomZ:matrix.org because Invalid ID: 'matrix.org'\r\n```\r\nand then\r\n```\r\n2018-03-06 17:48:50,973 - synapse.http.server - 183 - ERROR - POST-237286- Failed handle request synapse.http.server._async_render on <synapse.rest.ClientRestResource object at 0x7f428604b190>: <XForwardedForRequest at 0x7f423878ba70 method=POST uri=/_matrix/client/r0/join/%23neb:matrix.org? clientproto=HTTP/1.1 sit\r\nFailure: twisted.internet.defer.FirstError: FirstError[#0, [Failure instance: Traceback: <type 'exceptions.IndexError'>: list index out of range\r\n/opt/synapse/env/local/lib/python2.7/site-packages/twisted/internet/defer.py:653:_runCallbacks\r\n/opt/synapse/env/local/lib/python2.7/site-packages/twisted/internet/defer.py:1442:gotResult\r\n/opt/synapse/env/local/lib/python2.7/site-packages/twisted/internet/defer.py:1384:_inlineCallbacks\r\n/opt/synapse/env/local/lib/python2.7/site-packages/twisted/python/failure.py:419:throwExceptionIntoGenerator\r\n--- <exception caught here> ---\r\n/opt/synapse/synapse/synapse/storage/events.py:143:handle_queue_loop\r\n/opt/synapse/env/local/lib/python2.7/site-packages/twisted/internet/defer.py:1384:_inlineCallbacks\r\n/opt/synapse/env/local/lib/python2.7/site-packages/twisted/python/failure.py:419:throwExceptionIntoGenerator\r\n/opt/synapse/synapse/synapse/storage/events.py:288:persisting_queue\r\n/opt/synapse/env/local/lib/python2.7/site-packages/twisted/internet/defer.py:1384:_inlineCallbacks\r\n/opt/synapse/env/local/lib/python2.7/site-packages/twisted/python/failure.py:419:throwExceptionIntoGenerator\r\n/opt/synapse/synapse/synapse/storage/events.py:184:f\r\n/opt/synapse/env/local/lib/python2.7/site-packages/twisted/internet/defer.py:1386:_inlineCallbacks\r\n/opt/synapse/synapse/synapse/storage/events.py:421:_persist_events\r\n/opt/synapse/synapse/synapse/server.py:181:is_mine_id\r\n]]\r\n```\r\n\r\n`$1416421111999gtomZ:matrix.org` looks like:\r\n\r\n```\r\n  {\r\n    \"origin\": \"matrix.org\",\r\n    \"signatures\": {\r\n      \"matrix.org\": {\r\n        \"ed25519:auto\": \"M/HQNUSCDEmmzdwGFFsAi9lD/V6RoS/tNavEW6w2bM41+RQq6CFm7jdriXpzK2QoZqN9qCuv3sILMZr1Df/lDw\"\r\n      }\r\n    },\r\n    \"origin_server_ts\": 1410782729923,\r\n    \"sender\": \"matrix.org\",\r\n    \"event_id\": \"$1416421111999gtomZ:matrix.org\",\r\n    \"stream_ordering\": 5144,\r\n    \"prev_events\": [\r\n      [\r\n        \"$1416421111992SoSWp:matrix.org\",\r\n        {\r\n          \"sha256\": \"iJAK2dEcpDiCysSaChnsUJkbJB6sF/B8g3hzCDj3BHo\"\r\n        }\r\n      ]\r\n    ],\r\n    \"unsigned\": {\r\n      \"age\": 103937416446\r\n    },\r\n    \"state_key\": \"matrix.org\",\r\n    \"content\": {\r\n      \"aliases\": [\r\n        \"#neb:matrix.org\"\r\n      ]\r\n    },\r\n    \"depth\": 2,\r\n    \"prev_state\": [],\r\n    \"room_id\": \"!aZkanAnWEdxcRIQkWn:matrix.org\",\r\n    \"auth_events\": [],\r\n    \"hashes\": {\r\n      \"sha256\": \"2wva9kILrW7ngfYQLcwqFhvu+Pc+HgZ+bQIyzRprahI\"\r\n    },\r\n    \"type\": \"m.room.aliases\"\r\n  }\r\n```\r\n\r\n(note the invalid `sender`).\r\n\r\nHowever, that is enough for all of the events to be persisted in the database. A second attempt then looks at those events to determine other servers in the room, and has a good chance (note: not guaranteed) of picking one that's not `matrix.org` to do the join.\r\n\r\nMost other servers will not have `$1416421111999gtomZ:matrix.org` (since they will have rejected it) so do not return it from the send_join, and the join therefore succeeds.\r\n\r\n(An alternative approach is to join via a different alias, such as `#neb:t2l.io` - which, again, means that you do not receive the problem event and the join succeeds.)\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/2956/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/2956/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

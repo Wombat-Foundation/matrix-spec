@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16310",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16310/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16310/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16310/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16310",
+  "id": 1894134084,
+  "node_id": "I_kwDOAVyVwM5w5jFE",
+  "number": 16310,
+  "title": "Complement `Device_list_tracking_for_pre-existing_members_in_partial_state_room` flake",
+  "user": {
+    "login": "DMRobertson",
+    "id": 8614563,
+    "node_id": "MDQ6VXNlcjg2MTQ1NjM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8614563?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/DMRobertson",
+    "html_url": "https://github.com/DMRobertson",
+    "followers_url": "https://api.github.com/users/DMRobertson/followers",
+    "following_url": "https://api.github.com/users/DMRobertson/following{/other_user}",
+    "gists_url": "https://api.github.com/users/DMRobertson/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/DMRobertson/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/DMRobertson/subscriptions",
+    "organizations_url": "https://api.github.com/users/DMRobertson/orgs",
+    "repos_url": "https://api.github.com/users/DMRobertson/repos",
+    "events_url": "https://api.github.com/users/DMRobertson/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/DMRobertson/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406437,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDM3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Other",
+      "name": "T-Other",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Questions, user support, anything else."
+    },
+    {
+      "id": 4302892012,
+      "node_id": "LA_kwDOAVyVwM8AAAABAHjr7A",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Flake",
+      "name": "Z-Flake",
+      "color": "aa5522",
+      "default": false,
+      "description": "Tests that give intermittent failures"
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    },
+    {
+      "id": 4459600960,
+      "node_id": "LA_kwDOAVyVwM8AAAABCdAcQA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Testing",
+      "name": "A-Testing",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues related to testing in complement, synapse, etc"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2023-09-13T09:34:01Z",
+  "updated_at": "2023-09-14T14:27:52Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "https://github.com/matrix-org/synapse/actions/runs/6169075347/job/16742675906#step:5:26424\r\n\r\n```\r\n      client.go:787: [CSAPI] POST hs1/_matrix/client/v3/register => 200 OK (75.192772ms)\r\n      client.go:787: [CSAPI] GET hs1/_matrix/client/v3/capabilities => 200 OK (20.201327ms)\r\n      server.go:170: Creating room !0-1kyqpkiaQWlFrJMJKD:host.docker.internal:41369 with version 10\r\n      federation_room_join_partial_state_test.go:4400: Registered state_ids handler for event $ZTc4bUqYvLVu6w95OtxitUFRQhHntJ7lWu9IeQYpwDE\r\n      federation_room_join_partial_state_test.go:4441: Registered /state handler for event $ZTc4bUqYvLVu6w95OtxitUFRQhHntJ7lWu9IeQYpwDE\r\n  2023/09/13 07:28:13 Received send-join of event $8mHTdVcQHH4zxXQPeYkdzdQmq4LppMXziDzURot235g\r\n      federation_room_join_partial_state_test.go:4379: Incoming state_ids request for event [$ZTc4bUqYvLVu6w95OtxitUFRQhHntJ7lWu9IeQYpwDE] in room !0-1kyqpkiaQWlFrJMJKD:host.docker.internal:41369\r\n      client.go:787: [CSAPI] POST hs1/_matrix/client/v3/join/!0-1kyqpkiaQWlFrJMJKD:host.docker.internal:41369 => 200 OK (656.497916ms)\r\n      federation_room_join_partial_state_test.go:4294: /join request completed\r\n      federation_room_join_partial_state_test.go:2646: Incoming POST /_matrix/federation/v1/user/keys/query\r\n      client.go:787: [CSAPI] POST hs1/_matrix/client/v3/keys/query => 200 OK (60.372479ms)\r\n      federation_room_join_partial_state_test.go:2646: Incoming POST /_matrix/federation/v1/user/keys/query\r\n      client.go:787: [CSAPI] POST hs1/_matrix/client/v3/keys/query => 200 OK (14.998594ms)\r\n      federation_room_join_partial_state_test.go:2646: Incoming POST /_matrix/federation/v1/user/keys/query\r\n      client.go:787: [CSAPI] POST hs1/_matrix/client/v3/keys/query => 200 OK (8.988556ms)\r\n      federation_room_join_partial_state_test.go:2646: Incoming POST /_matrix/federation/v1/user/keys/query\r\n      client.go:787: [CSAPI] POST hs1/_matrix/client/v3/keys/query => 200 OK (8.174451ms)\r\n      client.go:787: [CSAPI] GET hs1/_matrix/client/v3/sync => 200 OK (212.12803ms)\r\n      client.go:787: [CSAPI] GET hs1/_matrix/client/v3/sync => 200 OK (54.750743ms)\r\n      federation_room_join_partial_state_test.go:2864: Alice successfully received event $CIrUCeIk4u1DfxqrHRujPoYiLwsdEnlsHc4F6nhC89A via /sync\r\n      client.go:787: [CSAPI] GET hs1/_matrix/client/v3/sync => 200 OK (126.832296ms)\r\n      federation_room_join_partial_state_test.go:2874: Alice successfully received event $0b2VJAFH-GHDBpUZtvpkRZfXGKAWLRFRegrsYscrUGw via /sync\r\n      federation_room_join_partial_state_test.go:4386: Replying to /state_ids request for event [$ZTc4bUqYvLVu6w95OtxitUFRQhHntJ7lWu9IeQYpwDE]\r\n      federation_room_join_partial_state_test.go:4419: Incoming state request for event [$ZTc4bUqYvLVu6w95OtxitUFRQhHntJ7lWu9IeQYpwDE] in room !0-1kyqpkiaQWlFrJMJKD:host.docker.internal:41369\r\n      federation_room_join_partial_state_test.go:4427: Replying to /state request for event [$ZTc4bUqYvLVu6w95OtxitUFRQhHntJ7lWu9IeQYpwDE]\r\n      client.go:787: [CSAPI] GET hs1/_matrix/client/v3/rooms/!0-1kyqpkiaQWlFrJMJKD:host.docker.internal:41369/members => 200 OK (541.301394ms)\r\n      federation_room_join_partial_state_test.go:2878: @t30alice:hs1's partial state join to !0-1kyqpkiaQWlFrJMJKD:host.docker.internal:41369 completed.\r\n      client.go:787: [CSAPI] GET hs1/_matrix/client/v3/sync => 200 OK (85.939939ms)\r\n      client.go:787: [CSAPI] GET hs1/_matrix/client/v3/keys/changes => 200 OK (37.703037ms)\r\n      federation_room_join_partial_state_test.go:2618: Incoming GET /_matrix/federation/v1/user/devices/@charlie:host.docker.internal:41369\r\n      client.go:787: [CSAPI] POST hs1/_matrix/client/v3/keys/query => 200 OK (44.473879ms)\r\n      federation_room_join_partial_state_test.go:2618: Incoming GET /_matrix/federation/v1/user/devices/@derek:host.docker.internal:41369\r\n      client.go:787: [CSAPI] POST hs1/_matrix/client/v3/keys/query => 200 OK (65.095108ms)\r\n      client.go:787: [CSAPI] POST hs1/_matrix/client/v3/keys/query => 200 OK (56.765456ms)\r\n      client.go:787: [CSAPI] POST hs1/_matrix/client/v3/keys/query => 200 OK (21.296433ms)\r\n      federation_room_join_partial_state_test.go:4317: Cleaning up after test...\r\n      client.go:787: [CSAPI] GET hs1/_matrix/client/v3/rooms/!0-1kyqpkiaQWlFrJMJKD:host.docker.internal:41369/members => 200 OK (19.942625ms)\r\n      federation_room_join_partial_state_test.go:4319: @t30alice:hs1's partial state join to !0-1kyqpkiaQWlFrJMJKD:host.docker.internal:41369 completed.\r\n      client.go:787: [CSAPI] POST hs1/_matrix/client/v3/rooms/!0-1kyqpkiaQWlFrJMJKD:host.docker.internal:41369/leave => 200 OK (281.747766ms)\r\n      federation_room_join_partial_state_test.go:157: host.docker.internal:41369 timed out waiting for @t30alice:hs1 to leave test room !0-1kyqpkiaQWlFrJMJKD:host.docker.internal:41369.\r\n```\r\n\r\nIn particular\r\n\r\n>    federation_room_join_partial_state_test.go:157: host.docker.internal:41369 timed out waiting for @t30alice:hs1 to leave test room !0-1kyqpkiaQWlFrJMJKD:host.docker.internal:41369.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16310/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16310/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

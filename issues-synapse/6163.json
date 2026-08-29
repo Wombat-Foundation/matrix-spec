@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/6163",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/6163/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/6163/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/6163/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/6163",
+  "id": 502193247,
+  "node_id": "MDU6SXNzdWU1MDIxOTMyNDc=",
+  "number": 6163,
+  "title": "No entry in device_lists left when user rejects invite",
+  "user": {
+    "login": "dbkr",
+    "id": 986903,
+    "node_id": "MDQ6VXNlcjk4NjkwMw==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/986903?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/dbkr",
+    "html_url": "https://github.com/dbkr",
+    "followers_url": "https://api.github.com/users/dbkr/followers",
+    "following_url": "https://api.github.com/users/dbkr/following{/other_user}",
+    "gists_url": "https://api.github.com/users/dbkr/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/dbkr/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/dbkr/subscriptions",
+    "organizations_url": "https://api.github.com/users/dbkr/orgs",
+    "repos_url": "https://api.github.com/users/dbkr/repos",
+    "events_url": "https://api.github.com/users/dbkr/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/dbkr/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1828464348,
+      "node_id": "MDU6TGFiZWwxODI4NDY0MzQ4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Device-List-Tracking",
+      "name": "A-Device-List-Tracking",
+      "color": "5319E7",
+      "default": false,
+      "description": "Telling clients about other devices. Often related to E2EE."
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2019-10-03T17:19:11Z",
+  "updated_at": "2022-11-23T13:59:51Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "In https://github.com/matrix-org/synapse/blob/master/synapse/handlers/sync.py#L1392 we only include a member in `newly_left_users` if their previous membership was `join`, but in the other branch of the `if`, we include them in `newly_joined_or_invited_users` if they're, well, joined or invited, so if a user goes from `invite` to `leave` (or `ban`) then we'll never send them in the `left` section.\r\n\r\nNB. clients shouldn't be relying on this to work out who to encrypt to (and indeed the js-sdk does not) so this doesn't cause events to be encrypted to anyone they shouldn't be. It might just cause clients to continue tracking the device lists of some users when they don't need to.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/6163/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/6163/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

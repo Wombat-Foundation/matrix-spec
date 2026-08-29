@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14683",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14683/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14683/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14683/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14683",
+  "id": 1499938951,
+  "node_id": "I_kwDOAVyVwM5ZZ0CH",
+  "number": 14683,
+  "title": "/sync should not include a room in 'leave' and 'invite'",
+  "user": {
+    "login": "Ainias",
+    "id": 17934715,
+    "node_id": "MDQ6VXNlcjE3OTM0NzE1",
+    "avatar_url": "https://avatars.githubusercontent.com/u/17934715?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Ainias",
+    "html_url": "https://github.com/Ainias",
+    "followers_url": "https://api.github.com/users/Ainias/followers",
+    "following_url": "https://api.github.com/users/Ainias/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Ainias/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Ainias/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Ainias/subscriptions",
+    "organizations_url": "https://api.github.com/users/Ainias/orgs",
+    "repos_url": "https://api.github.com/users/Ainias/repos",
+    "events_url": "https://api.github.com/users/Ainias/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Ainias/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2038475067,
+      "node_id": "MDU6TGFiZWwyMDM4NDc1MDY3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Sync",
+      "name": "A-Sync",
+      "color": "5319E7",
+      "default": false,
+      "description": "defects related to /sync"
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2022-12-16T10:15:22Z",
+  "updated_at": "2022-12-16T14:48:26Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nWhen a User A kicks a User B and invites User B directly again, without User B syncing in between (because the client-app was closed for example), then the /sync response for User B includes the room in both `rooms.invite` and `rooms.leave`. \r\n\r\nSince the client by default cannot rely on `origin_server_ts` for the order of events as there could be multiple servers with different time, some clients (like matrix-js-sdk) process the events in the wrong order (first the invite, then the leave) resulting in a wrong state on the client. The corresponding room cannot be used to chat, as the client thinks  he left, when in reality he has an invitation to the room.\r\n\r\nIf the room is only inlcuded in either \"leave\" or \"invite\" (whichever is the newest event), then the client would always have the correct state\r\n\r\nHere is a result of `/sync` for User B:\r\n<details>\r\n<summary>/sync Result</summary>\r\n\r\n```json\r\n{\r\n  \"next_batch\": \"s127655_2818331_4835_288127_209897_85_169_14999_0\",\r\n  \"presence\": {\r\n    \"events\": [\r\n      {\r\n        \"type\": \"m.presence\",\r\n        \"sender\": \"@ct_a18c34c2-ea65-4359-956e-b4c237c96e47:chat.krz.tools\",\r\n        \"content\": {\r\n          \"presence\": \"online\",\r\n          \"last_active_ago\": 17,\r\n          \"currently_active\": true\r\n        }\r\n      }\r\n    ]\r\n  },\r\n  \"device_lists\": {\r\n    \"left\": [\r\n      \"@ctbot:chat.krz.tools\"\r\n    ]\r\n  },\r\n  \"device_one_time_keys_count\": {\r\n    \"signed_curve25519\": 0\r\n  },\r\n  \"org.matrix.msc2732.device_unused_fallback_key_types\": [],\r\n  \"device_unused_fallback_key_types\": [],\r\n  \"rooms\": {\r\n    \"invite\": {\r\n      \"!sQgeWUrcqXvxvzkUqw:chat.krz.tools\": {\r\n        \"invite_state\": {\r\n          \"events\": [\r\n            {\r\n              \"type\": \"m.room.avatar\",\r\n              \"state_key\": \"\",\r\n              \"content\": {\r\n                \"url\": \"\"\r\n              },\r\n              \"sender\": \"@ctbot:chat.krz.tools\"\r\n            },\r\n            {\r\n              \"type\": \"m.room.canonical_alias\",\r\n              \"state_key\": \"\",\r\n              \"content\": {\r\n                \"alias\": \"#ctg_4b1a00f5-7753-469f-bf95-6bb3b7c1414d:chat.krz.tools\"\r\n              },\r\n              \"sender\": \"@ctbot:chat.krz.tools\"\r\n            },\r\n            {\r\n              \"type\": \"m.room.create\",\r\n              \"state_key\": \"\",\r\n              \"content\": {\r\n                \"room_version\": \"9\",\r\n                \"creator\": \"@ctbot:chat.krz.tools\"\r\n              },\r\n              \"sender\": \"@ctbot:chat.krz.tools\"\r\n            },\r\n            {\r\n              \"type\": \"m.room.join_rules\",\r\n              \"state_key\": \"\",\r\n              \"content\": {\r\n                \"join_rule\": \"invite\"\r\n              },\r\n              \"sender\": \"@ctbot:chat.krz.tools\"\r\n            },\r\n            {\r\n              \"type\": \"m.room.name\",\r\n              \"state_key\": \"\",\r\n              \"content\": {\r\n                \"name\": \"Chattest\"\r\n              },\r\n              \"sender\": \"@ctbot:chat.krz.tools\"\r\n            },\r\n            {\r\n              \"type\": \"m.room.topic\",\r\n              \"state_key\": \"\",\r\n              \"content\": {\r\n                \"topic\": \"Gruppen-Chat einer Gruppe in testsilas.krz.tools\"\r\n              },\r\n              \"sender\": \"@ctbot:chat.krz.tools\"\r\n            },\r\n            {\r\n              \"type\": \"m.room.member\",\r\n              \"state_key\": \"@ctbot:chat.krz.tools\",\r\n              \"content\": {\r\n                \"membership\": \"join\"\r\n              },\r\n              \"sender\": \"@ctbot:chat.krz.tools\"\r\n            },\r\n            {\r\n              \"type\": \"m.room.member\",\r\n              \"sender\": \"@ctbot:chat.krz.tools\",\r\n              \"content\": {\r\n                \"membership\": \"invite\",\r\n                \"displayname\": \"Admin Admin\"\r\n              },\r\n              \"state_key\": \"@ct_a18c34c2-ea65-4359-956e-b4c237c96e47:chat.krz.tools\",\r\n              \"origin_server_ts\": 1671178716243,\r\n              \"unsigned\": {\r\n                \"replaces_state\": \"$LbfQGkLijKPasqYizadgfKnvLW_OKYK4izrqDLegduU\",\r\n                \"prev_content\": {\r\n                  \"reason\": null,\r\n                  \"membership\": \"leave\"\r\n                },\r\n                \"prev_sender\": \"@ctbot:chat.krz.tools\",\r\n                \"age\": 41096\r\n              },\r\n              \"event_id\": \"$elHhtOnT4Xy9mdNaHeJzVu5nVhKnRbjDEiFpN8BxBrc\"\r\n            }\r\n          ]\r\n        }\r\n      }\r\n    },\r\n    \"leave\": {\r\n      \"!sQgeWUrcqXvxvzkUqw:chat.krz.tools\": {\r\n        \"timeline\": {\r\n          \"events\": [\r\n            {\r\n              \"type\": \"m.room.member\",\r\n              \"sender\": \"@ctbot:chat.krz.tools\",\r\n              \"content\": {\r\n                \"reason\": null,\r\n                \"membership\": \"leave\"\r\n              },\r\n              \"state_key\": \"@ct_a18c34c2-ea65-4359-956e-b4c237c96e47:chat.krz.tools\",\r\n              \"origin_server_ts\": 1671178710797,\r\n              \"unsigned\": {\r\n                \"replaces_state\": \"$pTOIJv3ViDwR7QyzOCLQatCwUyv5fQpNYSOaDIHXcdI\",\r\n                \"prev_content\": {\r\n                  \"membership\": \"join\",\r\n                  \"displayname\": \"Admin Admin\"\r\n                },\r\n                \"prev_sender\": \"@ct_a18c34c2-ea65-4359-956e-b4c237c96e47:chat.krz.tools\",\r\n                \"age\": 46542\r\n              },\r\n              \"event_id\": \"$LbfQGkLijKPasqYizadgfKnvLW_OKYK4izrqDLegduU\"\r\n            }\r\n          ],\r\n          \"prev_batch\": \"s127652_2818310_4829_288126_209897_85_169_14999_0\",\r\n          \"limited\": false\r\n        },\r\n        \"state\": {\r\n          \"events\": []\r\n        },\r\n        \"account_data\": {\r\n          \"events\": []\r\n        }\r\n      }\r\n    }\r\n  }\r\n}\r\n```\r\n</details>\n\n### Steps to reproduce\n\n- User A and B are in a room together\r\n- User B stops his client\r\n- User A kicks User B\r\n- User A invites User B back in\r\n- User B starts his client\r\n- Client of User B syncs and gets the wrong sync response\r\n\n\n### Homeserver\n\nchat.krz.tools\n\n### Synapse Version\n\n1.73.0\n\n### Installation Method\n\nI don't know\n\n### Database\n\nPostgreSQL and the rest I don't know\n\n### Workers\n\nSingle process\n\n### Platform\n\nrunning in a vm as far as I know\n\n### Configuration\n\n_No response_\n\n### Relevant log output\n\n```shell\n-\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14683/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14683/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

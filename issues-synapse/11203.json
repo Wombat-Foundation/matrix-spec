@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/11203",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/11203/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/11203/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/11203/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/11203",
+  "id": 1038586294,
+  "node_id": "I_kwDOAVyVwM4955G2",
+  "number": 11203,
+  "title": "Ability to deep-merge configuration values (especially for workers)",
+  "user": {
+    "login": "anoadragon453",
+    "id": 1342360,
+    "node_id": "MDQ6VXNlcjEzNDIzNjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1342360?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/anoadragon453",
+    "html_url": "https://github.com/anoadragon453",
+    "followers_url": "https://api.github.com/users/anoadragon453/followers",
+    "following_url": "https://api.github.com/users/anoadragon453/following{/other_user}",
+    "gists_url": "https://api.github.com/users/anoadragon453/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/anoadragon453/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/anoadragon453/subscriptions",
+    "organizations_url": "https://api.github.com/users/anoadragon453/orgs",
+    "repos_url": "https://api.github.com/users/anoadragon453/repos",
+    "events_url": "https://api.github.com/users/anoadragon453/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/anoadragon453/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1056680564,
+      "node_id": "MDU6TGFiZWwxMDU2NjgwNTY0",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Workers",
+      "name": "A-Workers",
+      "color": "5319E7",
+      "default": false,
+      "description": "Problems related to running Synapse in Worker Mode (or replication)"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2021-10-28T14:26:42Z",
+  "updated_at": "2022-08-30T17:10:48Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "When running a large production deployment of Synapse with many worker process - each with their own config file - one quickly runs into issues with scalability of configuration. Specifically with any non-top level configuration options that need to different between worker processes.\r\n\r\nOne such example is database arguments. A common configuration is to have different `cp_min` and `cp_max` (database connection minimum and maximum values) for each worker. These are configured with the following config structure:\r\n\r\nhttps://github.com/matrix-org/synapse/blob/1bfd141205d8e2abceef3c277e47f20799bbd455/docs/sample_config.yaml#L773-L783\r\n\r\nIn order to have a different `cp_*` value for each worker, this entire structure must be copy/pasted between each worker's individual config file. This can be a pain as other, more long-lived options, such as the database host IP (`database.host`), must also be copied over. Then, if one wanted to change the database host IP, they would need to do so across _all_ worker files. \r\n\r\nPlainly, if one were to have a full `database` option in the main config, but only:\r\n\r\n```yaml\r\ndatabase:\r\n  args:\r\n    cp_min: 20\r\n    cp_max: 30\r\n```\r\n\r\nthe problem is that the entire `database` section from the main config would be overwritten so that all values other than `database.args.cp_*` would be set to their default. So you end up needing to copy values over.\r\n\r\nThis issue makes a case for a method of telling Synapse (presumably through a CLI flag) to **deep-merge** config options when multiple config files are present, instead of the current behaviour. This would result in the subset of options shown above preserving those options that were not explicitly overridden.\r\n\r\nDeep-merging should be optional and disabled by default, so that any existing config files written for the current behaviour would not be broken.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/11203/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/11203/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

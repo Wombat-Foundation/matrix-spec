@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16259",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16259/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16259/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16259/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16259",
+  "id": 1882699165,
+  "node_id": "I_kwDOAVyVwM5wN7Wd",
+  "number": 16259,
+  "title": "Allow spam checkers to override the error message",
+  "user": {
+    "login": "gabrc52",
+    "id": 24363938,
+    "node_id": "MDQ6VXNlcjI0MzYzOTM4",
+    "avatar_url": "https://avatars.githubusercontent.com/u/24363938?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/gabrc52",
+    "html_url": "https://github.com/gabrc52",
+    "followers_url": "https://api.github.com/users/gabrc52/followers",
+    "following_url": "https://api.github.com/users/gabrc52/following{/other_user}",
+    "gists_url": "https://api.github.com/users/gabrc52/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/gabrc52/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/gabrc52/subscriptions",
+    "organizations_url": "https://api.github.com/users/gabrc52/orgs",
+    "repos_url": "https://api.github.com/users/gabrc52/repos",
+    "events_url": "https://api.github.com/users/gabrc52/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/gabrc52/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1554244657,
+      "node_id": "MDU6TGFiZWwxNTU0MjQ0NjU3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Moderation",
+      "name": "A-Moderation",
+      "color": "5319E7",
+      "default": false,
+      "description": "Tools for moderating HSes: event redaction, media removal, purge admin API, reports from users, ..."
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2023-09-05T20:51:22Z",
+  "updated_at": "2023-09-06T12:46:36Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\n\r\nFor instance in [user_may_join_room](https://matrix-org.github.io/synapse/latest/modules/spam_checker_callbacks.html#user_may_join_room)\r\n\r\n![image](https://github.com/matrix-org/synapse/assets/24363938/327db977-b9b4-498d-9759-b6878a8d9782)\r\n\r\nIt is currently possible to override the status code / error code but not the error message. It would be useful for plugin devs to specify to users trying to join a room why they were denied for the room and what they can do in order to be granted access.\r\n\r\nClients like Element can then then display that error message.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16259/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16259/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

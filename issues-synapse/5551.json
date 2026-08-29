@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/5551",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/5551/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/5551/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/5551/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/5551",
+  "id": 460359269,
+  "node_id": "MDU6SXNzdWU0NjAzNTkyNjk=",
+  "number": 5551,
+  "title": "Support/document enabling http2",
+  "user": {
+    "login": "olmari",
+    "id": 5422161,
+    "node_id": "MDQ6VXNlcjU0MjIxNjE=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/5422161?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/olmari",
+    "html_url": "https://github.com/olmari",
+    "followers_url": "https://api.github.com/users/olmari/followers",
+    "following_url": "https://api.github.com/users/olmari/following{/other_user}",
+    "gists_url": "https://api.github.com/users/olmari/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/olmari/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/olmari/subscriptions",
+    "organizations_url": "https://api.github.com/users/olmari/orgs",
+    "repos_url": "https://api.github.com/users/olmari/repos",
+    "events_url": "https://api.github.com/users/olmari/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/olmari/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 600557921,
+      "node_id": "MDU6TGFiZWw2MDA1NTc5MjE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Performance",
+      "name": "A-Performance",
+      "color": "5319E7",
+      "default": false,
+      "description": "Performance, both client-facing and admin-facing"
+    },
+    {
+      "id": 845245048,
+      "node_id": "MDU6TGFiZWw4NDUyNDUwNDg=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Docs",
+      "name": "A-Docs",
+      "color": "5319E7",
+      "default": false,
+      "description": "things relating to the documentation"
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2019-06-25T11:08:25Z",
+  "updated_at": "2022-08-25T14:15:45Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\n\r\nhttp2, http/2, h2, would be beneficial to use between Synapse connections where-ever possible. https://github.com/matrix-org/synapse/issues/3683 for example suggest by intrepetation that one only needs to install python-h2 and python-priority and http2 would just work with Twisted, thus with Synapse, then. This might or might not be the case, but it would be awesome if this would be documented somewhere appropiately within Synapse docs.\r\n\r\nBenefits from http2 will not come if it isn't widely in use within Synapse and/or matrix-servers in general. I'd vote for having it supported by default within future Synapse releases and additionally mention it with reverse proxying instructions etc. I can do simple PR's to such documentation if this idea ever gain momentum :)",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/5551/reactions",
+    "total_count": 11,
+    "+1": 11,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/5551/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

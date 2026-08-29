@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/6162",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/6162/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/6162/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/6162/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/6162",
+  "id": 502187072,
+  "node_id": "MDU6SXNzdWU1MDIxODcwNzI=",
+  "number": 6162,
+  "title": "Synapse sends unnecessary device list change entries",
+  "user": {
+    "login": "dbkr",
+    "id": 986903,
+    "node_id": "MDQ6VXNlcjk4NjkwMw==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/986903?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/dbkr",
+    "html_url": "https://github.com/dbkr",
+    "followers_url": "https://api.github.com/users/dbkr/followers",
+    "following_url": "https://api.github.com/users/dbkr/following{/other_user}",
+    "gists_url": "https://api.github.com/users/dbkr/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/dbkr/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/dbkr/subscriptions",
+    "organizations_url": "https://api.github.com/users/dbkr/orgs",
+    "repos_url": "https://api.github.com/users/dbkr/repos",
+    "events_url": "https://api.github.com/users/dbkr/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/dbkr/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086029,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMjk=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-bug",
+      "name": "z-bug",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 477043173,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p2",
+      "name": "z-p2",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 600557921,
+      "node_id": "MDU6TGFiZWw2MDA1NTc5MjE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Performance",
+      "name": "A-Performance",
+      "color": "5319E7",
+      "default": false,
+      "description": "Performance, both client-facing and admin-facing"
+    },
+    {
+      "id": 1828464348,
+      "node_id": "MDU6TGFiZWwxODI4NDY0MzQ4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Device-List-Tracking",
+      "name": "A-Device-List-Tracking",
+      "color": "5319E7",
+      "default": false,
+      "description": "Telling clients about other devices. Often related to E2EE."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4213373831,
+      "node_id": "LA_kwDOAVyVwM77IvuH",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Lazy-Loading",
+      "name": "A-Lazy-Loading",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues relating to `lazy_load_members` in `/sync`"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2019-10-03T17:05:31Z",
+  "updated_at": "2022-06-08T16:54:05Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "With the lazy loading sync options enabled, synapse includes the current state events it thinks the client will need in order to render the events in the timeline section. The device list sync computation code includes these state events when working out what users have joined a room, so every time this happens, it generates a device change entry for that user too.\r\n\r\nThis will also presumably have happened when a user changed their profile information, so perhaps the most sensible fix here is for the sync code to look at the prev content for join events (it already looks at prev_content for leave events: https://github.com/matrix-org/synapse/blob/master/synapse/handlers/sync.py#L1382 ).",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/6162/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/6162/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

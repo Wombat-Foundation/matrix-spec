@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/4439",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/4439/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/4439/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/4439/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/4439",
+  "id": 402244964,
+  "node_id": "MDU6SXNzdWU0MDIyNDQ5NjQ=",
+  "number": 4439,
+  "title": "debian package runs synapse as nogroup",
+  "user": {
+    "login": "attilakinali",
+    "id": 1065209,
+    "node_id": "MDQ6VXNlcjEwNjUyMDk=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1065209?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/attilakinali",
+    "html_url": "https://github.com/attilakinali",
+    "followers_url": "https://api.github.com/users/attilakinali/followers",
+    "following_url": "https://api.github.com/users/attilakinali/following{/other_user}",
+    "gists_url": "https://api.github.com/users/attilakinali/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/attilakinali/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/attilakinali/subscriptions",
+    "organizations_url": "https://api.github.com/users/attilakinali/orgs",
+    "repos_url": "https://api.github.com/users/attilakinali/repos",
+    "events_url": "https://api.github.com/users/attilakinali/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/attilakinali/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477050471,
+      "node_id": "MDU6TGFiZWw0NzcwNTA0NzE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p3",
+      "name": "z-p3",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 482414360,
+      "node_id": "MDU6TGFiZWw0ODI0MTQzNjA=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Packaging",
+      "name": "A-Packaging",
+      "color": "5319E7",
+      "default": false,
+      "description": "Our Debian packages, docker images; or issues relevant to downstream packagers"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2017-03-27T23:05:43Z",
+  "updated_at": "2023-05-23T14:33:59Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Hi,\r\n\r\nThe debian package creates files that belong to nogroup. But, like nobody, nogroup is a virtual group who should never own any files. It is meant as a group to switch to as a daemon in order to drop privileges. Instead matrix-synapse should create a group and assign all files to that group.\r\n\r\nAttila",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/4439/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/4439/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

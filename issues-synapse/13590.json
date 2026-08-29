@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13590",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13590/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13590/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13590/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13590",
+  "id": 1347207909,
+  "node_id": "I_kwDOAVyVwM5QTMLl",
+  "number": 13590,
+  "title": "`conf/workers-shared-extra.yaml.j2` is applied to monolith Complement runs",
+  "user": {
+    "login": "MadLittleMods",
+    "id": 558581,
+    "node_id": "MDQ6VXNlcjU1ODU4MQ==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/558581?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/MadLittleMods",
+    "html_url": "https://github.com/MadLittleMods",
+    "followers_url": "https://api.github.com/users/MadLittleMods/followers",
+    "following_url": "https://api.github.com/users/MadLittleMods/following{/other_user}",
+    "gists_url": "https://api.github.com/users/MadLittleMods/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/MadLittleMods/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/MadLittleMods/subscriptions",
+    "organizations_url": "https://api.github.com/users/MadLittleMods/orgs",
+    "repos_url": "https://api.github.com/users/MadLittleMods/repos",
+    "events_url": "https://api.github.com/users/MadLittleMods/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/MadLittleMods/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406413,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDEz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Task",
+      "name": "T-Task",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Refactoring, removal, replacement, enabling or disabling functionality, other engineering tasks."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    },
+    {
+      "id": 4459600960,
+      "node_id": "LA_kwDOAVyVwM8AAAABCdAcQA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Testing",
+      "name": "A-Testing",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues related to testing in complement, synapse, etc"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2022-08-23T01:50:43Z",
+  "updated_at": "2022-08-25T11:50:48Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "[`docker/complement/conf/workers-shared-extra.yaml.j2`](https://github.com/matrix-org/synapse/blob/3dd175b628bab5638165f20de9eade36a4e88147/docker/complement/conf/workers-shared-extra.yaml.j2) seems to apply even when `SYNAPSE_COMPLEMENT_USE_WORKERS=true` isn't set. I assume they aren't supposed to stack like that for the monolith?\r\n\r\nNoticed because I saw the `reject_limit` as `99999` when investigating https://github.com/matrix-org/synapse/pull/13541#discussion_r952064254. Disabling the rate limit could be as expected for the monolith but the way it's inherited from workers seems weird.\r\n\r\nThis is the command I was running for reference but it probably works in the simplified case as well,\r\n```\r\nTEST_ONLY_IGNORE_POETRY_LOCKFILE=1 TEST_ONLY_SKIP_DEP_HASH_VERIFICATION=1 COMPLEMENT_DEBUG=1 COMPLEMENT_KEEP_BLUEPRINTS=\"fed.perf_many_messages.hs1\" COMPLEMENT_ALWAYS_PRINT_SERVER_LOGS=1 COMPLEMENT_DIR=../complement ./scripts-dev/complement.sh -run TestMessagesOverFederation -p 1\r\n```\r\n\r\n\r\n### Dev notes\r\n\r\nRelated PRs:\r\n\r\n - https://github.com/matrix-org/synapse/pull/12404\r\n - https://github.com/matrix-org/synapse/pull/13279",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13590/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13590/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

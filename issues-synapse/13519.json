@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13519",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13519/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13519/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13519/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13519",
+  "id": 1337289332,
+  "node_id": "I_kwDOAVyVwM5PtWp0",
+  "number": 13519,
+  "title": "User admin API returns integers instead of booleans on SQLite, or the documentation is incorrect",
+  "user": {
+    "login": "squahtx",
+    "id": 8349537,
+    "node_id": "MDQ6VXNlcjgzNDk1Mzc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8349537?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/squahtx",
+    "html_url": "https://github.com/squahtx",
+    "followers_url": "https://api.github.com/users/squahtx/followers",
+    "following_url": "https://api.github.com/users/squahtx/following{/other_user}",
+    "gists_url": "https://api.github.com/users/squahtx/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/squahtx/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/squahtx/subscriptions",
+    "organizations_url": "https://api.github.com/users/squahtx/orgs",
+    "repos_url": "https://api.github.com/users/squahtx/repos",
+    "events_url": "https://api.github.com/users/squahtx/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/squahtx/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1507817868,
+      "node_id": "MDU6TGFiZWwxNTA3ODE3ODY4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Admin-API",
+      "name": "A-Admin-API",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4195810659,
+      "node_id": "LA_kwDOAVyVwM76Fv1j",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Database",
+      "name": "A-Database",
+      "color": "5319E7",
+      "default": false,
+      "description": "DB stuff like queries, migrations, new/remove columns, indexes, unexpected entries in the db"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 4482903664,
+      "node_id": "LA_kwDOAVyVwM8AAAABCzOucA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-SQLite",
+      "name": "A-SQLite",
+      "color": "5319E7",
+      "default": false,
+      "description": "Database issues specific to SQLite"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2022-08-12T14:35:05Z",
+  "updated_at": "2022-09-08T13:39:50Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Similar to #13505.\r\nOriginally reported by @jplatte in https://github.com/matrix-org/synapse/pull/13509#issuecomment-1212916888:\r\n\r\n### Description\r\n\r\nThe first example on https://matrix-org.github.io/synapse/develop/admin_api/user_admin_api.html shows this:\r\n```\r\n    \"is_guest\": 0,\r\n    \"admin\": 0,\r\n    \"deactivated\": 0,\r\n    \"shadow_banned\": 0,\r\n```\r\nbut some of these fields are mentioned as being `bool` further down.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13519/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13519/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

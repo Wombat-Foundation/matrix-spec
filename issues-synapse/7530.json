@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/7530",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/7530/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/7530/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/7530/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/7530",
+  "id": 620918504,
+  "node_id": "MDU6SXNzdWU2MjA5MTg1MDQ=",
+  "number": 7530,
+  "title": "Potential bug when using SAML and workers might result in \"Unsolicited response\" errors",
+  "user": {
+    "login": "clokep",
+    "id": 517124,
+    "node_id": "MDQ6VXNlcjUxNzEyNA==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/517124?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/clokep",
+    "html_url": "https://github.com/clokep",
+    "followers_url": "https://api.github.com/users/clokep/followers",
+    "following_url": "https://api.github.com/users/clokep/following{/other_user}",
+    "gists_url": "https://api.github.com/users/clokep/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/clokep/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/clokep/subscriptions",
+    "organizations_url": "https://api.github.com/users/clokep/orgs",
+    "repos_url": "https://api.github.com/users/clokep/repos",
+    "events_url": "https://api.github.com/users/clokep/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/clokep/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1056680564,
+      "node_id": "MDU6TGFiZWwxMDU2NjgwNTY0",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Workers",
+      "name": "A-Workers",
+      "color": "5319E7",
+      "default": false,
+      "description": "Problems related to running Synapse in Worker Mode (or replication)"
+    },
+    {
+      "id": 2186787706,
+      "node_id": "MDU6TGFiZWwyMTg2Nzg3NzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-SSO",
+      "name": "A-SSO",
+      "color": "5319E7",
+      "default": false,
+      "description": "Single Sign-On (maybe OIDC)"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 9,
+  "created_at": "2020-05-19T11:59:37Z",
+  "updated_at": "2022-03-21T13:46:11Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "I'm unsure if this will be a problem in reality or is just a potential for issues, but figured I should document it. This is somewhat similar to #6705, but is:\r\n* Specific to SAML.\r\n* Not specific to UI authentication (e.g. it will apply to login/registration as well).\r\n\r\nThe SAML handler stores state about ongoing SAML requests in memory (see uses of [`_outstanding_requests_dict`](https://github.com/matrix-org/synapse/blob/3c8a57f080a66a3d4d146adf7020c18b397bcf6c/synapse/handlers/saml_handler.py#L76-L77) in the `synapse.handlers.saml_handler.SamlHandler` class).\r\n\r\nIn worker mode, it is possible for a request to get created and the callback to occur on different workers causing an error about an unrequested SAML response.\r\n\r\nI believe the workaround is to ensure that the following endpoints all go to the same worker:\r\n* `/_matrix/client/r0/login/sso/redirect`\r\n* `/_matrix/saml2/authn_response`\r\n* `/_matrix/client/r0/auth/(org.matrix.login.sso|m.login.sso)/fallback/web`\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/7530/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/7530/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

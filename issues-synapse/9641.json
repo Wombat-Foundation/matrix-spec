@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/9641",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/9641/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/9641/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/9641/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/9641",
+  "id": 834095589,
+  "node_id": "MDU6SXNzdWU4MzQwOTU1ODk=",
+  "number": 9641,
+  "title": "Fix remaining uses of deprecated cmp argument in attrs decorators",
+  "user": {
+    "login": "ulope",
+    "id": 55078,
+    "node_id": "MDQ6VXNlcjU1MDc4",
+    "avatar_url": "https://avatars.githubusercontent.com/u/55078?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/ulope",
+    "html_url": "https://github.com/ulope",
+    "followers_url": "https://api.github.com/users/ulope/followers",
+    "following_url": "https://api.github.com/users/ulope/following{/other_user}",
+    "gists_url": "https://api.github.com/users/ulope/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/ulope/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/ulope/subscriptions",
+    "organizations_url": "https://api.github.com/users/ulope/orgs",
+    "repos_url": "https://api.github.com/users/ulope/repos",
+    "events_url": "https://api.github.com/users/ulope/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/ulope/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406235,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MjM1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/good%20first%20issue",
+      "name": "good first issue",
+      "color": "0E8A16",
+      "default": true,
+      "description": "Good for newcomers"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406413,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDEz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Task",
+      "name": "T-Task",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Refactoring, removal, replacement, enabling or disabling functionality, other engineering tasks."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2021-03-17T19:10:07Z",
+  "updated_at": "2023-01-25T13:24:19Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nThere are a handful of places left that use the deprecated `cmp` argument on the `attr.s` decorator:\r\n- https://github.com/matrix-org/synapse/blob/0a00b7ff14890987f09112a2ae696c61001e6cf1/synapse/events/builder.py#L38\r\n- https://github.com/matrix-org/synapse/blob/d29b71aa50f568c3b951b95f2ea3009292b95630/tests/server.py#L472\r\n- https://github.com/matrix-org/synapse/blob/a7a379006651ea219c2618c0a47e8f4053a9e769/synapse/types.py#L421\r\n- https://github.com/matrix-org/synapse/blob/31b1905e13f84d839f46990d7e63bafe0917dc75/synapse/crypto/keyring.py#L65\r\n\r\nThese should be fixed.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/9641/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/9641/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

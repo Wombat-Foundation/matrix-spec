@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/10741",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/10741/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/10741/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/10741/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/10741",
+  "id": 986649465,
+  "node_id": "MDU6SXNzdWU5ODY2NDk0NjU=",
+  "number": 10741,
+  "title": "Thumbnailing CMYK colorspace image gives Internal Server Error",
+  "user": {
+    "login": "flukiluke",
+    "id": 11623995,
+    "node_id": "MDQ6VXNlcjExNjIzOTk1",
+    "avatar_url": "https://avatars.githubusercontent.com/u/11623995?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/flukiluke",
+    "html_url": "https://github.com/flukiluke",
+    "followers_url": "https://api.github.com/users/flukiluke/followers",
+    "following_url": "https://api.github.com/users/flukiluke/following{/other_user}",
+    "gists_url": "https://api.github.com/users/flukiluke/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/flukiluke/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/flukiluke/subscriptions",
+    "organizations_url": "https://api.github.com/users/flukiluke/orgs",
+    "repos_url": "https://api.github.com/users/flukiluke/repos",
+    "events_url": "https://api.github.com/users/flukiluke/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/flukiluke/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045806,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDY=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Media-Repository",
+      "name": "A-Media-Repository",
+      "color": "5319E7",
+      "default": false,
+      "description": "Uploading, downloading images and video, thumbnailing"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2021-09-02T12:24:29Z",
+  "updated_at": "2023-08-10T11:43:26Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "When a jpeg image using the CMYK colorspace is uploaded to synapse, any attempts to get a thumbnail with the `/media/r0/thumbnail` endpoint return Internal Server Error. The logs contain the following exception:\r\n```\r\nsynapse.http.server - 93 - ERROR - GET-393903 - Failed handle request via 'ThumbnailResource': <XForwardedForRequest at 0xffff176a5e20 method='GET' uri='/_matrix/media/r0/thumbnail/alephc.xyz/onBfeogmWNGmprAkaswiXiOC?width=64&height=64&method=crop' clientproto='HTTP/1.1' site='8008'>\r\nTraceback (most recent call last):\r\n  File \"/home/synapse/synapse/env/lib/python3.8/site-packages/PIL/PngImagePlugin.py\", line 1230, in _save\r\n    rawmode, mode = _OUTMODES[mode]\r\nKeyError: 'CMYK'\r\nThe above exception was the direct cause of the following exception:\r\nTraceback (most recent call last):\r\n  File \"/home/synapse/synapse/env/lib/python3.8/site-packages/synapse/http/server.py\", line 258, in _async_render_wrapper\r\n    callback_return = await self._async_render(request)\r\n  File \"/home/synapse/synapse/env/lib/python3.8/site-packages/synapse/http/server.py\", line 286, in _async_render\r\n    callback_return = await raw_callback_return\r\n  File \"/home/synapse/synapse/env/lib/python3.8/site-packages/synapse/rest/media/v1/thumbnail_resource.py\", line 69, in _async_render_GET\r\n    await self._select_or_generate_local_thumbnail(\r\n  File \"/home/synapse/synapse/env/lib/python3.8/site-packages/synapse/rest/media/v1/thumbnail_resource.py\", line 170, in _select_or_generate_local_thumbnail\r\n    file_path = await self.media_repo.generate_local_exact_thumbnail(\r\n  File \"/home/synapse/synapse/env/lib/python3.8/site-packages/synapse/rest/media/v1/media_repository.py\", line 535, in generate_local_exact_thumbnail\r\n    t_byte_source = await defer_to_thread(\r\n  File \"/home/synapse/synapse/env/lib/python3.8/site-packages/twisted/python/threadpool.py\", line 238, in inContext\r\n    result = inContext.theWork()  # type: ignore[attr-defined]\r\n  File \"/home/synapse/synapse/env/lib/python3.8/site-packages/twisted/python/threadpool.py\", line 254, in <lambda>\r\n    inContext.theWork = lambda: context.call(  # type: ignore[attr-defined]\r\n  File \"/home/synapse/synapse/env/lib/python3.8/site-packages/twisted/python/context.py\", line 118, in callWithContext\r\n    return self.currentContext().callWithContext(ctx, func, *args, **kw)\r\n  File \"/home/synapse/synapse/env/lib/python3.8/site-packages/twisted/python/context.py\", line 83, in callWithContext\r\n    return func(*args, **kw)\r\n  File \"/home/synapse/synapse/env/lib/python3.8/site-packages/synapse/logging/context.py\", line 902, in g\r\n    return f(*args, **kwargs)\r\n  File \"/home/synapse/synapse/env/lib/python3.8/site-packages/synapse/rest/media/v1/media_repository.py\", line 501, in _generate_thumbnail\r\n    return thumbnailer.crop(t_width, t_height, t_type)\r\n  File \"/home/synapse/synapse/env/lib/python3.8/site-packages/synapse/rest/media/v1/thumbnailer.py\", line 152, in crop\r\n    return self._encode_image(cropped, output_type)\r\n  File \"/home/synapse/synapse/env/lib/python3.8/site-packages/synapse/rest/media/v1/thumbnailer.py\", line 159, in _encode_image\r\n    output_image.save(output_bytes_io, fmt, quality=80)\r\n  File \"/home/synapse/synapse/env/lib/python3.8/site-packages/PIL/Image.py\", line 2235, in save\r\n    save_handler(self, fp, filename)\r\n  File \"/home/synapse/synapse/env/lib/python3.8/site-packages/PIL/PngImagePlugin.py\", line 1232, in _save\r\n    raise OSError(f\"cannot write mode {mode} as PNG\") from e\r\nOSError: cannot write mode CMYK as PNG\r\n```\r\nAccessing the image via the `/media/r0/download` endpoint does not have any issue.\r\n\r\nI have attached a small image that exhibits the issue, otherwise one can be created by taking any jpeg and using image magick: `convert in.jpg -colorspace cmyk.jpg`\r\n\r\n### Version & Config Info\r\nSynapse: 1.41.1, with dynamic_thumbnails: true\r\nPython: 3.8.10\r\nPillow: 8.3.1\r\nRunning on Ubuntu 20.04\r\n\r\n### Test Image\r\n![cmyk](https://user-images.githubusercontent.com/11623995/131842323-5a9f61c4-ecb6-4d7c-87f9-e789b1260133.jpg)",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/10741/reactions",
+    "total_count": 2,
+    "+1": 2,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/10741/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

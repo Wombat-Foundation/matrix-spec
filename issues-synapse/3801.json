@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/3801",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/3801/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/3801/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/3801/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/3801",
+  "id": 357540724,
+  "node_id": "MDU6SXNzdWUzNTc1NDA3MjQ=",
+  "number": 3801,
+  "title": "[Documentation] Provide documentation regarding TURN configuration with Docker",
+  "user": {
+    "login": "Ezwen",
+    "id": 1388961,
+    "node_id": "MDQ6VXNlcjEzODg5NjE=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1388961?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Ezwen",
+    "html_url": "https://github.com/Ezwen",
+    "followers_url": "https://api.github.com/users/Ezwen/followers",
+    "following_url": "https://api.github.com/users/Ezwen/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Ezwen/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Ezwen/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Ezwen/subscriptions",
+    "organizations_url": "https://api.github.com/users/Ezwen/orgs",
+    "repos_url": "https://api.github.com/users/Ezwen/repos",
+    "events_url": "https://api.github.com/users/Ezwen/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Ezwen/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086032,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMzI=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Help-Wanted",
+      "name": "Z-Help-Wanted",
+      "color": "006B0F",
+      "default": false,
+      "description": "We know exactly how to fix this issue, and would be grateful for any contribution"
+    },
+    {
+      "id": 845245048,
+      "node_id": "MDU6TGFiZWw4NDUyNDUwNDg=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Docs",
+      "name": "A-Docs",
+      "color": "5319E7",
+      "default": false,
+      "description": "things relating to the documentation"
+    },
+    {
+      "id": 1083085226,
+      "node_id": "MDU6TGFiZWwxMDgzMDg1MjI2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Docker",
+      "name": "A-Docker",
+      "color": "5319E7",
+      "default": false,
+      "description": "Docker images, or making it easier to run Synapse in a container."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2018-09-06T08:05:08Z",
+  "updated_at": "2023-05-23T14:02:20Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "While it is now very easy and convenient to setup synapse instances using the official Docker image, there is no documentation regarding TURN configuration with such setup. Is there any recommended TURN docker image? How to configure both synapse and TURN containers to connect them together?\r\n\r\nIt would be in particular really great to have such documentation (or a pointer to such documentation) in https://github.com/matrix-org/synapse/blob/master/docs/turn-howto.rst",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/3801/reactions",
+    "total_count": 2,
+    "+1": 2,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/3801/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,140 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/4985",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/4985/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/4985/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/4985/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/4985",
+  "id": 427818393,
+  "node_id": "MDU6SXNzdWU0Mjc4MTgzOTM=",
+  "number": 4985,
+  "title": "Federation: /rooms/.../members fails for the invites received from a federated server",
+  "user": {
+    "login": "giomfo",
+    "id": 8969772,
+    "node_id": "MDQ6VXNlcjg5Njk3NzI=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8969772?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/giomfo",
+    "html_url": "https://github.com/giomfo",
+    "followers_url": "https://api.github.com/users/giomfo/followers",
+    "following_url": "https://api.github.com/users/giomfo/following{/other_user}",
+    "gists_url": "https://api.github.com/users/giomfo/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/giomfo/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/giomfo/subscriptions",
+    "organizations_url": "https://api.github.com/users/giomfo/orgs",
+    "repos_url": "https://api.github.com/users/giomfo/repos",
+    "events_url": "https://api.github.com/users/giomfo/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/giomfo/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 828678284,
+      "node_id": "MDU6TGFiZWw4Mjg2NzgyODQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spec-Compliance",
+      "name": "A-Spec-Compliance",
+      "color": "5319E7",
+      "default": false,
+      "description": "places where synapse does not conform to the spec"
+    },
+    {
+      "id": 2674406235,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MjM1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/good%20first%20issue",
+      "name": "good first issue",
+      "color": "0E8A16",
+      "default": true,
+      "description": "Good for newcomers"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137743886,
+      "node_id": "LA_kwDOAVyVwM72oPYO",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Invite",
+      "name": "A-Invite",
+      "color": "5319E7",
+      "default": false,
+      "description": "Inviting users to rooms and accepting invites"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2019-04-01T17:11:13Z",
+  "updated_at": "2023-03-28T11:58:02Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description**\r\nget `/_matrix/client/r0/rooms/{roomId}/members` on an invite received from another federated server fails with the following error:\r\n```\r\nerrcode = \"M_NOT_FOUND\";\r\nerror = \"Can't find event for token Token(room_key=u'xxx', presence_key=u'xxx', typing_key=u'x', receipt_key=u'xxx', account_data_key=u'xxx', push_rules_key=u'xx', to_device_key=u'xxx', device_list_key=u'xxx', groups_key=u'xx')\";\r\n```\r\n**Steps to reproduce**\r\nConsider 2 users userA and userB, created on 2 different Homeservers.\r\nuserA creates a room and invites userB\r\nWhen userB requests for the members of this room, he gets an error",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/4985/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/4985/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

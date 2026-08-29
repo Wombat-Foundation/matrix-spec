@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/3813",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/3813/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/3813/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/3813/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/3813",
+  "id": 357742338,
+  "node_id": "MDU6SXNzdWUzNTc3NDIzMzg=",
+  "number": 3813,
+  "title": "Thumbnail rendering can throw an error while it's outputting and cause a traceback",
+  "user": {
+    "login": "hawkowl",
+    "id": 3307100,
+    "node_id": "MDQ6VXNlcjMzMDcxMDA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/3307100?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/hawkowl",
+    "html_url": "https://github.com/hawkowl",
+    "followers_url": "https://api.github.com/users/hawkowl/followers",
+    "following_url": "https://api.github.com/users/hawkowl/following{/other_user}",
+    "gists_url": "https://api.github.com/users/hawkowl/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/hawkowl/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/hawkowl/subscriptions",
+    "organizations_url": "https://api.github.com/users/hawkowl/orgs",
+    "repos_url": "https://api.github.com/users/hawkowl/repos",
+    "events_url": "https://api.github.com/users/hawkowl/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/hawkowl/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045806,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDY=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Media-Repository",
+      "name": "A-Media-Repository",
+      "color": "5319E7",
+      "default": false,
+      "description": "Uploading, downloading images and video, thumbnailing"
+    },
+    {
+      "id": 477050471,
+      "node_id": "MDU6TGFiZWw0NzcwNTA0NzE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p3",
+      "name": "z-p3",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 1056673481,
+      "node_id": "MDU6TGFiZWwxMDU2NjczNDgx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Logging",
+      "name": "A-Logging",
+      "color": "5319E7",
+      "default": false,
+      "description": "Synapse's logs (structured or otherwise). Not metrics."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2018-09-06T16:55:01Z",
+  "updated_at": "2022-06-10T01:14:43Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "```\r\n2018-09-06 18:27:29,177 - synapse.http.site - 144 - ERROR - GET-3175501- Asynchronous messge handler raised an uncaught exception\r\nTraceback (most recent call last):\r\n  File \"/usr/lib/python2.7/dist-packages/synapse/http/site.py\", line 141, in processing\r\n    yield\r\n  File \"/usr/lib/python2.7/dist-packages/synapse/http/server.py\", line 190, in wrapped_async_request_handler\r\n    yield h(self, request)\r\n  File \"/usr/lib/python2.7/dist-packages/twisted/internet/defer.py\", line 1384, in _inlineCallbacks\r\n    result = result.throwExceptionIntoGenerator(g)\r\n  File \"/usr/lib/python2.7/dist-packages/twisted/python/failure.py\", line 422, in throwExceptionIntoGenerator\r\n    return g.throw(self.type, self.value, self.tb)\r\n  File \"/usr/lib/python2.7/dist-packages/synapse/http/server.py\", line 111, in wrapped_request_handler\r\n    pretty_print=_request_user_agent_is_curl(request),\r\n  File \"/usr/lib/python2.7/dist-packages/synapse/http/server.py\", line 409, in respond_with_json\r\n    response_code_message=response_code_message,\r\n  File \"/usr/lib/python2.7/dist-packages/synapse/http/server.py\", line 439, in respond_with_json_bytes\r\n    producer.start()\r\n  File \"/usr/lib/python2.7/dist-packages/twisted/web/static.py\", line 735, in start\r\n    self.request.registerProducer(self, False)\r\n  File \"/usr/lib/python2.7/dist-packages/twisted/web/http.py\", line 927, in registerProducer\r\n    \"unregistered\" % (producer, self.producer))\r\nValueError: registering producer <twisted.web.static.NoRangeStaticProducer object at 0x7f65f5a56e10> before previous one (<twisted.protocols.basic.FileSender instance at 0x7f662505c830>) was unregistered\r\n```",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/3813/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/3813/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16290",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16290/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16290/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16290/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16290",
+  "id": 1889246041,
+  "node_id": "I_kwDOAVyVwM5wm5tZ",
+  "number": 16290,
+  "title": "Calling the deactivation API without rate limiting causes room inconsistencies",
+  "user": {
+    "login": "ThoreKr",
+    "id": 5465291,
+    "node_id": "MDQ6VXNlcjU0NjUyOTE=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/5465291?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/ThoreKr",
+    "html_url": "https://github.com/ThoreKr",
+    "followers_url": "https://api.github.com/users/ThoreKr/followers",
+    "following_url": "https://api.github.com/users/ThoreKr/following{/other_user}",
+    "gists_url": "https://api.github.com/users/ThoreKr/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/ThoreKr/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/ThoreKr/subscriptions",
+    "organizations_url": "https://api.github.com/users/ThoreKr/orgs",
+    "repos_url": "https://api.github.com/users/ThoreKr/repos",
+    "events_url": "https://api.github.com/users/ThoreKr/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/ThoreKr/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1507817868,
+      "node_id": "MDU6TGFiZWwxNTA3ODE3ODY4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Admin-API",
+      "name": "A-Admin-API",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2023-09-10T17:11:11Z",
+  "updated_at": "2023-09-26T11:41:56Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nWhen bulk removing users in the IdM (keycloak), at the same time multiple requests will be sent to the `/_synapse/admin/v1/deactivate/<user_id>` endpoint to deactivate (erase=true) the concerning accounts in synapse.\r\n\r\nWhen not rate limiting these delete requests, the erasure can have the following side effect for a subset of the deactivated users:\r\n\r\n* user unset their display name\r\n* user left the room\r\n* user joined the room\r\n\r\nThese hulls of deactivated accounts then sit in the room as regular members. Manually calling the deactivate endpoint again will remove them from the room again, but they shouldn't be rejoining in the first place.\r\n\r\n\n\n### Steps to reproduce\n\n* Have a room with about 1k users (authenticated via OIDC) all auto-joining into a shared public, non-encrypted room\r\n* In a for loop without wait times call the deactivate endpoint for 20-30 users\r\n* Watch them unsetting their display name and leaving\r\n* Some will shortly after rejoin the room\n\n### Homeserver\n\nselfhosted\n\n### Synapse Version\n\n1.89.0\n\n### Installation Method\n\nDocker (matrixdotorg/synapse)\n\n### Database\n\npostgresql, single instance\n\n### Workers\n\nSingle process\n\n### Platform\n\nx86 (64 bit) VM\n\n### Configuration\n\n* Presence is enabled\r\n* Message retention is enabled\r\n```\r\n  purge_jobs:\r\n    - longest_max_lifetime: 2d\r\n      interval: 1h\r\n    - shortest_max_lifetime: 2d\r\n      interval: 1d\r\n```\n\n### Relevant log output\n\n```shell\nOnly the api call to the deactivate endpoint is logged.\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16290/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16290/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

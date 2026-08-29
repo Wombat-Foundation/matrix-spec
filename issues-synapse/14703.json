@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14703",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14703/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14703/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14703/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14703",
+  "id": 1502611067,
+  "node_id": "I_kwDOAVyVwM5ZkAZ7",
+  "number": 14703,
+  "title": "Messages can't be decrypted by receiver (session key missing)",
+  "user": {
+    "login": "antlarr",
+    "id": 4385446,
+    "node_id": "MDQ6VXNlcjQzODU0NDY=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/4385446?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/antlarr",
+    "html_url": "https://github.com/antlarr",
+    "followers_url": "https://api.github.com/users/antlarr/followers",
+    "following_url": "https://api.github.com/users/antlarr/following{/other_user}",
+    "gists_url": "https://api.github.com/users/antlarr/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/antlarr/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/antlarr/subscriptions",
+    "organizations_url": "https://api.github.com/users/antlarr/orgs",
+    "repos_url": "https://api.github.com/users/antlarr/repos",
+    "events_url": "https://api.github.com/users/antlarr/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/antlarr/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    },
+    {
+      "id": 4459612007,
+      "node_id": "LA_kwDOAVyVwM8AAAABCdBHZw",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-E2EE",
+      "name": "A-E2EE",
+      "color": "5319E7",
+      "default": false,
+      "description": "End-to-end encryption for Matrix clients"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 6,
+  "created_at": "2022-12-19T09:34:24Z",
+  "updated_at": "2023-09-01T00:55:11Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nI use a local home server (not federated) with just two users. I use two clients at different times of the day (latest Android Element from Play Store on an Android 13 phone and element-web, also running locally). The other user only uses the latest Android Element from Play Store too. We mostly talk in a DM room which is encrypted.\r\n\r\nSome days ago, I received an encrypted message in my phone that couldn't be decrypted (it showed the error `Unable to decrypt: The sender's device has not sent us the keys for this message.` ) . I switched to the web client and it couldn't be decrypted either (it showed the error `** Unable to decrypt: decryption key withheld **`). I tried requesting the keys from my other sessions (I have no other session than those two, but just in case...) and it didn't help. Since then all messages I received could not be decrypted, but my messages were decrypted correctly by the other user. After a while, suddenly all new messages  worked fine again although the \"broken\" messages could never be decrypted by any of my clients.\r\n\r\nBtw, the whole period when messages couldn't be decrypted lasted for around one hour (at least, since we just stopped trying and only several hours later tried again and it's when we noticed we could message correctly again). During that hour, the messages went like:\r\nA: blah blah (unable to decrypt)\r\nB: I can't read you. Please try again. (here I tried to request keys again on both clients I use)\r\nA: blah blah (unable to decrypt)\r\nB: Not yet. Doesn't seem to work (I tried to request keys once more)\r\nA: blah blah (unable to decrypt)\r\n\r\nThis problem happened a few times in the last couple of weeks on both directions.\r\n\r\nTrying to debug a bit more I focused on one time this problem happened, opened the message source and noticed that the session_id is different in the messages that couldn't be decrypted from the previous (working) messages, and then, the session_id also changed for the later messages when decryption suddenly started working again.\r\n\r\nI then used sqlite to have a quick look at the homeserver.db file and noticed that for the session used by the sender of the problematic messages, the e2e_room_keys table doesn't contain an entry for my user.\r\n\r\nI used `select * from e2e_room_keys where room_id='!fDOxxxxxxxxxxxxxxx:myhomeserver' and session_id='rWPxxxxxxxxxxxxxxz+jxxxxxxxxv+Hxxx+/axxxxxx';`\r\n\r\nThat showed only one row with the user_id of the sender, but mine was missing. When looking for the session_id used for the messages I sent during that time (and which could be seen correctly by both of us) select returns two rows as expected, one for each user.\r\n\r\nBtw, I'm curious, who generates the room key for my user and the session that belongs to the other user? is that done by my client? or the server?\r\n\r\n`select session_id, count(*) c from e2e_room_keys group by session_id having c!=2;`\r\n\r\ngives 13 rows (all with count(*) = 1)\r\n\r\n`select user_id, e2e_room_keys.session_id from e2e_room_keys, (select session_id, count(*) c from e2e_room_keys group by session_id having c!=2) t where t.session_id=e2e_room_keys.session_id;`\r\n\r\ngives 8 rows with my user_id and 5 with the other user user_id.\r\n\r\nI don't know how to find the last time a session was used to put those 13 times the issue happened in perspective. Btw, the `sessions` table is empty here.\r\n\r\n### Steps to reproduce\r\n\r\nI'm afraid I didn't find how to reproduce the problem. It happened a few times, always after a period of not sending any message to the room (which I guess is why a new session is started).\r\n\r\n### Homeserver\r\n\r\nunfederated homeserver\r\n\r\n### Synapse Version\r\n\r\n1.73.0\r\n\r\n### Installation Method\r\n\r\npip (from PyPI)\r\n\r\n### Database\r\n\r\nsqlite\r\n\r\n### Workers\r\n\r\nSingle process\r\n\r\n### Platform\r\n\r\nRaspberry Pi with Raspbian (bullseye) running synapse in a virtualenv installed with pip (no vm/container involved).\r\n\r\n### Configuration\r\n\r\nNothing unusual about the configuration.\r\n\r\n### Relevant log output\r\n\r\nI'm afraid I had backupCount: 3 in the log configuration so I no longer have server logs for the last time this issue happened. I increased it now and will comment adding the logs if/when it happens again. I remember seeing a message like 'key missing'.\r\n\r\n\r\n### Anything else that would be useful to know?\r\n\r\nThe Android clients some times connect from the local network and some times connect using wireguard (which is running in the same host as synapse) so they can change the connecting IP . I don't think that has anything to do with the issue, but just in case.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14703/reactions",
+    "total_count": 2,
+    "+1": 2,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14703/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

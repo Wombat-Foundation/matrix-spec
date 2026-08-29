@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16489",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16489/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16489/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16489/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16489",
+  "id": 1943106736,
+  "node_id": "I_kwDOAVyVwM5z0XSw",
+  "number": 16489,
+  "title": "replication timeouts due to message retention purge jobs",
+  "user": {
+    "login": "verymilan",
+    "id": 10698140,
+    "node_id": "MDQ6VXNlcjEwNjk4MTQw",
+    "avatar_url": "https://avatars.githubusercontent.com/u/10698140?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/verymilan",
+    "html_url": "https://github.com/verymilan",
+    "followers_url": "https://api.github.com/users/verymilan/followers",
+    "following_url": "https://api.github.com/users/verymilan/following{/other_user}",
+    "gists_url": "https://api.github.com/users/verymilan/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/verymilan/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/verymilan/subscriptions",
+    "organizations_url": "https://api.github.com/users/verymilan/orgs",
+    "repos_url": "https://api.github.com/users/verymilan/repos",
+    "events_url": "https://api.github.com/users/verymilan/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/verymilan/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 3607820563,
+      "node_id": "LA_kwDOAVyVwM7XCvkT",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Message-Retention-Policies",
+      "name": "A-Message-Retention-Policies",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues related to Synapse's support of MSC1763 (message retention policies)"
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    },
+    {
+      "id": 4889967947,
+      "node_id": "LA_kwDOAVyVwM8AAAABI3b9Sw",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Retention",
+      "name": "A-Retention",
+      "color": "5319E7",
+      "default": false,
+      "description": "Retention rules to delete messages after a certain amount of time"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2023-10-14T09:08:22Z",
+  "updated_at": "2023-11-28T09:15:24Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nAssumingly due to https://github.com/matrix-org/synapse/pull/13632, the master process is unable to handle replication requests by workers due to the load from purge jobs. It is happily logging updates on the purge job states while clients can't connect anymore.\r\n\r\n### Steps to reproduce\r\n\r\n- enable message retention\r\n- maybe be a big instance idk\r\n- wait for the scheduled job to execute\r\n\r\n\r\n### Homeserver\r\n\r\ntchncs.de\r\n\r\n### Synapse Version\r\n\r\n1.94.0\r\n\r\n### Installation Method\r\n\r\npip (from PyPI)\r\n\r\n### Database\r\n\r\nPostgreSQL\r\n\r\n### Workers\r\n\r\nMultiple workers\r\n\r\n### Platform\r\n\r\nDebian GNU/Linux 12 (bookworm), dedicated\r\n\r\n### Configuration\r\n\r\ndraupnir module, presence, retention\r\n\r\n### Relevant log output\r\n\r\n```shell\r\nsynapse.replication.tcp.client - 352 - INFO - _process_incoming_pdus_in_room_inner-124023-$fbrT_6mck678v_gNV527V0f5Jp4kvbDiQVSeHOmiN2E - Finished waiting for repl stream 'events' to reach 361593234 (event_persister1)\r\nsynapse.http.client - 923 - INFO - PUT-890470 - Received response to POST synapse-replication://master/_synapse/replication/fed_send_edu/m.receipt/IjFSBKBxIa: 200\r\nsynapse.replication.tcp.client - 332 - INFO - PUT-890470 - Waiting for repl stream 'caches' to reach 416737455 (master); currently at: 416710210\r\nsynapse.replication.tcp.client - 342 - WARNING - PUT-890464 - Timed out waiting for repl stream 'caches' to reach 416737417 (master); currently at: 416710510\r\nsynapse.replication.tcp.client - 342 - WARNING - PUT-890470 - Timed out waiting for repl stream 'caches' to reach 416737422 (master); currently at: 416710510\r\nsynapse.replication.tcp.client - 342 - WARNING - PUT-890470 - Timed out waiting for repl stream 'caches' to reach 416737422 (master); currently at: 416710510\r\nsynapse.replication.tcp.client - 342 - WARNING - PUT-890470 - Timed out waiting for repl stream 'caches' to reach 416737422 (master); currently at: 416710510\r\nsynapse.replication.tcp.client - 342 - WARNING - PUT-890470 - Timed out waiting for repl stream 'caches' to reach 416737422 (master); currently at: 416710510\r\nsynapse.replication.tcp.client - 342 - WARNING - PUT-890470 - Timed out waiting for repl stream 'caches' to reach 416737422 (master); currently at: 416710510\r\nsynapse.replication.http._base - 300 - WARNING - GET-2559861 - presence_set_state request timed out; retrying\r\nsynapse.replication.http._base - 312 - WARNING - PUT-899550 - fed_send_edu request connection failed; retrying in 1s: ConnectError(<twisted.python.failure.Failure twisted.internet.error.ConnectionLost: Connection to the other side was lost in a non-clean fashion: Connection lost.>)\r\nsynapse.http.client - 932 - INFO - PUT-901284 - Error sending request to  POST synapse-replication://master/_synapse/replication/fed_send_edu/m.presence/WCoECfmCdH: ConnectError [Failure instance: Traceback (failure with no frames): <class 'twisted.internet.error.ConnectionLost'>: Connection to the other side was lost in a non-clean fashion: Connection lost.\r\n]\r\n```\r\n\r\n<img width=\"2545\" alt=\"SCR-20231014-kdvv\" src=\"https://github.com/matrix-org/synapse/assets/10698140/9fb50058-46e5-405f-b907-de18e6bc5201\">\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16489/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16489/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

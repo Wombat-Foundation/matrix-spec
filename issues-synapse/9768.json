@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/9768",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/9768/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/9768/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/9768/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/9768",
+  "id": 853516353,
+  "node_id": "MDU6SXNzdWU4NTM1MTYzNTM=",
+  "number": 9768,
+  "title": "Own member event is duplicated in timeline when joining a room",
+  "user": {
+    "login": "bwindels",
+    "id": 274386,
+    "node_id": "MDQ6VXNlcjI3NDM4Ng==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/274386?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/bwindels",
+    "html_url": "https://github.com/bwindels",
+    "followers_url": "https://api.github.com/users/bwindels/followers",
+    "following_url": "https://api.github.com/users/bwindels/following{/other_user}",
+    "gists_url": "https://api.github.com/users/bwindels/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/bwindels/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/bwindels/subscriptions",
+    "organizations_url": "https://api.github.com/users/bwindels/orgs",
+    "repos_url": "https://api.github.com/users/bwindels/repos",
+    "events_url": "https://api.github.com/users/bwindels/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/bwindels/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2038475067,
+      "node_id": "MDU6TGFiZWwyMDM4NDc1MDY3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Sync",
+      "name": "A-Sync",
+      "color": "5319E7",
+      "default": false,
+      "description": "defects related to /sync"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137743886,
+      "node_id": "LA_kwDOAVyVwM72oPYO",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Invite",
+      "name": "A-Invite",
+      "color": "5319E7",
+      "default": false,
+      "description": "Inviting users to rooms and accepting invites"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 10,
+  "created_at": "2021-04-08T14:10:51Z",
+  "updated_at": "2022-06-08T17:16:01Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "When accepting an invite to a new DM, I consistently (on matrix.org) see the last two events of the timeline being my own member event, duplicated. The request URL for this is https://matrix.org/_matrix/client/r0/sync?since=m1932336751~1.1932336915_757284961_312592_815559230_699804110_2214631_242549737_904922611_187106&timeout=30000&filter=2&_cacheBuster=1532609541718558\r\n\r\n```json\r\n{\r\n  \"events\": [\r\n    {\r\n      \"content\": {\r\n        \"displayname\": \"bruno5\",\r\n        \"membership\": \"join\"\r\n      },\r\n      \"origin_server_ts\": 1617890563769,\r\n      \"sender\": \"@bruno5:matrix.org\",\r\n      \"state_key\": \"@bruno5:matrix.org\",\r\n      \"type\": \"m.room.member\",\r\n      \"unsigned\": {\r\n        \"age\": 93068\r\n      },\r\n      \"event_id\": \"$jcf51330L2Ej9-mcccs6bl5G4fdkB91xKgIkn7vOUe4\"\r\n    },\r\n    {\r\n      \"content\": {\r\n        \"ban\": 50,\r\n        \"events\": {\r\n          \"m.room.avatar\": 50,\r\n          \"m.room.canonical_alias\": 50,\r\n          \"m.room.encryption\": 100,\r\n          \"m.room.history_visibility\": 100,\r\n          \"m.room.name\": 50,\r\n          \"m.room.power_levels\": 100,\r\n          \"m.room.server_acl\": 100,\r\n          \"m.room.tombstone\": 100\r\n        },\r\n        \"events_default\": 0,\r\n        \"invite\": 0,\r\n        \"kick\": 50,\r\n        \"redact\": 50,\r\n        \"state_default\": 50,\r\n        \"users\": {\r\n          \"@bruno4:matrix.org\": 100,\r\n          \"@bruno5:matrix.org\": 100\r\n        },\r\n        \"users_default\": 0\r\n      },\r\n      \"origin_server_ts\": 1617890563855,\r\n      \"sender\": \"@bruno5:matrix.org\",\r\n      \"state_key\": \"\",\r\n      \"type\": \"m.room.power_levels\",\r\n      \"unsigned\": {\r\n        \"age\": 92982\r\n      },\r\n      \"event_id\": \"$sUotYNlUwJH1r4gskhgpeDzRnmaitJ4K0f1RPh5mobk\"\r\n    },\r\n    {\r\n      \"content\": {\r\n        \"join_rule\": \"invite\"\r\n      },\r\n      \"origin_server_ts\": 1617890563926,\r\n      \"sender\": \"@bruno5:matrix.org\",\r\n      \"state_key\": \"\",\r\n      \"type\": \"m.room.join_rules\",\r\n      \"unsigned\": {\r\n        \"age\": 92911\r\n      },\r\n      \"event_id\": \"$n5CR2u0GTgCJmpcjKIWegxjyTVKqRytjchxe_sgIsWU\"\r\n    },\r\n    {\r\n      \"content\": {\r\n        \"history_visibility\": \"shared\"\r\n      },\r\n      \"origin_server_ts\": 1617890564015,\r\n      \"sender\": \"@bruno5:matrix.org\",\r\n      \"state_key\": \"\",\r\n      \"type\": \"m.room.history_visibility\",\r\n      \"unsigned\": {\r\n        \"age\": 92822\r\n      },\r\n      \"event_id\": \"$wFSynF9jBu54-POGzwhsrVS562kHkao6fL6fY2DCEHM\"\r\n    },\r\n    {\r\n      \"content\": {\r\n        \"guest_access\": \"can_join\"\r\n      },\r\n      \"origin_server_ts\": 1617890564101,\r\n      \"sender\": \"@bruno5:matrix.org\",\r\n      \"state_key\": \"\",\r\n      \"type\": \"m.room.guest_access\",\r\n      \"unsigned\": {\r\n        \"age\": 92736\r\n      },\r\n      \"event_id\": \"$EFiR8kBA8K8CZuKcwSVG7E15TttlJLdCf5ulVaLNF5Q\"\r\n    },\r\n    {\r\n      \"content\": {\r\n        \"algorithm\": \"m.megolm.v1.aes-sha2\"\r\n      },\r\n      \"origin_server_ts\": 1617890564186,\r\n      \"sender\": \"@bruno5:matrix.org\",\r\n      \"state_key\": \"\",\r\n      \"type\": \"m.room.encryption\",\r\n      \"unsigned\": {\r\n        \"age\": 92651\r\n      },\r\n      \"event_id\": \"$ns1-TrtI8Vm4b7Gtw-rfPTJZc2ZTSPzKtYoJA62_LFA\"\r\n    },\r\n    {\r\n      \"content\": {\r\n        \"avatar_url\": \"mxc://matrix.org/AbaQoXqdDHmFzEpEIYBXSTEP\",\r\n        \"displayname\": \"Bruno the bloodhound\",\r\n        \"is_direct\": true,\r\n        \"membership\": \"invite\"\r\n      },\r\n      \"origin_server_ts\": 1617890564287,\r\n      \"sender\": \"@bruno5:matrix.org\",\r\n      \"state_key\": \"@bruno4:matrix.org\",\r\n      \"type\": \"m.room.member\",\r\n      \"unsigned\": {\r\n        \"age\": 92550\r\n      },\r\n      \"event_id\": \"$oORFPM76LlRaBAnaNxa-K8f_Ut67paUFKcmpz-9o51w\"\r\n    },\r\n    {\r\n      \"content\": {\r\n        \"algorithm\": \"m.megolm.v1.aes-sha2\",\r\n        \"ciphertext\": \"AwgAEoABSOmkHREfvz5cGZqDTvT8cYeTVrTtX+7HQ1xoMH4BCkZlsDLbXXpa1OzzL9bomP8J5EdD9sZVsR7It48CBM3VbIJfyMMBMEq5uSFIkjUyfuZPid57VuZHuNQd93Du8/wxOqUxMar+1rWu3wGXNfT43LlL5TEA2HpTm1JRr01Xu+XF666EE91s4sqZkTPWhtmQVpbSAla1QLrPrKddwN89G/TKXjrb171qGsqdu170U48PIuKBoyBRuVd/XOsoADRFEFlCvSUG8Ac\",\r\n        \"device_id\": \"NWYSNKCJJL\",\r\n        \"sender_key\": \"//RkE4avb7fo+VCmbK6HDa7Y4p2sPsMGCyO8/DnAyAU\",\r\n        \"session_id\": \"JOVjdHpxd34Cm+zp4DVHhSR8UMetkWYB9olMK2rfovA\"\r\n      },\r\n      \"origin_server_ts\": 1617890576653,\r\n      \"sender\": \"@bruno5:matrix.org\",\r\n      \"type\": \"m.room.encrypted\",\r\n      \"unsigned\": {\r\n        \"age\": 80184\r\n      },\r\n      \"event_id\": \"$ZS3NguTnTHAq0fkIOqutai4Mbfe-MYfQqb1S5tgOK-U\"\r\n    },\r\n    {\r\n      \"content\": {\r\n        \"avatar_url\": \"mxc://matrix.org/AbaQoXqdDHmFzEpEIYBXSTEP\",\r\n        \"displayname\": \"Bruno the bloodhound\",\r\n        \"membership\": \"join\"\r\n      },\r\n      \"origin_server_ts\": 1617890656548,\r\n      \"sender\": \"@bruno4:matrix.org\",\r\n      \"state_key\": \"@bruno4:matrix.org\",\r\n      \"type\": \"m.room.member\",\r\n      \"unsigned\": {\r\n        \"replaces_state\": \"$oORFPM76LlRaBAnaNxa-K8f_Ut67paUFKcmpz-9o51w\",\r\n        \"prev_content\": {\r\n          \"avatar_url\": \"mxc://matrix.org/AbaQoXqdDHmFzEpEIYBXSTEP\",\r\n          \"displayname\": \"Bruno the bloodhound\",\r\n          \"is_direct\": true,\r\n          \"membership\": \"invite\"\r\n        },\r\n        \"prev_sender\": \"@bruno5:matrix.org\",\r\n        \"age\": 289\r\n      },\r\n      \"event_id\": \"$Qwq0X0QqTvj4ANh0XZtK4okxne4D9E024wz36MtzgF4\"\r\n    },\r\n    {\r\n      \"content\": {\r\n        \"avatar_url\": \"mxc://matrix.org/AbaQoXqdDHmFzEpEIYBXSTEP\",\r\n        \"displayname\": \"Bruno the bloodhound\",\r\n        \"membership\": \"join\"\r\n      },\r\n      \"origin_server_ts\": 1617890656548,\r\n      \"sender\": \"@bruno4:matrix.org\",\r\n      \"state_key\": \"@bruno4:matrix.org\",\r\n      \"type\": \"m.room.member\",\r\n      \"unsigned\": {\r\n        \"replaces_state\": \"$oORFPM76LlRaBAnaNxa-K8f_Ut67paUFKcmpz-9o51w\",\r\n        \"prev_content\": {\r\n          \"avatar_url\": \"mxc://matrix.org/AbaQoXqdDHmFzEpEIYBXSTEP\",\r\n          \"displayname\": \"Bruno the bloodhound\",\r\n          \"is_direct\": true,\r\n          \"membership\": \"invite\"\r\n        },\r\n        \"prev_sender\": \"@bruno5:matrix.org\",\r\n        \"age\": 289\r\n      },\r\n      \"event_id\": \"$Qwq0X0QqTvj4ANh0XZtK4okxne4D9E024wz36MtzgF4\"\r\n    }\r\n  ],\r\n  \"prev_batch\": \"t2-1932333599_757284961_312982_815559432_699804383_2214631_242549800_904923309_187106\",\r\n  \"limited\": true\r\n}\r\n```",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/9768/reactions",
+    "total_count": 3,
+    "+1": 3,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/9768/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

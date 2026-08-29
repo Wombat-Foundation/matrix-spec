@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14069",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14069/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14069/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14069/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14069",
+  "id": 1398320879,
+  "node_id": "I_kwDOAVyVwM5TWK7v",
+  "number": 14069,
+  "title": "Sentry noise: `Sentry is attempting to send N pending error messages`",
+  "user": {
+    "login": "DMRobertson",
+    "id": 8614563,
+    "node_id": "MDQ6VXNlcjg2MTQ1NjM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8614563?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/DMRobertson",
+    "html_url": "https://github.com/DMRobertson",
+    "followers_url": "https://api.github.com/users/DMRobertson/followers",
+    "following_url": "https://api.github.com/users/DMRobertson/following{/other_user}",
+    "gists_url": "https://api.github.com/users/DMRobertson/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/DMRobertson/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/DMRobertson/subscriptions",
+    "organizations_url": "https://api.github.com/users/DMRobertson/orgs",
+    "repos_url": "https://api.github.com/users/DMRobertson/repos",
+    "events_url": "https://api.github.com/users/DMRobertson/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/DMRobertson/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1056673481,
+      "node_id": "MDU6TGFiZWwxMDU2NjczNDgx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Logging",
+      "name": "A-Logging",
+      "color": "5319E7",
+      "default": false,
+      "description": "Synapse's logs (structured or otherwise). Not metrics."
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 4618619241,
+      "node_id": "LA_kwDOAVyVwM8AAAABE0qJaQ",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Sentry",
+      "name": "Z-Sentry",
+      "color": "ffffff",
+      "default": false,
+      "description": "Issue was discovered by looking at Sentry reports on Matrix.org"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2022-10-05T20:10:29Z",
+  "updated_at": "2022-10-05T20:10:54Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "E.g. https://sentry.tools.element.io/organizations/element/issues/608\r\n\r\n```\r\n2022-09-28 10:27:50,446 - twisted - 274 - INFO - sentinel - Main loop terminated.\r\n2022-09-28 10:27:50,549 - twisted - 274 - ERROR - sentinel - Sentry is attempting to send 94 pending error messages\r\n2022-09-28 10:27:50,555 - twisted - 274 - ERROR - sentinel - Waiting up to 2 seconds\r\n2022-09-28 10:27:50,563 - twisted - 274 - ERROR - sentinel - Press Ctrl-C to quit\r\n```\r\n\r\nPresumably comes from https://github.com/getsentry/sentry-python/blob/4c09f3203d6d19789c6fa729a2e46557ad4ea913/sentry_sdk/integrations/atexit.py#L30-L33\r\n\r\nGiven that we redirect stderr -> twisted -> stdlib logging (for Reasons :TM:) this ends up as an ERROR; I think a warning makes more sense. There are some notes [here](https://docs.sentry.io/platforms/python/guides/flask/configuration/integrations/default-integrations/#atexit).",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14069/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14069/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

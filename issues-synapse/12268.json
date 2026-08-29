@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/12268",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/12268/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/12268/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/12268/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/12268",
+  "id": 1177094511,
+  "node_id": "I_kwDOAVyVwM5GKQlv",
+  "number": 12268,
+  "title": "Releasing Synapse will soon require authenticating via a PyPI API token",
+  "user": {
+    "login": "anoadragon453",
+    "id": 1342360,
+    "node_id": "MDQ6VXNlcjEzNDIzNjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1342360?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/anoadragon453",
+    "html_url": "https://github.com/anoadragon453",
+    "followers_url": "https://api.github.com/users/anoadragon453/followers",
+    "following_url": "https://api.github.com/users/anoadragon453/following{/other_user}",
+    "gists_url": "https://api.github.com/users/anoadragon453/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/anoadragon453/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/anoadragon453/subscriptions",
+    "organizations_url": "https://api.github.com/users/anoadragon453/orgs",
+    "repos_url": "https://api.github.com/users/anoadragon453/repos",
+    "events_url": "https://api.github.com/users/anoadragon453/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/anoadragon453/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 845245048,
+      "node_id": "MDU6TGFiZWw4NDUyNDUwNDg=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Docs",
+      "name": "A-Docs",
+      "color": "5319E7",
+      "default": false,
+      "description": "things relating to the documentation"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406437,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDM3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Other",
+      "name": "T-Other",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Questions, user support, anything else."
+    },
+    {
+      "id": 4316622437,
+      "node_id": "LA_kwDOAVyVwM8AAAABAUpuZQ",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Dev-Wishlist",
+      "name": "Z-Dev-Wishlist",
+      "color": "FBCA04",
+      "default": false,
+      "description": "Makes developers' lives better, but doesn't have direct user impact"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2022-03-22T17:36:59Z",
+  "updated_at": "2022-08-25T13:11:26Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "When making use of [the release script](https://github.com/matrix-org/synapse/blob/831d4797ab46ada7266046a9719b72ca9e5949f9/scripts-dev/release.py) today and running:\r\n\r\n```\r\n./scripts-dev/release.py upload\r\n```\r\n\r\nI entered my username and password to upload the package releases of Synapse to PyPI. I then received an email from PyPI telling me:\r\n\r\n> ## What?\r\n>\r\n>  During your recent upload or upload attempt to PyPI, we noticed you used basic authentication (username & password). However, your account has two-factor authentication (2FA) enabled.\r\n>\r\n>In the near future, PyPI will begin prohibiting uploads using basic authentication for accounts with two-factor authentication enabled. Instead, we will require API tokens to be used. \r\n\r\n> ## What should I do?\r\n>\r\n> First, generate an API token for your account or project at https://pypi.org/manage/account/token/. Then, use this token when publishing instead of your username and password. See https://pypi.org/help/#apitoken for help using API tokens to publish. \r\n\r\nThe release script makes use of the [twine](https://twine.readthedocs.io/en/stable/) tool to upload the packages. As far as I can see, twine does not have a simple option for providing an API token (https://github.com/pypa/twine/issues/561). Instead, one can supply the following at the existing prompt:\r\n\r\n```\r\nusername: __token__\r\npassword: YOUR_PYPI_TOKEN\r\n```\r\n\r\nThe concrete step here is to update the internal release documentation to note the above workaround. Past that, we can bodge the release script to make this a bit more user-friendly, or simply sit on our laurels until twine release an update with a simplified workflow.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/12268/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/12268/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

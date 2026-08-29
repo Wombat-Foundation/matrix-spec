@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14444",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14444/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14444/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14444/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14444",
+  "id": 1448882750,
+  "node_id": "I_kwDOAVyVwM5WXDI-",
+  "number": 14444,
+  "title": "Sync with no since param is not always up to date",
+  "user": {
+    "login": "dec05eba",
+    "id": 66856951,
+    "node_id": "MDQ6VXNlcjY2ODU2OTUx",
+    "avatar_url": "https://avatars.githubusercontent.com/u/66856951?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/dec05eba",
+    "html_url": "https://github.com/dec05eba",
+    "followers_url": "https://api.github.com/users/dec05eba/followers",
+    "following_url": "https://api.github.com/users/dec05eba/following{/other_user}",
+    "gists_url": "https://api.github.com/users/dec05eba/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/dec05eba/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/dec05eba/subscriptions",
+    "organizations_url": "https://api.github.com/users/dec05eba/orgs",
+    "repos_url": "https://api.github.com/users/dec05eba/repos",
+    "events_url": "https://api.github.com/users/dec05eba/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/dec05eba/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2038475067,
+      "node_id": "MDU6TGFiZWwyMDM4NDc1MDY3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Sync",
+      "name": "A-Sync",
+      "color": "5319E7",
+      "default": false,
+      "description": "defects related to /sync"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2022-11-14T22:49:16Z",
+  "updated_at": "2022-11-29T20:04:23Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nIf a message is posted in a room and you receive it and see it in a client (in element for example) and then run /sync from curl/postman with the same authorization token and no `since` param then it can sometimes exclude the most recent messages. If you then get the next_batch token from that sync response and use it in a /sync again as the `since` param then it may give you a message that you received in the previous sync again. This sync can also say that there is a highlighted message that you have already read (and set read marker to it). This issue goes away after 2-30 seconds, as if the server only updates latest sync data periodically.\r\n\r\nThe affect of this is that in my matrix client for example you see that in the room that you got a message in it says that there are unread mentions even when you have read the message. If you also enter the room then the message at the bottom is not the latest one and it has to wait until it fetches the latest one.\r\n\r\nThe /notifications api says that the message hasn't been read either.\r\nThis issue didn't happen long ago either, i dont remember exactly how long ago. Im not really sure if it is a bug or if it's intentionally behaving like this but it causes issues in my client.\r\n\r\nIt may only happen when using a filter, specifically this one: `{\"presence\":{\"limit\":0,\"types\":[\"\"]},\"account_data\":{\"types\":[\"qm.emoji\",\"m.direct\"]},\"room\":{\"state\":{\"not_types\":[\"m.room.related_groups\",\"m.room.power_levels\",\"m.room.join_rules\",\"m.room.history_visibility\",\"m.room.canonical_alias\",\"m.space.child\"],\"lazy_load_members\":true},\"timeline\":{\"lazy_load_members\":true},\"ephemeral\":{\"limit\":0,\"types\":[\"\"],\"lazy_load_members\":true},\"account_data\":{\"types\":[\"m.fully_read\",\"m.tag\",\"qm.last_read_message_timestamp\"],\"lazy_load_members\":true}}}`\r\n\r\n### Steps to reproduce\r\n\r\n- Use two different account at the same time, two element windows in two different browsers work.\r\n- While being in the same room use one of the accounts to @mention the other user.\r\n- Open the account on the other window, scroll to the bottom and see that it has been read properly.\r\n- Open postman/curl and run `https://matrix-server/_matrix/client/r0/sync?filter={\"presence\":{\"limit\":0,\"types\":[\"\"]},\"account_data\":{\"types\":[\"qm.emoji\",\"m.direct\"]},\"room\":{\"state\":{\"not_types\":[\"m.room.related_groups\",\"m.room.power_levels\",\"m.room.join_rules\",\"m.room.history_visibility\",\"m.room.canonical_alias\",\"m.space.child\"],\"lazy_load_members\":true},\"timeline\":{\"lazy_load_members\":true},\"ephemeral\":{\"limit\":0,\"types\":[\"\"],\"lazy_load_members\":true},\"account_data\":{\"types\":[\"m.fully_read\",\"m.tag\",\"qm.last_read_message_timestamp\"],\"lazy_load_members\":true}}}&timeout=0` and with authorization token set (to the same account as the account that was mentioned).\r\n- See that the latest m.room.message is not the latest message that was posted in the room. Also try using the next_batch at top level to do another request by setting the `since` param to see messages after that sync.\r\n\r\n### Homeserver\r\n\r\nmatrix.org, midov.pl\r\n\r\n### Synapse Version\r\n\r\n1.71.0rc2 (b=matrix-org-hotfixes,39ea774cff,dirty), 1.69.0\r\n\r\n### Installation Method\r\n\r\n_No response_\r\n\r\n### Platform\r\n\r\nmatrix.org\r\n\r\n### Relevant log output\r\n\r\n```shell\r\nNo helpful logs available, only steps to reproduce\r\n```\r\n\r\n\r\n### Anything else that would be useful to know?\r\n\r\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14444/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14444/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

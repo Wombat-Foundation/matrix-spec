@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/7365",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/7365/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/7365/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/7365/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/7365",
+  "id": 609019196,
+  "node_id": "MDU6SXNzdWU2MDkwMTkxOTY=",
+  "number": 7365,
+  "title": "psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint \"e2e_one_time_keys_json_uniqueness\"",
+  "user": {
+    "login": "anoadragon453",
+    "id": 1342360,
+    "node_id": "MDQ6VXNlcjEzNDIzNjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1342360?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/anoadragon453",
+    "html_url": "https://github.com/anoadragon453",
+    "followers_url": "https://api.github.com/users/anoadragon453/followers",
+    "following_url": "https://api.github.com/users/anoadragon453/following{/other_user}",
+    "gists_url": "https://api.github.com/users/anoadragon453/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/anoadragon453/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/anoadragon453/subscriptions",
+    "organizations_url": "https://api.github.com/users/anoadragon453/orgs",
+    "repos_url": "https://api.github.com/users/anoadragon453/repos",
+    "events_url": "https://api.github.com/users/anoadragon453/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/anoadragon453/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086029,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMjk=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-bug",
+      "name": "z-bug",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 477043173,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p2",
+      "name": "z-p2",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 1920863622,
+      "node_id": "MDU6TGFiZWwxOTIwODYzNjIy",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Validation",
+      "name": "A-Validation",
+      "color": "5319E7",
+      "default": false,
+      "description": "500 (mostly) errors due to lack of event/parameter validation"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2020-04-29T12:31:01Z",
+  "updated_at": "2023-05-23T16:06:00Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Storage function `add_e2e_one_time_keys` claims that it raises an error when one tries to insert a key that already exists in the db. This makes a call to `/keys/upload` fail if one of the keys in the set is already known:\r\n\r\n```\r\nsynapse.http.server - 110 - ERROR - POST-xxx - Failed handle request via 'KeyUploadServlet': <XForwardedForRequest at 0x7f02d1508578 method='POST' uri='/_matrix/client/r0/keys/upload' clientproto='HTTP/1.1' site=8080>\r\n...\r\n  File \"/synapse/storage/data_stores/main/end_to_end_keys.py\", line 237, in _add_e2e_one_time_keys\r\n    for algorithm, key_id, json_bytes in new_keys\r\n  File \"/synapse/storage/database.py\", line 684, in simple_insert_many_txn\r\n    txn.executemany(sql, vals)\r\n  File \"/synapse/storage/database.py\", line 202, in executemany\r\n    self._do_execute(self.txn.executemany, sql, *args)\r\n  File \"/synapse/storage/database.py\", line 225, in _do_execute\r\n    return func(sql, *args)\r\npsycopg2.errors.UniqueViolation: duplicate key value violates unique constraint \"e2e_one_time_keys_json_uniqueness\"\r\nDETAIL:  Key (user_id, device_id, algorithm, key_id)=(@blabla:example.com, ATNXJDJWK, signed_curve25519, AAAANR) already exists.\r\n```\r\n\r\nPerhaps this in intentional, but presumably we'd want to just skip a key if we already have it and continue inserting the rest rather than 500 (well, ideally we wouldn't do that in any case).",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/7365/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/7365/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

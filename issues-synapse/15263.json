@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15263",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15263/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15263/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15263/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15263",
+  "id": 1622208873,
+  "node_id": "I_kwDOAVyVwM5gsPFp",
+  "number": 15263,
+  "title": "`/event` does not try to backfill unknown events from federation",
+  "user": {
+    "login": "MadLittleMods",
+    "id": 558581,
+    "node_id": "MDQ6VXNlcjU1ODU4MQ==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/558581?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/MadLittleMods",
+    "html_url": "https://github.com/MadLittleMods",
+    "followers_url": "https://api.github.com/users/MadLittleMods/followers",
+    "following_url": "https://api.github.com/users/MadLittleMods/following{/other_user}",
+    "gists_url": "https://api.github.com/users/MadLittleMods/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/MadLittleMods/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/MadLittleMods/subscriptions",
+    "organizations_url": "https://api.github.com/users/MadLittleMods/orgs",
+    "repos_url": "https://api.github.com/users/MadLittleMods/repos",
+    "events_url": "https://api.github.com/users/MadLittleMods/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/MadLittleMods/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2023-03-13T20:26:19Z",
+  "updated_at": "2023-03-15T09:10:33Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "*Sister issue to `/context` backfilling events: https://github.com/matrix-org/synapse/issues/3848*\r\n\r\n---\r\n\r\nThe client `/event` endpoint does not try to backfill unknown events from federation. \"This means that if I try to follow a permalink for a room and my server doesn't have that event locally, the permalink fails. This is pretty awful UX.\"\r\n\r\n - https://github.com/vector-im/element-web/issues/1230\r\n - https://github.com/vector-im/element-web/issues/24665 (spawned from this issue)\r\n\r\n\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15263/reactions",
+    "total_count": 2,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 2,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15263/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

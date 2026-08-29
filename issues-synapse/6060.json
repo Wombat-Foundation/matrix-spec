@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/6060",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/6060/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/6060/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/6060/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/6060",
+  "id": 495474691,
+  "node_id": "MDU6SXNzdWU0OTU0NzQ2OTE=",
+  "number": 6060,
+  "title": "event_push_actions don't seem to be cleaned for some of my rooms",
+  "user": {
+    "login": "ara4n",
+    "id": 1294269,
+    "node_id": "MDQ6VXNlcjEyOTQyNjk=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1294269?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/ara4n",
+    "html_url": "https://github.com/ara4n",
+    "followers_url": "https://api.github.com/users/ara4n/followers",
+    "following_url": "https://api.github.com/users/ara4n/following{/other_user}",
+    "gists_url": "https://api.github.com/users/ara4n/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/ara4n/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/ara4n/subscriptions",
+    "organizations_url": "https://api.github.com/users/ara4n/orgs",
+    "repos_url": "https://api.github.com/users/ara4n/repos",
+    "events_url": "https://api.github.com/users/ara4n/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/ara4n/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045805,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDU=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Push",
+      "name": "A-Push",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues related to push/notifications"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4195810659,
+      "node_id": "LA_kwDOAVyVwM76Fv1j",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Database",
+      "name": "A-Database",
+      "color": "5319E7",
+      "default": false,
+      "description": "DB stuff like queries, migrations, new/remove columns, indexes, unexpected entries in the db"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2019-09-18T21:57:31Z",
+  "updated_at": "2023-07-06T16:33:45Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "specifically, i have 19 entries in the EPA table for !zVpPeWAObqutioiNzB:jki.re despite being caught up on it. I thought every time i send a read receipt, my EPA entries from before the point I sent the read receipt should get cleaned out by _remove_old_push_actions_before_txn?",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/6060/reactions",
+    "total_count": 2,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 2
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/6060/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

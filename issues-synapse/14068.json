@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14068",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14068/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14068/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14068/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14068",
+  "id": 1398303512,
+  "node_id": "I_kwDOAVyVwM5TWGsY",
+  "number": 14068,
+  "title": "URL previews includes unicode punycode which causes issues URLs in the text body",
+  "user": {
+    "login": "HarHarLinks",
+    "id": 2803622,
+    "node_id": "MDQ6VXNlcjI4MDM2MjI=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/2803622?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/HarHarLinks",
+    "html_url": "https://github.com/HarHarLinks",
+    "followers_url": "https://api.github.com/users/HarHarLinks/followers",
+    "following_url": "https://api.github.com/users/HarHarLinks/following{/other_user}",
+    "gists_url": "https://api.github.com/users/HarHarLinks/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/HarHarLinks/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/HarHarLinks/subscriptions",
+    "organizations_url": "https://api.github.com/users/HarHarLinks/orgs",
+    "repos_url": "https://api.github.com/users/HarHarLinks/repos",
+    "events_url": "https://api.github.com/users/HarHarLinks/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/HarHarLinks/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 4644449862,
+      "node_id": "LA_kwDOAVyVwM8AAAABFNSuRg",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-URL-Preview",
+      "name": "A-URL-Preview",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues related to generating server-side previews of remote URLs"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2022-10-05T19:56:34Z",
+  "updated_at": "2023-04-25T22:23:25Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nhttps://github.com/vector-im/element-web/issues/23432\r\n\r\nSynapse injects `“` (`5o0a`) punycode into og:description of twitter URLs, leading to broken links.\n\n### Steps to reproduce\n\nForwarded Element issue:\r\n\r\n### Steps to reproduce\r\n\r\n1. Post a twitter URL into a room, URL previews enabled\r\n2. Twitter post content is put into double quotes `\"\"`\r\n3. in case of media-only posts, the t.co media URL is in quotes\r\n4. element includes the ending quote in the URL, resulting in a broken link\r\n\r\n### Outcome\r\n\r\n#### What did you expect?\r\nlinks work\r\n#### What happened instead?\r\n![image](https://user-images.githubusercontent.com/2803622/194140184-3e32b90b-c99c-40ed-9ca4-94b8d67949fb.png)\r\n\r\nDemo URLs for reference:\r\nhttps://twitter.com/FXNetworks/status/1577704289476128771\r\nhttps://twitter.com/mischiefanimals/status/1576904037449969664\r\n\r\n### Operating system\r\n\r\narch\r\n\r\n### Application version\r\n\r\nElement Nightly version: 2022100501 Olm version: 3.2.12\r\n\r\n### How did you install the app?\r\n\r\naur\n\n### Homeserver\n\nprivate\n\n### Synapse Version\n\n1.68.0\n\n### Installation Method\n\nDocker (matrixdotorg/synapse)\n\n### Platform\n\ndebian, matrix-docker-ansible-deploy\n\n### Relevant log output\n\n```shell\nn/a\n```\n\n\n### Anything else that would be useful to know?\n\n```\r\ncurl \"https://publish.twitter.com/oembed?url=https://twitter.com/mischiefanimals/status/1576904037449969664\" | jq .\r\n  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\r\n                                 Dload  Upload   Total   Spent    Left  Speed\r\n100   853  100   853    0     0   3946      0 --:--:-- --:--:-- --:--:--  4140\r\n{\r\n  \"url\": \"https://twitter.com/mischiefanimals/status/1576904037449969664\",\r\n  \"author_name\": \"animals going goblin mode\",\r\n  \"author_url\": \"https://twitter.com/mischiefanimals\",\r\n  \"html\": \"<blockquote class=\\\"twitter-tweet\\\"><p lang=\\\"zxx\\\" dir=\\\"ltr\\\"><a href=\\\"https://t.co/fVP8YWHS2j\\\">pic.twitter.com/fVP8YWHS2j</a></p>&mdash; animals going goblin mode (@mischiefanimals) <a href=\\\"https://twitter.com/mischiefanimals/status/1576904037449969664?ref_src=twsrc%5Etfw\\\">October 3, 2022</a></blockquote>\\n<script async src=\\\"https://platform.twitter.com/widgets.js\\\" charset=\\\"utf-8\\\"></script>\\n\",\r\n  \"width\": 550,\r\n  \"height\": null,\r\n  \"type\": \"rich\",\r\n  \"cache_age\": \"3153600000\",\r\n  \"provider_name\": \"Twitter\",\r\n  \"provider_url\": \"https://twitter.com\",\r\n  \"version\": \"1.0\"\r\n}\r\n```\r\nhttps://user-images.githubusercontent.com/2403652/194146661-044758f9-fefd-4744-9ef2-bd3aec094d40.png",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14068/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14068/timeline",
+  "performed_via_github_app": null,
+  "state_reason": "reopened",
+  "pinned_comment": null
+}

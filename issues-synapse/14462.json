@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14462",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14462/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14462/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14462/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14462",
+  "id": 1451435525,
+  "node_id": "I_kwDOAVyVwM5WgyYF",
+  "number": 14462,
+  "title": "room alias lookups on `libera.chat` timing out",
+  "user": {
+    "login": "progval",
+    "id": 406946,
+    "node_id": "MDQ6VXNlcjQwNjk0Ng==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/406946?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/progval",
+    "html_url": "https://github.com/progval",
+    "followers_url": "https://api.github.com/users/progval/followers",
+    "following_url": "https://api.github.com/users/progval/following{/other_user}",
+    "gists_url": "https://api.github.com/users/progval/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/progval/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/progval/subscriptions",
+    "organizations_url": "https://api.github.com/users/progval/orgs",
+    "repos_url": "https://api.github.com/users/progval/repos",
+    "events_url": "https://api.github.com/users/progval/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/progval/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086032,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMzI=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Help-Wanted",
+      "name": "Z-Help-Wanted",
+      "color": "006B0F",
+      "default": false,
+      "description": "We know exactly how to fix this issue, and would be grateful for any contribution"
+    },
+    {
+      "id": 1771241792,
+      "node_id": "MDU6TGFiZWwxNzcxMjQxNzky",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federated-Join",
+      "name": "A-Federated-Join",
+      "color": "5319E7",
+      "default": false,
+      "description": "joins over federation generally suck"
+    },
+    {
+      "id": 2674406235,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MjM1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/good%20first%20issue",
+      "name": "good first issue",
+      "color": "0E8A16",
+      "default": true,
+      "description": "Good for newcomers"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 8,
+  "created_at": "2022-11-16T11:42:55Z",
+  "updated_at": "2022-12-01T17:05:22Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nI created a room yesterday, and no client can display it because getting `client/v3/directory/room/` times out or crashes with a 502 error.\r\n\r\nWith curl:\r\n\r\n```\r\n$ curl https://matrix.org/_matrix/client/v3/directory/room/%23valtest8:libera.chat\r\n{\"errcode\":\"M_UNKNOWN\",\"error\":\"Failed to fetch alias\"}\r\n```\r\n\r\nWith my own client, the connection times out\r\n\r\nAnd from my browser (regardless of being logged in), I'm getting Cloudflare's 502 Bad Gateway page\r\n\r\n### Steps to reproduce\r\n\r\n- join a room on a different server, with no other user from your own homeserver in the room\r\n- leave and re-join a couple of times\r\n- Eventually the client will be stuck \r\n\r\n### Homeserver\r\n\r\nmatrix.org\r\n\r\n### Synapse Version\r\n\r\n1.71.0rc2 (b=matrix-org-hotfixes,39ea774cff,dirty)\r\n\r\n### Installation Method\r\n\r\n_No response_\r\n\r\n### Platform\r\n\r\nn/a\r\n\r\n### Relevant log output\r\n\r\n```shell\r\nn/a\r\n```\r\n\r\n\r\n### Anything else that would be useful to know?\r\n\r\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14462/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14462/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

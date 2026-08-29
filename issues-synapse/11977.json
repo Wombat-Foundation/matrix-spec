@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/11977",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/11977/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/11977/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/11977/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/11977",
+  "id": 1132999867,
+  "node_id": "I_kwDOAVyVwM5DiDS7",
+  "number": 11977,
+  "title": "Option to only share presence with members of rooms with `m.direct`",
+  "user": {
+    "login": "svenpaulsen",
+    "id": 7894194,
+    "node_id": "MDQ6VXNlcjc4OTQxOTQ=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/7894194?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/svenpaulsen",
+    "html_url": "https://github.com/svenpaulsen",
+    "followers_url": "https://api.github.com/users/svenpaulsen/followers",
+    "following_url": "https://api.github.com/users/svenpaulsen/following{/other_user}",
+    "gists_url": "https://api.github.com/users/svenpaulsen/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/svenpaulsen/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/svenpaulsen/subscriptions",
+    "organizations_url": "https://api.github.com/users/svenpaulsen/orgs",
+    "repos_url": "https://api.github.com/users/svenpaulsen/repos",
+    "events_url": "https://api.github.com/users/svenpaulsen/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/svenpaulsen/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045943,
+      "node_id": "MDU6TGFiZWw0NzcwNDU5NDM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Presence",
+      "name": "A-Presence",
+      "color": "5319e7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 3232177309,
+      "node_id": "MDU6TGFiZWwzMjMyMTc3MzA5",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/P4",
+      "name": "P4",
+      "color": "d1e5f0",
+      "default": false,
+      "description": "(OBSOLETE: use S- labels.) Okay backlog: will not schedule, will accept patches"
+    },
+    {
+      "id": 5491851823,
+      "node_id": "LA_kwDOAVyVwM8AAAABR1cCLw",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/roadmap",
+      "name": "roadmap",
+      "color": "1D76DB",
+      "default": false,
+      "description": ""
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2022-02-11T19:25:24Z",
+  "updated_at": "2023-11-15T22:57:38Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "As you know, presence updates have a major impact on the overall server performance... but just turning it off is not a real solution in most use-cases. Therefore, I'm suggesting a new option in the presence configuration called `limit_to_direct_rooms` (or something like that).\r\n\r\nThe idea is, that when collecting the list of interested parties for presence updates, only room ids with a `m.direct` membership should be used. As a result, users would retrieve presence updates for their \"contacts\", but not for everyone who's sharing a group chat room. This could help decreasing the server load and increase privacy at the same time.\r\n\r\nWhat do you think? Could this be a reasonable solution?",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/11977/reactions",
+    "total_count": 2,
+    "+1": 2,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/11977/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/9246",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/9246/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/9246/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/9246/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/9246",
+  "id": 795492472,
+  "node_id": "MDU6SXNzdWU3OTU0OTI0NzI=",
+  "number": 9246,
+  "title": "Upgrading a public room erroneously makes it E2EE when E2EE is required for private rooms",
+  "user": {
+    "login": "joepie91",
+    "id": 1663259,
+    "node_id": "MDQ6VXNlcjE2NjMyNTk=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1663259?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/joepie91",
+    "html_url": "https://github.com/joepie91",
+    "followers_url": "https://api.github.com/users/joepie91/followers",
+    "following_url": "https://api.github.com/users/joepie91/following{/other_user}",
+    "gists_url": "https://api.github.com/users/joepie91/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/joepie91/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/joepie91/subscriptions",
+    "organizations_url": "https://api.github.com/users/joepie91/orgs",
+    "repos_url": "https://api.github.com/users/joepie91/repos",
+    "events_url": "https://api.github.com/users/joepie91/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/joepie91/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1281928350,
+      "node_id": "MDU6TGFiZWwxMjgxOTI4MzUw",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Room-Upgrades",
+      "name": "A-Room-Upgrades",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 6,
+  "created_at": "2021-01-27T22:24:28Z",
+  "updated_at": "2022-12-21T17:34:45Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\n(Note: I'm filing this issue on behalf of someone else, who can't currently file issues, so I don't have direct access to the homeserver in question.)\r\n\r\nWhen Synapse is configured to require E2EE for private rooms, then when a public room is upgraded through that homeserver, it is erroneously marked as end-to-end encrypted. According to TravisR:\r\n\r\n> looks like a synapse bug. encryption_enabled_by_default_for_room_type doesn't seem to work with room upgrades (/upgrade creates a room without a preset, which is by default a private room until it later updates the state)\r\n\r\nAutomatically enabling E2EE for the upgraded room should only occur for private rooms, instead.\r\n\r\n### Steps to reproduce\r\n\r\n- Run homeserver that requires E2EE for private rooms\r\n- From an account on that homeserver, upgrade a public room, through `/upgraderoom 6` in Element Web/Desktop\r\n\r\n### Version information\r\n\r\n<!-- IMPORTANT: please answer the following questions, to help us narrow down the problem -->\r\n\r\n<!-- Was this issue identified on matrix.org or another homeserver? -->\r\n- **Homeserver**: privacytools.io\r\n\r\nIf not matrix.org:\r\n\r\n<!--\r\n What version of Synapse is running?\r\n\r\nYou can find the Synapse version with this command:\r\n\r\n$ curl http://localhost:8008/_synapse/admin/v1/server_version\r\n\r\n(You may need to replace `localhost:8008` if Synapse is not configured to\r\nlisten on that port.)\r\n-->\r\n- **Version**: unknown\r\n\r\n- **Install method**: unknown\r\n<!-- examples: package manager/git clone/pip  -->\r\n\r\n- **Platform**: unknown\r\n<!--\r\nTell us about the environment in which your homeserver is operating\r\ndistro, hardware, if it's running in a vm/container, etc.\r\n-->\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/9246/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/9246/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

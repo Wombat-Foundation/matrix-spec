@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15999",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15999/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15999/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15999/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15999",
+  "id": 1820461244,
+  "node_id": "I_kwDOAVyVwM5sggi8",
+  "number": 15999,
+  "title": "Disabling a user does not seem to clear cross-signing keys.",
+  "user": {
+    "login": "JocelynDelalande",
+    "id": 429633,
+    "node_id": "MDQ6VXNlcjQyOTYzMw==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/429633?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/JocelynDelalande",
+    "html_url": "https://github.com/JocelynDelalande",
+    "followers_url": "https://api.github.com/users/JocelynDelalande/followers",
+    "following_url": "https://api.github.com/users/JocelynDelalande/following{/other_user}",
+    "gists_url": "https://api.github.com/users/JocelynDelalande/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/JocelynDelalande/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/JocelynDelalande/subscriptions",
+    "organizations_url": "https://api.github.com/users/JocelynDelalande/orgs",
+    "repos_url": "https://api.github.com/users/JocelynDelalande/repos",
+    "events_url": "https://api.github.com/users/JocelynDelalande/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/JocelynDelalande/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 5345655364,
+      "node_id": "LA_kwDOAVyVwM8AAAABPqA6RA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Account-Deactivation",
+      "name": "A-Account-Deactivation",
+      "color": "5319E7",
+      "default": false,
+      "description": "\"Deleting\"/\"Removing\" a user, GDPR erasure (erased)"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2023-07-25T14:21:46Z",
+  "updated_at": "2023-07-27T09:52:15Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nThe doc says that [disabling user clears the cross-signing keys](https://matrix-org.github.io/synapse/latest/admin_api/user_admin_api.html#deactivate-account).\r\n\r\nBut from my tests, the same cross-signing keys remain accross disabling+re-enabling process.\r\n\r\nI even tested to trigger a `regenerate_directory` event and wait for it to complete before re-enabling it but it does change nothing.\r\n\r\nWaiting for a fix, is there any workaround to manually clear (not replace, clear) cross-signing keys for a given user ?\r\n\r\nThanks by advance <3\n\n### Steps to reproduce\n\n- disable user via admin API\r\n- enable user via admin APIh\r\n- check for cross-signing keys (for ex in session initialization logs, but I guess it can be checked in DB too)\r\n\n\n### Homeserver\n\nprivate\n\n### Synapse Version\n\nSynapseVersion(server='1.88.0', python='3.11.4')\n\n### Installation Method\n\nDocker (matrixdotorg/synapse)\n\n### Database\n\nPostgreSQL\n\n### Workers\n\nI don't know\n\n### Platform\n\nLinux\n\n### Configuration\n\n_No response_\n\n### Relevant log output\n\n```shell\nelement-web JS console after deactivate/reactivate :\r\n\r\n\r\ngot cross-signing keys for @test3:xxx.yyy: \r\nObject { master: {…}, self_signing: {…}, user_signing: {…} }\r\nbundle.js:2:3195419\r\n```\r\n\r\n(`…` being a complete key object, with hash remaining the same accross disable/enable cycles)\r\n\r\nAlthough with a freshly created user, I get : \r\n\r\n```\r\ngot cross-signing keys for @test_j5:ouvre-boites.coop: \r\nObject { master: undefined, self_signing: undefined, user_signing: undefined }\r\nbundle.js:2:3195419\r\n```\r\n\r\nRemains undefined accross logout/login cycles.\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15999/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15999/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

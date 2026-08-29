@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15258",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15258/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15258/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15258/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15258",
+  "id": 1621000071,
+  "node_id": "I_kwDOAVyVwM5gnn-H",
+  "number": 15258,
+  "title": "Synapse decided I'm no longer a member of a room",
+  "user": {
+    "login": "namazso",
+    "id": 8676443,
+    "node_id": "MDQ6VXNlcjg2NzY0NDM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8676443?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/namazso",
+    "html_url": "https://github.com/namazso",
+    "followers_url": "https://api.github.com/users/namazso/followers",
+    "following_url": "https://api.github.com/users/namazso/following{/other_user}",
+    "gists_url": "https://api.github.com/users/namazso/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/namazso/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/namazso/subscriptions",
+    "organizations_url": "https://api.github.com/users/namazso/orgs",
+    "repos_url": "https://api.github.com/users/namazso/repos",
+    "events_url": "https://api.github.com/users/namazso/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/namazso/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137895389,
+      "node_id": "LA_kwDOAVyVwM72o0Xd",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Membership",
+      "name": "A-Membership",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 5432722667,
+      "node_id": "LA_kwDOAVyVwM8AAAABQ9DE6w",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-State-Resolution",
+      "name": "A-State-Resolution",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2023-03-13T08:42:16Z",
+  "updated_at": "2023-06-15T19:25:05Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nSo the story starts at a room I'm in (PG Lounge) started missing a lot of peoples messages. I wrote it off as some synapse bug, and proceeded to just purge the room and rejoin. This seemed to fix it for about 4 days. This morning, Synapse decided that I am no longer a member of the room. Upon rejoining, most messages are missing and the timeline is messed up:\r\n\r\n![image](https://user-images.githubusercontent.com/8676443/224649283-ad5f805e-b999-4718-9c53-54ff39b15ee2.png)\r\n\n\n### Steps to reproduce\n\nI don't know.\n\n### Homeserver\n\nnamazso.eu\n\n### Synapse Version\n\n1.78.0\n\n### Installation Method\n\nDocker (matrixdotorg/synapse)\n\n### Database\n\nPostgreSQL 12. Single server. Yes, about 2 years ago. No.\n\n### Workers\n\nSingle process\n\n### Platform\n\nProbably not relevant, but Fedora IoT, official docker container.\n\n### Configuration\n\nPresence is enabled.\n\n### Relevant log output\n\n```shell\n2023-03-13 06:18:55,764 - synapse.federation.sender.per_destination_queue - 561 - INFO - federation_transaction_transmission_loop-314815 - Catching up rooms to conorz.tk: '!xGDfMAzPVtiqAxdQIu:privacyguides.org'\r\n2023-03-13 06:21:52,697 - synapse.handlers.typing - 373 - INFO - PUT-148747 - Got typing update from @123bob123:matrix.org: {'room_id': '!xGDfMAzPVtiqAxdQIu:privacyguides.org', 'typing': True, 'user_id': '@123bob123:matrix.org'}\r\n2023-03-13 06:22:02,693 - synapse.handlers.typing - 373 - INFO - PUT-148750 - Got typing update from @123bob123:matrix.org: {'room_id': '!xGDfMAzPVtiqAxdQIu:privacyguides.org', 'typing': False, 'user_id': '@123bob123:matrix.org'}\r\n2023-03-13 06:22:06,687 - synapse.handlers.typing - 373 - INFO - PUT-148752 - Got typing update from @123bob123:matrix.org: {'room_id': '!xGDfMAzPVtiqAxdQIu:privacyguides.org', 'typing': True, 'user_id': '@123bob123:matrix.org'}\r\n2023-03-13 06:22:13,948 - synapse.handlers.typing - 373 - INFO - PUT-148759 - Got typing update from @123bob123:matrix.org: {'room_id': '!xGDfMAzPVtiqAxdQIu:privacyguides.org', 'typing': False, 'user_id': '@123bob123:matrix.org'}\r\n2023-03-13 06:22:14,702 - synapse.federation.federation_server - 1236 - INFO - _process_incoming_pdus_in_room_inner-6145 - handling received PDU in room !xGDfMAzPVtiqAxdQIu:privacyguides.org: <FrozenEventV3 event_id=$30_fuaLRkoj8MMbkl9YBlQ88x-QeHrntdSQMV0FLjEQ, type=m.room.message, state_key=None, outlier=False>\r\n2023-03-13 06:22:17,692 - synapse.handlers.typing - 373 - INFO - PUT-148761 - Got typing update from @123bob123:matrix.org: {'room_id': '!xGDfMAzPVtiqAxdQIu:privacyguides.org', 'typing': True, 'user_id': '@123bob123:matrix.org'}\r\n2023-03-13 06:22:19,910 - synapse.handlers.typing - 373 - INFO - PUT-148762 - Got typing update from @123bob123:matrix.org: {'room_id': '!xGDfMAzPVtiqAxdQIu:privacyguides.org', 'typing': False, 'user_id': '@123bob123:matrix.org'}\r\n2023-03-13 06:22:20,145 - synapse.federation.federation_server - 1236 - INFO - _process_incoming_pdus_in_room_inner-6146 - handling received PDU in room !xGDfMAzPVtiqAxdQIu:privacyguides.org: <FrozenEventV3 event_id=$B_8RZjqAPFRFh4GruU5oR7X5sFsQvKDueVZ_OCEdm5k, type=m.room.message, state_key=None, outlier=False>\r\n2023-03-13 06:24:54,323 - synapse.federation.sender.per_destination_queue - 561 - INFO - federation_transaction_transmission_loop-317840 - Catching up rooms to projectsegfau.lt: '!xGDfMAzPVtiqAxdQIu:privacyguides.org'\r\n2023-03-13 06:39:21,005 - synapse.federation.federation_server - 1236 - INFO - _process_incoming_pdus_in_room_inner-6168 - handling received PDU in room !xGDfMAzPVtiqAxdQIu:privacyguides.org: <FrozenEventV3 event_id=$9nL14NRJg1_n8U4klVLXNQYsCdEWIPn1MW31dM_zxBY, type=m.room.member, state_key=@double0beagle:matrix.org, outlier=False>\r\n2023-03-13 06:49:57,469 - synapse.federation.sender.per_destination_queue - 561 - INFO - federation_transaction_transmission_loop-317856 - Catching up rooms to projectsegfau.lt: '!xGDfMAzPVtiqAxdQIu:privacyguides.org'\r\n2023-03-13 07:14:57,581 - synapse.federation.sender.per_destination_queue - 561 - INFO - federation_transaction_transmission_loop-322628 - Catching up rooms to projectsegfau.lt: '!xGDfMAzPVtiqAxdQIu:privacyguides.org'\r\n2023-03-13 07:32:02,394 - synapse.federation.sender.per_destination_queue - 561 - INFO - federation_transaction_transmission_loop-322712 - Catching up rooms to conorz.tk: '!xGDfMAzPVtiqAxdQIu:privacyguides.org'\r\n2023-03-13 07:39:57,554 - synapse.federation.sender.per_destination_queue - 561 - INFO - federation_transaction_transmission_loop-325709 - Catching up rooms to projectsegfau.lt: '!xGDfMAzPVtiqAxdQIu:privacyguides.org'\r\n2023-03-13 08:05:00,869 - synapse.federation.sender.per_destination_queue - 561 - INFO - federation_transaction_transmission_loop-327248 - Catching up rooms to projectsegfau.lt: '!xGDfMAzPVtiqAxdQIu:privacyguides.org'\r\n2023-03-13 08:07:55,540 - synapse.federation.federation_server - 1236 - INFO - _process_incoming_pdus_in_room_inner-6243 - handling received PDU in room !xGDfMAzPVtiqAxdQIu:privacyguides.org: <FrozenEventV3 event_id=$2Voa-IClLrUoa4ByjY4tvhSeVhKhbq2bcbPxVAS-scM, type=m.room.message, state_key=None, outlier=False>\r\n2023-03-13 08:08:35,089 - synapse.state - 656 - INFO - persist_events-11923 - Resolving state for !xGDfMAzPVtiqAxdQIu:privacyguides.org with groups [1259202, 1259266]\r\n2023-03-13 08:08:36,102 - synapse.state - 656 - INFO - persist_events-11925 - Resolving state for !xGDfMAzPVtiqAxdQIu:privacyguides.org with groups [1259202, 1259267, 1259266]\r\n2023-03-13 08:08:38,060 - synapse.state - 656 - INFO - persist_events-11927 - Resolving state for !xGDfMAzPVtiqAxdQIu:privacyguides.org with groups [1259202, 1259267, 1259268, 1259266]\r\n2023-03-13 08:08:45,513 - synapse.state - 656 - INFO - persist_events-11940 - Resolving state for !xGDfMAzPVtiqAxdQIu:privacyguides.org with groups [1259202, 1259267, 1259266, 1259268, 1259269]\r\n2023-03-13 08:08:46,793 - synapse.state - 656 - INFO - persist_events-11942 - Resolving state for !xGDfMAzPVtiqAxdQIu:privacyguides.org with groups [1259202, 1259267, 1259266, 1259268, 1259269, 1259271]\r\n2023-03-13 08:08:47,060 - synapse.handlers.sync - 1373 - INFO - GET-152610 - User membership change between getting rooms and current token: @namazso:namazso.eu leave !xGDfMAzPVtiqAxdQIu:privacyguides.org\r\n2023-03-13 08:09:52,837 - synapse.federation.federation_server - 1236 - INFO - _process_incoming_pdus_in_room_inner-6251 - handling received PDU in room !xGDfMAzPVtiqAxdQIu:privacyguides.org: <FrozenEventV3 event_id=$VxMSAfYKzPFDdOYVKISxwFWj58fzkFQV9oK0Xb9zRxs, type=m.room.message, state_key=None, outlier=False>\r\n2023-03-13 08:10:12,257 - synapse.state - 656 - INFO - GET-152740-$tAUp2CEzV6UVgnnyP0KtsnLnM48B-SGXWt6-InGOWOk - Resolving state for !xGDfMAzPVtiqAxdQIu:privacyguides.org with groups [1259275, 1259276]\r\n2023-03-13 08:10:20,674 - synapse.handlers.sync - 1373 - INFO - GET-152839 - User membership change between getting rooms and current token: @namazso:namazso.eu join !xGDfMAzPVtiqAxdQIu:privacyguides.org\r\n2023-03-13 08:10:30,834 - synapse.state - 656 - INFO - persist_events-12056 - Resolving state for !xGDfMAzPVtiqAxdQIu:privacyguides.org with groups [1259283, 1259278]\r\n2023-03-13 08:10:38,105 - synapse.state - 656 - INFO - persist_events-12067 - Resolving state for !xGDfMAzPVtiqAxdQIu:privacyguides.org with groups [1259283, 1259284, 1259278]\r\n2023-03-13 08:10:45,766 - synapse.state - 656 - INFO - persist_events-12079 - Resolving state for !xGDfMAzPVtiqAxdQIu:privacyguides.org with groups [1259283, 1259284, 1259285, 1259278]\r\n2023-03-13 08:11:15,155 - synapse.state - 656 - INFO - persist_events-12086 - Resolving state for !xGDfMAzPVtiqAxdQIu:privacyguides.org with groups [1259278, 1259283, 1259284, 1259285, 1259286]\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15258/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15258/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

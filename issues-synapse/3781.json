@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/3781",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/3781/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/3781/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/3781/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/3781",
+  "id": 356155962,
+  "node_id": "MDU6SXNzdWUzNTYxNTU5NjI=",
+  "number": 3781,
+  "title": "we only send m.device_list_update EDUs when another transaction is to be sent to a server",
+  "user": {
+    "login": "ara4n",
+    "id": 1294269,
+    "node_id": "MDQ6VXNlcjEyOTQyNjk=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1294269?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/ara4n",
+    "html_url": "https://github.com/ara4n",
+    "followers_url": "https://api.github.com/users/ara4n/followers",
+    "following_url": "https://api.github.com/users/ara4n/following{/other_user}",
+    "gists_url": "https://api.github.com/users/ara4n/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/ara4n/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/ara4n/subscriptions",
+    "organizations_url": "https://api.github.com/users/ara4n/orgs",
+    "repos_url": "https://api.github.com/users/ara4n/repos",
+    "events_url": "https://api.github.com/users/ara4n/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/ara4n/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477043173,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p2",
+      "name": "z-p2",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 828665577,
+      "node_id": "MDU6TGFiZWw4Mjg2NjU1Nzc=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-minor",
+      "name": "z-minor",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 1828464348,
+      "node_id": "MDU6TGFiZWwxODI4NDY0MzQ4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Device-List-Tracking",
+      "name": "A-Device-List-Tracking",
+      "color": "5319E7",
+      "default": false,
+      "description": "Telling clients about other devices. Often related to E2EE."
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2018-09-01T00:30:43Z",
+  "updated_at": "2023-05-23T14:31:27Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "so device lists can get stale if we have no reason to talk to the remote server",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/3781/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/3781/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

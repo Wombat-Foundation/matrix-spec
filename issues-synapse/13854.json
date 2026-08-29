@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13854",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13854/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13854/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13854/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13854",
+  "id": 1379803119,
+  "node_id": "I_kwDOAVyVwM5SPh_v",
+  "number": 13854,
+  "title": "Event send time graph is misleading due to including errors in the graph",
+  "user": {
+    "login": "turt2live",
+    "id": 1190097,
+    "node_id": "MDQ6VXNlcjExOTAwOTc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1190097?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/turt2live",
+    "html_url": "https://github.com/turt2live",
+    "followers_url": "https://api.github.com/users/turt2live/followers",
+    "following_url": "https://api.github.com/users/turt2live/following{/other_user}",
+    "gists_url": "https://api.github.com/users/turt2live/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/turt2live/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/turt2live/subscriptions",
+    "organizations_url": "https://api.github.com/users/turt2live/orgs",
+    "repos_url": "https://api.github.com/users/turt2live/repos",
+    "events_url": "https://api.github.com/users/turt2live/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/turt2live/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 3537729900,
+      "node_id": "LA_kwDOAVyVwM7S3Xls",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Metrics",
+      "name": "A-Metrics",
+      "color": "5319E7",
+      "default": false,
+      "description": "metrics, measures, stuff we put in Prometheus"
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2022-09-20T18:07:00Z",
+  "updated_at": "2022-09-20T18:55:07Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nBlocking a high traffic room meant that the event send time dropped to <10ms on average, which is not physically possible with the infrastructure I have in place - errors shouldn't count towards the \"Event Send Time\" graph/metric.\r\n\n\n### Steps to reproduce\n\n- Get lots of 403 or similar errors in sending events\r\n- See that your send times look great on the graph now\r\n\n\n### Homeserver\n\nt2bot.io\n\n### Synapse Version\n\n1.67.0\n\n### Installation Method\n\n_No response_\n\n### Platform\n\nUbuntu server, postgresql on a different box.\n\n### Relevant log output\n\n```shell\nN/A\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13854/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13854/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

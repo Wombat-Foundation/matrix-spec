@@ -1,0 +1,149 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/5433",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/5433/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/5433/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/5433/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/5433",
+  "id": 455000149,
+  "node_id": "MDU6SXNzdWU0NTUwMDAxNDk=",
+  "number": 5433,
+  "title": "federation: refresh devices_list for users more frequently",
+  "user": {
+    "login": "cyphar",
+    "id": 2888411,
+    "node_id": "MDQ6VXNlcjI4ODg0MTE=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/2888411?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/cyphar",
+    "html_url": "https://github.com/cyphar",
+    "followers_url": "https://api.github.com/users/cyphar/followers",
+    "following_url": "https://api.github.com/users/cyphar/following{/other_user}",
+    "gists_url": "https://api.github.com/users/cyphar/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/cyphar/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/cyphar/subscriptions",
+    "organizations_url": "https://api.github.com/users/cyphar/orgs",
+    "repos_url": "https://api.github.com/users/cyphar/repos",
+    "events_url": "https://api.github.com/users/cyphar/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/cyphar/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477043174,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-feature",
+      "name": "z-feature",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 477050471,
+      "node_id": "MDU6TGFiZWw0NzcwNTA0NzE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p3",
+      "name": "z-p3",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 1828464348,
+      "node_id": "MDU6TGFiZWwxODI4NDY0MzQ4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Device-List-Tracking",
+      "name": "A-Device-List-Tracking",
+      "color": "5319E7",
+      "default": false,
+      "description": "Telling clients about other devices. Often related to E2EE."
+    },
+    {
+      "id": 1828503314,
+      "node_id": "MDU6TGFiZWwxODI4NTAzMzE0",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-uisi",
+      "name": "z-uisi",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2019-06-12T03:55:18Z",
+  "updated_at": "2023-05-23T15:36:17Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\n\r\nLet's take two homeservers `A.com` and `B.com`. You've set up `A.com` and `B.com` and they are both federating with one another freely.\r\n\r\nAt the moment if you (possibly accidentally) nuke your already-federated `A.com` server and want to rebuild it using the same `server_name` things work mostly fine (`B.com` seems to accept the new signing key of your server without much issue, and federated events between `A.com` and `B.com` work properly).\r\n\r\nHowever, one issue that occurs is that the cached device list of `A.com`'s users on `B.com`  will persist (assuming that you've kept the same usernames on the new installation). Not only that, but because the database has been completely nuked, `A.com` won't know that it needs to send `m.device_list_update` EDUs to `B.com`. This results in E2EE over federation being basically broken permanently because users on `B.com` won't negotiate new Megolm session keys (because they don't see the new `A.com` devices and instead only see the ghost ones.\r\n\r\nWould it be acceptable to make synapse automatically do a hard refresh of the devices list of the users on a federated server if the signing key of the homeserver changes? This could be done lazily (effectively just remove the cached information about devices, and when a user requests it then we fetch it over federation). Is there any attack that I'm missing which much result if we make this a default feature?\r\n\r\n**Workaround**\r\n\r\nAs a quick hack, it is possible to fix this using the manhole in synapse -- by sending a `m.device_list_update` EDU to `B.com` which has a broken value of `prev_id`. [According to the spec](https://matrix.org/docs/spec/server_server/r0.1.1.html#device-management) this causes `B.com` to reset its cached device list:\r\n\r\n> If a server receives an EDU which refers to a prev_id it does not recognise, it must resynchronise its list by calling the /user/keys/query API and resume the process.\r\n\r\n<details>\r\n<summary>Manhole Script -- USE AT YOUR OWN RISK</summary>\r\n\r\n```python\r\nbroken_server = \"B.com\"\r\nuser_id = \"@cyphar:A.com\"\r\n\r\nfs = hs.get_federation_sender()\r\nk = fs._per_destination_queues[broken_server]._store.get_devices_with_keys_by_user(user_id)\r\ncontent = {\"user_id\": user_id, \"stream_id\": k.result[0]+2, \"prev_id\": [k.result[0]+1], **k.result[1][0]}\r\nfs.build_and_send_edu(broken_server, \"m.device_list_update\", content)\r\n```\r\n</details>",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/5433/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/5433/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

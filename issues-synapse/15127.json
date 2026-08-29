@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15127",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15127/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15127/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15127/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15127",
+  "id": 1594025802,
+  "node_id": "I_kwDOAVyVwM5fAudK",
+  "number": 15127,
+  "title": "Large rooms are stuck in partial-state because of response body size limit on `/state` federation API",
+  "user": {
+    "login": "reivilibre",
+    "id": 38398653,
+    "node_id": "MDQ6VXNlcjM4Mzk4NjUz",
+    "avatar_url": "https://avatars.githubusercontent.com/u/38398653?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/reivilibre",
+    "html_url": "https://github.com/reivilibre",
+    "followers_url": "https://api.github.com/users/reivilibre/followers",
+    "following_url": "https://api.github.com/users/reivilibre/following{/other_user}",
+    "gists_url": "https://api.github.com/users/reivilibre/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/reivilibre/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/reivilibre/subscriptions",
+    "organizations_url": "https://api.github.com/users/reivilibre/orgs",
+    "repos_url": "https://api.github.com/users/reivilibre/repos",
+    "events_url": "https://api.github.com/users/reivilibre/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/reivilibre/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 1771241792,
+      "node_id": "MDU6TGFiZWwxNzcxMjQxNzky",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federated-Join",
+      "name": "A-Federated-Join",
+      "color": "5319E7",
+      "default": false,
+      "description": "joins over federation generally suck"
+    },
+    {
+      "id": 2674406300,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzAw",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Critical",
+      "name": "S-Critical",
+      "color": "bd0026",
+      "default": false,
+      "description": "Blocks development, potential data loss, more than 25% of users possibly affected, no workarounds."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2023-02-21T19:59:03Z",
+  "updated_at": "2023-02-22T14:19:20Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Whilst resyncing a room from libera.chat to Matrix.org (Libera is resident, Morg is partial-state), the room state is too big (the response > 500 MiB) and it's hitting a response body size limit:\r\n\r\n```\r\nfederation_inbound4.log:2023-02-21 16:02:34,329 - synapse.http.matrixfederationclient - 240 - WARNING - _process_incoming_pdus_in_room_inner-41-$9smLiG7QFK54RlCkbKxtv3fP51S9Fpof7gx34bhvVdI---$inr3_5AH_4CTwJyBza-ZrWP4Qo3i_QvMEilMW_E9pBU---$_M55QrVpzz9THIgUgngswj99-Z6JPa5XGBQ-xr7q1h4--- - {GET-O-22420} [libera.chat] JSON response exceeded max size 524288000 - GET matrix://libera.chat/_matrix/federation/v1/state/%21fuzEIyMtiFYSFEjRCI%3Alibera.chat?event_id=%24_M55QrVpzz9THIgUgngswj99-Z6JPa5XGBQ-xr7q1h4\r\n```\r\n\r\n```python\r\n    # As with /send_join, /state responses can be huge.\r\n    MAX_RESPONSE_SIZE = 500 * 1024 * 1024\r\n```\r\n\r\nThis room is now stuck and I don't think anything, short of upping this limit and waiting until we manage to hit *that*, will help. We need a sustainable solution.\r\n\r\nSynapse version 1.78.0rc1 (+ morg hotfixes)",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15127/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15127/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

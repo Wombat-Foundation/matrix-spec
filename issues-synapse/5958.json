@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/5958",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/5958/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/5958/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/5958/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/5958",
+  "id": 487907538,
+  "node_id": "MDU6SXNzdWU0ODc5MDc1Mzg=",
+  "number": 5958,
+  "title": "Documentation how fill old_signing_keys after changing homeserver.signing.key",
+  "user": {
+    "login": "MurzNN",
+    "id": 336662,
+    "node_id": "MDQ6VXNlcjMzNjY2Mg==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/336662?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/MurzNN",
+    "html_url": "https://github.com/MurzNN",
+    "followers_url": "https://api.github.com/users/MurzNN/followers",
+    "following_url": "https://api.github.com/users/MurzNN/following{/other_user}",
+    "gists_url": "https://api.github.com/users/MurzNN/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/MurzNN/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/MurzNN/subscriptions",
+    "organizations_url": "https://api.github.com/users/MurzNN/orgs",
+    "repos_url": "https://api.github.com/users/MurzNN/repos",
+    "events_url": "https://api.github.com/users/MurzNN/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/MurzNN/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477043173,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p2",
+      "name": "z-p2",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 845245048,
+      "node_id": "MDU6TGFiZWw4NDUyNDUwNDg=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Docs",
+      "name": "A-Docs",
+      "color": "5319E7",
+      "default": false,
+      "description": "things relating to the documentation"
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2019-09-01T16:49:29Z",
+  "updated_at": "2023-05-23T15:07:14Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Please add documentation with examples how to fill `old_signing_keys` values, when we have new `homeserver.signing.key` and old one.\r\n\r\nIn `homeserver.yaml` file there are description:\r\n```\r\n# The keys that the server used to sign messages with but won't use\r\n# to sign new messages. E.g. it has lost its private key\r\n#\r\n#old_signing_keys:\r\n#  \"ed25519:auto\":\r\n#    # Base64 encoded public key\r\n#    key: \"The public part of your old signing key.\"\r\n#    # Millisecond POSIX timestamp when the key expired.\r\n#    expired_ts: 123456789123\r\n```\r\nSo users must place in this file only **public part of your old signing key**, but there are no description how to generate public part, having full old key file? Can you please describe how to do this in description text?",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/5958/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/5958/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

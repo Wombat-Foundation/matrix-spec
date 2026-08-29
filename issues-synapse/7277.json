@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/7277",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/7277/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/7277/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/7277/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/7277",
+  "id": 600266529,
+  "node_id": "MDU6SXNzdWU2MDAyNjY1Mjk=",
+  "number": 7277,
+  "title": "Allow for configuring url preview Accept-Language headers on a per-user, per-room and per-group basis",
+  "user": {
+    "login": "anoadragon453",
+    "id": 1342360,
+    "node_id": "MDQ6VXNlcjEzNDIzNjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1342360?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/anoadragon453",
+    "html_url": "https://github.com/anoadragon453",
+    "followers_url": "https://api.github.com/users/anoadragon453/followers",
+    "following_url": "https://api.github.com/users/anoadragon453/following{/other_user}",
+    "gists_url": "https://api.github.com/users/anoadragon453/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/anoadragon453/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/anoadragon453/subscriptions",
+    "organizations_url": "https://api.github.com/users/anoadragon453/orgs",
+    "repos_url": "https://api.github.com/users/anoadragon453/repos",
+    "events_url": "https://api.github.com/users/anoadragon453/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/anoadragon453/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477050471,
+      "node_id": "MDU6TGFiZWw0NzcwNTA0NzE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p3",
+      "name": "z-p3",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458764864,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNaQA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Frequent",
+      "name": "O-Frequent",
+      "color": "0052CC",
+      "default": false,
+      "description": "Affects or can be seen by most users regularly or impacts most users' first experience"
+    },
+    {
+      "id": 4644449862,
+      "node_id": "LA_kwDOAVyVwM8AAAABFNSuRg",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-URL-Preview",
+      "name": "A-URL-Preview",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues related to generating server-side previews of remote URLs"
+    },
+    {
+      "id": 5380186365,
+      "node_id": "LA_kwDOAVyVwM8AAAABQK8g_Q",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Internationalisation",
+      "name": "A-Internationalisation",
+      "color": "5319e7",
+      "default": false,
+      "description": "Improves Synapse for international users. May include improvements for Unicode or non-English langs."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2020-04-15T12:39:26Z",
+  "updated_at": "2023-05-23T15:22:10Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "As of #7265, a server admin can specify the preferred language that URL previews should appear in. However, you may have a homeserver made up of people who speak multiple languages, who would prefer URL previews to appear in their own language.\r\n\r\nIdeally you could set a default URL preview language in your client's settings, in room settings, in a group's settings, and the server would figure out which language best to request for you from the remote server.\r\n\r\nWill require spec work and making sure this works with other media repository implementations.\r\n\r\nPrevious discussion: https://github.com/matrix-org/synapse/issues/3037",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/7277/reactions",
+    "total_count": 2,
+    "+1": 2,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/7277/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

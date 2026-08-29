@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/4993",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/4993/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/4993/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/4993/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/4993",
+  "id": 428323512,
+  "node_id": "MDU6SXNzdWU0MjgzMjM1MTI=",
+  "number": 4993,
+  "title": "Frequent [TXN OPERROR] messages",
+  "user": {
+    "login": "c7hm4r",
+    "id": 1974041,
+    "node_id": "MDQ6VXNlcjE5NzQwNDE=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1974041?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/c7hm4r",
+    "html_url": "https://github.com/c7hm4r",
+    "followers_url": "https://api.github.com/users/c7hm4r/followers",
+    "following_url": "https://api.github.com/users/c7hm4r/following{/other_user}",
+    "gists_url": "https://api.github.com/users/c7hm4r/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/c7hm4r/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/c7hm4r/subscriptions",
+    "organizations_url": "https://api.github.com/users/c7hm4r/orgs",
+    "repos_url": "https://api.github.com/users/c7hm4r/repos",
+    "events_url": "https://api.github.com/users/c7hm4r/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/c7hm4r/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1056673481,
+      "node_id": "MDU6TGFiZWwxMDU2NjczNDgx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Logging",
+      "name": "A-Logging",
+      "color": "5319E7",
+      "default": false,
+      "description": "Synapse's logs (structured or otherwise). Not metrics."
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406437,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDM3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Other",
+      "name": "T-Other",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Questions, user support, anything else."
+    },
+    {
+      "id": 4195810659,
+      "node_id": "LA_kwDOAVyVwM76Fv1j",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Database",
+      "name": "A-Database",
+      "color": "5319E7",
+      "default": false,
+      "description": "DB stuff like queries, migrations, new/remove columns, indexes, unexpected entries in the db"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2019-04-02T16:22:07Z",
+  "updated_at": "2023-01-11T18:25:08Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "In our log files appear these lines multiple times (around 5 per day). Our synapse instance is very small. Until now, I have not yet recognized problems with our synapse server which seem to be related to that. However, the log level is `WARN`, so do I need to worry?\r\n\r\n```\r\n16:22:32 Starting db txn 'update_presence' from sentinel context\r\n16:22:32 Starting db connection from sentinel context: metrics will be lost\r\n16:23:27 [TXN OPERROR] {claim_e2e_one_time_keys-19645} could not serialize access due to concurrent update\r\n16:23:27  0/5\r\n16:23:27 [TXN OPERROR] {claim_e2e_one_time_keys-19645} could not serialize access due to concurrent update\r\n16:23:27  1/5\r\n16:23:27 [TXN OPERROR] {claim_e2e_one_time_keys-19648} could not serialize access due to concurrent update\r\n16:23:27  0/5\r\n16:23:27 [TXN OPERROR] {add_messages_to_device_inbox-19655} could not serialize access due to concurrent update\r\n16:23:27  0/5\r\n16:23:27 [TXN OPERROR] {add_messages_to_device_inbox-19654} could not serialize access due to concurrent update\r\n16:23:27  0/5\r\n16:23:27 [TXN OPERROR] {add_messages_to_device_inbox-19652} could not serialize access due to concurrent update\r\n16:23:27  0/5\r\n16:23:27 [TXN OPERROR] {add_messages_to_device_inbox-19655} could not serialize access due to concurrent update\r\n16:23:27  1/5\r\n16:23:32 Starting db txn 'update_presence' from sentinel context\r\n16:23:32 Starting db connection from sentinel context: metrics will be lost\r\n```\r\n\r\nOS: Ubuntu 18.04\r\nVersion of package `matrix-synapse-py3`: 0.99.3+bionic1\r\nDB is powered by PostgreSQL, and is also accessed by MXISD",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/4993/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/4993/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

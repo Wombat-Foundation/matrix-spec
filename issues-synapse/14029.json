@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14029",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14029/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14029/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14029/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14029",
+  "id": 1395017321,
+  "node_id": "I_kwDOAVyVwM5TJkZp",
+  "number": 14029,
+  "title": "`event_push_actions_staging` can have many stale rows in them.",
+  "user": {
+    "login": "erikjohnston",
+    "id": 8428120,
+    "node_id": "MDQ6VXNlcjg0MjgxMjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8428120?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/erikjohnston",
+    "html_url": "https://github.com/erikjohnston",
+    "followers_url": "https://api.github.com/users/erikjohnston/followers",
+    "following_url": "https://api.github.com/users/erikjohnston/following{/other_user}",
+    "gists_url": "https://api.github.com/users/erikjohnston/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/erikjohnston/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/erikjohnston/subscriptions",
+    "organizations_url": "https://api.github.com/users/erikjohnston/orgs",
+    "repos_url": "https://api.github.com/users/erikjohnston/repos",
+    "events_url": "https://api.github.com/users/erikjohnston/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/erikjohnston/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045805,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDU=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Push",
+      "name": "A-Push",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues related to push/notifications"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2022-10-03T16:35:56Z",
+  "updated_at": "2022-10-03T16:36:58Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "This is mostly likely due to previous bugs, or due to restarts.\r\n\r\nhttps://github.com/matrix-org/synapse/pull/14020 adds a background job to clear them out.\r\n\r\nOnce that has worked through the current stale rows we should check if we still see stale rows added, and if so investigate where they are coming from.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14029/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14029/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

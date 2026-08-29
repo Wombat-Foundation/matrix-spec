@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15294",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15294/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15294/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15294/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15294",
+  "id": 1632268616,
+  "node_id": "I_kwDOAVyVwM5hSnFI",
+  "number": 15294,
+  "title": "Split appservice transactions up when an AS responds with 413 Entity Too Large",
+  "user": {
+    "login": "Half-Shot",
+    "id": 2072976,
+    "node_id": "MDQ6VXNlcjIwNzI5NzY=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/2072976?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Half-Shot",
+    "html_url": "https://github.com/Half-Shot",
+    "followers_url": "https://api.github.com/users/Half-Shot/followers",
+    "following_url": "https://api.github.com/users/Half-Shot/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Half-Shot/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Half-Shot/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Half-Shot/subscriptions",
+    "organizations_url": "https://api.github.com/users/Half-Shot/orgs",
+    "repos_url": "https://api.github.com/users/Half-Shot/repos",
+    "events_url": "https://api.github.com/users/Half-Shot/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Half-Shot/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477046103,
+      "node_id": "MDU6TGFiZWw0NzcwNDYxMDM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Application-Service",
+      "name": "A-Application-Service",
+      "color": "5319E7",
+      "default": false,
+      "description": "Related to AS support"
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406413,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDEz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Task",
+      "name": "T-Task",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Refactoring, removal, replacement, enabling or disabling functionality, other engineering tasks."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2023-03-20T14:49:17Z",
+  "updated_at": "2023-03-22T18:21:02Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "COLLABORATOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Because it's tribal knowledge around ASes that you should set a sensibly healthy maximum client body for transactions, people often don't. Nginx sets a max body size of 1MB by default, which is unhelpfully pitifully small.\r\n\r\nWhen Synapse encounters a 413, it just tries to resend the request ad infinitum rather than trying to split the request up into smaller chunks. What would be nice is if Synapse split the txn up and retried it, queuing the other half of the original transaction as the next logical block. However, this has it's own problems like trying to determine the maximum size by guessing..\r\n\r\nEither way, perhaps we should be more intelligent about 413s than simply resending them and hoping the LB has been reconfigured.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15294/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15294/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

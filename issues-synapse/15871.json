@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15871",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15871/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15871/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15871/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15871",
+  "id": 1786482632,
+  "node_id": "I_kwDOAVyVwM5qe4_I",
+  "number": 15871,
+  "title": "500 error when `auth` is `null` for a UIA request",
+  "user": {
+    "login": "richvdh",
+    "id": 1389908,
+    "node_id": "MDQ6VXNlcjEzODk5MDg=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1389908?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/richvdh",
+    "html_url": "https://github.com/richvdh",
+    "followers_url": "https://api.github.com/users/richvdh/followers",
+    "following_url": "https://api.github.com/users/richvdh/following{/other_user}",
+    "gists_url": "https://api.github.com/users/richvdh/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/richvdh/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/richvdh/subscriptions",
+    "organizations_url": "https://api.github.com/users/richvdh/orgs",
+    "repos_url": "https://api.github.com/users/richvdh/repos",
+    "events_url": "https://api.github.com/users/richvdh/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/richvdh/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1920863622,
+      "node_id": "MDU6TGFiZWwxOTIwODYzNjIy",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Validation",
+      "name": "A-Validation",
+      "color": "5319E7",
+      "default": false,
+      "description": "500 (mostly) errors due to lack of event/parameter validation"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2023-07-03T16:19:09Z",
+  "updated_at": "2023-09-18T18:27:39Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "If you make a request that requires user-interactive auth, and set `{\"auth\": null}`, synapse returns a 500 error with the following stacktrace:\r\n\r\n```\r\n2023-07-03 16:11:39,547 - synapse.http.server - 134 - ERROR - POST-36820 - Failed handle request via 'SigningKeyUploadServlet': <XForwardedForRequest at 0x7f0cc0633ac8 method='POST' uri='/_matrix/client/v3/keys/device_signing/upload' clientproto='HTTP/1.0' site='8008'>\r\nCapture point (most recent call last):\r\n  File \"<string>\", line 1, in <module>\r\n  File \"/home/synapse/src/synapse/synapse/app/homeserver.py\", line 394, in main\r\n    run(hs)\r\n  File \"/home/synapse/src/synapse/synapse/app/homeserver.py\", line 380, in run\r\n    logger=logger,\r\n  File \"/home/synapse/src/synapse/synapse/app/_base.py\", line 196, in start_reactor\r\n    run()\r\n  File \"/home/synapse/src/synapse/synapse/app/_base.py\", line 178, in run\r\n    run_command()\r\n  File \"/home/synapse/src/synapse/synapse/app/_base.py\", line 153, in <lambda>\r\n    run_command: Callable[[], None] = lambda: reactor.run(),\r\n  File \"/home/synapse/poetry-env/matrix-synapse-o-qzlfnx-py3.7/lib/python3.7/site-packages/twisted/internet/base.py\", line 1318, in run\r\n    self.mainLoop()\r\n  File \"/home/synapse/poetry-env/matrix-synapse-o-qzlfnx-py3.7/lib/python3.7/site-packages/twisted/internet/base.py\", line 1328, in mainLoop\r\n    reactorBaseSelf.runUntilCurrent()\r\n  File \"/home/synapse/poetry-env/matrix-synapse-o-qzlfnx-py3.7/lib/python3.7/site-packages/twisted/internet/base.py\", line 967, in runUntilCurrent\r\n    f(*a, **kw)\r\n  File \"/home/synapse/poetry-env/matrix-synapse-o-qzlfnx-py3.7/lib/python3.7/site-packages/twisted/internet/defer.py\", line 696, in callback\r\n    self._startRunCallbacks(result)\r\n  File \"/home/synapse/poetry-env/matrix-synapse-o-qzlfnx-py3.7/lib/python3.7/site-packages/twisted/internet/defer.py\", line 798, in _startRunCallbacks\r\n    self._runCallbacks()\r\n  File \"/home/synapse/poetry-env/matrix-synapse-o-qzlfnx-py3.7/lib/python3.7/site-packages/twisted/internet/defer.py\", line 893, in _runCallbacks\r\n    current.result, *args, **kwargs\r\n  File \"/home/synapse/poetry-env/matrix-synapse-o-qzlfnx-py3.7/lib/python3.7/site-packages/twisted/internet/defer.py\", line 1792, in gotResult\r\n    _inlineCallbacks(r, gen, status, context)\r\n  File \"/home/synapse/poetry-env/matrix-synapse-o-qzlfnx-py3.7/lib/python3.7/site-packages/twisted/internet/defer.py\", line 1782, in _inlineCallbacks\r\n    status.deferred.callback(callbackValue)\r\n  File \"/home/synapse/poetry-env/matrix-synapse-o-qzlfnx-py3.7/lib/python3.7/site-packages/twisted/internet/defer.py\", line 696, in callback\r\n    self._startRunCallbacks(result)\r\n  File \"/home/synapse/poetry-env/matrix-synapse-o-qzlfnx-py3.7/lib/python3.7/site-packages/twisted/internet/defer.py\", line 798, in _startRunCallbacks\r\n    self._runCallbacks()\r\n  File \"/home/synapse/poetry-env/matrix-synapse-o-qzlfnx-py3.7/lib/python3.7/site-packages/twisted/internet/defer.py\", line 893, in _runCallbacks\r\n    current.result, *args, **kwargs\r\n  File \"/home/synapse/poetry-env/matrix-synapse-o-qzlfnx-py3.7/lib/python3.7/site-packages/twisted/internet/defer.py\", line 696, in callback\r\n    self._startRunCallbacks(result)\r\n  File \"/home/synapse/poetry-env/matrix-synapse-o-qzlfnx-py3.7/lib/python3.7/site-packages/twisted/internet/defer.py\", line 798, in _startRunCallbacks\r\n    self._runCallbacks()\r\n  File \"/home/synapse/poetry-env/matrix-synapse-o-qzlfnx-py3.7/lib/python3.7/site-packages/twisted/internet/defer.py\", line 893, in _runCallbacks\r\n    current.result, *args, **kwargs\r\n  File \"/home/synapse/poetry-env/matrix-synapse-o-qzlfnx-py3.7/lib/python3.7/site-packages/twisted/internet/defer.py\", line 1792, in gotResult\r\n    _inlineCallbacks(r, gen, status, context)\r\n  File \"/home/synapse/poetry-env/matrix-synapse-o-qzlfnx-py3.7/lib/python3.7/site-packages/twisted/internet/defer.py\", line 1697, in _inlineCallbacks\r\n    result = context.run(gen.send, result)\r\n  File \"/home/synapse/src/synapse/synapse/http/server.py\", line 235, in wrapped_async_request_handler\r\n    await h(self, request)\r\nTraceback (most recent call last):\r\n  File \"/home/synapse/src/synapse/synapse/http/server.py\", line 313, in _async_render_wrapper\r\n    callback_return = await self._async_render(request)\r\n  File \"/home/synapse/src/synapse/synapse/http/server.py\", line 523, in _async_render\r\n    callback_return = await raw_callback_return\r\n  File \"/home/synapse/src/synapse/synapse/rest/client/_base.py\", line 102, in wrapped\r\n    return await orig(*args, **kwargs)\r\n  File \"/home/synapse/src/synapse/synapse/rest/client/keys.py\", line 399, in on_POST\r\n    can_skip_ui_auth=True,\r\n  File \"/home/synapse/src/synapse/synapse/handlers/auth.py\", line 360, in validate_user_via_ui_auth\r\n    get_new_session_data,\r\n  File \"/home/synapse/src/synapse/synapse/handlers/auth.py\", line 481, in check_ui_auth\r\n    if \"session\" in authdict:\r\nTypeError: argument of type 'NoneType' is not iterable\r\n```",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15871/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15871/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

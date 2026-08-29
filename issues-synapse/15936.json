@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15936",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15936/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15936/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15936/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15936",
+  "id": 1803803138,
+  "node_id": "I_kwDOAVyVwM5rg9oC",
+  "number": 15936,
+  "title": "ERROR - Failed to handle edu 'm.receipt': psycopg2.errors.SerializationFailure: could not serialize access due to concurrent update",
+  "user": {
+    "login": "melroy89",
+    "id": 628926,
+    "node_id": "MDQ6VXNlcjYyODkyNg==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/628926?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/melroy89",
+    "html_url": "https://github.com/melroy89",
+    "followers_url": "https://api.github.com/users/melroy89/followers",
+    "following_url": "https://api.github.com/users/melroy89/following{/other_user}",
+    "gists_url": "https://api.github.com/users/melroy89/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/melroy89/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/melroy89/subscriptions",
+    "organizations_url": "https://api.github.com/users/melroy89/orgs",
+    "repos_url": "https://api.github.com/users/melroy89/repos",
+    "events_url": "https://api.github.com/users/melroy89/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/melroy89/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406413,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDEz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Task",
+      "name": "T-Task",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Refactoring, removal, replacement, enabling or disabling functionality, other engineering tasks."
+    },
+    {
+      "id": 4195810659,
+      "node_id": "LA_kwDOAVyVwM76Fv1j",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Database",
+      "name": "A-Database",
+      "color": "5319E7",
+      "default": false,
+      "description": "DB stuff like queries, migrations, new/remove columns, indexes, unexpected entries in the db"
+    },
+    {
+      "id": 4458764864,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNaQA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Frequent",
+      "name": "O-Frequent",
+      "color": "0052CC",
+      "default": false,
+      "description": "Affects or can be seen by most users regularly or impacts most users' first experience"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 10,
+  "created_at": "2023-07-13T21:44:46Z",
+  "updated_at": "2023-09-23T09:09:45Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nDespite that issue: https://github.com/matrix-org/synapse/issues/3234 is closed. Is is not resolved for me.\r\n\r\nI still suffer from errors: \"ERROR - PUT-58315 - Failed to handle edu 'm.receipt'\". See log output below, for more info.\n\n### Steps to reproduce\n\n- I'm just running the latest Synapse server (docker)\r\n- The error might get triggered when I join a new room in Elements?\n\n### Homeserver\n\nmatrix.melroy.org\n\n### Synapse Version\n\n{\"server_version\":\"1.87.0\",\"python_version\":\"3.11.4\"}\n\n### Installation Method\n\nDocker (matrixdotorg/synapse)\n\n### Database\n\nPostgresql V14\n\n### Workers\n\nSingle process\n\n### Platform\n\nUbuntu 22.04 (running Docker on top of that)\r\n\n\n### Configuration\n\nStandard Matrix config\n\n### Relevant log output\n\n```shell\n2023-07-13 03:24:39,970 - synapse.federation.federation_server - 1470 - ERROR - PUT-58315 - Failed to handle edu 'm.receipt'\r\nTraceback (most recent call last):\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/federation/federation_server.py\", line 1466, in on_edu\r\n    await handler(origin, content)\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/handlers/receipts.py\", line 112, in _received_remote_receipt\r\n    await self._handle_new_receipts(receipts)\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/handlers/receipts.py\", line 120, in _handle_new_receipts\r\n    res = await self.store.insert_receipt(\r\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/storage/databases/main/receipts.py\", line 798, in insert_receipt\r\n    await self.db_pool.runInteraction(\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/storage/database.py\", line 930, in runInteraction\r\n    return await delay_cancellation(_runInteraction())\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/twisted/internet/defer.py\", line 1693, in _inlineCallbacks\r\n    result = context.run(\r\n             ^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/twisted/python/failure.py\", line 518, in throwExceptionIntoGenerator\r\n    return g.throw(self.type, self.value, self.tb)\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/storage/database.py\", line 896, in _runInteraction\r\n    result = await self.runWithConnection(\r\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/storage/database.py\", line 1025, in runWithConnection\r\n    return await make_deferred_yieldable(\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/twisted/python/threadpool.py\", line 244, in inContext\r\n    result = inContext.theWork()  # type: ignore[attr-defined]\r\n             ^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/twisted/python/threadpool.py\", line 260, in <lambda>\r\n    inContext.theWork = lambda: context.call(  # type: ignore[attr-defined]\r\n                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/twisted/python/context.py\", line 117, in callWithContext\r\n    return self.currentContext().callWithContext(ctx, func, *args, **kw)\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/twisted/python/context.py\", line 82, in callWithContext\r\n    return func(*args, **kw)\r\n           ^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/twisted/enterprise/adbapi.py\", line 282, in _runWithConnection\r\n    result = func(conn, *args, **kw)\r\n             ^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/storage/database.py\", line 1018, in inner_func\r\n    return func(db_conn, *args, **kwargs)\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/storage/database.py\", line 758, in new_transaction\r\n    r = func(cursor, *args, **kwargs)\r\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/storage/databases/main/receipts.py\", line 843, in _insert_graph_receipt_txn\r\n    self.db_pool.simple_upsert_txn(\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/storage/database.py\", line 1291, in simple_upsert_txn\r\n    return self.simple_upsert_txn_native_upsert(\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/storage/database.py\", line 1431, in simple_upsert_txn_native_upsert\r\n    txn.execute(sql, list(allvalues.values()))\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/storage/database.py\", line 417, in execute\r\n    self._do_execute(self.txn.execute, sql, parameters)\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/storage/database.py\", line 469, in _do_execute\r\n    return func(sql, *args, **kwargs)\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\r\npsycopg2.errors.SerializationFailure: could not serialize access due to concurrent update\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15936/reactions",
+    "total_count": 2,
+    "+1": 2,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15936/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

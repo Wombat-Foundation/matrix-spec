@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13461",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13461/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13461/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13461/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13461",
+  "id": 1328884628,
+  "node_id": "I_kwDOAVyVwM5PNSuU",
+  "number": 13461,
+  "title": "POST join from matrix bridge sometimes takes very long (> 30 sec.)",
+  "user": {
+    "login": "hubermat",
+    "id": 1336497,
+    "node_id": "MDQ6VXNlcjEzMzY0OTc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1336497?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/hubermat",
+    "html_url": "https://github.com/hubermat",
+    "followers_url": "https://api.github.com/users/hubermat/followers",
+    "following_url": "https://api.github.com/users/hubermat/following{/other_user}",
+    "gists_url": "https://api.github.com/users/hubermat/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/hubermat/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/hubermat/subscriptions",
+    "organizations_url": "https://api.github.com/users/hubermat/orgs",
+    "repos_url": "https://api.github.com/users/hubermat/repos",
+    "events_url": "https://api.github.com/users/hubermat/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/hubermat/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 600557921,
+      "node_id": "MDU6TGFiZWw2MDA1NTc5MjE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Performance",
+      "name": "A-Performance",
+      "color": "5319E7",
+      "default": false,
+      "description": "Performance, both client-facing and admin-facing"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137895389,
+      "node_id": "LA_kwDOAVyVwM72o0Xd",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Membership",
+      "name": "A-Membership",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 16,
+  "created_at": "2022-08-04T16:20:22Z",
+  "updated_at": "2023-01-12T21:42:36Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nHi, \r\n\r\nOur own matrix bridge runs sometimes into long running join requests (> 30 sec.), which triggers a timeout on the bridge side.\r\nThis is what the bridge executes:\r\n\r\n`return bridge.getIntent()._ensureJoined(roomAlias, false, undefined, true);`\r\n\r\nTypically this takes 0.03 sec.. But sometimes it takes a loooong time!\r\n\r\nHere is the result from homeserver.log (filtered only for POST-9744812):\r\n```\r\n2022-08-04 00:25:26,333 - synapse.http.site - 362 - INFO - POST-9744812 - Connection from client lost before response was sent\r\n2022-08-04 00:26:06,821 - synapse.handlers.message - 1275 - INFO - POST-9744812 - Not bothering to persist state event $0AvNQaCtErI11Pl4OvGPhfTJypW6eLzu9gSvEZ8-q6E duplicated by $L6xUQADxe6Va4rDMXgTgEDIqfdFNHXSWtf8SZl14Elw\r\n2022-08-04 00:26:06,821 - synapse.http.server - 795 - WARNING - POST-9744812 - Not sending response to request <XForwardedForRequest at 0x7f03dced95e0 method='POST' uri='/_matrix/client/r0/join/%23ctg_12e8de3e-a2e9-40cb-a858-75ab7697d15e%3Achat.church.tools?access_token=<redacted>' clientproto='HTTP/1.0' site='8008'>, already disconnected.\r\n2022-08-04 00:26:06,822 - synapse.access.http.8008 - 450 - INFO - POST-9744812 - 192.168.20.60 - 8008 - {@ctbot:chat.church.tools} Processed request: 70.490sec/-40.489sec (0.005sec, 0.003sec) (0.005sec/0.033sec/16) 0B 200! \"POST /_matrix/client/r0/join/%23ctg_12e8de3e-a2e9-40cb-a858-75ab7697d15e%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [2 dbevts]\r\n```\r\nAs you can see, connection from the bridge is closed after 30 seconds (timeout), the POST request in total takes 70 seconds. \r\n\r\nWhat we notice, is that these long running join-requests sometimes occur in parallel with other similar join-request. \r\n\r\nHere for example are three join requests from the bridge bot for three different rooms, all taking a long time and finishing at the same time! The above request POST-9744812 is one of them:\r\n```\r\n[comment: POST-9744698 send by bridge around 00:24:26 with a timeout of 30 seconds]\r\n2022-08-04 00:24:56,314 - synapse.http.site - 362 - INFO - POST-9744698 - Connection from client lost before response was sent\r\n[comment: POST-9744812 send by bridge around 00:24:56 with a timeout of 30 seconds]\r\n2022-08-04 00:25:26,333 - synapse.http.site - 362 - INFO - POST-9744812 - Connection from client lost before response was sent\r\n[comment: POST-9744966 send by bridge around 00:25:26 with a timeout of 30 seconds]\r\n2022-08-04 00:25:56,353 - synapse.http.site - 362 - INFO - POST-9744966 - Connection from client lost before response was sent\r\n2022-08-04 00:26:06,821 - synapse.handlers.message - 1275 - INFO - POST-9744812 - Not bothering to persist state event $0AvNQaCtErI11Pl4OvGPhfTJypW6eLzu9gSvEZ8-q6E duplicated by $L6xUQADxe6Va4rDMXgTgEDIqfdFNHXSWtf8SZl14Elw\r\n2022-08-04 00:26:06,821 - synapse.http.server - 795 - WARNING - POST-9744812 - Not sending response to request <XForwardedForRequest at 0x7f03dced95e0 method='POST' uri='/_matrix/client/r0/join/%23ctg_12e8de3e-a2e9-40cb-a858-75ab7697d15e%3Achat.church.tools?access_token=<redacted>' clientproto='HTTP/1.0' site='8008'>, already disconnected.\r\n2022-08-04 00:26:06,822 - synapse.access.http.8008 - 450 - INFO - POST-9744812 - 192.168.20.60 - 8008 - {@ctbot:chat.church.tools} Processed request: 70.490sec/-40.489sec (0.005sec, 0.003sec) (0.005sec/0.033sec/16) 0B 200! \"POST /_matrix/client/r0/join/%23ctg_12e8de3e-a2e9-40cb-a858-75ab7697d15e%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [2 dbevts]\r\n2022-08-04 00:26:06,823 - synapse.handlers.message - 1275 - INFO - POST-9744966 - Not bothering to persist state event $xNi9xZ4Q96OMkwCrBm5n3j1bmtQVUV5QTylIiBDJhFk duplicated by $kDwWpaBmP0SkjZUml9qwgd_5EQSfvrymtP5igwnAPKk\r\n2022-08-04 00:26:06,823 - synapse.http.server - 795 - WARNING - POST-9744966 - Not sending response to request <XForwardedForRequest at 0x7f031128b8e0 method='POST' uri='/_matrix/client/r0/join/%23ctg_16365885-c9fd-495c-9f0c-36de0c5ca98b%3Achat.church.tools?access_token=<redacted>' clientproto='HTTP/1.0' site='8008'>, already disconnected.\r\n2022-08-04 00:26:06,823 - synapse.access.http.8008 - 450 - INFO - POST-9744966 - 192.168.20.60 - 8008 - {@ctbot:chat.church.tools} Processed request: 40.472sec/-10.471sec (0.007sec, 0.001sec) (0.006sec/0.025sec/16) 0B 200! \"POST /_matrix/client/r0/join/%23ctg_16365885-c9fd-495c-9f0c-36de0c5ca98b%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [3 dbevts]\r\n2022-08-04 00:26:06,824 - synapse.handlers.message - 1275 - INFO - POST-9744698 - Not bothering to persist state event $YB-55YkNiNjBRRJidwEQsseTI7u-OhT2rMDyjL9cwgw duplicated by $lY_wX6HlN6-x9svkO_nk3Kz1GJ6Yx_c3S7qpmCOSWXI\r\n2022-08-04 00:26:06,824 - synapse.http.server - 795 - WARNING - POST-9744698 - Not sending response to request <XForwardedForRequest at 0x7f0341c268e0 method='POST' uri='/_matrix/client/r0/join/%23ctg_067d4083-b340-450f-a765-b3ad3178eeb6%3Achat.church.tools?access_token=<redacted>' clientproto='HTTP/1.0' site='8008'>, already disconnected.\r\n2022-08-04 00:26:06,824 - synapse.access.http.8008 - 450 - INFO - POST-9744698 - 192.168.20.60 - 8008 - {@ctbot:chat.church.tools} Processed request: 100.510sec/-70.510sec (0.014sec, 0.003sec) (0.005sec/100.488sec/18) 0B 200! \"POST /_matrix/client/r0/join/%23ctg_067d4083-b340-450f-a765-b3ad3178eeb6%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [1 dbevts]\r\n```\r\n\r\nLooks like there is something blocking in synapse (or the database, PostgreSQL in our case), then when the lock is released, all requests finish at the same time. Runtimes of the three requests above: 40, 70 and 100 seconds.\r\n\r\nHere the POST join requests in the bigger context:\r\n```\r\n2022-08-04 00:24:21,693 - synapse.access.http.8008 - 450 - INFO - POST-9744593 - 192.168.20.60 - 8008 - {@ctbot:chat.church.tools} Processed request: 0.043sec/0.000sec (0.005sec, 0.001sec) \r\n(0.003sec/0.021sec/17) 51B 200 \"POST /_matrix/client/r0/join/%23cte_0d63e97a-9ed7-4ad5-8f94-9d61b8f0d8cb%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [5 dbevts]\r\n2022-08-04 00:24:21,814 - synapse.access.http.8008 - 450 - INFO - POST-9744603 - 192.168.20.60 - 8008 - {@ctbot:chat.church.tools} Processed request: 0.040sec/0.000sec (0.005sec, 0.001sec) \r\n(0.003sec/0.019sec/17) 51B 200 \"POST /_matrix/client/r0/join/%23cte_3d0ec928-77fd-4311-b454-ed3f3994faa4%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [5 dbevts]\r\n2022-08-04 00:24:21,915 - synapse.access.http.8008 - 450 - INFO - POST-9744613 - 192.168.20.60 - 8008 - {@ctbot:chat.church.tools} Processed request: 0.025sec/0.000sec (0.005sec, 0.001sec) \r\n(0.003sec/0.013sec/16) 51B 200 \"POST /_matrix/client/r0/join/%23cte_66aea0fc-bf8d-4e49-ae83-70c69bb31073%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [1 dbevts]\r\n2022-08-04 00:24:22,017 - synapse.access.http.8008 - 450 - INFO - POST-9744623 - 192.168.20.60 - 8008 - {@ctbot:chat.church.tools} Processed request: 0.024sec/0.000sec (0.003sec, 0.000sec) \r\n(0.002sec/0.012sec/16) 51B 200 \"POST /_matrix/client/r0/join/%23cte_8b716325-0b3b-4817-bdcf-6f220d9d4a14%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [2 dbevts]\r\n2022-08-04 00:24:22,170 - synapse.access.http.8008 - 450 - INFO - POST-9744637 - 192.168.20.60 - 8008 - {@ctbot:chat.church.tools} Processed request: 0.047sec/0.000sec (0.004sec, 0.002sec) \r\n(0.003sec/0.015sec/16) 51B 200 \"POST /_matrix/client/r0/join/%23cte_a341b1a5-7654-405e-997c-d44327840b07%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [11 dbevts]\r\n2022-08-04 00:24:22,284 - synapse.access.http.8008 - 450 - INFO - POST-9744649 - 192.168.20.60 - 8008 - {@ctbot:chat.church.tools} Processed request: 0.025sec/0.000sec (0.003sec, 0.001sec) \r\n(0.003sec/0.013sec/16) 51B 200 \"POST /_matrix/client/r0/join/%23cte_bbc0a3bb-5e09-45b6-99ab-69c20b5c8417%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [1 dbevts]\r\n2022-08-04 00:24:22,395 - synapse.access.http.8008 - 450 - INFO - POST-9744659 - 192.168.20.60 - 8008 - {@ctbot:chat.church.tools} Processed request: 0.026sec/0.000sec (0.003sec, 0.001sec) \r\n(0.003sec/0.014sec/16) 51B 200 \"POST /_matrix/client/r0/join/%23cte_f338935a-7c48-4695-9fd1-8303e3f8d1d9%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [1 dbevts]\r\n2022-08-04 00:24:22,514 - synapse.access.http.8008 - 450 - INFO - POST-9744669 - 192.168.20.60 - 8008 - {@ctbot:chat.church.tools} Processed request: 0.026sec/0.000sec (0.003sec, 0.001sec) \r\n(0.003sec/0.013sec/16) 51B 200 \"POST /_matrix/client/r0/join/%23cte_f7920cfd-a719-4c57-a101-cf47d7779d85%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [1 dbevts]\r\n2022-08-04 00:24:22,622 - synapse.access.http.8008 - 450 - INFO - POST-9744678 - 192.168.20.60 - 8008 - {@ctbot:chat.church.tools} Processed request: 0.032sec/0.000sec (0.003sec, 0.001sec) \r\n(0.003sec/0.020sec/17) 51B 200 \"POST /_matrix/client/r0/join/%23cte_42aaaefc-4da8-43d2-9679-2c3d32a99a66%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [1 dbevts]\r\n2022-08-04 00:26:06,822 - synapse.access.http.8008 - 450 - INFO - POST-9744812 - 192.168.20.60 - 8008 - {@ctbot:chat.church.tools} Processed request: 70.490sec/-40.489sec (0.005sec, 0.003se\r\nc) (0.005sec/0.033sec/16) 0B 200! \"POST /_matrix/client/r0/join/%23ctg_12e8de3e-a2e9-40cb-a858-75ab7697d15e%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [2 dbevts]\r\n2022-08-04 00:26:06,823 - synapse.access.http.8008 - 450 - INFO - POST-9744966 - 192.168.20.60 - 8008 - {@ctbot:chat.church.tools} Processed request: 40.472sec/-10.471sec (0.007sec, 0.001se\r\nc) (0.006sec/0.025sec/16) 0B 200! \"POST /_matrix/client/r0/join/%23ctg_16365885-c9fd-495c-9f0c-36de0c5ca98b%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [3 dbevts]\r\n2022-08-04 00:26:06,824 - synapse.access.http.8008 - 450 - INFO - POST-9744698 - 192.168.20.60 - 8008 - {@ctbot:chat.church.tools} Processed request: 100.510sec/-70.510sec (0.014sec, 0.003s\r\nec) (0.005sec/100.488sec/18) 0B 200! \"POST /_matrix/client/r0/join/%23ctg_067d4083-b340-450f-a765-b3ad3178eeb6%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [1 dbevts]\r\n2022-08-04 00:26:06,824 - synapse.access.http.8008 - 450 - INFO - POST-9745091 - 192.168.20.61 - 8008 - {@ctbot:chat.church.tools} Processed request: 10.451sec/0.002sec (0.006sec, 0.001sec)\r\n (0.006sec/0.022sec/16) 51B 200 \"POST /_matrix/client/r0/join/%23ctg_258380d2-213c-4367-985b-6fc329b21d92%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [2 dbevts]\r\n2022-08-04 00:26:06,988 - synapse.access.http.8008 - 450 - INFO - POST-9745158 - 192.168.20.61 - 8008 - {@ctbot:chat.church.tools} Processed request: 0.032sec/0.000sec (0.003sec, 0.001sec) \r\n(0.003sec/0.017sec/16) 51B 200 \"POST /_matrix/client/r0/join/%23ctg_5159917e-27ea-42d0-b963-3e6e643e9da8%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [2 dbevts]\r\n2022-08-04 00:26:07,550 - synapse.access.http.8008 - 450 - INFO - POST-9745220 - 192.168.20.61 - 8008 - {@ctbot:chat.church.tools} Processed request: 0.037sec/0.000sec (0.003sec, 0.001sec) \r\n(0.003sec/0.018sec/16) 51B 200 \"POST /_matrix/client/r0/join/%23ctg_53e1c190-7522-43b9-be6b-dda944a14951%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [3 dbevts]\r\n2022-08-04 00:26:07,786 - synapse.access.http.8008 - 450 - INFO - POST-9745248 - 192.168.20.61 - 8008 - {@ctbot:chat.church.tools} Processed request: 0.024sec/0.000sec (0.006sec, 0.001sec) \r\n(0.002sec/0.012sec/16) 51B 200 \"POST /_matrix/client/r0/join/%23ctg_6aa63134-e708-4e0c-882e-f81b1bad164d%3Achat.church.tools?access_token=<redacted> HTTP/1.0\" \"-\" [2 dbevts]\r\n```\r\n\r\nWe have activated prometheus metrics on our synapse server, but could not find anything abnormal when these delays occured.\r\n\r\n\n\n### Steps to reproduce\n\n- do a lot of consecutive `bridge.getIntent()._ensureJoined(roomAlias, false, undefined, true);`\r\n- wait for timeouts to appear\n\n### Homeserver\n\nhttps://chat.church.tools/\n\n### Synapse Version\n\n{\"server_version\":\"1.63.1\",\"python_version\":\"3.8.10\"}\n\n### Installation Method\n\nDebian packages from packages.matrix.org\n\n### Platform\n\nUbuntu 18.04\r\n\r\n## PostgreSQL Version\r\npostgres (PostgreSQL) 10.20 (Ubuntu 10.20-0ubuntu0.18.04.1)\n\n### Relevant log output\n\n```shell\nsee description above\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13461/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13461/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

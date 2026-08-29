@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15278",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15278/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15278/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15278/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15278",
+  "id": 1627735945,
+  "node_id": "I_kwDOAVyVwM5hBUeJ",
+  "number": 15278,
+  "title": "Synapse modules can register an endpoint under any path",
+  "user": {
+    "login": "anoadragon453",
+    "id": 1342360,
+    "node_id": "MDQ6VXNlcjEzNDIzNjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1342360?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/anoadragon453",
+    "html_url": "https://github.com/anoadragon453",
+    "followers_url": "https://api.github.com/users/anoadragon453/followers",
+    "following_url": "https://api.github.com/users/anoadragon453/following{/other_user}",
+    "gists_url": "https://api.github.com/users/anoadragon453/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/anoadragon453/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/anoadragon453/subscriptions",
+    "organizations_url": "https://api.github.com/users/anoadragon453/orgs",
+    "repos_url": "https://api.github.com/users/anoadragon453/repos",
+    "events_url": "https://api.github.com/users/anoadragon453/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/anoadragon453/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 3537596628,
+      "node_id": "LA_kwDOAVyVwM7S23DU",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Modules",
+      "name": "A-Modules",
+      "color": "5319E7",
+      "default": false,
+      "description": "Module API: https://matrix-org.github.io/synapse/latest/modules/index.html"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2023-03-16T15:22:26Z",
+  "updated_at": "2023-03-22T18:17:36Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Synapse modules have the ability to register an endpoint resource in order to handle incoming HTTP requests (added in https://github.com/matrix-org/synapse/pull/10062, [see example module usage](https://github.com/matrix-org/synapse-email-account-validity/blob/b9cd3afbf56138756d72e2c27aaa4fa3f7753b86/email_account_validity/account_validity.py#L62-L65)).\r\n\r\nhttps://github.com/matrix-org/synapse/blob/53680ae148b4f35d69f5c6bbf779b6cec49a7c04/synapse/module_api/__init__.py#L464-L478\r\n\r\nThis is a really handy feature! However, they are currently able to register an endpoint under any path... which seems like it will be prone to breakage as we expand the matrix spec and `/_synapse/...` endpoints.\r\n\r\nSay a module hardcodes listening on the path `/_synapse/client/register_jwt_token` into its workflow. If in the future Synapse decides that it would like to listen and handle that path itself, this module will suddenly break.\r\n\r\nI propose that modules should only be allowed to register resources on a path with a prefix that would not conflict with anything we add in the future, i.e. `/_synapse/module/...`.\r\n\r\nI can't currently think of any valid use cases for modules to register an endpoint outside of `/_synapse/module/`. A module may want to register `/_matrix/client/unstable/...` in order to implement an MSC, but the typical approach we take is to implement that in Synapse, and then provide a module callback.\r\n\r\nTo prevent future headaches, I suggest we minimize the scope of paths that can be registered by:\r\n\r\n- Warning in the upgrade notes that we will be disallowing registering module endpoints under any path that does not start with `/_synapse/module` (for example). This gives some time for module developers to shout about any valid use cases.\r\n- After a suitable amount of time has passed, raise an exception if a module does try to register anything outside of `/_synapse/module`.\r\n\r\nThis would be a breaking change for any existing module that registers a web path other than `/_synapse/module`, which is likely currently every module that calls `synapse.module_api.register_web_resource`.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15278/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15278/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

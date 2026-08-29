@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15579",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15579/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15579/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15579/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15579",
+  "id": 1706865906,
+  "node_id": "I_kwDOAVyVwM5lvLTy",
+  "number": 15579,
+  "title": "Disable media federation",
+  "user": {
+    "login": "catfromplan9",
+    "id": 104175360,
+    "node_id": "U_kgDOBjWXAA",
+    "avatar_url": "https://avatars.githubusercontent.com/u/104175360?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/catfromplan9",
+    "html_url": "https://github.com/catfromplan9",
+    "followers_url": "https://api.github.com/users/catfromplan9/followers",
+    "following_url": "https://api.github.com/users/catfromplan9/following{/other_user}",
+    "gists_url": "https://api.github.com/users/catfromplan9/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/catfromplan9/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/catfromplan9/subscriptions",
+    "organizations_url": "https://api.github.com/users/catfromplan9/orgs",
+    "repos_url": "https://api.github.com/users/catfromplan9/repos",
+    "events_url": "https://api.github.com/users/catfromplan9/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/catfromplan9/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045806,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDY=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Media-Repository",
+      "name": "A-Media-Repository",
+      "color": "5319E7",
+      "default": false,
+      "description": "Uploading, downloading images and video, thumbnailing"
+    },
+    {
+      "id": 1554244657,
+      "node_id": "MDU6TGFiZWwxNTU0MjQ0NjU3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Moderation",
+      "name": "A-Moderation",
+      "color": "5319E7",
+      "default": false,
+      "description": "Tools for moderating HSes: event redaction, media removal, purge admin API, reports from users, ..."
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4397135835,
+      "node_id": "LA_kwDOAVyVwM8AAAABBhb32w",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Spec-Blocked",
+      "name": "Z-Spec-Blocked",
+      "color": "A9146D",
+      "default": false,
+      "description": "This change is blocked on specification (e.g. an MSC)."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2023-05-12T03:36:59Z",
+  "updated_at": "2023-05-16T03:57:23Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\n\r\nWhen a remote media MXC is requested, provided this feature is enabled, redirect to the same resource on the homeserver it is hosted on. Do not mirror content.\r\n\r\nI need this feature added to resolve the fact that malicious individuals are federating illegal content onto my private matrix homeserver and reporting it to my VPS.\r\n\r\nAn alternative would be to require an access token be passed when attempting to download remote media.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15579/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15579/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

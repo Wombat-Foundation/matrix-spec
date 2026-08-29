@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/9234",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/9234/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/9234/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/9234/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/9234",
+  "id": 794643903,
+  "node_id": "MDU6SXNzdWU3OTQ2NDM5MDM=",
+  "number": 9234,
+  "title": "Email verifications sent by synapse are fiendishly ugly",
+  "user": {
+    "login": "ara4n",
+    "id": 1294269,
+    "node_id": "MDQ6VXNlcjEyOTQyNjk=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1294269?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/ara4n",
+    "html_url": "https://github.com/ara4n",
+    "followers_url": "https://api.github.com/users/ara4n/followers",
+    "following_url": "https://api.github.com/users/ara4n/following{/other_user}",
+    "gists_url": "https://api.github.com/users/ara4n/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/ara4n/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/ara4n/subscriptions",
+    "organizations_url": "https://api.github.com/users/ara4n/orgs",
+    "repos_url": "https://api.github.com/users/ara4n/repos",
+    "events_url": "https://api.github.com/users/ara4n/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/ara4n/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2316489728,
+      "node_id": "MDU6TGFiZWwyMzE2NDg5NzI4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-3PID",
+      "name": "A-3PID",
+      "color": "5319E7",
+      "default": false,
+      "description": "3rd party identifiers: e.g. email, phone number"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 3722136933,
+      "node_id": "LA_kwDOAVyVwM7d201l",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-WTF",
+      "name": "z-WTF",
+      "color": "ededed",
+      "default": false,
+      "description": "Causing the user to exclaim! These issues are high impact and low effort."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2021-01-26T23:42:26Z",
+  "updated_at": "2022-08-25T12:10:18Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Please can we brand them and delight our users?",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/9234/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/9234/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

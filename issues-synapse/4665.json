@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/4665",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/4665/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/4665/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/4665/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/4665",
+  "id": 411374245,
+  "node_id": "MDU6SXNzdWU0MTEzNzQyNDU=",
+  "number": 4665,
+  "title": "500 error when attempting to accept invite from unreachable server",
+  "user": {
+    "login": "Valodim",
+    "id": 27813,
+    "node_id": "MDQ6VXNlcjI3ODEz",
+    "avatar_url": "https://avatars.githubusercontent.com/u/27813?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Valodim",
+    "html_url": "https://github.com/Valodim",
+    "followers_url": "https://api.github.com/users/Valodim/followers",
+    "following_url": "https://api.github.com/users/Valodim/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Valodim/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Valodim/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Valodim/subscriptions",
+    "organizations_url": "https://api.github.com/users/Valodim/orgs",
+    "repos_url": "https://api.github.com/users/Valodim/repos",
+    "events_url": "https://api.github.com/users/Valodim/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Valodim/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 1920863622,
+      "node_id": "MDU6TGFiZWwxOTIwODYzNjIy",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Validation",
+      "name": "A-Validation",
+      "color": "5319E7",
+      "default": false,
+      "description": "500 (mostly) errors due to lack of event/parameter validation"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137743886,
+      "node_id": "LA_kwDOAVyVwM72oPYO",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Invite",
+      "name": "A-Invite",
+      "color": "5319E7",
+      "default": false,
+      "description": "Inviting users to rooms and accepting invites"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2019-02-18T09:19:00Z",
+  "updated_at": "2022-11-15T09:33:07Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "My synapse just received an invite from a homeserver with a malformed .well-known entry:\r\n```\r\n{\r\n  \"m.server\": \"https://datenverein.de\"\r\n}\r\n```\r\n\r\nThis leads to pretty terrible user-facing failure mode: I received the invite, but joining yields \"internal server error\", while rejecting (in riot-web) does nothing until a cache reload. Although synapse decides not to retry the server fast enough, the log is still littered with errors for requests to it, e.g. from media or active requests to it like rejecting the invite (see below).\r\n\r\nThe obvious fix would be to not misconfigure servers :) but the failure mode could also need some improvements. I'm not sure what a good approach here is, but the ultimate goal would be to have a less frustrating user experience. Some of the puzzle pieces might be\r\n* failing a little harder when bidirectional communication is broken with some federating server, e.g. rejecting invites from it\r\n* more specific error messages?, right now there's no way to tell for users whether they did something wrong, their server did something wrong, some other server did something wrong, whether it's a temporary failure or a permanent one, or if it might be actionable.\r\n* a standardized technical contact field in the .well-known file, perhaps even one that allows for automated \"I failed to federate with you!\" mails from synapse. As a server admin I currently have no good way to report to anyone at `datenverein.de` that there is a problem.\r\n\r\n```\r\n2019-02-18 09:43:40,019 - synapse.http.matrixfederationclient - 385 - WARNING - POST-693570- {GET-O-908408} [datenverein.de] Request failed: GET matrix://datenverein.de/_matrix/federation/v1/make_leave/%21lkCXzXfueTvyZLWWlP%3Adatenverein.de/%40Valodim%3Astratum0.org: InvalidCodepoint(\"Codepoint U+003A at position 6 of 'https://datenverein' not allowed\",)\r\n2019-02-18 09:43:40,020 - synapse.federation.federation_client - 540 - WARNING - POST-693570- Failed to make_leave via datenverein.de\r\nTraceback (most recent call last):\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.5/site-packages/synapse/http/federation/srv_resolver.py\", line 127, in resolve_service\r\n    self._dns_client.lookupService(service_name),\r\ntwisted.names.error.DNSNameError: <Message id=43713 rCode=3 maxSize=0 flags=answer,recDes,recAv queries=[Query('_matrix._tcp.https://datenverein.de', 33, 1)] authority=[<RR name=de type=SOA class=IN ttl=1541s auth=False>]>\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.5/site-packages/idna/core.py\", line 270, in alabel\r\n    ulabel(label)\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.5/site-packages/idna/core.py\", line 304, in ulabel\r\n    check_label(label)\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.5/site-packages/idna/core.py\", line 261, in check_label\r\n    raise InvalidCodepoint('Codepoint {0} at position {1} of {2} not allowed'.format(_unot(cp_value), pos+1, repr(label)))\r\nidna.core.InvalidCodepoint: Codepoint U+003A at position 6 of 'https://datenverein' not allowed\r\n\r\nThe above exception was the direct cause of the following exception:\r\n\r\nTraceback (most recent call last):\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.5/site-packages/synapse/federation/federation_client.py\", line 522, in _try_destination_list\r\n    res = yield callback(destination)\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.5/site-packages/twisted/internet/defer.py\", line 1416, in _inlineCallbacks\r\n    result = result.throwExceptionIntoGenerator(g)\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.5/site-packages/twisted/python/failure.py\", line 491, in throwExceptionIntoGenerator\r\n    return g.throw(self.type, self.value, self.tb)\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.5/site-packages/synapse/federation/federation_client.py\", line 589, in send_request\r\n    destination, room_id, user_id, membership, params,\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.5/site-packages/twisted/internet/defer.py\", line 1416, in _inlineCallbacks\r\n    result = result.throwExceptionIntoGenerator(g)\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.5/site-packages/twisted/python/failure.py\", line 491, in throwExceptionIntoGenerator\r\n    return g.throw(self.type, self.value, self.tb)\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.5/site-packages/synapse/federation/transport/client.py\", line 253, in make_membership_event\r\n    ignore_backoff=ignore_backoff,\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.5/site-packages/twisted/internet/defer.py\", line 1416, in _inlineCallbacks\r\n    result = result.throwExceptionIntoGenerator(g)\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.5/site-packages/twisted/python/failure.py\", line 491, in throwExceptionIntoGenerator\r\n    return g.throw(self.type, self.value, self.tb)\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.5/site-packages/synapse/http/matrixfederationclient.py\", line 638, in get_json\r\n    ignore_backoff=ignore_backoff,\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.5/site-packages/twisted/internet/defer.py\", line 1416, in _inlineCallbacks\r\n    result = result.throwExceptionIntoGenerator(g)\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.5/site-packages/twisted/python/failure.py\", line 491, in throwExceptionIntoGenerator\r\n    return g.throw(self.type, self.value, self.tb)\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.5/site-packages/synapse/http/matrixfederationclient.py\", line 329, in _send_request\r\n    raise_from(RequestSendFailed(e, can_retry=True), e)\r\n  File \"<string>\", line 3, in raise_from\r\nsynapse.api.errors.RequestSendFailed: Failed to send request: InvalidCodepoint: Codepoint U+003A at position 6 of 'https://datenverein' not allowed\r\n2019-02-18 09:43:40,023 - synapse.handlers.room_member - 1022 - WARNING - POST-693570- Failed to reject invite: Failed to make_leave via any server\r\n```\r\n\r\n### Version information\r\n\r\nsynapse 0.99.1.1+stretch1, running on stratum0.org, malconfigured instance at datenverein.de",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/4665/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/4665/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

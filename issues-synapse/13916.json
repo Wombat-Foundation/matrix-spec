@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13916",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13916/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13916/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13916/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13916",
+  "id": 1386585498,
+  "node_id": "I_kwDOAVyVwM5SpZ2a",
+  "number": 13916,
+  "title": "Split out mutable event content from event cache into new caches that are keyed by room ID",
+  "user": {
+    "login": "anoadragon453",
+    "id": 1342360,
+    "node_id": "MDQ6VXNlcjEzNDIzNjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1342360?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/anoadragon453",
+    "html_url": "https://github.com/anoadragon453",
+    "followers_url": "https://api.github.com/users/anoadragon453/followers",
+    "following_url": "https://api.github.com/users/anoadragon453/following{/other_user}",
+    "gists_url": "https://api.github.com/users/anoadragon453/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/anoadragon453/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/anoadragon453/subscriptions",
+    "organizations_url": "https://api.github.com/users/anoadragon453/orgs",
+    "repos_url": "https://api.github.com/users/anoadragon453/repos",
+    "events_url": "https://api.github.com/users/anoadragon453/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/anoadragon453/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406382,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgy",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Time-Tracked",
+      "name": "Z-Time-Tracked",
+      "color": "ffc8f4",
+      "default": false,
+      "description": "Element employees should track their time spent on this issue/PR."
+    },
+    {
+      "id": 2674406437,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDM3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Other",
+      "name": "T-Other",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Questions, user support, anything else."
+    },
+    {
+      "id": 4195810659,
+      "node_id": "LA_kwDOAVyVwM76Fv1j",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Database",
+      "name": "A-Database",
+      "color": "5319E7",
+      "default": false,
+      "description": "DB stuff like queries, migrations, new/remove columns, indexes, unexpected entries in the db"
+    },
+    {
+      "id": 4482661320,
+      "node_id": "LA_kwDOAVyVwM8AAAABCy_7yA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Memory-Usage",
+      "name": "A-Memory-Usage",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 9,
+  "created_at": "2022-09-26T19:18:30Z",
+  "updated_at": "2022-10-14T12:59:36Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "In the hopes of fixing https://github.com/matrix-org/synapse/issues/11521 and paving the way towards an immutable external event cache (https://github.com/matrix-org/synapse/issues/2123), a new architecture for the event cache is proposed.\r\n\r\n### The current state\r\n\r\nCurrently there are a couple separate data structures related to caching event contents in memory in Synapse (see code for fetching an event from cache/db [here](https://github.com/matrix-org/synapse/blob/d3d9ca156e323fe194b1bcb1af1628f65a2f3c1c/synapse/storage/databases/main/events_worker.py#L439)):\r\n\r\n* `EventsWorkerStore._get_event_cache` - An instance of [AsyncLruCache](https://github.com/matrix-org/synapse/blob/41320a0554716aaf7cec6172da98e002c48344c5/synapse/util/caches/lrucache.py#L821) implemented as a map of `EventID` -> (`EventBase`, redacted `EventBase` | None).\r\n    * This cache is populated after fetching an event from the database.\r\n    * Entries in this cache are invalidated when an event is deleted from the database (in most cases, c.f. #11521), redacted or marked as rejected.\r\n    * Entries in this cache are invalidated when the size limit of the LruCache are reached.\r\n* `EventsWorkerStore._event_ref` - A [WeakValueDictionary](https://docs.python.org/3/library/weakref.html#weakref.WeakValueDictionary) which serves as a single point of reference for EventBase's in memory, ensuring that we don't end up with multiple, unnecessary copies of a single EventBase in memory.\r\n    * This data structure is populated after fetched an event from the database.\r\n    * Because this is a WeakValueDictionary, entries in this cache are invalidated when all other references to the EventBase in an entry are gone.\r\n    * Entries in this cache are invalidated when an event is deleted from the database (in most cases, c.f. #11521), redacted or marked as rejected.\r\n    * Entries in this cache are **not** invalidated when an entry is evicted from `EventsWorkerStore._get_event_cache`, as something else may still be processing the event, even if it's been removed from that cache.\r\n\r\n### What's the problem?\r\n\r\nSee https://github.com/matrix-org/synapse/issues/11521; because each of these caches are keyed by EventID alone, it becomes tricky to invalidate them when all you have is a RoomID (i.e. when purging a room completely). We could query all known events for a room from the database, but that may result in millions of events. Ideally we'd have some map of RoomID -> EventID which only covers the events that are actually currently held in memory. We could then use that to invalidate all three of these caches.\r\n\r\nAdditionally, as `get_event_cache` contains mutable `EventCacheEntry`s (comprised of `EventBase, redacted EventBase | None`), invalidating them is necessary when an event is both redacted or marked as rejected. These can differ per-homeserver, so removing this component from the cache entries opens up avenues for multiple homeservers sharing the same, immutable event cache.\r\n\r\n### Proposal\r\n\r\nAfter speaking with @erikjohnston we've (mostly Erik :) came up with the following idea:\r\n\r\n* `EventsWorkerStore._get_event_cache` would simply become a map of `EventID` -> `EventBase`.\r\n* We add a separate cache which is a nested map of `RoomID` -> `EventID` -> `{rejected_status: bool, redacted_event_content: Optional[EventBase]}`.\r\n    * Entries are added to this map when an event is pulled from the database. We know the RoomID at this point.\r\n    * Entries are **not** invalidated from this map when an entry is `EventsWorkerStore._get_event_cache` is invalidated due to hitting the cache size.\r\n    * This does mean that we'll need to know the RoomID when querying for rejected/redacted status though... But we can get that from the event cache?\r\n\r\nThe beauty of this is that we no longer need to invalidate the `_get_event_cache` at all (unless the size limit is hit)! Even in the room purge use case! How? Here are some examples of using this system:\r\n\r\n#### Fetch EventID A which is not in-memory\r\n\r\n1. Some calling function asks for EventID A.\r\n2. This does not exist in `_get_event_cache` (nor other caches) so we query from the database. The event and related metadata is fetched from the DB (`event_json`, `redactions`, `rejections`) and both the `_get_event_cache` and event metadata cache are populated.\r\n3. Return information from the database.\r\n\r\n#### Fetch EventID A which *is* in-memory\r\n\r\n1. Some calling function asks for EventID A.\r\n2. This already exists in `_get_event_cache`, and presumably the metadata cache. We take the RoomID from the EventBase in the `_get_event_cache` and query the event metadata cache.\r\n4. Return information from both caches.\r\n\r\n#### EventID A is not in-memory but the event has been purged\r\n\r\n1. Some calling function asks for EventID A.\r\n2. This already exists in `_get_event_cache`, and presumably the metadata cache. We take the RoomID from the EventBase in the cache and query the event metadata cache - but uh oh, there's no matching entry in the metadata cache! The event must have been purged.\r\n3. We invalidate the entry in the event cache as well and return None.\r\n\r\nThus when purging a room, we only need to purge entries in the metadata cache (which we can easily do by RoomID due to the metadata cache's structure). Entries in the `get_event_cache` and `event_ref` will be invalidated as they are fetched.\r\n\r\nI'm curious for thoughts on whether this sounds reasonable from other members of the Synapse team + cc @Fizzadar.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13916/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13916/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

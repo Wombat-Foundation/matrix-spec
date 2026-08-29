@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/3625",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/3625/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/3625/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/3625/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/3625",
+  "id": 345880101,
+  "node_id": "MDU6SXNzdWUzNDU4ODAxMDE=",
+  "number": 3625,
+  "title": "sending messages to unknown rooms creates redundant state groups",
+  "user": {
+    "login": "richvdh",
+    "id": 1389908,
+    "node_id": "MDQ6VXNlcjEzODk5MDg=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1389908?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/richvdh",
+    "html_url": "https://github.com/richvdh",
+    "followers_url": "https://api.github.com/users/richvdh/followers",
+    "following_url": "https://api.github.com/users/richvdh/following{/other_user}",
+    "gists_url": "https://api.github.com/users/richvdh/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/richvdh/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/richvdh/subscriptions",
+    "organizations_url": "https://api.github.com/users/richvdh/orgs",
+    "repos_url": "https://api.github.com/users/richvdh/repos",
+    "events_url": "https://api.github.com/users/richvdh/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/richvdh/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477043173,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p2",
+      "name": "z-p2",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 828665577,
+      "node_id": "MDU6TGFiZWw4Mjg2NjU1Nzc=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-minor",
+      "name": "z-minor",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 1018490364,
+      "node_id": "MDU6TGFiZWwxMDE4NDkwMzY0",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Disk-Space",
+      "name": "A-Disk-Space",
+      "color": "5319E7",
+      "default": false,
+      "description": "things which fill up the disk"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2018-07-30T18:30:37Z",
+  "updated_at": "2023-05-23T14:05:38Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Not sure if this only applies to ASes, but every time the RSS bot tries to send a message to this (unknown) room, we get a new (empty) state group:\r\n\r\n```\r\n2018-07-30 17:52:30,048 - synapse.access.http.8103 - 93 - INFO - PUT-3808195 - 2a04:3541:1000:500:6866:a4ff:fe4c:2321 - 8103 - Received request: PUT /_matrix/client/r0/rooms/%21LInBjthlgdanlFFgGB:im.datenpunk.io/send/m.room.message/go1532973150036318470?access_token=<redacted>\r\n2018-07-30 17:52:30,049 - synapse.util.async - 241 - INFO - PUT-3808195 - Acquired uncontended linearizer lock 'room_event_creation_limit' for key '!LInBjthlgdanlFFgGB:im.datenpunk.io'\r\n2018-07-30 17:52:30,060 - synapse.util.async - 241 - INFO - PUT-3808195 - Acquired uncontended linearizer lock 'state_resolve_lock' for key frozenset([])\r\n2018-07-30 17:52:30,060 - synapse.state - 471 - INFO - PUT-3808195 - Resolving state for !LInBjthlgdanlFFgGB:im.datenpunk.io with 0 groups\r\n2018-07-30 17:52:30,060 - synapse.util.async - 250 - INFO - PUT-3808195 - Releasing linearizer lock 'state_resolve_lock' for key frozenset([])\r\n2018-07-30 17:52:30,065 - synapse.util.async - 250 - INFO - PUT-3808195 - Releasing linearizer lock 'room_event_creation_limit' for key '!LInBjthlgdanlFFgGB:im.datenpunk.io'\r\n2018-07-30 17:52:30,065 - synapse.http.server - 83 - INFO - PUT-3808195 - <XForwardedForRequest at 0x7fbddbafd518 method='PUT' uri='/_matrix/client/r0/rooms/%21LInBjthlgdanlFFgGB:im.datenpunk.io/send/m.room.message/go1532973150036318470?access_token=<redacted>' clientproto='HTTP/1.1' site=8103> SynapseError: 403 - Room '!LInBjthlgdanlFFgGB:im.datenpunk.io' does not exist\r\n2018-07-30 17:52:30,065 - synapse.access.http.8103 - 139 - INFO - PUT-3808195 - 2a04:3541:1000:500:6866:a4ff:fe4c:2321 - 8103 - {@_neb_rssbot_=40oma=3aim.datenpunk.io:matrix.org} Processed request: 0.017sec (0.004sec, 0.000sec) (0.009sec/0.003sec/2) 91B 403 \"PUT /_matrix/client/r0/rooms/%21LInBjthlgdanlFFgGB:im.datenpunk.io/send/m.room.message/go1532973150036318470?access_token=<redacted> HTTP/1.1\" \"Go-http-client/2.0\" [0 dbevts]\r\n```",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/3625/reactions",
+    "total_count": 1,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 1,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/3625/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

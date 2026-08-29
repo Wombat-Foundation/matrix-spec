@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/5679",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/5679/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/5679/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/5679/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/5679",
+  "id": 467736910,
+  "node_id": "MDU6SXNzdWU0Njc3MzY5MTA=",
+  "number": 5679,
+  "title": "synapse.http.site - WARNING - Error processing request …: <class 'twisted.internet.error.ConnectionDone'> Connection was closed cleanly.",
+  "user": {
+    "login": "jo-so",
+    "id": 23032146,
+    "node_id": "MDQ6VXNlcjIzMDMyMTQ2",
+    "avatar_url": "https://avatars.githubusercontent.com/u/23032146?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/jo-so",
+    "html_url": "https://github.com/jo-so",
+    "followers_url": "https://api.github.com/users/jo-so/followers",
+    "following_url": "https://api.github.com/users/jo-so/following{/other_user}",
+    "gists_url": "https://api.github.com/users/jo-so/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/jo-so/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/jo-so/subscriptions",
+    "organizations_url": "https://api.github.com/users/jo-so/orgs",
+    "repos_url": "https://api.github.com/users/jo-so/repos",
+    "events_url": "https://api.github.com/users/jo-so/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/jo-so/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1056673481,
+      "node_id": "MDU6TGFiZWwxMDU2NjczNDgx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Logging",
+      "name": "A-Logging",
+      "color": "5319E7",
+      "default": false,
+      "description": "Synapse's logs (structured or otherwise). Not metrics."
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2019-07-13T15:58:20Z",
+  "updated_at": "2023-11-29T11:54:08Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nI'm seeing many warnings like these in the log, which isn't a bad case, i.e. nothing to be warned about:\r\n\r\n```\r\n2019-07-13 10:59:43,933 - synapse.http.site - 203 - WARNING - GET-295130- Error processing request <XForwardedForRequest at 0x7f98f6009550 method='GET' uri='/_matrix/client/r0/sync?filter=8&timeout=0&since=s2661503_51275966_31471_1968800_52703_4_10151_380580_8' clientproto='HTTP/1.0' site=8083>: <class 'twisted.internet.error.ConnectionDone'> Connection was closed cleanly.\r\n2019-07-13 10:59:43,934 - synapse.access.http.8083 - 302 - INFO - GET-295130- 2a02:810a:87c0:3a11:aefd:ceff:fe3d:9e83 - 8083 - {@joerg:alea.gnuu.de} Processed request: 0.004sec/0.131sec (0.004sec, 0.004sec) (0.000sec/0.000sec/0) 364B 200! \"GET /_matrix/client/r0/sync?filter=8&timeout=0&since=s2661503_51275966_31471_1968800_52703_4_10151_380580_8 HTTP/1.0\" \"Mozilla/5.0 (X11; Linux x86_64; rv:70.0) Gecko/20100101 Firefox/70.0\" [0 dbevts]\r\n```\r\n\r\nPatch: [synapse-con-done.txt](https://github.com/matrix-org/synapse/files/3388956/synapse-con-done.txt)\r\n\r\n### Version information\r\n\r\n- **Version**: 1.0.0-2\r\n- **Install method**: `apt install matrix-synapse`\r\n- **Platform**: Debian/stable",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/5679/reactions",
+    "total_count": 3,
+    "+1": 2,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 1,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/5679/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

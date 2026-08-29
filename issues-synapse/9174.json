@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/9174",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/9174/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/9174/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/9174/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/9174",
+  "id": 789908283,
+  "node_id": "MDU6SXNzdWU3ODk5MDgyODM=",
+  "number": 9174,
+  "title": "`/make_room_admin` admin API should check if the user is already an admin before updating PLs",
+  "user": {
+    "login": "Half-Shot",
+    "id": 2072976,
+    "node_id": "MDQ6VXNlcjIwNzI5NzY=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/2072976?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Half-Shot",
+    "html_url": "https://github.com/Half-Shot",
+    "followers_url": "https://api.github.com/users/Half-Shot/followers",
+    "following_url": "https://api.github.com/users/Half-Shot/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Half-Shot/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Half-Shot/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Half-Shot/subscriptions",
+    "organizations_url": "https://api.github.com/users/Half-Shot/orgs",
+    "repos_url": "https://api.github.com/users/Half-Shot/repos",
+    "events_url": "https://api.github.com/users/Half-Shot/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Half-Shot/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1507817868,
+      "node_id": "MDU6TGFiZWwxNTA3ODE3ODY4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Admin-API",
+      "name": "A-Admin-API",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2021-01-20T11:48:42Z",
+  "updated_at": "2022-12-08T21:13:55Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "COLLABORATOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "As otherwise the request fails with\r\n\r\n```\r\n  body: {\r\n    errcode: 'M_UNKNOWN',\r\n    error: 'No local admin user in room with power to update power levels.'\r\n  },\r\n```\r\n\r\nwhich is misleading.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/9174/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/9174/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

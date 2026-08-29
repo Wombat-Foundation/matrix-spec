@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/4582",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/4582/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/4582/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/4582/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/4582",
+  "id": 407702589,
+  "node_id": "MDU6SXNzdWU0MDc3MDI1ODk=",
+  "number": 4582,
+  "title": "500 error when trying to rejoin empty room",
+  "user": {
+    "login": "richvdh",
+    "id": 1389908,
+    "node_id": "MDQ6VXNlcjEzODk5MDg=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1389908?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/richvdh",
+    "html_url": "https://github.com/richvdh",
+    "followers_url": "https://api.github.com/users/richvdh/followers",
+    "following_url": "https://api.github.com/users/richvdh/following{/other_user}",
+    "gists_url": "https://api.github.com/users/richvdh/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/richvdh/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/richvdh/subscriptions",
+    "organizations_url": "https://api.github.com/users/richvdh/orgs",
+    "repos_url": "https://api.github.com/users/richvdh/repos",
+    "events_url": "https://api.github.com/users/richvdh/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/richvdh/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086029,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMjk=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-bug",
+      "name": "z-bug",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 1056680564,
+      "node_id": "MDU6TGFiZWwxMDU2NjgwNTY0",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Workers",
+      "name": "A-Workers",
+      "color": "5319E7",
+      "default": false,
+      "description": "Problems related to running Synapse in Worker Mode (or replication)"
+    },
+    {
+      "id": 1771241792,
+      "node_id": "MDU6TGFiZWwxNzcxMjQxNzky",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federated-Join",
+      "name": "A-Federated-Join",
+      "color": "5319E7",
+      "default": false,
+      "description": "joins over federation generally suck"
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2019-02-07T13:34:40Z",
+  "updated_at": "2023-05-23T15:29:24Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Related to #1533, but even worse. When using a worker deployment, the code that checks if the server list is empty (https://github.com/matrix-org/synapse/blob/d8e63846e23537d534f94df1e4294326964bb780/synapse/handlers/room_member.py#L988) gets missed, so we end up with an internal server error instead",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/4582/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/4582/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

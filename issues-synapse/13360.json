@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13360",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13360/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13360/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13360/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13360",
+  "id": 1314863417,
+  "node_id": "I_kwDOAVyVwM5OXzk5",
+  "number": 13360,
+  "title": "The error responses from /leave do not conform to the spec.",
+  "user": {
+    "login": "Half-Shot",
+    "id": 2072976,
+    "node_id": "MDQ6VXNlcjIwNzI5NzY=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/2072976?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Half-Shot",
+    "html_url": "https://github.com/Half-Shot",
+    "followers_url": "https://api.github.com/users/Half-Shot/followers",
+    "following_url": "https://api.github.com/users/Half-Shot/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Half-Shot/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Half-Shot/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Half-Shot/subscriptions",
+    "organizations_url": "https://api.github.com/users/Half-Shot/orgs",
+    "repos_url": "https://api.github.com/users/Half-Shot/repos",
+    "events_url": "https://api.github.com/users/Half-Shot/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Half-Shot/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 828678284,
+      "node_id": "MDU6TGFiZWw4Mjg2NzgyODQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spec-Compliance",
+      "name": "A-Spec-Compliance",
+      "color": "5319E7",
+      "default": false,
+      "description": "places where synapse does not conform to the spec"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 5432652643,
+      "node_id": "LA_kwDOAVyVwM8AAAABQ8-zYw",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Leave",
+      "name": "A-Leave",
+      "color": "5319E7",
+      "default": false,
+      "description": "Leaving a room"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2022-07-22T11:02:16Z",
+  "updated_at": "2023-12-13T12:54:13Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "COLLABORATOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nThe spec (https://spec.matrix.org/v1.3/client-server-api/#post_matrixclientv3roomsroomidleave) only allows two possible responses from a call to /leave. A 200 if the room was left, or 429 if the request was rate limited.\r\n\r\nHowever, Synapse will return different responses depending on your, and your homeservers state in the room:\r\n\r\n1. Leaving a room that doesn't exist on the host returns \"M_UNKNOWN\" (Not a known room)\r\n2. Leaving a room on the host that I was never in (but the host is still joined to via another user) will result in a M_FORBIDDEN.\r\n3. Leaving a room that I was previously in will always no-op with a 200.\r\n\r\nThe spec is unfortunately doesn't define the behaviour for trying to leave a room when you were never part of it, but my feeling is that it should no-op in a similar fashion to reinviting users, or rejoining a room also no-op.\r\n\n\n### Steps to reproduce\n\nFor case 1:\r\n\r\n- Try to `/leave` a random roomID that you totally made up.\r\n- Observe the error\r\n\r\nFor case 2:\r\n- Create a room your homeserver\r\n- Try to /leave that room from another user who was never joined to it.\r\n- Observe the error\r\n\r\nFor case 3:\r\n- Create a room.\r\n- Leave the room.\r\n- Leave the room (and repeat as much as you like)\r\n- Observe a 200 response with an empty body.\n\n### Homeserver\n\nhalf-shot.uk\n\n### Synapse Version\n\n1.60.0\n\n### Installation Method\n\npip (from PyPI)\n\n### Platform\n\nProbably not relevant\n\n### Relevant log output\n\n```shell\nDitto\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13360/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13360/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15785",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15785/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15785/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15785/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15785",
+  "id": 1759514068,
+  "node_id": "I_kwDOAVyVwM5o4A3U",
+  "number": 15785,
+  "title": "Leave room with unknown room version",
+  "user": {
+    "login": "MadLittleMods",
+    "id": 558581,
+    "node_id": "MDQ6VXNlcjU1ODU4MQ==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/558581?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/MadLittleMods",
+    "html_url": "https://github.com/MadLittleMods",
+    "followers_url": "https://api.github.com/users/MadLittleMods/followers",
+    "following_url": "https://api.github.com/users/MadLittleMods/following{/other_user}",
+    "gists_url": "https://api.github.com/users/MadLittleMods/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/MadLittleMods/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/MadLittleMods/subscriptions",
+    "organizations_url": "https://api.github.com/users/MadLittleMods/orgs",
+    "repos_url": "https://api.github.com/users/MadLittleMods/repos",
+    "events_url": "https://api.github.com/users/MadLittleMods/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/MadLittleMods/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 5432652643,
+      "node_id": "LA_kwDOAVyVwM8AAAABQ8-zYw",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Leave",
+      "name": "A-Leave",
+      "color": "5319E7",
+      "default": false,
+      "description": "Leaving a room"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2023-06-15T20:36:10Z",
+  "updated_at": "2023-06-16T19:08:43Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "## Background\r\n\r\nSynapse currently only supports leaving a room with a supported/known room version. This means you can get stuck in rooms with experimental room versions which are later dropped from Synapse.\r\n\r\nIf you try to leave a room with a room version that is no longer supported, the `/leave` request gives a `400` error with `M_UNSUPPORTED_ROOM_VERSION`\r\n\r\n```\r\n{\r\n  \"errcode\": \"M_UNSUPPORTED_ROOM_VERSION\",\r\n  \"error\": \"Room !abc uses a room version org.matrix.mscxxx.test which is no longer supported\"\r\n}\r\n```\r\n\r\nThe technical reason behind not being able to leave is that Synapse doesn't know how to resolve state in those rooms. Perhaps the spec needs some fallback mechanism for users wanting to escape or we can just make some assumptions and do our best effort at sending a leave.\r\n\r\n\r\n\r\n## What would you like to do?\r\n\r\nLeave room with unknown/unsupported room version\r\n\r\n\r\n---\r\n\r\nRelated issues:\r\n\r\n - https://github.com/matrix-org/synapse/issues/7083",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15785/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15785/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

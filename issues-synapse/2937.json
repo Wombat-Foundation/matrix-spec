@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/2937",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/2937/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/2937/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/2937/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/2937",
+  "id": 301967657,
+  "node_id": "MDU6SXNzdWUzMDE5Njc2NTc=",
+  "number": 2937,
+  "title": "Consider the user_id alongside the access_token when no-opping /send",
+  "user": {
+    "login": "turt2live",
+    "id": 1190097,
+    "node_id": "MDQ6VXNlcjExOTAwOTc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1190097?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/turt2live",
+    "html_url": "https://github.com/turt2live",
+    "followers_url": "https://api.github.com/users/turt2live/followers",
+    "following_url": "https://api.github.com/users/turt2live/following{/other_user}",
+    "gists_url": "https://api.github.com/users/turt2live/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/turt2live/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/turt2live/subscriptions",
+    "organizations_url": "https://api.github.com/users/turt2live/orgs",
+    "repos_url": "https://api.github.com/users/turt2live/repos",
+    "events_url": "https://api.github.com/users/turt2live/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/turt2live/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477046103,
+      "node_id": "MDU6TGFiZWw0NzcwNDYxMDM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Application-Service",
+      "name": "A-Application-Service",
+      "color": "5319E7",
+      "default": false,
+      "description": "Related to AS support"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 4459600960,
+      "node_id": "LA_kwDOAVyVwM8AAAABCdAcQA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Testing",
+      "name": "A-Testing",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues related to testing in complement, synapse, etc"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2018-03-03T04:29:44Z",
+  "updated_at": "2022-10-19T11:33:48Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nThis is more of an issue for testing appservices, and likely doesn't affect real appservices as the libraries already handle incrementing the transaction. \r\n\r\nAppservices can use the `?user_id` query parameter to impersonate another user in their namespace. However, synapse doesn't consider this when checking to see if an event has already been sent. The easiest way to see this in action is to use the following two curl commands (assuming the appservice is registered, etc):\r\n\r\n```bash\r\n# Send 'Hello world' as @_test_one:domain.com with transaction ID `__TXNID__`\r\ncurl -X PUT -H \"Content-Type: application/json\" --data-binary '{\"msgtype\":\"m.text\",\"body\":\"Hello world\"}' 'https://homeserver.org/_matrix/client/r0/rooms/!myroom:domain.com/send/m.room.message/__TXNID__?access_token=YourAppserviceAccessToken&user_id=@_test_one:domain.com\r\n\r\n# Send 'Hello world' as @_test_two:domain.com with transaction ID `__TXNID__`\r\n# The only thing that has changed is the user ID\r\ncurl -X PUT -H \"Content-Type: application/json\" --data-binary '{\"msgtype\":\"m.text\",\"body\":\"Hello world\"}' 'https://homeserver.org/_matrix/client/r0/rooms/!myroom:domain.com/send/m.room.message/__TXNID__?access_token=YourAppserviceAccessToken&user_id=@_test_two:domain.com\r\n```\r\n\r\nExpected: two 'hello world' messages\r\nActual: only the first sender gets through, the second is no-oped\r\n\r\nTested with synapse 0.26.0\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/2937/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/2937/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

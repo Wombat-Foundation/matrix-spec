@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/2173",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/2173/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/2173/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/2173/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/2173",
+  "id": 225534321,
+  "node_id": "MDU6SXNzdWUyMjU1MzQzMjE=",
+  "number": 2173,
+  "title": "Logout for a Guest User fails",
+  "user": {
+    "login": "pik",
+    "id": 10236920,
+    "node_id": "MDQ6VXNlcjEwMjM2OTIw",
+    "avatar_url": "https://avatars.githubusercontent.com/u/10236920?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/pik",
+    "html_url": "https://github.com/pik",
+    "followers_url": "https://api.github.com/users/pik/followers",
+    "following_url": "https://api.github.com/users/pik/following{/other_user}",
+    "gists_url": "https://api.github.com/users/pik/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/pik/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/pik/subscriptions",
+    "organizations_url": "https://api.github.com/users/pik/orgs",
+    "repos_url": "https://api.github.com/users/pik/repos",
+    "events_url": "https://api.github.com/users/pik/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/pik/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4137798466,
+      "node_id": "LA_kwDOAVyVwM72octC",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Guests",
+      "name": "A-Guests",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 4137873661,
+      "node_id": "LA_kwDOAVyVwM72ovD9",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Login",
+      "name": "A-Login",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2017-05-01T21:38:50Z",
+  "updated_at": "2023-05-23T13:50:35Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Attempting to use the logout endpoint if registered as a guest fails with:\r\n\r\n```\r\n{\"errcode\":\"M_UNKNOWN\",\"error\":\"No row found\"}\r\n```\r\n\r\nThis seems to occur because the `access_token` for a guest user is in fact stored in the `user_ips` and never in the `access_token` table.\r\n\r\nI cannot find a specification that suggests Guests should *not* be able to invalidate their access tokens (http://matrix.org/docs/spec/client_server/r0.2.0.html#post-matrix-client-r0-logout). ",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/2173/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/2173/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

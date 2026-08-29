@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14415",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14415/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14415/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14415/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14415",
+  "id": 1445025622,
+  "node_id": "I_kwDOAVyVwM5WIVdW",
+  "number": 14415,
+  "title": "Add configuration option for app service auth (header vs. query string)",
+  "user": {
+    "login": "bradjones1",
+    "id": 981966,
+    "node_id": "MDQ6VXNlcjk4MTk2Ng==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/981966?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/bradjones1",
+    "html_url": "https://github.com/bradjones1",
+    "followers_url": "https://api.github.com/users/bradjones1/followers",
+    "following_url": "https://api.github.com/users/bradjones1/following{/other_user}",
+    "gists_url": "https://api.github.com/users/bradjones1/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/bradjones1/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/bradjones1/subscriptions",
+    "organizations_url": "https://api.github.com/users/bradjones1/orgs",
+    "repos_url": "https://api.github.com/users/bradjones1/repos",
+    "events_url": "https://api.github.com/users/bradjones1/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/bradjones1/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477046103,
+      "node_id": "MDU6TGFiZWw0NzcwNDYxMDM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Application-Service",
+      "name": "A-Application-Service",
+      "color": "5319E7",
+      "default": false,
+      "description": "Related to AS support"
+    },
+    {
+      "id": 1056673481,
+      "node_id": "MDU6TGFiZWwxMDU2NjczNDgx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Logging",
+      "name": "A-Logging",
+      "color": "5319E7",
+      "default": false,
+      "description": "Synapse's logs (structured or otherwise). Not metrics."
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 7,
+  "created_at": "2022-11-11T07:01:23Z",
+  "updated_at": "2022-11-16T19:27:56Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\n\r\nAfter https://github.com/matrix-org/synapse/pull/13996 we now send the HS token in an `authentication` header in addition to the legacy query string. It would be good to make this configurable in the AS config, e.g. so that logs which include the query string no longer expose this security token or require manual redaction.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14415/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14415/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

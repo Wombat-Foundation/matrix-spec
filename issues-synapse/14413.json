@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14413",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14413/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14413/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14413/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14413",
+  "id": 1444829427,
+  "node_id": "I_kwDOAVyVwM5WHljz",
+  "number": 14413,
+  "title": "Make log correlation more configurable (support analysis services, e.g. Google, New Relic)",
+  "user": {
+    "login": "bradjones1",
+    "id": 981966,
+    "node_id": "MDQ6VXNlcjk4MTk2Ng==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/981966?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/bradjones1",
+    "html_url": "https://github.com/bradjones1",
+    "followers_url": "https://api.github.com/users/bradjones1/followers",
+    "following_url": "https://api.github.com/users/bradjones1/following{/other_user}",
+    "gists_url": "https://api.github.com/users/bradjones1/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/bradjones1/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/bradjones1/subscriptions",
+    "organizations_url": "https://api.github.com/users/bradjones1/orgs",
+    "repos_url": "https://api.github.com/users/bradjones1/repos",
+    "events_url": "https://api.github.com/users/bradjones1/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/bradjones1/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1056673481,
+      "node_id": "MDU6TGFiZWwxMDU2NjczNDgx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Logging",
+      "name": "A-Logging",
+      "color": "5319E7",
+      "default": false,
+      "description": "Synapse's logs (structured or otherwise). Not metrics."
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2022-11-11T02:25:48Z",
+  "updated_at": "2022-11-11T12:28:21Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\n\r\nThanks everyone who works on Synapse, it's really great.\r\n\r\nThe recent PR https://github.com/matrix-org/synapse/pull/13801 added the ability to specify the header from which to pull a request ID. This is a great step toward log correlation, but it more-or-less requires manual action to correlate.\r\n\r\nI am using Google's Cloud Logging (aka Stackdriver) and logs may be correlated automatically in their tooling if the structured logs contain a `trace` key with a value [following a particular convention](https://cloud.google.com/trace/docs/trace-log-integration#associating). Something similar exists for New Relic, see discussion at https://github.com/Seldaek/monolog/issues/1735).\r\n\r\nIt would be awesome if Synapse could support this. I think it could be as simple as:\r\n\r\n* Make the name of the request ID key, currently fixed to `request`, configurable. (E.g., I would set this to `trace`).\r\n* Drop the auto-prefixing of the request with the method name. The method is already included in the log (`method`).\r\n\r\nIn my case, I am currently setting the trace-id with a little bit of lua magic with an openresty reverse proxy, e.g.:\r\n\r\n```\r\nserver {\r\n    location @default {\r\n        proxy_set_header Host $host;\r\n        proxy_set_header X-Forwarded-For $remote_addr;\r\n        proxy_set_header X-Forwarded-Proto 'https';\r\n        set_by_lua $trace_id 'return string.sub(ngx.req.get_headers()[\"traceparent\"], 4, 35)';\r\n        proxy_set_header trace-id $trace_id;\r\n        set $upstream {{ .Env.UPSTREAM }};\r\n        proxy_pass http://$upstream:{{ default .Env.UPSTREAM_PORT \"8008\" }};\r\n    }\r\n}\r\n```\r\n\r\nAnd if this were supported, I would simply update this to include the additional data Google is looking for, e.g. the project ID. Synapse would then be responsible for hairpinning that back to me.\r\n\r\nAlternatively, I suppose this could be viewed as more an extension of the opentracing implementation, and Synapse could read out the Trace ID from the `traceparent` header and include it somehow in the logs. However, that wouldn't address the need for making the log value configurable (e.g., prefixing it with additional cloud provider namespacing.)",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14413/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14413/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

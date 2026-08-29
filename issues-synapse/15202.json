@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15202",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15202/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15202/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15202/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15202",
+  "id": 1608860738,
+  "node_id": "I_kwDOAVyVwM5f5URC",
+  "number": 15202,
+  "title": "Cannot start Synapse through docker-compose: `Permission denied: '/data/homeserver.yaml'`",
+  "user": {
+    "login": "hankster112",
+    "id": 66497709,
+    "node_id": "MDQ6VXNlcjY2NDk3NzA5",
+    "avatar_url": "https://avatars.githubusercontent.com/u/66497709?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/hankster112",
+    "html_url": "https://github.com/hankster112",
+    "followers_url": "https://api.github.com/users/hankster112/followers",
+    "following_url": "https://api.github.com/users/hankster112/following{/other_user}",
+    "gists_url": "https://api.github.com/users/hankster112/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/hankster112/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/hankster112/subscriptions",
+    "organizations_url": "https://api.github.com/users/hankster112/orgs",
+    "repos_url": "https://api.github.com/users/hankster112/repos",
+    "events_url": "https://api.github.com/users/hankster112/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/hankster112/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1083085226,
+      "node_id": "MDU6TGFiZWwxMDgzMDg1MjI2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Docker",
+      "name": "A-Docker",
+      "color": "5319E7",
+      "default": false,
+      "description": "Docker images, or making it easier to run Synapse in a container."
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 8,
+  "created_at": "2023-03-03T15:43:22Z",
+  "updated_at": "2023-05-30T19:31:29Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nEvery time I attempt to start a new synapse server from docker-compose I receive the below error.\r\n\r\n### Steps to reproduce\r\n\r\n1. Create docker-compose with parameters (volume and network is defined earlier as `synapse`):\r\n```yaml\r\n  synapse-server:\r\n    image: matrixdotorg/synapse:latest\r\n    container_name: synapse\r\n    environment:\r\n      - SYNAPSE_SERVER_NAME=my.domain.com\r\n      - SYNAPSE_REPORT_STATS=no\r\n    restart: unless-stopped\r\n    networks:\r\n      - synapse\r\n    volumes:\r\n      - synapse:/data\r\n    ports:\r\n      - \"8008:8008\"\r\n```\r\n2. Attempt to start the server through `sudo docker-compose up`\r\n3. Receive error in logs below\r\n\r\n### Homeserver\r\n\r\nCustom hostserver\r\n\r\n### Synapse Version\r\n\r\nLatest from matrixdotorg/synapse\r\n\r\n### Installation Method\r\n\r\nDocker (matrixdotorg/synapse)\r\n\r\n### Database\r\n\r\nSQLite\r\n\r\n### Workers\r\n\r\nSingle process\r\n\r\n### Platform\r\n\r\nDebian 11 Bullseye\r\nDocker (docker-compose)\r\n\r\n### Configuration\r\n\r\nStock/vanilla config\r\n\r\n### Relevant log output\r\n\r\n```shell\r\nsynapse             | Traceback (most recent call last):\r\nsynapse             |   File \"<frozen runpy>\", line 198, in _run_module_as_main\r\nsynapse             |   File \"<frozen runpy>\", line 88, in _run_code\r\nsynapse             |   File \"/usr/local/lib/python3.11/site-packages/synapse/app/homeserver.py\", line 389, in <module>\r\nsynapse             |     main()\r\nsynapse             |   File \"/usr/local/lib/python3.11/site-packages/synapse/app/homeserver.py\", line 379, in main\r\nsynapse             |     hs = setup(sys.argv[1:])\r\nsynapse             |          ^^^^^^^^^^^^^^^^^^^\r\nsynapse             |   File \"/usr/local/lib/python3.11/site-packages/synapse/app/homeserver.py\", line 287, in setup\r\nsynapse             |     config = HomeServerConfig.load_or_generate_config(\r\nsynapse             |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nsynapse             |   File \"/usr/local/lib/python3.11/site-packages/synapse/config/_base.py\", line 792, in load_or_generate_config\r\nsynapse             |     config_dict = read_config_files(config_files)\r\nsynapse             |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nsynapse             |   File \"/usr/local/lib/python3.11/site-packages/synapse/config/_base.py\", line 874, in read_config_files\r\nsynapse             |     with open(config_file) as file_stream:\r\nsynapse             |          ^^^^^^^^^^^^^^^^^\r\nsynapse             | PermissionError: [Errno 13] Permission denied: '/data/homeserver.yaml'\r\n```\r\n\r\n\r\n### Anything else that would be useful to know?\r\n\r\nI have created the volume from scratch multiple times, manually set permissions on the directory in the volume as suggested by ma-fl in #6303, and generated a new config by manually running the docker container with `generate` or `migrate_config` commands.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15202/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15202/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

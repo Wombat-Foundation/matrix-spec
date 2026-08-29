@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/6670",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/6670/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/6670/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/6670/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/6670",
+  "id": 547434903,
+  "node_id": "MDU6SXNzdWU1NDc0MzQ5MDM=",
+  "number": 6670,
+  "title": "send_dummy_events_to_fill_extremities raises errors if homeserver is blocked",
+  "user": {
+    "login": "jaywink",
+    "id": 1174866,
+    "node_id": "MDQ6VXNlcjExNzQ4NjY=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1174866?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/jaywink",
+    "html_url": "https://github.com/jaywink",
+    "followers_url": "https://api.github.com/users/jaywink/followers",
+    "following_url": "https://api.github.com/users/jaywink/following{/other_user}",
+    "gists_url": "https://api.github.com/users/jaywink/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/jaywink/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/jaywink/subscriptions",
+    "organizations_url": "https://api.github.com/users/jaywink/orgs",
+    "repos_url": "https://api.github.com/users/jaywink/repos",
+    "events_url": "https://api.github.com/users/jaywink/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/jaywink/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086029,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMjk=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-bug",
+      "name": "z-bug",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 477043173,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p2",
+      "name": "z-p2",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 1056673481,
+      "node_id": "MDU6TGFiZWwxMDU2NjczNDgx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Logging",
+      "name": "A-Logging",
+      "color": "5319E7",
+      "default": false,
+      "description": "Synapse's logs (structured or otherwise). Not metrics."
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2020-01-09T11:58:59Z",
+  "updated_at": "2023-05-23T15:41:37Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nIn the event that the homeserver is disabled (ie via [hs_disabled](https://github.com/matrix-org/synapse/blob/master/docs/sample_config.yaml#L243)), `send_dummy_events_to_fill_extremities` will start turning out errors which fall into for example Sentry.\r\n\r\nError raised is:\r\n\r\n```\r\nResourceLimitError\r\n403: Your host access has been blocked. Please contact support@modular.im\r\n```\r\n\r\n(message corresponds to the `hs_disabled_message`)\r\n\r\nPlease ask for Sentry url if needed.\r\n\r\n### Steps to reproduce\r\n\r\n- set `hs_disabled: true`\r\n\r\n### Version information\r\n\r\n- **Version**: v1.7.3",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/6670/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/6670/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

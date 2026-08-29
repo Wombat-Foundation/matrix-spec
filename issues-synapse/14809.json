@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14809",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14809/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14809/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14809/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14809",
+  "id": 1527362405,
+  "node_id": "I_kwDOAVyVwM5bCbNl",
+  "number": 14809,
+  "title": "Use `StrCollection` in more places",
+  "user": {
+    "login": "clokep",
+    "id": 517124,
+    "node_id": "MDQ6VXNlcjUxNzEyNA==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/517124?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/clokep",
+    "html_url": "https://github.com/clokep",
+    "followers_url": "https://api.github.com/users/clokep/followers",
+    "following_url": "https://api.github.com/users/clokep/following{/other_user}",
+    "gists_url": "https://api.github.com/users/clokep/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/clokep/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/clokep/subscriptions",
+    "organizations_url": "https://api.github.com/users/clokep/orgs",
+    "repos_url": "https://api.github.com/users/clokep/repos",
+    "events_url": "https://api.github.com/users/clokep/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/clokep/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406413,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDEz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Task",
+      "name": "T-Task",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Refactoring, removal, replacement, enabling or disabling functionality, other engineering tasks."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    },
+    {
+      "id": 4462968272,
+      "node_id": "LA_kwDOAVyVwM8AAAABCgN90A",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Cleanup",
+      "name": "Z-Cleanup",
+      "color": "FBCA04",
+      "default": false,
+      "description": "Things we want to get rid of, but aren't actively causing pain"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2023-01-10T13:08:52Z",
+  "updated_at": "2023-04-25T22:15:11Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Using a `Sequence[str]` or `Collection[str]` is bad since a `str` also fits those and you *usually* want this to refer to a `Set[str]`, `List[str]`, `Tuple[str, ...]`, etc.\r\n\r\nIn #14716 @reivilibre added a `StrCollection` type which we can re-use for this.\r\n\r\nThis has bit us a few times in the past but I'm failing to find references at the moment.\r\n\r\nIt would be good to audit `Sequence[str]` and `Collection[str]` and see if any of those should be updated.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14809/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14809/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

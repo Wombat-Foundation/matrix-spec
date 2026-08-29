@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14320",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14320/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14320/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14320/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14320",
+  "id": 1427866808,
+  "node_id": "I_kwDOAVyVwM5VG4S4",
+  "number": 14320,
+  "title": "Unhandled ijson exceptions in various places causing log and sentry spam",
+  "user": {
+    "login": "DMRobertson",
+    "id": 8614563,
+    "node_id": "MDQ6VXNlcjg2MTQ1NjM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8614563?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/DMRobertson",
+    "html_url": "https://github.com/DMRobertson",
+    "followers_url": "https://api.github.com/users/DMRobertson/followers",
+    "following_url": "https://api.github.com/users/DMRobertson/following{/other_user}",
+    "gists_url": "https://api.github.com/users/DMRobertson/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/DMRobertson/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/DMRobertson/subscriptions",
+    "organizations_url": "https://api.github.com/users/DMRobertson/orgs",
+    "repos_url": "https://api.github.com/users/DMRobertson/repos",
+    "events_url": "https://api.github.com/users/DMRobertson/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/DMRobertson/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1056673481,
+      "node_id": "MDU6TGFiZWwxMDU2NjczNDgx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Logging",
+      "name": "A-Logging",
+      "color": "5319E7",
+      "default": false,
+      "description": "Synapse's logs (structured or otherwise). Not metrics."
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4316622437,
+      "node_id": "LA_kwDOAVyVwM8AAAABAUpuZQ",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Dev-Wishlist",
+      "name": "Z-Dev-Wishlist",
+      "color": "FBCA04",
+      "default": false,
+      "description": "Makes developers' lives better, but doesn't have direct user impact"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 4618619241,
+      "node_id": "LA_kwDOAVyVwM8AAAABE0qJaQ",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Sentry",
+      "name": "Z-Sentry",
+      "color": "ffffff",
+      "default": false,
+      "description": "Issue was discovered by looking at Sentry reports on Matrix.org"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2022-10-28T21:39:19Z",
+  "updated_at": "2023-02-19T22:36:15Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "https://sentry.tools.element.io/organizations/element/issues/29/?project=2&query=is%3Aunresolved&statsPeriod=24h\r\n\r\n```\r\n2022-10-28 02:43:48,424 - twisted - 274 - ERROR - _maybe_retry_device_resync-852- - Exception ignored in: <generator object utf8_encoder at 0x7f52723e7430>\r\n2022-10-28 02:43:48,430 - twisted - 274 - ERROR - _maybe_retry_device_resync-852- - Traceback (most recent call last):\r\n2022-10-28 02:43:48,435 - twisted - 274 - ERROR - _maybe_retry_device_resync-852- -   File \"/home/synapse/env-pyston-poetry/lib/python3.8-pyston2.3/site-packages/ijson/backends/python.py\", line 46, in utf8_encoder\r\n2022-10-28 02:43:48,440 - twisted - 274 - ERROR - _maybe_retry_device_resync-852- -     target.close()\r\n2022-10-28 02:43:48,443 - twisted - 274 - ERROR - _maybe_retry_device_resync-852- -   File \"/home/synapse/env-pyston-poetry/lib/python3.8-pyston2.3/site-packages/ijson/backends/python.py\", line 116, in Lexer\r\n2022-10-28 02:43:48,447 - twisted - 274 - ERROR - _maybe_retry_device_resync-852- -     target.send(EOF)\r\n2022-10-28 02:43:48,450 - twisted - 274 - ERROR - _maybe_retry_device_resync-852- -   File \"/home/synapse/env-pyston-poetry/lib/python3.8-pyston2.3/site-packages/ijson/backends/python.py\", line 161, in parse_value\r\n2022-10-28 02:43:48,453 - twisted - 274 - ERROR - _maybe_retry_device_resync-852- -     raise common.IncompleteJSONError('Incomplete JSON content')\r\n2022-10-28 02:43:48,456 - twisted - 274 - ERROR - _maybe_retry_device_resync-852- - ijson.common.IncompleteJSONError: Incomplete JSON content\r\n```",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14320/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14320/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

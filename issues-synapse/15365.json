@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15365",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15365/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15365/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15365/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15365",
+  "id": 1650463450,
+  "node_id": "I_kwDOAVyVwM5iYBLa",
+  "number": 15365,
+  "title": "No backoff on `v1/user/devices` requests for homeservers that have been reset",
+  "user": {
+    "login": "phesch",
+    "id": 18366516,
+    "node_id": "MDQ6VXNlcjE4MzY2NTE2",
+    "avatar_url": "https://avatars.githubusercontent.com/u/18366516?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/phesch",
+    "html_url": "https://github.com/phesch",
+    "followers_url": "https://api.github.com/users/phesch/followers",
+    "following_url": "https://api.github.com/users/phesch/following{/other_user}",
+    "gists_url": "https://api.github.com/users/phesch/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/phesch/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/phesch/subscriptions",
+    "organizations_url": "https://api.github.com/users/phesch/orgs",
+    "repos_url": "https://api.github.com/users/phesch/repos",
+    "events_url": "https://api.github.com/users/phesch/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/phesch/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 1828464348,
+      "node_id": "MDU6TGFiZWwxODI4NDY0MzQ4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Device-List-Tracking",
+      "name": "A-Device-List-Tracking",
+      "color": "5319E7",
+      "default": false,
+      "description": "Telling clients about other devices. Often related to E2EE."
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2023-04-01T12:59:10Z",
+  "updated_at": "2023-06-13T13:59:26Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nI used run a Conduit instance on the domain `matrix.example.com` with a user `@phesch:matrix.example.com` and joined several rooms with that user. However, this was before I knew about `.well-known` redirects, so I eventually decided to nuke that server and set up a new one under `example.com` with a well-known redirect to `matrix.example.com` (so the homeserver's \"actual\" domain and DNS didn't change, but the name did).\r\nIt has been about 18 months since I reset the homeserver and everything works correctly except for the fact that it receives a large amount of request spam from the Synapse homeservers that were in the rooms my old user `@phesch:matrix.example.com` was in.\r\nThese servers constantly request `/federation/v1/user/devices/@phesch:matrix.example.com` despite the fact that they always receive a 403 response (since that user obviously doesn't exist). I guess this has something to do with the usual backoff being reset since my homeserver responds normally to other (current) requests.\r\nThis behavior has become rather annoying since it amounts to >60000 requests a day and constitutes about 70% of my server's total incoming HTTP traffic.\r\nNote that Dendrites and other Conduits do not show up as performing these requests in my logs.\n\n### Steps to reproduce\n\n- Set up a matrix homeserver (unsure whether it must be a conduit server) on a subdomain\r\n- Make a user and join some rooms\r\n- Delete the homeserver and make a new one with the homeserver itself on the same subdomain, but with a `.well-known` entry so the homeserver's name is the main domain\r\n- Make a user and join some rooms\r\n- Observe that Synapse homeservers keep requesting `v1/user/devices` at a high rate even though it always returns an error\n\n### Homeserver\n\nMany Synapse servers\n\n### Synapse Version\n\n1.70.1 - 1.80.0rc2 are the versions I found in my logs\n\n### Installation Method\n\nOther (please mention below)\n\n### Database\n\nN/A\n\n### Workers\n\nI don't know\n\n### Platform\n\nN/A\n\n### Configuration\n\nN/A\n\n### Relevant log output\n\n```shell\nHere's an excerpt of what this looks like in my nginx logs:\r\n<IP> - - [<TIME>] \"GET /_matrix/federation/v1/user/devices/%40phesch%3Amatrix.example.com HTTP/1.1\" 403 86 \"-\" \"Synapse/1.79.0\" \"-\" 313 0.011\r\n<IP> - - [<TIME+0s>] \"GET /_matrix/federation/v1/user/devices/%40phesch%3Amatrix.example.com HTTP/1.1\" 403 86 \"-\" \"Synapse/1.79.0\" \"-\" 317 0.010\r\n<IP> - - [<TIME+3s>] \"GET /_matrix/federation/v1/user/devices/%40phesch%3Amatrix.example.com HTTP/1.1\" 403 86 \"-\" \"Synapse/1.79.0\" \"-\" 327 0.011\r\n<IP> - - [<TIME+7s>] \"GET /_matrix/federation/v1/user/devices/%40phesch%3Amatrix.example.com HTTP/1.1\" 403 86 \"-\" \"Synapse/1.74.0\" \"-\" 310 0.010\r\n...\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15365/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15365/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

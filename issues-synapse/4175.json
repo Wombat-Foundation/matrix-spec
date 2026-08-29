@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/4175",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/4175/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/4175/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/4175/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/4175",
+  "id": 379905169,
+  "node_id": "MDU6SXNzdWUzNzk5MDUxNjk=",
+  "number": 4175,
+  "title": "Third Party Lookups: the returned protocol instance icons are not Matrix Content URIs",
+  "user": {
+    "login": "giomfo",
+    "id": 8969772,
+    "node_id": "MDQ6VXNlcjg5Njk3NzI=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8969772?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/giomfo",
+    "html_url": "https://github.com/giomfo",
+    "followers_url": "https://api.github.com/users/giomfo/followers",
+    "following_url": "https://api.github.com/users/giomfo/following{/other_user}",
+    "gists_url": "https://api.github.com/users/giomfo/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/giomfo/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/giomfo/subscriptions",
+    "organizations_url": "https://api.github.com/users/giomfo/orgs",
+    "repos_url": "https://api.github.com/users/giomfo/repos",
+    "events_url": "https://api.github.com/users/giomfo/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/giomfo/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 828678284,
+      "node_id": "MDU6TGFiZWw4Mjg2NzgyODQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spec-Compliance",
+      "name": "A-Spec-Compliance",
+      "color": "5319E7",
+      "default": false,
+      "description": "places where synapse does not conform to the spec"
+    },
+    {
+      "id": 2674406235,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MjM1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/good%20first%20issue",
+      "name": "good first issue",
+      "color": "0E8A16",
+      "default": true,
+      "description": "Good for newcomers"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2018-11-12T18:43:40Z",
+  "updated_at": "2022-01-31T13:06:55Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Contrary to the documentation (https://matrix.org/docs/spec/client_server/r0.4.0.html#get-matrix-client-r0-thirdparty-protocols), the returned protocol icons are not `mxc://` URIs.\r\nThe client gets https URLs (like \"https://matrix.org/_matrix/media/v1/download/matrix.org/DHLHpDDgWNNejFmrewvwEAHX\").\r\n\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/4175/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/4175/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

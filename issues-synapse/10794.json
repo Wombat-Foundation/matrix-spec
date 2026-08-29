@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/10794",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/10794/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/10794/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/10794/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/10794",
+  "id": 993118320,
+  "node_id": "MDU6SXNzdWU5OTMxMTgzMjA=",
+  "number": 10794,
+  "title": "Handle state pulled in via backfill more robustly",
+  "user": {
+    "login": "erikjohnston",
+    "id": 8428120,
+    "node_id": "MDQ6VXNlcjg0MjgxMjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8428120?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/erikjohnston",
+    "html_url": "https://github.com/erikjohnston",
+    "followers_url": "https://api.github.com/users/erikjohnston/followers",
+    "following_url": "https://api.github.com/users/erikjohnston/following{/other_user}",
+    "gists_url": "https://api.github.com/users/erikjohnston/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/erikjohnston/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/erikjohnston/subscriptions",
+    "organizations_url": "https://api.github.com/users/erikjohnston/orgs",
+    "repos_url": "https://api.github.com/users/erikjohnston/repos",
+    "events_url": "https://api.github.com/users/erikjohnston/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/erikjohnston/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4137886492,
+      "node_id": "LA_kwDOAVyVwM72oyMc",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Messages-Endpoint",
+      "name": "A-Messages-Endpoint",
+      "color": "5319E7",
+      "default": false,
+      "description": "/messages client API endpoint (`RoomMessageListRestServlet`) (which also triggers /backfill)"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2021-09-10T10:50:00Z",
+  "updated_at": "2022-08-25T10:28:12Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Synapse goes to great lengths to ensure that malicious servers cannot replace the current state of the room by sending an event `E` that points to all existing forward extremities plus a fake event that the server refuses to divulge. Naively, the server would ask for the state at `E`, which would then become the current state as `E` is the new forward extremity, instead Synapse rejects the event if the server refuses to divulge any of `E`'s prev events. This ensures that the new current state cannot be replaced by malicious servers (without it being resolved against some existing state the server already has).\r\n\r\nCurrently, this logic only applies to newly received events, rather than events that come in via backfill. However, the same attack could be done via backfill in the same way. Thankfully, Synapse currently does not replace forwards extremities when events come in via backfill so Synapse isn't vulnerable to the attack, but that is very tenuous protection and we should add more explicit checks and protections.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/10794/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/10794/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

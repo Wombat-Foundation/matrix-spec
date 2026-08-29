@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15882",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15882/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15882/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15882/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15882",
+  "id": 1789091030,
+  "node_id": "I_kwDOAVyVwM5qo1zW",
+  "number": 15882,
+  "title": "LIMIT_EXCEEDED (429) error when inviting user to a room on a (deep) hierarchical space structure.",
+  "user": {
+    "login": "salomaat",
+    "id": 93129867,
+    "node_id": "U_kgDOBY0Miw",
+    "avatar_url": "https://avatars.githubusercontent.com/u/93129867?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/salomaat",
+    "html_url": "https://github.com/salomaat",
+    "followers_url": "https://api.github.com/users/salomaat/followers",
+    "following_url": "https://api.github.com/users/salomaat/following{/other_user}",
+    "gists_url": "https://api.github.com/users/salomaat/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/salomaat/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/salomaat/subscriptions",
+    "organizations_url": "https://api.github.com/users/salomaat/orgs",
+    "repos_url": "https://api.github.com/users/salomaat/repos",
+    "events_url": "https://api.github.com/users/salomaat/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/salomaat/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 2754675394,
+      "node_id": "MDU6TGFiZWwyNzU0Njc1Mzk0",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spaces",
+      "name": "A-Spaces",
+      "color": "5319E7",
+      "default": false,
+      "description": "Hierarchical organization of rooms"
+    },
+    {
+      "id": 4137743886,
+      "node_id": "LA_kwDOAVyVwM72oPYO",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Invite",
+      "name": "A-Invite",
+      "color": "5319E7",
+      "default": false,
+      "description": "Inviting users to rooms and accepting invites"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 9,
+  "created_at": "2023-07-05T08:53:27Z",
+  "updated_at": "2023-08-22T17:49:38Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nWhen creating a space hierarchy of several levels and then inviting a user into a room in the deep hierarchy a LIMIT_EXCEEDED / Too many requests (429) arises. This is on single room / single invite not in multi invite on multiple rooms.  \r\n\r\n### Steps to reproduce\r\n\r\n 1. Create two users, \r\n 1. Then create a space hierarchy with first user down to 5 levels. \r\n 1. Then create a room into the 5th level of spaces. \r\n 1. Then try invite 2nd user into the room. \r\n 1. You will most likely get 429 error. \r\n\r\nUsing standard `rc_limits` i.e. fresh Synapse setup.\r\n\r\n\r\n### Homeserver\r\n\r\nAnother home server running on UpCloud VM \r\n\r\n### Synapse Version\r\n\r\nv1.87\r\n\r\n### Installation Method\r\n\r\nDebian packages from packages.matrix.org\r\n\r\n### Database\r\n\r\nPostgreSQL\r\n\r\n### Workers\r\n\r\nSingle process\r\n\r\n### Platform\r\n\r\nDistributor ID:\tDebian\r\nDescription:\tDebian GNU/Linux 10 (buster)\r\nRelease:\t10\r\nCodename:\tbuster\r\n\r\nServer running on VM in UpCloud\r\n\r\n### Configuration\r\n\r\nFresh Synapse install, standard setups\r\n\r\n### Relevant log output\r\n\r\n```shell\r\nHomeserver.log\r\n\r\n2023-07-05 07:30:41,571 - synapse.http.server - 117 - INFO - POST-1016 - <XForwardedForRequest at 0x7fb7c011d4a8 method='POST' uri='/_matrix/client/r0/rooms/!pTDaCacJgHLIhGVQWK%3Adev.eu.taxonomy.app/invite' clientproto='HTTP/1.0' site='8008'> SynapseError: 429 - Too Many Requests\r\n2023-07-05 07:30:41,572 - synapse.access.http.8008 - 482 - INFO - POST-1016 - 94.31.96.232\r\n```\r\n\r\n\r\n### Anything else that would be useful to know?\r\n\r\n-",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15882/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15882/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

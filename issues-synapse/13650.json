@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13650",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13650/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13650/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13650/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13650",
+  "id": 1352632641,
+  "node_id": "I_kwDOAVyVwM5Qn4lB",
+  "number": 13650,
+  "title": "When leaving the last room shared with a remote user, the remote user is missing from `device_lists.left` in the `/sync` response, even when `lazy_load_members` is off",
+  "user": {
+    "login": "squahtx",
+    "id": 8349537,
+    "node_id": "MDQ6VXNlcjgzNDk1Mzc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8349537?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/squahtx",
+    "html_url": "https://github.com/squahtx",
+    "followers_url": "https://api.github.com/users/squahtx/followers",
+    "following_url": "https://api.github.com/users/squahtx/following{/other_user}",
+    "gists_url": "https://api.github.com/users/squahtx/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/squahtx/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/squahtx/subscriptions",
+    "organizations_url": "https://api.github.com/users/squahtx/orgs",
+    "repos_url": "https://api.github.com/users/squahtx/repos",
+    "events_url": "https://api.github.com/users/squahtx/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/squahtx/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1828464348,
+      "node_id": "MDU6TGFiZWwxODI4NDY0MzQ4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Device-List-Tracking",
+      "name": "A-Device-List-Tracking",
+      "color": "5319E7",
+      "default": false,
+      "description": "Telling clients about other devices. Often related to E2EE."
+    },
+    {
+      "id": 2038475067,
+      "node_id": "MDU6TGFiZWwyMDM4NDc1MDY3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Sync",
+      "name": "A-Sync",
+      "color": "5319E7",
+      "default": false,
+      "description": "defects related to /sync"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2022-08-26T19:01:25Z",
+  "updated_at": "2022-09-09T13:24:41Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "1. Have a room with one local user, `@alice:local` and one remote user, `@bob:remote`.\r\n2. Have `@alice:local` leave the room.\r\n3. `@alice:local` does not observe `@bob:remote` in the `device_lists.left` section of /sync.\r\n4. [If `@bob:remote` then updates their device list and `@alice:local` does a `/keys/query` request, the correct response is returned. This part is working.]\r\n5. [If `@alice:local` rejoins the room, I believe `device_lists.changed` will contain `@bob:remote`, so nothing should break here.]\r\n\r\nNot tested with `lazy_load_members` yet. I presume it's similarly buggy and even trickier to fix.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13650/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13650/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

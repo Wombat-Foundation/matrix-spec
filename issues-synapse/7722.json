@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/7722",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/7722/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/7722/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/7722/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/7722",
+  "id": 641284130,
+  "node_id": "MDU6SXNzdWU2NDEyODQxMzA=",
+  "number": 7722,
+  "title": "\"Requested operation has changed during the UI authentication session.\" shouldn't be raised if only the query string changes",
+  "user": {
+    "login": "babolivier",
+    "id": 5547783,
+    "node_id": "MDQ6VXNlcjU1NDc3ODM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/5547783?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/babolivier",
+    "html_url": "https://github.com/babolivier",
+    "followers_url": "https://api.github.com/users/babolivier/followers",
+    "following_url": "https://api.github.com/users/babolivier/following{/other_user}",
+    "gists_url": "https://api.github.com/users/babolivier/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/babolivier/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/babolivier/subscriptions",
+    "organizations_url": "https://api.github.com/users/babolivier/orgs",
+    "repos_url": "https://api.github.com/users/babolivier/repos",
+    "events_url": "https://api.github.com/users/babolivier/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/babolivier/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086029,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMjk=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-bug",
+      "name": "z-bug",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 477043173,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p2",
+      "name": "z-p2",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 477046074,
+      "node_id": "MDU6TGFiZWw0NzcwNDYwNzQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-auth",
+      "name": "z-auth",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2020-06-18T15:04:02Z",
+  "updated_at": "2023-05-23T15:58:24Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "https://github.com/matrix-org/synapse/pull/7483 changed the condition under which the \"Requested operation has changed during the UI authentication session.\" error raised so that it's only raised if the (method, uri) changes during UIA.\r\n\r\nThis means that if e.g. I initiate a registration with `POST /register` but ends it with `POST /register?kind=user`, which is the same operation, the registration fails.\r\n\r\nIdeally this condition should be changed to omit the query string from the uri, but we should first check if that doesn't introduce any issue (e.g. if the UIA operation is passed in the query string in some cases - which I don't think it is, but we should probably make sure of that).",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/7722/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/7722/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

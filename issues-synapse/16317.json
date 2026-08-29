@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16317",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16317/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16317/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16317/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16317",
+  "id": 1894940522,
+  "node_id": "I_kwDOAVyVwM5w8n9q",
+  "number": 16317,
+  "title": "New OIDC user registrations do not bind email addresses when user consent is required at registration time.",
+  "user": {
+    "login": "Half-Shot",
+    "id": 2072976,
+    "node_id": "MDQ6VXNlcjIwNzI5NzY=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/2072976?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Half-Shot",
+    "html_url": "https://github.com/Half-Shot",
+    "followers_url": "https://api.github.com/users/Half-Shot/followers",
+    "following_url": "https://api.github.com/users/Half-Shot/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Half-Shot/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Half-Shot/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Half-Shot/subscriptions",
+    "organizations_url": "https://api.github.com/users/Half-Shot/orgs",
+    "repos_url": "https://api.github.com/users/Half-Shot/repos",
+    "events_url": "https://api.github.com/users/Half-Shot/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Half-Shot/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137874325,
+      "node_id": "LA_kwDOAVyVwM72ovOV",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Registration",
+      "name": "A-Registration",
+      "color": "5319E7",
+      "default": false,
+      "description": "Creating an account"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2023-09-13T17:15:28Z",
+  "updated_at": "2023-09-18T17:11:23Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "COLLABORATOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "This is a bit of an edge case, so please bear with. The parameters are:\r\n\r\n- You have enabled `consent.user_consent_at_registration` in your config.\r\n- You have OIDC auth enabled. You allow users to register via OIDC.\r\n- You have set `localpart_template`, `displayname_template` and `email_template`  in the OIDC config so that users can automatically map their emails.\r\n\r\nWhen this is set, the mapped email is always ignored on registration. Specifically you'll get a log line like:\r\n\r\n```\r\n2023-09-12 23:08:50,238 - synapse.handlers.sso - 1074 - INFO - GET-219194- [session vsrKfTioDugwCcQw] Registered userid @foo:example.com with attributes UserAttributes(localpart='foo', confirm_localpart=False, display_name='Mr Foo', picture=None, emails=())\r\n```\r\n\r\nThe OIDC code is quite hard to follow, but I have done my best to understand it. The flow I believe is as follows:\r\n\r\n#### /_synapse/client/oidc/callback\r\n\r\n- The user logs in, and does the OIDC authentication part. They are sent to `/_synapse/client/oidc/callback`.\r\n- Synapse sees this, works out that the user doesn't exist yet ([here](https://github.com/matrix-org/synapse/blob/ad3f43be9a597dd4fdf59e0a95e4630e7b9502fe/synapse/handlers/sso.py#L482)).\r\n- Because  `user_consent_at_registration` is `true`, the user is directed to `/_synapse/client/new_user_consent` in `_get_url_for_next_new_user_step`.\r\n- `_redirect_to_next_new_user_step` will store the mapped emails in the session object.\r\n\r\n#### /_synapse/client/new_user_consent\r\n\r\n- The user is asked to consent, and does so.\r\n- Nothing terribly exciting happens to the session state but eventually a new url is generated via `_get_url_for_next_new_user_step`. Because the current stage passes in a `session` object, we are sent to `/_synapse/client/sso_register`.\r\n\r\n#### /_synapse/client/sso_register\r\n\r\n- This calls `register_sso_user`, which looks at `session.emails_to_use`, rather than `session.emails` that was set in `/_synapse/client/oidc/callback`.  `emails_to_use` is *expected* to be set during `/_synapse/client/pick_username` but because we define a localpart template already, we are never sent to this page.\r\n- The user is created with no bound emails because `emails_to_use` is not set.\r\n\r\n### Proposal\r\n\r\nWe should probably fall back to `session.emails` when `session.emails_to_use` has not been defined. ",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16317/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16317/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16734",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16734/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16734/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16734/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16734",
+  "id": 2030302123,
+  "node_id": "I_kwDOAVyVwM55A_Or",
+  "number": 16734,
+  "title": "621 - WARNING - persist_presence_changes-99641 - [TXN OPERROR] {update_presence-34728b} could not serialize access due to concurrent update",
+  "user": {
+    "login": "lea-aglz",
+    "id": 147405594,
+    "node_id": "U_kgDOCMk7Gg",
+    "avatar_url": "https://avatars.githubusercontent.com/u/147405594?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/lea-aglz",
+    "html_url": "https://github.com/lea-aglz",
+    "followers_url": "https://api.github.com/users/lea-aglz/followers",
+    "following_url": "https://api.github.com/users/lea-aglz/following{/other_user}",
+    "gists_url": "https://api.github.com/users/lea-aglz/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/lea-aglz/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/lea-aglz/subscriptions",
+    "organizations_url": "https://api.github.com/users/lea-aglz/orgs",
+    "repos_url": "https://api.github.com/users/lea-aglz/repos",
+    "events_url": "https://api.github.com/users/lea-aglz/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/lea-aglz/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045943,
+      "node_id": "MDU6TGFiZWw0NzcwNDU5NDM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Presence",
+      "name": "A-Presence",
+      "color": "5319e7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 1056673481,
+      "node_id": "MDU6TGFiZWwxMDU2NjczNDgx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Logging",
+      "name": "A-Logging",
+      "color": "5319E7",
+      "default": false,
+      "description": "Synapse's logs (structured or otherwise). Not metrics."
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 4195810659,
+      "node_id": "LA_kwDOAVyVwM76Fv1j",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Database",
+      "name": "A-Database",
+      "color": "5319E7",
+      "default": false,
+      "description": "DB stuff like queries, migrations, new/remove columns, indexes, unexpected entries in the db"
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2023-12-07T09:37:53Z",
+  "updated_at": "2023-12-07T14:05:55Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nThe are some Warnings on  Synapse 1.89\n\n### Steps to reproduce\n\nI have this error on the log.\r\n\n\n### Homeserver\n\nauto-host\n\n### Synapse Version\n\n1.89\n\n### Installation Method\n\npip (from PyPI)\n\n### Database\n\nPosgreeSQL 11\n\n### Workers\n\nSingle process\n\n### Platform\n\nCentOS7 VM Python installation\n\n### Configuration\n\n_No response_\n\n### Relevant log output\n\n```shell\n2023-11-23 11:42:50.459\tcd11-comm.on-gofast.com\r\n2023-11-23 12:42:40,592 - synapse.storage.txn - 621 - WARNING - persist_presence_changes-99641 - [TXN OPERROR] {update_presence-34728b} could not serialize access due to concurrent update\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16734/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16734/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

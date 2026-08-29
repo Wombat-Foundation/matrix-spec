@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/11720",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/11720/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/11720/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/11720/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/11720",
+  "id": 1098236944,
+  "node_id": "I_kwDOAVyVwM5BdcQQ",
+  "number": 11720,
+  "title": "Synapse does not reject an attempt to upload keys for device A from device B",
+  "user": {
+    "login": "DMRobertson",
+    "id": 8614563,
+    "node_id": "MDQ6VXNlcjg2MTQ1NjM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8614563?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/DMRobertson",
+    "html_url": "https://github.com/DMRobertson",
+    "followers_url": "https://api.github.com/users/DMRobertson/followers",
+    "following_url": "https://api.github.com/users/DMRobertson/following{/other_user}",
+    "gists_url": "https://api.github.com/users/DMRobertson/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/DMRobertson/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/DMRobertson/subscriptions",
+    "organizations_url": "https://api.github.com/users/DMRobertson/orgs",
+    "repos_url": "https://api.github.com/users/DMRobertson/repos",
+    "events_url": "https://api.github.com/users/DMRobertson/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/DMRobertson/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2038497284,
+      "node_id": "MDU6TGFiZWwyMDM4NDk3Mjg0",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-cross-signing",
+      "name": "z-cross-signing",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 3232177309,
+      "node_id": "MDU6TGFiZWwzMjMyMTc3MzA5",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/P4",
+      "name": "P4",
+      "color": "d1e5f0",
+      "default": false,
+      "description": "(OBSOLETE: use S- labels.) Okay backlog: will not schedule, will accept patches"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2022-01-10T18:29:42Z",
+  "updated_at": "2023-06-28T06:08:33Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Discovered when playing around writing a stress test.\r\n\r\nSynapse seems to treat the contents of `/keys/upload` as an opaque blob. But the spec is pretty explicit that it should have [a certain shape](https://spec.matrix.org/v1.1/client-server-api/#post_matrixclientv3keysupload), and that you must include a device_id which matches \"the one when logging in\".\r\n\r\nAs proof, I offer the following debug line\r\n```\r\n* 2022-01-10 18:21:09,180 - synapse.handlers.device - 251 - WARNING - GET-4 - DMR: stream_id=6, devices=[{'device_id': 'MEVKUJOZQV* ', 'keys': {'algorithms': [], 'device_id': 'alice_1', 'keys': {}, 'signatures': {}, 'user_id': '@alice:hs1'}}]\r\n```\r\n\r\nwhich came from \r\n\r\n```\r\n    async def on_federation_query_user_devices(self, user_id: str) -> JsonDict:\r\n        stream_id, devices = await self.store.get_e2e_device_keys_for_federation_query(\r\n            user_id\r\n        )\r\n        logger.warning(f\"DMR: {stream_id=}, {devices=}\")\r\n```",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/11720/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/11720/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

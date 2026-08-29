@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/669",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/669/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/669/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/669/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/669",
+  "id": 143687231,
+  "node_id": "MDU6SXNzdWUxNDM2ODcyMzE=",
+  "number": 669,
+  "title": "Guest accounts should expire",
+  "user": {
+    "login": "fladd",
+    "id": 2971539,
+    "node_id": "MDQ6VXNlcjI5NzE1Mzk=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/2971539?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/fladd",
+    "html_url": "https://github.com/fladd",
+    "followers_url": "https://api.github.com/users/fladd/followers",
+    "following_url": "https://api.github.com/users/fladd/following{/other_user}",
+    "gists_url": "https://api.github.com/users/fladd/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/fladd/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/fladd/subscriptions",
+    "organizations_url": "https://api.github.com/users/fladd/orgs",
+    "repos_url": "https://api.github.com/users/fladd/repos",
+    "events_url": "https://api.github.com/users/fladd/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/fladd/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4137798466,
+      "node_id": "LA_kwDOAVyVwM72octC",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Guests",
+      "name": "A-Guests",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 10,
+  "created_at": "2016-03-26T10:36:58Z",
+  "updated_at": "2022-10-19T11:15:59Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Currently, guest accounts will not expire, which leads to them cluttering up rooms, even though no one is using these accounts anymore.\n\nSince the whole idea of guest accounts is that of a temporary life-span, this should be reflected in how they are handled server-side.\n\nI propose that guest accounts automatically expire/leave all rooms they are in, if either:\n\na) The user goes offline\n\nor\n\nb) The account has no activity for 24 hours \n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/669/reactions",
+    "total_count": 23,
+    "+1": 23,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/669/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

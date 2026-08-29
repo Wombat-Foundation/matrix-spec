@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/11426",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/11426/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/11426/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/11426/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/11426",
+  "id": 1063506557,
+  "node_id": "I_kwDOAVyVwM4_Y9J9",
+  "number": 11426,
+  "title": "Allow the Admin API to create a user where the same localpart exists with uppercase letters",
+  "user": {
+    "login": "Twi1ightSparkle",
+    "id": 19155609,
+    "node_id": "MDQ6VXNlcjE5MTU1NjA5",
+    "avatar_url": "https://avatars.githubusercontent.com/u/19155609?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Twi1ightSparkle",
+    "html_url": "https://github.com/Twi1ightSparkle",
+    "followers_url": "https://api.github.com/users/Twi1ightSparkle/followers",
+    "following_url": "https://api.github.com/users/Twi1ightSparkle/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Twi1ightSparkle/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Twi1ightSparkle/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Twi1ightSparkle/subscriptions",
+    "organizations_url": "https://api.github.com/users/Twi1ightSparkle/orgs",
+    "repos_url": "https://api.github.com/users/Twi1ightSparkle/repos",
+    "events_url": "https://api.github.com/users/Twi1ightSparkle/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Twi1ightSparkle/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1507817868,
+      "node_id": "MDU6TGFiZWwxNTA3ODE3ODY4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Admin-API",
+      "name": "A-Admin-API",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 8,
+  "created_at": "2021-11-25T12:05:16Z",
+  "updated_at": "2022-09-06T13:18:48Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "# Description\r\n\r\nNote, I have added a space after the @ in all example Matrix IDs in this issue, this is to avoid pinging the existing @ Alice user on GitHub.\r\n\r\n## Use case \r\n\r\nThere are a handful of users who have uppercase letters in their Matrix ID from before Synapse started enforcing lowercase only. They may want to create a new Matrix account with a spec compliant all lowercase localpart.\r\nIe. they currently have @ Alice:example.com, but want to register @ alice:example.com\r\n\r\n## Proposed solution\r\n\r\nAdding a feature to the [User creation Admin API](https://matrix-org.github.io/synapse/latest/admin_api/user_admin_api.html#create-or-modify-account) to allow registering @ alice:example.com when @ Alice:example.com already exists.\r\n\r\nAuthentication endpoints may also need updating when implementing this as these may ignore casing currently.\r\n\r\n## Security considerations\r\n\r\nThe localpart availability checker and both client-server and Admin user creation API endpoints ignore casing today and should continue doing this by default.\r\n\r\n- This is to avoid impersonation by allowing client-server API registrations of the lowercase version of an existing MXID with uppercase letters. It is expected that server administrators have verified the users identity before registering this new lowercase Matrix user for them.\r\n- Also to avoid changing the behavior of existing Synapse user management portals that rely on Synapse for localpart validation.\r\n\r\nWe should add a parameter to the API something along the lines of `&ignore_localpart_casing_duplicates=true`. This need to be an optional parameter and default to `false` if not set",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/11426/reactions",
+    "total_count": 2,
+    "+1": 2,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/11426/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

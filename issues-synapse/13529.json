@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13529",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13529/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13529/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13529/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13529",
+  "id": 1339162268,
+  "node_id": "I_kwDOAVyVwM5P0f6c",
+  "number": 13529,
+  "title": "Moving towards stronger schemas for response types",
+  "user": {
+    "login": "erikjohnston",
+    "id": 8428120,
+    "node_id": "MDQ6VXNlcjg0MjgxMjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8428120?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/erikjohnston",
+    "html_url": "https://github.com/erikjohnston",
+    "followers_url": "https://api.github.com/users/erikjohnston/followers",
+    "following_url": "https://api.github.com/users/erikjohnston/following{/other_user}",
+    "gists_url": "https://api.github.com/users/erikjohnston/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/erikjohnston/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/erikjohnston/subscriptions",
+    "organizations_url": "https://api.github.com/users/erikjohnston/orgs",
+    "repos_url": "https://api.github.com/users/erikjohnston/repos",
+    "events_url": "https://api.github.com/users/erikjohnston/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/erikjohnston/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 828678284,
+      "node_id": "MDU6TGFiZWw4Mjg2NzgyODQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spec-Compliance",
+      "name": "A-Spec-Compliance",
+      "color": "5319E7",
+      "default": false,
+      "description": "places where synapse does not conform to the spec"
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 2674406413,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDEz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Task",
+      "name": "T-Task",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Refactoring, removal, replacement, enabling or disabling functionality, other engineering tasks."
+    },
+    {
+      "id": 4462968272,
+      "node_id": "LA_kwDOAVyVwM8AAAABCgN90A",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Cleanup",
+      "name": "Z-Cleanup",
+      "color": "FBCA04",
+      "default": false,
+      "description": "Things we want to get rid of, but aren't actively causing pain"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2022-08-15T15:46:32Z",
+  "updated_at": "2023-04-25T22:29:40Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "We've recently had a number of issues with Synapse returning unspecced fields in API response that clients have ended up relying on.\r\n\r\nThere are two related questions here:\r\n1. How do we ensure that our API responses match the spec?\r\n2. Can we automatically detect in CI when we change an API response, so that we can flag that extra care must be taken?\r\n\r\nLong term there is a desire to move to generating responses via swagger from the Spec. ",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13529/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13529/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

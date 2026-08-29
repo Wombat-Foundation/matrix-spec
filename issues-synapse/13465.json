@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13465",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13465/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13465/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13465/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13465",
+  "id": 1329546669,
+  "node_id": "I_kwDOAVyVwM5PP0Wt",
+  "number": 13465,
+  "title": "event_match push rule condition doesn't work on booleans or integers",
+  "user": {
+    "login": "Johennes",
+    "id": 1137962,
+    "node_id": "MDQ6VXNlcjExMzc5NjI=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1137962?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Johennes",
+    "html_url": "https://github.com/Johennes",
+    "followers_url": "https://api.github.com/users/Johennes/followers",
+    "following_url": "https://api.github.com/users/Johennes/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Johennes/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Johennes/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Johennes/subscriptions",
+    "organizations_url": "https://api.github.com/users/Johennes/orgs",
+    "repos_url": "https://api.github.com/users/Johennes/repos",
+    "events_url": "https://api.github.com/users/Johennes/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Johennes/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045805,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDU=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Push",
+      "name": "A-Push",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues related to push/notifications"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4397135835,
+      "node_id": "LA_kwDOAVyVwM8AAAABBhb32w",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Spec-Blocked",
+      "name": "Z-Spec-Blocked",
+      "color": "A9146D",
+      "default": false,
+      "description": "This change is blocked on specification (e.g. an MSC)."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2022-08-05T07:14:46Z",
+  "updated_at": "2022-09-07T14:28:06Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nThe `event_match` condition is evaluated against a flattened variant of the event dictionary that drops all non-string values (see https://github.com/matrix-org/synapse/blob/develop/synapse/push/push_rule_evaluator.py#L345). As a result, it's not possible to match against any boolean or integer JSON values.\r\n\r\nAs an example, live location sharing uses events of type `beacon_info` with a `\"live\": true/false` value in `content` to signal whether location sharing was started or ended.\r\n\r\n```\r\n{\r\n  \"content\": {\r\n    \"body\": \"Live location\",\r\n    \"live\": true,\r\n    \"org.matrix.msc3488.asset\": {\r\n      \"type\": \"m.self\"\r\n    },\r\n    \"org.matrix.msc3488.ts\": 1659359067708,\r\n    \"timeout\": 900000\r\n  },\r\n  \"origin_server_ts\": 1659359069894,\r\n  \"sender\": \"@...\",\r\n  \"state_key\": \"@...,\r\n  \"type\": \"org.matrix.msc3672.beacon_info\",\r\n  ...\r\n}\r\n```\r\n\r\nSince the value of `live` is boolean, it's not currently possible to define a push rule that only matches `\"live\": true` but not `\"live\": false`.\r\n\r\nThe [spec](https://spec.matrix.org/v1.3/client-server-api/#conditions-1) doesn't explicitly state that `event_match` should only work on strings. It just says the pattern is evaluated against \"a field\" on the event.\r\n\r\n> This is a glob pattern match on a field of the event.\r\n\r\nTherefore, I think `event_match` should work on the string-representation of boolean and integer values as well.\r\n\r\n### Steps to reproduce\r\n\r\nDefine a push rule that matches on a boolean value, e.g.\r\n\r\n```\r\n{\r\n    \"rule_id\":\"m.rule.live_location_start\",\r\n    \"default\": true,\r\n    \"enabled\": true,\r\n    \"conditions\": [\r\n        {\r\n            \"kind\": \"event_match\",\r\n            \"key\": \"type\",\r\n            \"pattern\": \"*beacon_info\",\r\n        },\r\n        {\r\n            \"kind\": \"event_match\",\r\n            \"key\": \"content.live\",\r\n            \"pattern\": \"true\",\r\n        },\r\n        {\r\n            \"kind\": \"event_match\",\r\n            \"key\": \"state_key\",\r\n            \"pattern\": \"*\",\r\n        }\r\n    ],\r\n    \"actions\": [\r\n        \"notify\"\r\n    ]\r\n}\r\n```\r\n\r\nNotice how it's not having any effect.\r\n\r\n### Homeserver\r\n\r\nn/a\r\n\r\n### Synapse Version\r\n\r\nCurrent develop\r\n\r\n### Installation Method\r\n\r\n_No response_\r\n\r\n### Platform\r\n\r\nn/a\r\n\r\n### Relevant log output\r\n\r\nn/a\r\n\r\n### Anything else that would be useful to know?\r\n\r\nn/a",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13465/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13465/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

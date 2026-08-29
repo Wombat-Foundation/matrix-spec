@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16192",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16192/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16192/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16192/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16192",
+  "id": 1868660283,
+  "node_id": "I_kwDOAVyVwM5vYX47",
+  "number": 16192,
+  "title": "Migration `79/04_mitigate_stream_ordering_update_race` fails because `there is no unique constraint matching given keys for referenced table \"events\"`",
+  "user": {
+    "login": "gpetters94",
+    "id": 4546947,
+    "node_id": "MDQ6VXNlcjQ1NDY5NDc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/4546947?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/gpetters94",
+    "html_url": "https://github.com/gpetters94",
+    "followers_url": "https://api.github.com/users/gpetters94/followers",
+    "following_url": "https://api.github.com/users/gpetters94/following{/other_user}",
+    "gists_url": "https://api.github.com/users/gpetters94/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/gpetters94/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/gpetters94/subscriptions",
+    "organizations_url": "https://api.github.com/users/gpetters94/orgs",
+    "repos_url": "https://api.github.com/users/gpetters94/repos",
+    "events_url": "https://api.github.com/users/gpetters94/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/gpetters94/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406462,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDYy",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/X-Needs-Info",
+      "name": "X-Needs-Info",
+      "color": "ff7979",
+      "default": false,
+      "description": "This issue is blocked awaiting information from the reporter"
+    },
+    {
+      "id": 4195810659,
+      "node_id": "LA_kwDOAVyVwM76Fv1j",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Database",
+      "name": "A-Database",
+      "color": "5319E7",
+      "default": false,
+      "description": "DB stuff like queries, migrations, new/remove columns, indexes, unexpected entries in the db"
+    },
+    {
+      "id": 4195849067,
+      "node_id": "LA_kwDOAVyVwM76F5Nr",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Background-Updates",
+      "name": "A-Background-Updates",
+      "color": "5319E7",
+      "default": false,
+      "description": "Filling in database columns, making the database eventually up-to-date"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 20,
+  "created_at": "2023-08-27T22:49:48Z",
+  "updated_at": "2023-11-25T14:17:53Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nSimilar to #10691, I'm having issues after a system update. After an upgrade (from Debian 11 to 12) and a reboot, I get the following error on startup: `psycopg2.errors.InvalidForeignKey: there is no unique constraint matching given keys for referenced table \"events\"`\r\n\r\nWhat's strange is I don't think synapse actually updated. It looks like it's still using a bullseye version, and I have daily unattended upgrades so it shouldn't have changed much. I've compared the schema to the one referenced in the source code, but I don't see any missing keys.\r\n\r\n```\r\nsynapse=> \\d events\r\n                      Table \"public.events\"\r\n        Column        |  Type   | Collation | Nullable | Default \r\n----------------------+---------+-----------+----------+---------\r\n stream_ordering      | integer |           | not null | \r\n topological_ordering | bigint  |           | not null | \r\n event_id             | text    |           | not null | \r\n type                 | text    |           | not null | \r\n room_id              | text    |           | not null | \r\n content              | text    |           |          | \r\n unrecognized_keys    | text    |           |          | \r\n processed            | boolean |           | not null | \r\n outlier              | boolean |           | not null | \r\n depth                | bigint  |           | not null | 0\r\n origin_server_ts     | bigint  |           |          | \r\n received_ts          | bigint  |           |          | \r\n sender               | text    |           |          | \r\n contains_url         | boolean |           |          | \r\n instance_name        | text    |           |          | \r\n stream_ordering2     | bigint  |           |          | \r\n state_key            | text    |           |          | \r\n rejection_reason     | text    |           |          | \r\nIndexes:\r\n    \"events_pkey\" PRIMARY KEY, btree (stream_ordering)\r\n    \"event_contains_url_index\" btree (room_id, topological_ordering, stream_ordering) WHERE contains_url = true AND outlier = false\r\n    \"events_event_id_key\" UNIQUE CONSTRAINT, btree (event_id)\r\n    \"events_order_room\" btree (room_id, topological_ordering, stream_ordering)\r\n    \"events_room_stream\" btree (room_id, stream_ordering)\r\n    \"events_ts\" btree (origin_server_ts, stream_ordering)\r\nReferenced by:\r\n    TABLE \"event_edges\" CONSTRAINT \"event_edges_event_id_fkey\" FOREIGN KEY (event_id) REFERENCES events(event_id) NOT VALID\r\n    TABLE \"event_forward_extremities\" CONSTRAINT \"event_forward_extremities_event_id\" FOREIGN KEY (event_id) REFERENCES events(event_id) DEFERRABLE INITIALLY DEFERRED NOT VALID\r\n    TABLE \"current_state_events\" CONSTRAINT \"event_stream_ordering_fkey\" FOREIGN KEY (event_stream_ordering) REFERENCES events(stream_ordering) NOT VALID\r\n    TABLE \"local_current_membership\" CONSTRAINT \"event_stream_ordering_fkey\" FOREIGN KEY (event_stream_ordering) REFERENCES events(stream_ordering) NOT VALID\r\n    TABLE \"room_memberships\" CONSTRAINT \"event_stream_ordering_fkey\" FOREIGN KEY (event_stream_ordering) REFERENCES events(stream_ordering) NOT VALID\r\n    TABLE \"event_txn_id_device_id\" CONSTRAINT \"event_txn_id_device_id_event_id_fkey\" FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE\r\n    TABLE \"event_txn_id\" CONSTRAINT \"event_txn_id_event_id_fkey\" FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE\r\n    TABLE \"partial_state_events\" CONSTRAINT \"partial_state_events_event_id_fkey\" FOREIGN KEY (event_id) REFERENCES events(event_id)\r\n    TABLE \"partial_state_rooms\" CONSTRAINT \"partial_state_rooms_join_event_id_fkey\" FOREIGN KEY (join_event_id) REFERENCES events(event_id)\r\n    TABLE \"un_partial_stated_event_stream\" CONSTRAINT \"un_partial_stated_event_stream_event_id_fkey\" FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE\r\nRules:\r\n    populate_stream_ordering2 AS\r\n    ON INSERT TO events DO  UPDATE events SET stream_ordering2 = new.stream_ordering\r\n  WHERE events.stream_ordering = new.stream_ordering\r\n```\r\n\r\n### Steps to reproduce\r\n\r\n- Upgrade from Debian 11 to 12\r\n- Start the server\r\n\r\n### Homeserver\r\n\r\nMy self-hosted server\r\n\r\n### Synapse Version\r\n\r\n1.90.0+bullseye1\r\n\r\n### Installation Method\r\n\r\nDebian packages from packages.matrix.org\r\n\r\n### Database\r\n\r\nPostgreSQL, single server, never ported.\r\n\r\n### Workers\r\n\r\nI don't know\r\n\r\n### Platform\r\n\r\nDebian 12 (previously 11) on a VPS\r\n\r\n### Configuration\r\n\r\n_No response_\r\n\r\n### Relevant log output\r\n\r\n```shell\r\n2023-08-27 22:28:54,839 - root - 348 - WARNING - main - ***** STARTING SERVER *****\r\n2023-08-27 22:28:54,839 - root - 349 - WARNING - main - Server /opt/venvs/matrix-synapse/lib/python3.9/site-packages/synapse/app/homeserver.py version 1.90.0\r\n2023-08-27 22:28:54,839 - root - 354 - INFO - main - Server hostname: REDACTED\r\n2023-08-27 22:28:54,839 - root - 355 - INFO - main - Instance name: master\r\n2023-08-27 22:28:54,839 - root - 356 - INFO - main - Twisted reactor: EPollReactor\r\n2023-08-27 22:28:54,839 - synapse.app.homeserver - 350 - INFO - main - Setting up server\r\n2023-08-27 22:28:54,839 - synapse.server - 337 - INFO - main - Setting up.\r\n2023-08-27 22:28:54,853 - synapse.storage.databases - 66 - INFO - main - [database config 'master']: Checking database server\r\n2023-08-27 22:28:54,854 - synapse.storage.databases - 69 - INFO - main - [database config 'master']: Preparing for databases ['main', 'state']\r\n2023-08-27 22:28:54,855 - synapse.storage.prepare_database - 120 - INFO - main - ['main', 'state']: Checking existing schema version\r\n2023-08-27 22:28:54,857 - synapse.storage.prepare_database - 124 - INFO - main - ['main', 'state']: Existing schema is 79 (+0 deltas)\r\n2023-08-27 22:28:54,857 - synapse.storage.databases.main - 323 - INFO - main - Checking database for consistency with configuration...\r\n2023-08-27 22:28:54,858 - synapse.storage.prepare_database - 418 - INFO - main - Applying schema deltas for v79\r\n2023-08-27 22:28:54,859 - synapse.storage.prepare_database - 534 - INFO - main - Applying engine-specific schema 79/03_read_write_locks_triggers.sql.postgres\r\n2023-08-27 22:28:54,886 - synapse.storage.prepare_database - 509 - INFO - main - Running 79/04_mitigate_stream_ordering_update_race.py:run_create\r\n2023-08-27 22:28:54,895 - synapse.app._base - 215 - ERROR - main - Exception during startup\r\nTraceback (most recent call last):\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.9/site-packages/synapse/app/homeserver.py\", line 353, in setup\r\n    hs.setup()\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.9/site-packages/synapse/server.py\", line 339, in setup\r\n    self.datastores = Databases(self.DATASTORE_CLASS, self)\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.9/site-packages/synapse/storage/databases/__init__.py\", line 74, in __init__\r\n    prepare_database(\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.9/site-packages/synapse/storage/prepare_database.py\", line 141, in prepare_database\r\n    _upgrade_existing_database(\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.9/site-packages/synapse/storage/prepare_database.py\", line 510, in _upgrade_existing_database\r\n    module.run_create(cur, database_engine)\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.9/site-packages/synapse/storage/schema/main/delta/79/04_mitigate_stream_ordering_update_race.py\", line 58, in run_create\r\n    cur.execute(add_cse_sql)\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.9/site-packages/synapse/storage/database.py\", line 417, in execute\r\n    self._do_execute(self.txn.execute, sql, parameters)\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.9/site-packages/synapse/storage/database.py\", line 471, in _do_execute\r\n    return func(sql, *args, **kwargs)\r\npsycopg2.errors.InvalidForeignKey: there is no unique constraint matching given keys for referenced table \"events\"\r\n```\r\n```\r\n\r\n\r\n### Anything else that would be useful to know?\r\n\r\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16192/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16192/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14706",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14706/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14706/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14706/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14706",
+  "id": 1502930417,
+  "node_id": "I_kwDOAVyVwM5ZlOXx",
+  "number": 14706,
+  "title": "Optimize /keys/query endpoint",
+  "user": {
+    "login": "clokep",
+    "id": 517124,
+    "node_id": "MDQ6VXNlcjUxNzEyNA==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/517124?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/clokep",
+    "html_url": "https://github.com/clokep",
+    "followers_url": "https://api.github.com/users/clokep/followers",
+    "following_url": "https://api.github.com/users/clokep/following{/other_user}",
+    "gists_url": "https://api.github.com/users/clokep/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/clokep/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/clokep/subscriptions",
+    "organizations_url": "https://api.github.com/users/clokep/orgs",
+    "repos_url": "https://api.github.com/users/clokep/repos",
+    "events_url": "https://api.github.com/users/clokep/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/clokep/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 600557921,
+      "node_id": "MDU6TGFiZWw2MDA1NTc5MjE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Performance",
+      "name": "A-Performance",
+      "color": "5319E7",
+      "default": false,
+      "description": "Performance, both client-facing and admin-facing"
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 4459612007,
+      "node_id": "LA_kwDOAVyVwM8AAAABCdBHZw",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-E2EE",
+      "name": "A-E2EE",
+      "color": "5319E7",
+      "default": false,
+      "description": "End-to-end encryption for Matrix clients"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2022-12-19T13:11:55Z",
+  "updated_at": "2023-03-23T12:12:25Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "This endpoint seems to do some funny things (and the code is hard to follow, but that doesn't seem to be a performance issue). Note that this endpoint is supported by workers (and goes the `client_reader` on matrix.org/Complement). See `E2eKeysHandler.query_devices` for the entry point.\r\n\r\n* It linearizes based on requesting user / device (but since you can run multiple of these, I'm not sure how useful that is).\r\n* It seems to reasonably separate queries into local and remote users, checking caches and such.\r\n* For any uncached remote queries it fans-out per destination (via background tasks) and calls `E2eKeysHandler._query_devices_for_destination`.\r\n  * This then iterates through each user for that destination and attempts to resync devices via the `/user/devices/{user_id}` federation endpoint.\r\n    * If workers are used, this calls a replication endpoint on the main process.\r\n  * In some situations this might fail and Synapse then tries calling `/user/keys/query` once per destination.\r\n\r\nNote that Synapse will call the same resync logic for a remove users keys/devices due to a few different operations (receiving to-device messages from an unknown device, a `/keys/query` request in some situations, maybe other situations).\r\n\r\n----\r\n\r\n* Can we avoid bouncing this to the main process? (Can we have a different worker handle these queries?)\r\n* Can we shard this work? Likely by destination. (Note the `/user/keys/query` is *not* sent to the main process.)\r\n* Can we parallelize the per-user queries (or add a new endpoint to make them more efficient)?\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14706/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14706/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

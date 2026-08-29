@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13875",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13875/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13875/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13875/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13875",
+  "id": 1382595286,
+  "node_id": "I_kwDOAVyVwM5SaLrW",
+  "number": 13875,
+  "title": "Clear out empty event_push_summary rows",
+  "user": {
+    "login": "clokep",
+    "id": 517124,
+    "node_id": "MDQ6VXNlcjUxNzEyNA==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/517124?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/clokep",
+    "html_url": "https://github.com/clokep",
+    "followers_url": "https://api.github.com/users/clokep/followers",
+    "following_url": "https://api.github.com/users/clokep/following{/other_user}",
+    "gists_url": "https://api.github.com/users/clokep/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/clokep/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/clokep/subscriptions",
+    "organizations_url": "https://api.github.com/users/clokep/orgs",
+    "repos_url": "https://api.github.com/users/clokep/repos",
+    "events_url": "https://api.github.com/users/clokep/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/clokep/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406413,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDEz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Task",
+      "name": "T-Task",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Refactoring, removal, replacement, enabling or disabling functionality, other engineering tasks."
+    },
+    {
+      "id": 3454012371,
+      "node_id": "LA_kwDOAVyVwM7N4AvT",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Threads",
+      "name": "A-Threads",
+      "color": "5319E7",
+      "default": false,
+      "description": "Threaded messages"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2022-09-22T14:57:49Z",
+  "updated_at": "2022-09-22T14:57:49Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "After #13776 we generate a row in `event_push_summary` per (user, room, thread). If a receipt marks a thread as completely read then the summary is (somewhat) useless as the `notif_count` and `unread_count` would be 0.\r\n\r\nIt might make sense to clean these up eventually to avoid the table growing too large.\r\n\r\nThere's some conversation about this at https://github.com/matrix-org/synapse/pull/13776#discussion_r969598225.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13875/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13875/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

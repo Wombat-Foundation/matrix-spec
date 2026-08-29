@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/4808",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/4808/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/4808/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/4808/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/4808",
+  "id": 417644710,
+  "node_id": "MDU6SXNzdWU0MTc2NDQ3MTA=",
+  "number": 4808,
+  "title": "Disinviting users over federation doesn't work",
+  "user": {
+    "login": "turt2live",
+    "id": 1190097,
+    "node_id": "MDQ6VXNlcjExOTAwOTc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1190097?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/turt2live",
+    "html_url": "https://github.com/turt2live",
+    "followers_url": "https://api.github.com/users/turt2live/followers",
+    "following_url": "https://api.github.com/users/turt2live/following{/other_user}",
+    "gists_url": "https://api.github.com/users/turt2live/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/turt2live/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/turt2live/subscriptions",
+    "organizations_url": "https://api.github.com/users/turt2live/orgs",
+    "repos_url": "https://api.github.com/users/turt2live/repos",
+    "events_url": "https://api.github.com/users/turt2live/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/turt2live/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137743886,
+      "node_id": "LA_kwDOAVyVwM72oPYO",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Invite",
+      "name": "A-Invite",
+      "color": "5319E7",
+      "default": false,
+      "description": "Inviting users to rooms and accepting invites"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2019-03-06T06:32:11Z",
+  "updated_at": "2022-11-15T09:34:51Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Riot issue: https://github.com/vector-im/riot-web/issues/7318\r\n\r\nAs mentioned in https://github.com/vector-im/riot-web/issues/7318#issuecomment-469984876, this is a different case from https://github.com/matrix-org/synapse/issues/2181 due to Synapse not sending the disinvite over federation to the target homeserver.\r\n\r\nAs a simple test case:\r\n1. Create a room on Server A\r\n2. Invite a user from Server B to the room\r\n3. Before they accept, disinvite them\r\n4. That user now has a stuck invite\r\n\r\nServer A never notifies Server B of the disinvite (`leave` event), and therefore Server B can't really do anything about it. If the user tries to respond to the event, Server B could realize that 403 on join (or declination of the invite) means it should be locally rejected. At that point, you're in https://github.com/matrix-org/synapse/issues/2181 territory.\r\n\r\nWhen Server A is modified to make calls to Server B by sending the disinvite in a transaction, Server B accepts the transaction but ignores the event because it cannot determine the room version (and therefore the event format version). A lightly tested and highly unstable branch for modifying Server A to send the event is available here: https://github.com/matrix-org/synapse/compare/16c8b4ecbd99c4be6419bf65212acc613a179950...travis/fix-stuck-invites\r\n\r\nPatching Server B's behaviour is non-trivial to me, otherwise I'd just fix it. Would be good if this fix was partnered with spec to clarify that disinvite (leave) events should be sent to target hosts, and that target hosts should expect them. I don't think this is introducing anything new, and shouldn't need a dedicated endpoint either.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/4808/reactions",
+    "total_count": 1,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 1,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/4808/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

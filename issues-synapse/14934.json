@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14934",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14934/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14934/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14934/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14934",
+  "id": 1561698708,
+  "node_id": "I_kwDOAVyVwM5dFaGU",
+  "number": 14934,
+  "title": "Synapse cannot send mail to local Postfix server using STARTTLS",
+  "user": {
+    "login": "nike4613",
+    "id": 10411129,
+    "node_id": "MDQ6VXNlcjEwNDExMTI5",
+    "avatar_url": "https://avatars.githubusercontent.com/u/10411129?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/nike4613",
+    "html_url": "https://github.com/nike4613",
+    "followers_url": "https://api.github.com/users/nike4613/followers",
+    "following_url": "https://api.github.com/users/nike4613/following{/other_user}",
+    "gists_url": "https://api.github.com/users/nike4613/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/nike4613/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/nike4613/subscriptions",
+    "organizations_url": "https://api.github.com/users/nike4613/orgs",
+    "repos_url": "https://api.github.com/users/nike4613/repos",
+    "events_url": "https://api.github.com/users/nike4613/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/nike4613/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 3271562136,
+      "node_id": "MDU6TGFiZWwzMjcxNTYyMTM2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Email-Push",
+      "name": "A-Email-Push",
+      "color": "5319E7",
+      "default": false,
+      "description": "Email notifications"
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 7,
+  "created_at": "2023-01-30T04:01:16Z",
+  "updated_at": "2023-06-15T00:25:25Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nWhen I make Synapse try to send an email (e.g. by adding one to my account in the Element UI), it reports an internal error, with the attached error in the logs (duplicated 5 times, with the `Retry:` line counting down from 5.\r\n\n\n### Steps to reproduce\n\n- Attempt to add an email address to user account on homeserver\n\n### Homeserver\n\ncirr.com\n\n### Synapse Version\n\n1.75.0\n\n### Installation Method\n\nDebian packages from packages.matrix.org\n\n### Database\n\nPostgreSQL. Single server, no porting, no backups.\n\n### Workers\n\nSingle process\n\n### Platform\n\nDebian 5.10.127-1 VPS\n\n### Configuration\n\n_No response_\n\n### Relevant log output\n\n```shell\n2023-01-29 21:47:03,886 - twisted - 274 - CRITICAL - sentinel - Error during info_callback\r\nTraceback (most recent call last):\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.9/site-packages/twisted/protocols/tls.py\", line 314, in dataReceived\r\n    self._checkHandshakeStatus()\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.9/site-packages/twisted/protocols/tls.py\", line 237, in _checkHandshakeStatus\r\n    self._tlsConnection.do_handshake()\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.9/site-packages/OpenSSL/SSL.py\", line 2074, in do_handshake\r\n    result = _lib.SSL_do_handshake(self._ssl)\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.9/site-packages/OpenSSL/SSL.py\", line 1336, in wrapper\r\n    callback(Connection._reverse_mapping[ssl], where, return_code)\r\n--- <exception caught here> ---\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.9/site-packages/twisted/internet/_sslverify.py\", line 1064, in infoCallback\r\n    return wrapped(connection, where, ret)\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.9/site-packages/twisted/internet/_sslverify.py\", line 1174, in _identityVerifyingInfoCallback\r\n    verifyHostname(connection, self._hostnameASCII)\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.9/site-packages/service_identity/pyopenssl.py\", line 48, in verify_hostname\r\n    verify_service_identity(\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.9/site-packages/service_identity/_common.py\", line 48, in verify_service_identity\r\n    matches = _find_matches(cert_patterns, obligatory_ids) + _find_matches(\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.9/site-packages/service_identity/_common.py\", line 88, in _find_matches\r\n    if sid.verify(cid):\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.9/site-packages/service_identity/_common.py\", line 284, in verify\r\n    return _hostname_matches(pattern.pattern, self.hostname)\r\n  File \"/opt/venvs/matrix-synapse/lib/python3.9/site-packages/service_identity/_common.py\", line 398, in _hostname_matches\r\n    actual_head, actual_tail = actual_hostname.split(b\".\", 1)\r\nbuiltins.ValueError: not enough values to unpack (expected 2, got 1)\r\n\r\n2023-01-29 21:47:03,889 - twisted - 274 - INFO - sentinel - SMTP Client retrying server. Retry: 3\n```\n\n\n### Anything else that would be useful to know?\n\nThe target mail server is a Postfix server configured to only accept TLS. I do not have issues sending mail through this server from any other application; I am able to send mail using Thunderbird, and my Nextcloud instance is able to send mail through it.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14934/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14934/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

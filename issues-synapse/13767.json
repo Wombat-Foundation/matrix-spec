@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13767",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13767/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13767/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13767/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13767",
+  "id": 1367918697,
+  "node_id": "I_kwDOAVyVwM5RiMhp",
+  "number": 13767,
+  "title": "HEIC/HEIF support",
+  "user": {
+    "login": "ptman",
+    "id": 24669,
+    "node_id": "MDQ6VXNlcjI0NjY5",
+    "avatar_url": "https://avatars.githubusercontent.com/u/24669?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/ptman",
+    "html_url": "https://github.com/ptman",
+    "followers_url": "https://api.github.com/users/ptman/followers",
+    "following_url": "https://api.github.com/users/ptman/following{/other_user}",
+    "gists_url": "https://api.github.com/users/ptman/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/ptman/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/ptman/subscriptions",
+    "organizations_url": "https://api.github.com/users/ptman/orgs",
+    "repos_url": "https://api.github.com/users/ptman/repos",
+    "events_url": "https://api.github.com/users/ptman/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/ptman/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045806,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDY=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Media-Repository",
+      "name": "A-Media-Repository",
+      "color": "5319E7",
+      "default": false,
+      "description": "Uploading, downloading images and video, thumbnailing"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2022-09-09T14:33:12Z",
+  "updated_at": "2023-07-01T20:30:24Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\n\r\nApparently someone managed to send an HEIC image from an apple device to a matrix room I participate in. At least thumbnailing HEIC/HEIF ( https://en.wikipedia.org/wiki/High_Efficiency_Image_File_Format ) would be nice. I suppose synapse isn't supposed to be a generic media converter, but that would have been useful as well.\r\n\r\nPNGs should be thumbnailed as JPEG https://github.com/matrix-org/synapse/issues/2045 , but there's complaints about WEBP being thumbnailed about JPEG https://github.com/matrix-org/synapse/issues/11840 . I guess it's hard to please everyone.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13767/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13767/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/8145",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/8145/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/8145/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/8145/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/8145",
+  "id": 683659714,
+  "node_id": "MDU6SXNzdWU2ODM2NTk3MTQ=",
+  "number": 8145,
+  "title": "Synapse sends SMTP retries in quick succession if SMTP server is down",
+  "user": {
+    "login": "Traumflug",
+    "id": 318581,
+    "node_id": "MDQ6VXNlcjMxODU4MQ==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/318581?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Traumflug",
+    "html_url": "https://github.com/Traumflug",
+    "followers_url": "https://api.github.com/users/Traumflug/followers",
+    "following_url": "https://api.github.com/users/Traumflug/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Traumflug/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Traumflug/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Traumflug/subscriptions",
+    "organizations_url": "https://api.github.com/users/Traumflug/orgs",
+    "repos_url": "https://api.github.com/users/Traumflug/repos",
+    "events_url": "https://api.github.com/users/Traumflug/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Traumflug/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2021736922,
+      "node_id": "MDU6TGFiZWwyMDIxNzM2OTIy",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Upstream-Bug",
+      "name": "Z-Upstream-Bug",
+      "color": "ededed",
+      "default": false,
+      "description": "This issue requires a fix in an upstream dependency."
+    },
+    {
+      "id": 2073180190,
+      "node_id": "MDU6TGFiZWwyMDczMTgwMTkw",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-blocked",
+      "name": "z-blocked",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 12,
+  "created_at": "2020-08-21T15:58:34Z",
+  "updated_at": "2021-07-24T09:15:36Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nIf the SMTP server doesn't work perfectly for some reason, Synapse starts a Denial-of-Service (DoS) attack on that server. This triggers spam/DoS protection like Fail2Ban or UFW 'limit' rules on the server, of course, putting the Synapse server onto a temporary or permanent blacklist (on the SMTP server).\r\n\r\n### Steps to reproduce\r\n\r\n- Stop the configured mail server (to imitate some malfunction).\r\n- Using a client (e.g. Riot/Elements), attempt to do something sending an email. For example, adding an email address to a user account.\r\n\r\nAfter doing so, one can find this in the logs, 5 \"retries\" within less than 0.1 seconds:\r\n```\r\n2020-07-31 15:02:14,371 - synapse.push.mailer - 301 - INFO - POST-11 - Sending email to mah@jump-ing.de\r\n2020-07-31 15:02:14,668 - twisted - 192 - INFO -  - SMTP Client retrying server. Retry: 5\r\n2020-07-31 15:02:14,684 - twisted - 192 - INFO -  - SMTP Client retrying server. Retry: 4\r\n2020-07-31 15:02:14,702 - twisted - 192 - INFO -  - SMTP Client retrying server. Retry: 3\r\n2020-07-31 15:02:14,718 - twisted - 192 - INFO -  - SMTP Client retrying server. Retry: 2\r\n2020-07-31 15:02:14,736 - twisted - 192 - INFO -  - SMTP Client retrying server. Retry: 1\r\n```\r\nBlindly retrying to connect to a SMTP server is entirely pointless. SMTP uses TCP/IP, which is a reliable protocol (it retries on its own on errors), so there are no network errors one can work around by retrying immediately. Retrying only makes sense after looking at the error and acting sensible on that. In case one can't connect at all, it makes no sense to try again within less than a couple of minutes.\r\n\r\n### Version information\r\n\r\n- **Homeserver**:\r\nlocalhost\r\n- **Version**:\r\n    ```\r\n    $ curl http://localhost:8008/_synapse/admin/v1/server_version\r\n    {\r\n        \"python_version\": \"3.7.3\",\r\n        \"server_version\": \"1.19.0\"\r\n    }\r\n    ```\r\n- **Install method**:\r\n`apt-get install matrix-synapse-py3` with matrix.org's repository (https://packages.matrix.org/debian/) installed.\r\n\r\n- **Platform**:\r\nDebian 10.5 _buster_ on a virtual machine (in order to test before rolling out to a public server).\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/8145/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/8145/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/4724",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/4724/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/4724/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/4724/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/4724",
+  "id": 413720984,
+  "node_id": "MDU6SXNzdWU0MTM3MjA5ODQ=",
+  "number": 4724,
+  "title": "Image pre- or post-processing",
+  "user": {
+    "login": "grinapo",
+    "id": 1056054,
+    "node_id": "MDQ6VXNlcjEwNTYwNTQ=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1056054?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/grinapo",
+    "html_url": "https://github.com/grinapo",
+    "followers_url": "https://api.github.com/users/grinapo/followers",
+    "following_url": "https://api.github.com/users/grinapo/following{/other_user}",
+    "gists_url": "https://api.github.com/users/grinapo/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/grinapo/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/grinapo/subscriptions",
+    "organizations_url": "https://api.github.com/users/grinapo/orgs",
+    "repos_url": "https://api.github.com/users/grinapo/repos",
+    "events_url": "https://api.github.com/users/grinapo/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/grinapo/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045806,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDY=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Media-Repository",
+      "name": "A-Media-Repository",
+      "color": "5319E7",
+      "default": false,
+      "description": "Uploading, downloading images and video, thumbnailing"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2019-02-23T18:08:43Z",
+  "updated_at": "2022-08-25T10:35:28Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\nDid a brief test on the images hosted o nmy homeserver. \r\n* Using `jpegoptim` on jpegs generally saved 40-60% of the original size. \r\n* Converting images to better formats (my test was about *WebP* but it's just one) resulted 10-20% of the original size (and actually reducing  the quality resulted more than 90% savings).\r\nImages are large, and it's getting bigger every minute. Optimising, mostly without quality loss would be a great saver.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/4724/reactions",
+    "total_count": 4,
+    "+1": 4,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/4724/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

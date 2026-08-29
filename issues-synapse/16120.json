@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16120",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16120/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16120/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16120/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16120",
+  "id": 1853061847,
+  "node_id": "I_kwDOAVyVwM5uc3rX",
+  "number": 16120,
+  "title": "Alter ACL behaviour to prevent abuse",
+  "user": {
+    "login": "catfromplan9",
+    "id": 104175360,
+    "node_id": "U_kgDOBjWXAA",
+    "avatar_url": "https://avatars.githubusercontent.com/u/104175360?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/catfromplan9",
+    "html_url": "https://github.com/catfromplan9",
+    "followers_url": "https://api.github.com/users/catfromplan9/followers",
+    "following_url": "https://api.github.com/users/catfromplan9/following{/other_user}",
+    "gists_url": "https://api.github.com/users/catfromplan9/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/catfromplan9/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/catfromplan9/subscriptions",
+    "organizations_url": "https://api.github.com/users/catfromplan9/orgs",
+    "repos_url": "https://api.github.com/users/catfromplan9/repos",
+    "events_url": "https://api.github.com/users/catfromplan9/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/catfromplan9/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1554244657,
+      "node_id": "MDU6TGFiZWwxNTU0MjQ0NjU3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Moderation",
+      "name": "A-Moderation",
+      "color": "5319E7",
+      "default": false,
+      "description": "Tools for moderating HSes: event redaction, media removal, purge admin API, reports from users, ..."
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2023-08-16T11:41:11Z",
+  "updated_at": "2023-09-22T14:30:26Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\n\r\nRight now, when I ACL a server from my room on matrix, the users of that server are still in the room and able to join the room. This leads to an alternate copy of the room being propagated to all the servers that are blocked. I cannot see or moderate what is going on in this alternate copy of the room. The servers I block range from servers with rules that are not compatible with my own, to homeservers refusing to moderate CP. Having all these blocked servers able to communicate with eachother in a copy room is a problem for the matrix ecosystem and I have no doubt it leads to many new users abandoning the platform. If my room blocks matrix.org and some CP spammer servers, any matrix.org user will join and see CP, and I'd rather not have this happen.\r\n\r\nPerhaps, instead, when a homeserver is added to the ACL list, all members from that server can first be kicked? The issue, as I understand it, is that accounts from the blocked homeserver remain in the room, and are merely unable to communicate to the unblocked ones. Thus, the blocked server is able to allow other accounts from the same server to join, and to federate to other blocked servers. New joins from a blocked server is permitted if there is one account from the blocked server in the room. If we kick them all first, then no accounts will manage to join in the future\r\n\r\nI look forward to hearing your thoughts on this topic, and perhaps better ways to resolve this problem.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16120/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16120/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

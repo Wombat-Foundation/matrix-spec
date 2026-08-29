@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/2807",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/2807/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/2807/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/2807/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/2807",
+  "id": 289472889,
+  "node_id": "MDU6SXNzdWUyODk0NzI4ODk=",
+  "number": 2807,
+  "title": "Accepting an invite to a room on another HS returns a 404",
+  "user": {
+    "login": "ewingrj",
+    "id": 30963004,
+    "node_id": "MDQ6VXNlcjMwOTYzMDA0",
+    "avatar_url": "https://avatars.githubusercontent.com/u/30963004?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/ewingrj",
+    "html_url": "https://github.com/ewingrj",
+    "followers_url": "https://api.github.com/users/ewingrj/followers",
+    "following_url": "https://api.github.com/users/ewingrj/following{/other_user}",
+    "gists_url": "https://api.github.com/users/ewingrj/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/ewingrj/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/ewingrj/subscriptions",
+    "organizations_url": "https://api.github.com/users/ewingrj/orgs",
+    "repos_url": "https://api.github.com/users/ewingrj/repos",
+    "events_url": "https://api.github.com/users/ewingrj/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/ewingrj/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 477046103,
+      "node_id": "MDU6TGFiZWw0NzcwNDYxMDM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Application-Service",
+      "name": "A-Application-Service",
+      "color": "5319E7",
+      "default": false,
+      "description": "Related to AS support"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137743886,
+      "node_id": "LA_kwDOAVyVwM72oPYO",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Invite",
+      "name": "A-Invite",
+      "color": "5319E7",
+      "default": false,
+      "description": "Inviting users to rooms and accepting invites"
+    },
+    {
+      "id": 4458764864,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNaQA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Frequent",
+      "name": "O-Frequent",
+      "color": "0052CC",
+      "default": false,
+      "description": "Affects or can be seen by most users regularly or impacts most users' first experience"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 12,
+  "created_at": "2018-01-18T01:28:27Z",
+  "updated_at": "2022-10-05T16:51:21Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "<!-- \r\n\r\n**IF YOU HAVE SUPPORT QUESTIONS ABOUT RUNNING OR CONFIGURING YOUR OWN HOME SERVER**: \r\nYou will likely get better support more quickly if you ask in ** #matrix:matrix.org ** ;)\r\n\r\n\r\nThis is a bug report template. By following the instructions below and\r\nfilling out the sections with your information, you will help the us to get all\r\nthe necessary data to fix your issue.\r\n\r\nYou can also preview your report before submitting it. You may remove sections\r\nthat aren't relevant to your particular case.\r\n\r\nText between <!-- and --​> marks will be invisible in the report.\r\n\r\n-->\r\n\r\n### Description\r\n\r\nIn the matrix-appservice-slackbot, the bot will auto join any rooms it has been invited to. If a user from another HS invites the bot to a room that hasn't been synced to the bots HS, synapse will throw an error `2018-01-18 01:26: [-] POST https://matrix.giveth.io/_matrix/client/r0/join/!TAeakIVVBKXyGipXoY%3Amatrix.org AS) HTTP 404 Error: {\"errcode\":\"M_UNKNOWN\",\"error\":\"No row found\"}`.\r\n\r\n### Version information\r\n\r\n<!-- IMPORTANT: please answer the following questions, to help us narrow down the problem -->\r\n\r\n- **Homeserver**: Was this issue identified on matrix.org or another homeserver?\r\n\r\nIf not matrix.org: giveth.io\r\n- **Version**:     26 <!-- \r\nYou can find the Synapse version by inspecting the server headers (replace matrix.org with\r\nyour own homeserver domain):\r\n$ curl -v https://matrix.org/_matrix/client/versions 2>&1 | grep \"Server:\"\r\n-->\r\n- **Install method**: package manager    \r\n- **Platform**:      VPS w/ debian 9 \r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/2807/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/2807/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

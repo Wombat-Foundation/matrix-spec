@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15974",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15974/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15974/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15974/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15974",
+  "id": 1815372617,
+  "node_id": "I_kwDOAVyVwM5sNGNJ",
+  "number": 15974,
+  "title": "/admin/v1/send_server_notice is rate limited despite having corresponding ratelimit_override entries",
+  "user": {
+    "login": "rltas",
+    "id": 112475628,
+    "node_id": "U_kgDOBrQ97A",
+    "avatar_url": "https://avatars.githubusercontent.com/u/112475628?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/rltas",
+    "html_url": "https://github.com/rltas",
+    "followers_url": "https://api.github.com/users/rltas/followers",
+    "following_url": "https://api.github.com/users/rltas/following{/other_user}",
+    "gists_url": "https://api.github.com/users/rltas/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/rltas/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/rltas/subscriptions",
+    "organizations_url": "https://api.github.com/users/rltas/orgs",
+    "repos_url": "https://api.github.com/users/rltas/repos",
+    "events_url": "https://api.github.com/users/rltas/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/rltas/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1507817868,
+      "node_id": "MDU6TGFiZWwxNTA3ODE3ODY4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Admin-API",
+      "name": "A-Admin-API",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2023-07-21T08:15:08Z",
+  "updated_at": "2023-07-21T16:00:36Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nIn homeserver.yaml:\r\n```\r\nserver_notices:\r\n  system_mxid_localpart: system\r\n```\r\n\r\nIn ratelimit_override (put both here for testing):\r\n```\r\n          user_id           | messages_per_second | burst_count\r\n----------------------------+---------------------+-------------\r\n @root:ourmatrixdomain.net   |                   0 |           0\r\n @system:ourmatrixdomain.net |                   0 |           0\r\n```\r\n\r\nOur application, using user `root`, after sending several messages successfully:\r\n```\r\n2023-07-19 14:34:55 Running task now\r\n2023-07-19 14:34:55 The following request was sent to ourmatrixdomain.net\r\n                    URL: http://worker-reverse-proxy/_synapse/admin/v1/send_server_notice/@user:ourmatrixdomain.net.ns64b7d814ada6f8.93327386\r\n                    Method: PUT\r\n                    Body: {\"user_id\":\"@user:ourmatrixdomain.net\",\"content\":{\"msgtype\":\"m.text\",\"format\":\"org.matrix.custom.html\",\"formatted_body\":\"Message from <strong>root<\\/strong><br \\/>\\n<strong>Test message<\\/strong>\",\"body\":\"Message from root\\r\\nTest message\"}}\r\n2023-07-19 14:34:55 The following response was received from ourmatrixdomain.net:\r\n                    Status Code: 429\r\n                    Headers: server: nginx; date: Wed, 19 Jul 2023 12:34:55 GMT; content-type: application/json; transfer-encoding: chunked; connection: keep-alive; cache-control: no-cache, no-store, must-revalidate; access-control-allow-origin: *; access-control-allow-methods: GET, HEAD, POST, PUT, DELETE, OPTIONS; access-control-allow-headers: X-Requested-With, Content-Type, Authorization, Date; access-control-expose-headers: Synapse-Trace-Id\r\n                    Body: {\"errcode\":\"M_LIMIT_EXCEEDED\",\"error\":\"Too Many Requests\",\"retry_after_ms\":2150}\r\n2023-07-19 14:34:55 Exception thrown\r\n2023-07-19 14:34:55 Operation 'Admin\\ServerNotice' failed: M_LIMIT_EXCEEDED - Too Many Requests\r\n```\r\n\r\n### Homeserver\r\n\r\nNon-federating private instance\r\n\r\n### Synapse Version\r\n\r\n1.85.2\r\n\r\n### Installation Method\r\n\r\nOther (please mention below)\r\n\r\n### Database\r\n\r\nSingle PostgreSQL 15.3\r\n\r\n### Workers\r\n\r\nMultiple workers\r\n\r\n### Platform\r\n\r\nDocker containers installed via Matrix Ansible Playbook on Ubuntu 22.04\r\n\r\n### Relevant log output\r\n\r\n```shell\r\nJul 19 12:34:51 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:51,682 - synapse.server_notices.server_notices_manager - 166 - INFO - PUT-5615 - Creating server notices room for @test30:ourmatrixdomain.net\r\nJul 19 12:34:52 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:52,015 - synapse.http.client - 924 - INFO - PUT-5615 - Received response to POST synapse-replication://matrix-synapse-worker-stream-writer-3-account-data/_synapse/replication/add_tag/%40test30%3Aourmatrixdomain.net/%21rKRbFEDCorEwFePxfq%3Aourmatrixdomain.net/m.server_notice: 200\r\nJul 19 12:34:52 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:52,022 - synapse.server_notices.server_notices_manager - 199 - INFO - PUT-5615 - Created server notices room !rKRbFEDCorEwFePxfq:ourmatrixdomain.net for @test30:ourmatrixdomain.net\r\nJul 19 12:34:52 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:52,027 - synapse.http.server - 114 - INFO - PUT-5615 - <XForwardedForRequest at 0x7fa276199950 method='PUT' uri='/_synapse/admin/v1/send_server_notice/@test30:ourmatrixdomain.net.ns64b7d814ada6f8.93327386' clientproto='HTTP/1.0' site='8008'> SynapseError: 429 - Too Many Requests\r\nJul 19 12:34:52 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:52,028 - synapse.access.http.8008 - 461 - INFO - PUT-5615 - ::ffff:172.18.0.24 - 8008 - {@root:ourmatrixdomain.net} Processed request: 0.353sec/0.001sec (0.057sec, 0.014sec) (0.020sec/0.074sec/48) 80B 429 \"PUT /_synapse/admin/v1/send_server_notice/@test30:ourmatrixdomain.net.ns64b7d814ada6f8.93327386 HTTP/1.0\" \"Symfony HttpClient/Curl\" [2 dbevts]\r\n\r\nJul 19 12:34:52 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:52,099 - synapse.server_notices.server_notices_manager - 152 - INFO - PUT-5618 - Using existing server notices room !ENwElmoWoVSqgGzEDD:ourmatrixdomain.net for user @test3:ourmatrixdomain.net\r\nJul 19 12:34:52 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:52,108 - synapse.server_notices.server_notices_manager - 76 - INFO - PUT-5618 - Sending server notice to @test3:ourmatrixdomain.net\r\nJul 19 12:34:52 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:52,181 - synapse.access.http.8008 - 461 - INFO - PUT-5618 - ::ffff:172.18.0.24 - 8008 - {@root:ourmatrixdomain.net} Processed request: 0.096sec/0.001sec (0.012sec, 0.004sec) (0.008sec/0.028sec/24) 59B 200 \"PUT /_synapse/admin/v1/send_server_notice/@test3:ourmatrixdomain.net.ns64b7d814ada6f8.93327386 HTTP/1.0\" \"Symfony HttpClient/Curl\" [3 dbevts]\r\n\r\nJul 19 12:34:52 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:52,203 - synapse.server_notices.server_notices_manager - 152 - INFO - PUT-5619 - Using existing server notices room !EuvbdfIWKOZUNEnmsa:ourmatrixdomain.net for user @test4:ourmatrixdomain.net\r\nJul 19 12:34:52 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:52,213 - synapse.server_notices.server_notices_manager - 76 - INFO - PUT-5619 - Sending server notice to @test4:ourmatrixdomain.net\r\nJul 19 12:34:52 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:52,282 - synapse.access.http.8008 - 461 - INFO - PUT-5619 - ::ffff:172.18.0.24 - 8008 - {@root:ourmatrixdomain.net} Processed request: 0.092sec/0.001sec (0.010sec, 0.004sec) (0.008sec/0.029sec/24) 59B 200 \"PUT /_synapse/admin/v1/send_server_notice/@test4:ourmatrixdomain.net.ns64b7d814ada6f8.93327386 HTTP/1.0\" \"Symfony HttpClient/Curl\" [3 dbevts]\r\n\r\nJul 19 12:34:52 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:52,301 - synapse.server_notices.server_notices_manager - 152 - INFO - PUT-5620 - Using existing server notices room !TsKknhuNwXktoPYxbm:ourmatrixdomain.net for user @test5:ourmatrixdomain.net\r\nJul 19 12:34:52 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:52,311 - synapse.server_notices.server_notices_manager - 76 - INFO - PUT-5620 - Sending server notice to @test5:ourmatrixdomain.net\r\nJul 19 12:34:52 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:52,378 - synapse.access.http.8008 - 461 - INFO - PUT-5620 - ::ffff:172.18.0.24 - 8008 - {@root:ourmatrixdomain.net} Processed request: 0.087sec/0.001sec (0.008sec, 0.004sec) (0.007sec/0.028sec/24) 59B 200 \"PUT /_synapse/admin/v1/send_server_notice/@test5:ourmatrixdomain.net.ns64b7d814ada6f8.93327386 HTTP/1.0\" \"Symfony HttpClient/Curl\" [3 dbevts]\r\n\r\nJul 19 12:34:52 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:52,397 - synapse.server_notices.server_notices_manager - 166 - INFO - PUT-5621 - Creating server notices room for @test6:ourmatrixdomain.net\r\nJul 19 12:34:52 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:52,733 - synapse.http.client - 924 - INFO - PUT-5621 - Received response to POST synapse-replication://matrix-synapse-worker-stream-writer-3-account-data/_synapse/replication/add_tag/%40test6%3Aourmatrixdomain.net/%21ZLYxxsMLeIntUnvUly%3Aourmatrixdomain.net/m.server_notice: 200\r\nJul 19 12:34:52 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:52,738 - synapse.server_notices.server_notices_manager - 199 - INFO - PUT-5621 - Created server notices room !ZLYxxsMLeIntUnvUly:ourmatrixdomain.net for @test6:ourmatrixdomain.net\r\nJul 19 12:34:52 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:52,743 - synapse.http.server - 114 - INFO - PUT-5621 - <XForwardedForRequest at 0x7fa27536a6d0 method='PUT' uri='/_synapse/admin/v1/send_server_notice/@test6:ourmatrixdomain.net.ns64b7d814ada6f8.93327386' clientproto='HTTP/1.0' site='8008'> SynapseError: 429 - Too Many Requests\r\nJul 19 12:34:52 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:52,744 - synapse.access.http.8008 - 461 - INFO - PUT-5621 - ::ffff:172.18.0.24 - 8008 - {@root:ourmatrixdomain.net} Processed request: 0.358sec/0.001sec (0.055sec, 0.005sec) (0.019sec/0.079sec/50) 80B 429 \"PUT /_synapse/admin/v1/send_server_notice/@test6:ourmatrixdomain.net.ns64b7d814ada6f8.93327386 HTTP/1.0\" \"Symfony HttpClient/Curl\" [2 dbevts]\r\n\r\nJul 19 12:34:52 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:52,780 - synapse.server_notices.server_notices_manager - 166 - INFO - PUT-5624 - Creating server notices room for @test7:ourmatrixdomain.net\r\nJul 19 12:34:53 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:53,037 - synapse.http.client - 924 - INFO - PUT-5624 - Received response to POST synapse-replication://matrix-synapse-worker-stream-writer-3-account-data/_synapse/replication/add_tag/%40test7%3Aourmatrixdomain.net/%21dEMKYIHEGChqUWMutz%3Aourmatrixdomain.net/m.server_notice: 200\r\nJul 19 12:34:53 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:53,043 - synapse.server_notices.server_notices_manager - 199 - INFO - PUT-5624 - Created server notices room !dEMKYIHEGChqUWMutz:ourmatrixdomain.net for @test7:ourmatrixdomain.net\r\nJul 19 12:34:53 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:53,047 - synapse.http.server - 114 - INFO - PUT-5624 - <XForwardedForRequest at 0x7fa2729124d0 method='PUT' uri='/_synapse/admin/v1/send_server_notice/@test7:ourmatrixdomain.net.ns64b7d814ada6f8.93327386' clientproto='HTTP/1.0' site='8008'> SynapseError: 429 - Too Many Requests\r\nJul 19 12:34:53 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:53,049 - synapse.access.http.8008 - 461 - INFO - PUT-5624 - ::ffff:172.18.0.24 - 8008 - {@root:ourmatrixdomain.net} Processed request: 0.277sec/0.001sec (0.027sec, 0.008sec) (0.013sec/0.064sec/50) 80B 429 \"PUT /_synapse/admin/v1/send_server_notice/@test7:ourmatrixdomain.net.ns64b7d814ada6f8.93327386 HTTP/1.0\" \"Symfony HttpClient/Curl\" [2 dbevts]\r\n\r\nJul 19 12:34:53 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:53,676 - synapse.server_notices.server_notices_manager - 152 - INFO - PUT-5634 - Using existing server notices room !kNOowWmoRFgmmigJQX:ourmatrixdomain.net for user @test:ourmatrixdomain.net\r\nJul 19 12:34:53 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:53,684 - synapse.server_notices.server_notices_manager - 76 - INFO - PUT-5634 - Sending server notice to @test:ourmatrixdomain.net\r\nJul 19 12:34:53 mxbhv-app-mas-nbg matrix-synapse[3355891]: 2023-07-19 12:34:53,749 - synapse.access.http.8008 - 461 - INFO - PUT-5634 - ::ffff:172.18.0.24 - 8008 - {@root:ourmatrixdomain.net} Processed request: 0.084sec/0.001sec (0.012sec, 0.002sec) (0.006sec/0.027sec/25) 59B 200 \"PUT /_synapse/admin/v1/send_server_notice/@test:ourmatrixdomain.net.ns64b7d814ada6f8.93327386 HTTP/1.0\" \"Symfony HttpClient/Curl\" [3 dbevts]\r\n```\r\n\r\n### Anything else that would be useful to know?\r\n\r\nSo looking at the logs, messages go through when the server notices room already exists. If it has to be created, the request is rate limited, but it looks like the room is still created. I don't get that logic.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15974/reactions",
+    "total_count": 2,
+    "+1": 2,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15974/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

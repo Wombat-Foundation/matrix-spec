@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/3538",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/3538/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/3538/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/3538/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/3538",
+  "id": 341357648,
+  "node_id": "MDU6SXNzdWUzNDEzNTc2NDg=",
+  "number": 3538,
+  "title": "Sqlite can end up with valid utf8 sequences which describe invalid codepoints, which break synapse_port_db",
+  "user": {
+    "login": "ara4n",
+    "id": 1294269,
+    "node_id": "MDQ6VXNlcjEyOTQyNjk=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1294269?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/ara4n",
+    "html_url": "https://github.com/ara4n",
+    "followers_url": "https://api.github.com/users/ara4n/followers",
+    "following_url": "https://api.github.com/users/ara4n/following{/other_user}",
+    "gists_url": "https://api.github.com/users/ara4n/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/ara4n/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/ara4n/subscriptions",
+    "organizations_url": "https://api.github.com/users/ara4n/orgs",
+    "repos_url": "https://api.github.com/users/ara4n/repos",
+    "events_url": "https://api.github.com/users/ara4n/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/ara4n/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4195810659,
+      "node_id": "LA_kwDOAVyVwM76Fv1j",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Database",
+      "name": "A-Database",
+      "color": "5319E7",
+      "default": false,
+      "description": "DB stuff like queries, migrations, new/remove columns, indexes, unexpected entries in the db"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2018-07-15T22:24:36Z",
+  "updated_at": "2023-03-07T00:34:14Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Error ends up looking like:\r\n```\r\n2018-07-15 22:54:50,837 - synapse.metrics - 256 - INFO - Collecting gc 0\r\n2018-07-15 22:54:50,936 - synapse_port_db - 562 - ERROR -\r\nTraceback (most recent call last):\r\nFile \"/usr/bin/synapse_port_db\", line 552, in run\r\nconsumeErrors=True,\r\nFirstError: FirstError[#16, [Failure instance: Traceback: <class 'psycopg2.DataError'>: invalid byte sequence for encoding \"UTF8\": 0xed 0xb3 0xb6\r\n\r\n/usr/lib/python2.7/dist-packages/twisted/internet/defer.py:434:errback\r\n/usr/lib/python2.7/dist-packages/twisted/internet/defer.py:501:_startRunCallbacks\r\n/usr/lib/python2.7/dist-packages/twisted/internet/defer.py:588:_runCallbacks\r\n/usr/lib/python2.7/dist-packages/twisted/internet/defer.py:1184:gotResult\r\n--- <exception caught here> ---\r\n/usr/lib/python2.7/dist-packages/twisted/internet/defer.py:1126:_inlineCallbacks\r\n/usr/lib/python2.7/dist-packages/twisted/python/failure.py:389:throwExceptionIntoGenerator\r\n/usr/bin/synapse_port_db:269:handle_table\r\n/usr/lib/python2.7/dist-packages/twisted/internet/defer.py:1126:_inlineCallbacks\r\n/usr/lib/python2.7/dist-packages/twisted/python/failure.py:389:throwExceptionIntoGenerator\r\n/usr/bin/synapse_port_db:428:handle_search_table\r\n/usr/lib/python2.7/dist-packages/twisted/python/threadpool.py:246:inContext\r\n/usr/lib/python2.7/dist-packages/twisted/python/threadpool.py:262:<lambda>\r\n/usr/lib/python2.7/dist-packages/twisted/python/context.py:118:callWithContext\r\n/usr/lib/python2.7/dist-packages/twisted/python/context.py:81:callWithContext\r\n/usr/lib/python2.7/dist-packages/twisted/enterprise/adbapi.py:298:_runWithConnection\r\n/usr/bin/synapse_port_db:138:r\r\n/usr/bin/synapse_port_db:415:insert\r\n/usr/lib/python2.7/dist-packages/synapse/storage/_base.py:90:executemany\r\n/usr/lib/python2.7/dist-packages/synapse/storage/_base.py:117:_do_execute\r\n]]\r\n```\r\nin the event_search logic.\r\n\r\nTurns out that 0xed 0xb3 0xb6 is valid utf8, but describes \\uDCF7 which is not a valid defined codepoint, which postgres barfs on when you try to insert it.\r\n\r\nPython2 doesn't recognise there being anything invalid about it, however.\r\n\r\nThe workaround in the end was to use `iconv_codecs` to use `iconv` to strip invalid codepoints out of the string before handing to postgres, with something like:\r\n\r\n`row[\"value\"].encode(\"iconv:utf8\", \"ignore\").decode(\"utf8\")`\r\n\r\nWhich seemed to work on linux, but fails on macOS.\r\n\r\nThanks to `@flux:matrix.org` for reporting and debugging this!\r\n\r\nThe original cause of the bad data is https://github.com/matrix-org/synapse/issues/3537",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/3538/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/3538/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

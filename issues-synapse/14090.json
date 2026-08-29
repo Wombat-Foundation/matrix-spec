@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14090",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14090/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14090/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14090/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14090",
+  "id": 1400008848,
+  "node_id": "I_kwDOAVyVwM5TcnCQ",
+  "number": 14090,
+  "title": "Synapse is unusably slow after presence enabled.",
+  "user": {
+    "login": "DMRobertson",
+    "id": 8614563,
+    "node_id": "MDQ6VXNlcjg2MTQ1NjM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8614563?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/DMRobertson",
+    "html_url": "https://github.com/DMRobertson",
+    "followers_url": "https://api.github.com/users/DMRobertson/followers",
+    "following_url": "https://api.github.com/users/DMRobertson/following{/other_user}",
+    "gists_url": "https://api.github.com/users/DMRobertson/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/DMRobertson/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/DMRobertson/subscriptions",
+    "organizations_url": "https://api.github.com/users/DMRobertson/orgs",
+    "repos_url": "https://api.github.com/users/DMRobertson/repos",
+    "events_url": "https://api.github.com/users/DMRobertson/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/DMRobertson/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045943,
+      "node_id": "MDU6TGFiZWw0NzcwNDU5NDM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Presence",
+      "name": "A-Presence",
+      "color": "5319e7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    },
+    {
+      "id": 4482661320,
+      "node_id": "LA_kwDOAVyVwM8AAAABCy_7yA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Memory-Usage",
+      "name": "A-Memory-Usage",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2022-10-06T16:47:35Z",
+  "updated_at": "2023-02-13T05:21:34Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "This is an issue to track the problems happening on @tomsisk's deployment of Synapse.\r\n\r\nPreviously discussed on https://github.com/matrix-org/synapse/issues/12160#issuecomment-1144916473, #13955 and #13901.\r\n\r\nSuspect a regression between 1.60 and 1.64, see https://github.com/matrix-org/synapse/issues/12160#issuecomment-1204073333.\r\n\r\n----\r\n\r\nI updated this last night and used it for about an hour with a couple of users. There was nothing of note, presence was working and the service was responsive. So I let the service run over night with presence on and we never saw a huge memory spike, but not many people are online during off hours. By the morning, the service was still running albeit extremely slow. Nothing weird in CPU or memory usage, but it was taking up to 60 seconds to send a message, login, etc. It was running, but unusable, so I had to turn presence off. The slowness is what we normally see after just a couple of minutes if we turn presence on during the day. In those cases, I've never been able to see a huge memory spike like we have in the past, but it seems those may have been connected to specific users.\r\n\r\nQuestion: would it hurt anything if I truncated the `presence_stream` table? I don't know whether it would help anything either, but I noticed there is a lot of data going back a few years that hasn't been updated.\r\n\r\nBack to the topic at hand: even with presence off, there appears to still be a small leak somewhere, I'm hoping these graphs help.\r\nHere's a spike in memory.\r\n<img width=\"715\" alt=\"image\" src=\"https://user-images.githubusercontent.com/3673791/193378421-f389c41d-a9e1-4dbb-af9f-7be726ce33e8.png\">\r\n\r\nWhich coincides with a spike in `_handle_new_device_update_async` calls:\r\n<img width=\"708\" alt=\"image\" src=\"https://user-images.githubusercontent.com/3673791/193378552-27c50b8c-b386-44fb-a53e-762afe25f1d2.png\">\r\n\r\nNow if we look at the cache memory, we see an increase on `getEvent`, but after 30 minutes the metrics say this memory was released. There is no similar drop in memory in the first image.\r\n<img width=\"713\" alt=\"image\" src=\"https://user-images.githubusercontent.com/3673791/193378617-d7325566-073f-4a8d-a9c9-0c29a09dda88.png\">\r\n\r\n_Originally posted by @tomsisk in https://github.com/matrix-org/synapse/issues/13955#issuecomment-1264202558_\r\n      ",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14090/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14090/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

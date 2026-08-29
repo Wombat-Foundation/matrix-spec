@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/9603",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/9603/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/9603/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/9603/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/9603",
+  "id": 830075510,
+  "node_id": "MDU6SXNzdWU4MzAwNzU1MTA=",
+  "number": 9603,
+  "title": "retry device resync doesn't follow exponentially back off algorithm",
+  "user": {
+    "login": "benvei",
+    "id": 56588282,
+    "node_id": "MDQ6VXNlcjU2NTg4Mjgy",
+    "avatar_url": "https://avatars.githubusercontent.com/u/56588282?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/benvei",
+    "html_url": "https://github.com/benvei",
+    "followers_url": "https://api.github.com/users/benvei/followers",
+    "following_url": "https://api.github.com/users/benvei/following{/other_user}",
+    "gists_url": "https://api.github.com/users/benvei/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/benvei/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/benvei/subscriptions",
+    "organizations_url": "https://api.github.com/users/benvei/orgs",
+    "repos_url": "https://api.github.com/users/benvei/repos",
+    "events_url": "https://api.github.com/users/benvei/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/benvei/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 600557921,
+      "node_id": "MDU6TGFiZWw2MDA1NTc5MjE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Performance",
+      "name": "A-Performance",
+      "color": "5319E7",
+      "default": false,
+      "description": "Performance, both client-facing and admin-facing"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2021-03-12T12:33:15Z",
+  "updated_at": "2022-08-30T17:38:05Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "<!--\r\n\r\n**THIS IS NOT A SUPPORT CHANNEL!**\r\n**IF YOU HAVE SUPPORT QUESTIONS ABOUT RUNNING OR CONFIGURING YOUR OWN HOME SERVER**,\r\nplease ask in **#synapse:matrix.org** (using a matrix.org account if necessary)\r\n\r\nIf you want to report a security issue, please see https://matrix.org/security-disclosure-policy/\r\n\r\nThis is a bug report template. By following the instructions below and\r\nfilling out the sections with your information, you will help the us to get all\r\nthe necessary data to fix your issue.\r\n\r\nYou can also preview your report before submitting it. You may remove sections\r\nthat aren't relevant to your particular case.\r\n\r\nText between <!-- and --​> marks will be invisible in the report.\r\n\r\n-->\r\n\r\n### Description\r\n\r\nAs far as I'm aware matrix-synapse should stop syncing to dead servers using an exponential back off algorithm.\r\nReference:\r\nhttps://github.com/matrix-org/synapse/issues/4979\r\nhttps://github.com/matrix-org/synapse/issues/5113\r\n\r\nThis actually doesn't happen if the error is \"No Content-Type header received from remote server\". Most likely the server owner disabled the server and left the reverse proxy online or the domain got resold and now there is another HTTP/HTTPS service on that domain.\r\n\r\nIn my case my server tries to contact it almost twice a minute and is spamming my logs. The exponential back off algorithm does not work in that case.\r\n\r\nLogs in my case:\r\n```\r\n`2021-03-12 12:12:11,582 - synapse.http.matrixfederationclient - 203 - WARNING - _maybe_retry_device_resync-1834 - {GET-O-15116} [PRIVATE.me] Error reading response GET matrix://PRIVATE.me/_matrix/federation/v1/user/devices/%40PRIVATE%3APRIVATE.me: Failed to send request: RuntimeError: No Content-Type header received from remote server`\r\n`2021-03-12 12:12:11,583 - synapse.handlers.device - 866 - WARNING - _maybe_retry_device_resync-1834 - Failed to handle device list update for @PRIVATE:PRIVATE.me: Failed to send request: RuntimeError: No Content-Type header received from remote server`\r\n`2021-03-12 12:12:40,812 - synapse.http.matrixfederationclient - 203 - WARNING - _maybe_retry_device_resync-1835 - {GET-O-15120} [PRIVATE.me] Error reading response GET matrix://PRIVATE.me/_matrix/federation/v1/user/devices/%40PRIVATE%3APRIVATE.me: Failed to send request: RuntimeError: No Content-Type header received from remote server`\r\n`2021-03-12 12:12:40,813 - synapse.handlers.device - 866 - WARNING - _maybe_retry_device_resync-1835 - Failed to handle device list update for @PRIVATE:PRIVATE.me: Failed to send request: RuntimeError: No Content-Type header received from remote server`\r\n`2021-03-12 12:13:10,854 - synapse.http.matrixfederationclient - 203 - WARNING - _maybe_retry_device_resync-1836 - {GET-O-15126} [PRIVATE.me] Error reading response GET matrix://PRIVATE.me/_matrix/federation/v1/user/devices/%40PRIVATE%3APRIVATE.me: Failed to send request: RuntimeError: No Content-Type header received from remote server`\r\n`2021-03-12 12:13:10,854 - synapse.handlers.device - 866 - WARNING - _maybe_retry_device_resync-1836 - Failed to handle device list update for @PRIVATE:PRIVATE.me: Failed to send request: RuntimeError: No Content-Type header received from remote server`\r\n`2021-03-12 12:13:40,815 - synapse.http.matrixfederationclient - 203 - WARNING - _maybe_retry_device_resync-1837 - {GET-O-15130} [PRIVATE.me] Error reading response GET matrix://PRIVATE.me/_matrix/federation/v1/user/devices/%40PRIVATE%3APRIVATE.me: Failed to send request: RuntimeError: No Content-Type header received from remote server`\r\n`2021-03-12 12:13:40,815 - synapse.handlers.device - 866 - WARNING - _maybe_retry_device_resync-1837 - Failed to handle device list update for @PRIVATE:PRIVATE.me: Failed to send request: RuntimeError: No Content-Type header received from remote server`\r\n`2021-03-12 12:14:10,813 - synapse.http.matrixfederationclient - 203 - WARNING - _maybe_retry_device_resync-1838 - {GET-O-15134} [PRIVATE.me] Error reading response GET matrix://PRIVATE.me/_matrix/federation/v1/user/devices/%40PRIVATE%3APRIVATE.me: Failed to send request: RuntimeError: No Content-Type header received from remote server`\r\n`2021-03-12 12:14:10,814 - synapse.handlers.device - 866 - WARNING - _maybe_retry_device_resync-1838 - Failed to handle device list update for @PRIVATE:PRIVATE.me: Failed to send request: RuntimeError: No Content-Type header received from remote server`\r\n`2021-03-12 12:14:40,814 - synapse.http.matrixfederationclient - 203 - WARNING - _maybe_retry_device_resync-1839 - {GET-O-15138} [PRIVATE.me] Error reading response GET matrix://PRIVATE.me/_matrix/federation/v1/user/devices/%40PRIVATE%3APRIVATE.me: Failed to send request: RuntimeError: No Content-Type header received from remote server`\r\n`2021-03-12 12:14:40,815 - synapse.handlers.device - 866 - WARNING - _maybe_retry_device_resync-1839 - Failed to handle device list update for @PRIVATE:PRIVATE.me: Failed to send request: RuntimeError: No Content-Type header received from remote server`\r\n`2021-03-12 12:15:10,814 - synapse.http.matrixfederationclient - 203 - WARNING - _maybe_retry_device_resync-1840 - {GET-O-15142} [PRIVATE.me] Error reading response GET matrix://PRIVATE.me/_matrix/federation/v1/user/devices/%40PRIVATE%3APRIVATE.me: Failed to send request: RuntimeError: No Content-Type header received from remote server`\r\n`2021-03-12 12:15:10,814 - synapse.handlers.device - 866 - WARNING - _maybe_retry_device_resync-1840 - Failed to handle device list update for @PRIVATE:PRIVATE.me: Failed to send request: RuntimeError: No Content-Type header received from remote server\r\n```\r\n\r\n### Steps to reproduce\r\n\r\n- install synapse\r\n- find a user whose server is returning no content-type header\r\n- check logs\r\n\r\n<!--\r\nDescribe how what happens differs from what you expected.\r\n\r\nIf you can identify any relevant log snippets from _homeserver.log_, please include\r\nthose (please be careful to remove any personal or private data). Please surround them with\r\n``` (three backticks, on a line on their own), so that they are formatted legibly.\r\n-->\r\n\r\n### Version information\r\n\r\n<!-- IMPORTANT: please answer the following questions, to help us narrow down the problem -->\r\n\r\n<!-- Was this issue identified on matrix.org or another homeserver? -->\r\n- **Homeserver**:\r\n\r\n<!--\r\n What version of Synapse is running?\r\n\r\nYou can find the Synapse version with this command:\r\n\r\n$ curl http://localhost:8008/_synapse/admin/v1/server_version\r\n\r\n(You may need to replace `localhost:8008` if Synapse is not configured to\r\nlisten on that port.)\r\n-->\r\n- **Version**: 1.29.0+buster1\r\n\r\n- **Install method**: Debian Package Manager\r\n<!-- examples: package manager/git clone/pip  -->\r\n\r\n- **Platform**: Debian, LXC Container\r\n<!--\r\nTell us about the environment in which your homeserver is operating\r\ndistro, hardware, if it's running in a vm/container, etc.\r\n-->\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/9603/reactions",
+    "total_count": 3,
+    "+1": 3,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/9603/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

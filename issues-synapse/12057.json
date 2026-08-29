@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/12057",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/12057/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/12057/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/12057/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/12057",
+  "id": 1146823433,
+  "node_id": "I_kwDOAVyVwM5EWyMJ",
+  "number": 12057,
+  "title": "Admin API cannot create deactivated users",
+  "user": {
+    "login": "tadzik",
+    "id": 86378,
+    "node_id": "MDQ6VXNlcjg2Mzc4",
+    "avatar_url": "https://avatars.githubusercontent.com/u/86378?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/tadzik",
+    "html_url": "https://github.com/tadzik",
+    "followers_url": "https://api.github.com/users/tadzik/followers",
+    "following_url": "https://api.github.com/users/tadzik/following{/other_user}",
+    "gists_url": "https://api.github.com/users/tadzik/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/tadzik/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/tadzik/subscriptions",
+    "organizations_url": "https://api.github.com/users/tadzik/orgs",
+    "repos_url": "https://api.github.com/users/tadzik/repos",
+    "events_url": "https://api.github.com/users/tadzik/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/tadzik/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 845245048,
+      "node_id": "MDU6TGFiZWw4NDUyNDUwNDg=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Docs",
+      "name": "A-Docs",
+      "color": "5319E7",
+      "default": false,
+      "description": "things relating to the documentation"
+    },
+    {
+      "id": 1507817868,
+      "node_id": "MDU6TGFiZWwxNTA3ODE3ODY4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Admin-API",
+      "name": "A-Admin-API",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406413,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDEz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Task",
+      "name": "T-Task",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Refactoring, removal, replacement, enabling or disabling functionality, other engineering tasks."
+    },
+    {
+      "id": 5345655364,
+      "node_id": "LA_kwDOAVyVwM8AAAABPqA6RA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Account-Deactivation",
+      "name": "A-Account-Deactivation",
+      "color": "5319E7",
+      "default": false,
+      "description": "\"Deleting\"/\"Removing\" a user, GDPR erasure (erased)"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2022-02-22T12:01:41Z",
+  "updated_at": "2023-04-03T17:06:38Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nWhen using [Admin API to create new users](https://matrix-org.github.io/synapse/develop/admin_api/user_admin_api.html#create-or-modify-account), the `deactivated` body attribute is ignored. According to the docs, \"**If unspecified**, deactivation state will be left unchanged on existing accounts **and set to false for new accounts**\". It seems like it's set to false for new accounts regardless of what the attribute is set to.\r\n\r\n### Steps to reproduce\r\n\r\n- Create a new user with the admin API:\r\n\r\n```\r\n    PUT /_synapse/admin/v2/users/@jsmith:server {\r\n        displayname: 'Jacob Smith',\r\n        password: 'hello.code.reviewer',\r\n        deactivated: true\r\n    }\r\n```\r\n\r\n- The response indicates that the user is not deactivated, contrary to what was requested:\r\n\r\n```\r\n{\r\n  name: '@jsmith:server',\r\n  is_guest: 0,\r\n  admin: 0,\r\n  consent_version: null,\r\n  consent_server_notice_sent: null,\r\n  appservice_id: null,\r\n  creation_ts: 1645530918,\r\n  user_type: null,\r\n  deactivated: 0,\r\n  shadow_banned: 0,\r\n  displayname: 'Jacob Smith',\r\n  avatar_url: null,\r\n  threepids: [],\r\n  external_ids: []\r\n}\r\n\r\n```\r\n\r\n- The user can login, even though they shouldn't be able to.\r\n\r\nIt'd be fair if that option was unsupported during user creation, but the docs don't indicate that it is. It should either work as expected, or be documented (and preferably return a 400 when used) not to.\r\n\r\n### Version information\r\n\r\nSynapse 1.51.0 running under docker with [homerunner](https://github.com/matrix-org/complement/tree/main/cmd/homerunner).",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/12057/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/12057/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

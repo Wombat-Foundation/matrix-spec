@@ -1,0 +1,140 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15012",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15012/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15012/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15012/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15012",
+  "id": 1574124413,
+  "node_id": "I_kwDOAVyVwM5d0zt9",
+  "number": 15012,
+  "title": "Federation automatic joins raise 403 on callee homeserver",
+  "user": {
+    "login": "csuriano23",
+    "id": 34414634,
+    "node_id": "MDQ6VXNlcjM0NDE0NjM0",
+    "avatar_url": "https://avatars.githubusercontent.com/u/34414634?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/csuriano23",
+    "html_url": "https://github.com/csuriano23",
+    "followers_url": "https://api.github.com/users/csuriano23/followers",
+    "following_url": "https://api.github.com/users/csuriano23/following{/other_user}",
+    "gists_url": "https://api.github.com/users/csuriano23/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/csuriano23/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/csuriano23/subscriptions",
+    "organizations_url": "https://api.github.com/users/csuriano23/orgs",
+    "repos_url": "https://api.github.com/users/csuriano23/repos",
+    "events_url": "https://api.github.com/users/csuriano23/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/csuriano23/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1771241792,
+      "node_id": "MDU6TGFiZWwxNzcxMjQxNzky",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federated-Join",
+      "name": "A-Federated-Join",
+      "color": "5319E7",
+      "default": false,
+      "description": "joins over federation generally suck"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 3537596628,
+      "node_id": "LA_kwDOAVyVwM7S23DU",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Modules",
+      "name": "A-Modules",
+      "color": "5319E7",
+      "default": false,
+      "description": "Module API: https://matrix-org.github.io/synapse/latest/modules/index.html"
+    },
+    {
+      "id": 4137743886,
+      "node_id": "LA_kwDOAVyVwM72oPYO",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Invite",
+      "name": "A-Invite",
+      "color": "5319E7",
+      "default": false,
+      "description": "Inviting users to rooms and accepting invites"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 4683012001,
+      "node_id": "LA_kwDOAVyVwM8AAAABFyEXoQ",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Read-After-Write",
+      "name": "Z-Read-After-Write",
+      "color": "BFD4F2",
+      "default": false,
+      "description": "A lack of read-after-write consistency, usually due to cache invalidation races with workers"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2023-02-07T11:05:07Z",
+  "updated_at": "2023-02-08T12:06:06Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nI have two federated homeservers, call them `alpha` and `beta`.\r\n\r\nOn both servers it is installed the [synapse-auto-accept-invite plugin](https://github.com/matrix-org/synapse-auto-accept-invite) that triggers a join as a third-party rule each time a user is invited to a room.\r\n\r\nWhen I create a room on `alpha` and then I invite an user of `beta` the rule is triggered, but it fails, below the stacktrace on `beta` homeserver (see also [this issue](https://github.com/matrix-org/synapse-auto-accept-invite/issues/12)):\r\n\r\n```\r\n2023-02-07 11:49:38 2023-02-07 10:49:38,629 - synapse.events.third_party_rules - 406 - ERROR - PUT-625 - Failed to run module API callback <bound method InviteAutoAccepter.on_new_event of <synapse_auto_accept_invite.InviteAutoAccepter object at 0xffff99f762b0>>: 403: You are not invited to this room.\r\n2023-02-07 11:49:38 Traceback (most recent call last):\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/federation/federation_client.py\", line 852, in _try_destination_list\r\n2023-02-07 11:49:38     return await callback(destination)\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/federation/federation_client.py\", line 962, in send_request\r\n2023-02-07 11:49:38     ret = await self.transport_layer.make_membership_event(\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/federation/transport/client.py\", line 324, in make_membership_event\r\n2023-02-07 11:49:38     return await self.client.get_json(\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/http/matrixfederationclient.py\", line 1077, in get_json\r\n2023-02-07 11:49:38     response = await self._send_request_with_optional_trailing_slash(\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/http/matrixfederationclient.py\", line 406, in _send_request_with_optional_trailing_slash\r\n2023-02-07 11:49:38     response = await self._send_request(request, **send_request_args)\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/http/matrixfederationclient.py\", line 668, in _send_request\r\n2023-02-07 11:49:38     raise exc\r\n2023-02-07 11:49:38 synapse.api.errors.HttpResponseException: 403: Forbidden\r\n2023-02-07 11:49:38 \r\n2023-02-07 11:49:38 The above exception was the direct cause of the following exception:\r\n2023-02-07 11:49:38 \r\n2023-02-07 11:49:38 Traceback (most recent call last):\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/events/third_party_rules.py\", line 404, in on_new_event\r\n2023-02-07 11:49:38     await callback(event, state_events)\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse_auto_accept_invite/__init__.py\", line 99, in on_new_event\r\n2023-02-07 11:49:38     await self._api.update_room_membership(\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/module_api/__init__.py\", line 1063, in update_room_membership\r\n2023-02-07 11:49:38     event_id, _ = await self._hs.get_room_member_handler().update_membership(\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/handlers/room_member.py\", line 597, in update_membership\r\n2023-02-07 11:49:38     result = await self.update_membership_locked(\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/handlers/room_member.py\", line 965, in update_membership_locked\r\n2023-02-07 11:49:38     remote_join_response = await self._remote_join(\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/handlers/room_member.py\", line 1747, in _remote_join\r\n2023-02-07 11:49:38     event_id, stream_id = await self.federation_handler.do_invite_join(\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/handlers/federation.py\", line 574, in do_invite_join\r\n2023-02-07 11:49:38     origin, event, room_version_obj = await self._make_and_verify_event(\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/handlers/federation.py\", line 1082, in _make_and_verify_event\r\n2023-02-07 11:49:38     ) = await self.federation_client.make_membership_event(\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/federation/federation_client.py\", line 1014, in make_membership_event\r\n2023-02-07 11:49:38     return await self._try_destination_list(\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/federation/federation_client.py\", line 894, in _try_destination_list\r\n2023-02-07 11:49:38     raise synapse_error from e\r\n2023-02-07 11:49:38 synapse.api.errors.ProxiedRequestError: 403: You are not invited to this room.\r\n```\r\n\r\nOn `alpha` homeserver here is the stacktrace (I've patched the original code on /synapse/http/server.py:_async_render_wrapper, line ~315 in order to print this):\r\n```\r\n2023-02-07 11:49:38 Traceback (most recent call last):\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/http/server.py\", line 307, in _async_render_wrapper\r\n2023-02-07 11:49:38     callback_return = await self._async_render(request)\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/http/server.py\", line 514, in _async_render\r\n2023-02-07 11:49:38     callback_return = await raw_callback_return\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/federation/transport/server/_base.py\", line 349, in new_func\r\n2023-02-07 11:49:38     response = await func(\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/federation/transport/server/federation.py\", line 291, in on_GET\r\n2023-02-07 11:49:38     result = await self.handler.on_make_join_request(\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/federation/federation_server.py\", line 647, in on_make_join_request\r\n2023-02-07 11:49:38     pdu = await self.handler.on_make_join_request(origin, room_id, user_id)\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/handlers/federation.py\", line 952, in on_make_join_request\r\n2023-02-07 11:49:38     await self._event_auth_handler.check_auth_rules_from_context(event)\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/handlers/event_auth.py\", line 69, in check_auth_rules_from_context\r\n2023-02-07 11:49:38     check_state_dependent_auth_rules(event, auth_events_by_id.values())\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/event_auth.py\", line 304, in check_state_dependent_auth_rules\r\n2023-02-07 11:49:38     _is_membership_change_allowed(event.room_version, event, auth_dict)\r\n2023-02-07 11:49:38   File \"/usr/local/lib/python3.9/site-packages/synapse/event_auth.py\", line 649, in _is_membership_change_allowed\r\n2023-02-07 11:49:38     raise AuthError(403, \"You are not invited to this room.\")\r\n2023-02-07 11:49:38 synapse.api.errors.AuthError: 403: You are not invited to this room.\r\n```\r\n\r\nThis is due to the fact that events received by the function /synapse/event_auth.py:_is_membership_change_allowed (arg `auth_events`) are these (once again patched version with more logging):\r\n```\r\n[{('m.room.power_levels', ''): <FrozenEventV3 event_id=$QBnOW4DH8asI1Sjbb4cEp1kGF1DHO3kOxBeuHilgfjs, type=m.room.power_levels, state_key=, outlier=False>, ('m.room.join_rules', ''): <FrozenEventV3 event_id=$jonFOBLPEwbG3oTctHGv8s-LYw7SW0s7bW5eXiKq3z0, type=m.room.join_rules, state_key=, outlier=False>, ('m.room.create', ''): <FrozenEventV3 event_id=$s6joCXpyxW38sPpSE6dWS_2A62Op39z71awJ0lZAU6U, type=m.room.create, state_key=, outlier=False>}]\r\n```\r\n\r\nWhen I manually accept from the beta client everything goes ok and the auth events logged are different (call from beta server is the same, I've compared the url):\r\n```\r\n[{('m.room.power_levels', ''): <FrozenEventV3 event_id=$QBnOW4DH8asI1Sjbb4cEp1kGF1DHO3kOxBeuHilgfjs, type=m.room.power_levels, state_key=, outlier=False>, ('m.room.join_rules', ''): <FrozenEventV3 event_id=$jonFOBLPEwbG3oTctHGv8s-LYw7SW0s7bW5eXiKq3z0, type=m.room.join_rules, state_key=, outlier=False>, ('m.room.member', '@betauser:beta.dbridge.dev'): <FrozenEventV3 event_id=$ym49hJLGIrVg094rFk2C0DdAfF1s92FNGevTfosF6I4, type=m.room.member, state_key=@betauser:beta.dbridge.dev, outlier=False>, ('m.room.create', ''): <FrozenEventV3 event_id=$s6joCXpyxW38sPpSE6dWS_2A62Op39z71awJ0lZAU6U, type=m.room.create, state_key=, outlier=False>}]\r\n```\r\n\r\nEven hardcoding a `time.sleep(30)` on the third-party rule doesn't seem to solve the issue. I've also tried patching the third party rule to retry N times with backoff factor, but still the same issue.\r\n\r\nIs this inconsistent behavior on event storage a known issue?\r\nIf yes, has a fix already been planned?\r\nAre there workaround possible?\r\n\r\n### Steps to reproduce\r\n\r\nSee description\r\n\r\n### Homeserver\r\n\r\nlocal homeserver\r\n\r\n### Synapse Version\r\n\r\n1.75.0\r\n\r\n### Installation Method\r\n\r\nDocker (matrixdotorg/synapse)\r\n\r\n### Database\r\n\r\nPostgreSQL, no separate servers, no porting, no restoring\r\n\r\n### Workers\r\n\r\nSingle process\r\n\r\n### Platform\r\n\r\nSee docker image matrixdotorg/synapse:v1.75.0\r\n\r\n### Configuration\r\n\r\nThird party plugin:\r\n```\r\nmodules:\r\n  - module: synapse_auto_accept_invite.InviteAutoAccepter\r\n    config:\r\n      accept_invites_only_for_direct_messages: false\r\n```\r\n\r\n### Relevant log output\r\n\r\n```shell\r\nSee description\r\n```\r\n\r\n\r\n### Anything else that would be useful to know?\r\n\r\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15012/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15012/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

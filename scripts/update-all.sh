@@ -12,3 +12,9 @@ for script in "$script_dir"/update-*.sh; do
 	"$script"
 	echo ""
 done
+
+echo "=========================================="
+echo "Running update-issues.sh for matrix-org/synapse..."
+echo "=========================================="
+GH_REPO="matrix-org/synapse" TARGET_DIR="issues-synapse" "$script_dir/update-issues.sh"
+echo ""

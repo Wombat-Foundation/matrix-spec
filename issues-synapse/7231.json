@@ -1,0 +1,140 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/7231",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/7231/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/7231/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/7231/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/7231",
+  "id": 595415581,
+  "node_id": "MDU6SXNzdWU1OTU0MTU1ODE=",
+  "number": 7231,
+  "title": "dropping requests to .well-known leads to slow media federation",
+  "user": {
+    "login": "deepbluev7",
+    "id": 16312324,
+    "node_id": "MDQ6VXNlcjE2MzEyMzI0",
+    "avatar_url": "https://avatars.githubusercontent.com/u/16312324?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/deepbluev7",
+    "html_url": "https://github.com/deepbluev7",
+    "followers_url": "https://api.github.com/users/deepbluev7/followers",
+    "following_url": "https://api.github.com/users/deepbluev7/following{/other_user}",
+    "gists_url": "https://api.github.com/users/deepbluev7/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/deepbluev7/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/deepbluev7/subscriptions",
+    "organizations_url": "https://api.github.com/users/deepbluev7/orgs",
+    "repos_url": "https://api.github.com/users/deepbluev7/repos",
+    "events_url": "https://api.github.com/users/deepbluev7/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/deepbluev7/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086029,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMjk=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-bug",
+      "name": "z-bug",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 477043173,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p2",
+      "name": "z-p2",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 477045806,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDY=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Media-Repository",
+      "name": "A-Media-Repository",
+      "color": "5319E7",
+      "default": false,
+      "description": "Uploading, downloading images and video, thumbnailing"
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2020-04-06T20:44:43Z",
+  "updated_at": "2023-05-23T15:22:58Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "<!--\r\n\r\n**IF YOU HAVE SUPPORT QUESTIONS ABOUT RUNNING OR CONFIGURING YOUR OWN HOME SERVER**:\r\nYou will likely get better support more quickly if you ask in ** #synapse:matrix.org ** ;)\r\n\r\n\r\nThis is a bug report template. By following the instructions below and\r\nfilling out the sections with your information, you will help the us to get all\r\nthe necessary data to fix your issue.\r\n\r\nYou can also preview your report before submitting it. You may remove sections\r\nthat aren't relevant to your particular case.\r\n\r\nText between <!-- and --​> marks will be invisible in the report.\r\n\r\n-->\r\n\r\n### Description\r\n\r\n<!-- Describe here the problem that you are experiencing -->\r\n\r\nWhen a server has it's firewall set to drop incoming requests to ports it doesn't use (pf default for the block rule) and doesn't use .well-known (so it drops requests to 443, specifically `https://server:443/.well-known/matrix/server`), every media request needs to wait for the .well-known request to timeout, before it actually starts fetching the media. So every image in a shared room takes around 30 seconds to load over federation.\r\n\r\n### Steps to reproduce\r\n\r\n- set up a server A, that only runs on port 8448\r\n- set the firewall of server A to drop requests on port 443 (use SRV or default 8448 for federation setup)\r\n- set up server B\r\n- share a room between server A and B\r\n- let server A send an image\r\n\r\nServer B will now wait for 30 seconds on the .well-known timeout, before it sends the actual media request. This happens for every media!\r\n\r\n### Expected behaviour\r\n\r\nServer B caches the .well-known result and only waits for 30 seconds on the first timeout. Maybe it is just the media worker, that doesn't do that.\r\n\r\n<!--\r\nDescribe how what happens differs from what you expected.\r\n\r\nIf you can identify any relevant log snippets from _homeserver.log_, please include\r\nthose (please be careful to remove any personal or private data). Please surround them with\r\n``` (three backticks, on a line on their own), so that they are formatted legibly.\r\n-->\r\nrelevant logs:\r\n\r\n```\r\n2020-04-05 21:39:01,516 - synapse.http.matrixfederationclient - 408 - INFO - GET-11022 - {GET-O-345} [pink.packageloss.eu] Sending request: GET matrix://pink.packageloss.eu/_matrix/media/v1/download/pink.packageloss.eu/3d1a80ed7d2b89457d96e5212f2378a958b7560c?allow_remote=false; timeout 60.000000s\r\n2020-04-05 21:39:01,517 - synapse.http.federation.well_known_resolver - 234 - INFO - GET-11022 - Fetching https://pink.packageloss.eu/.well-known/matrix/server\r\n2020-04-05 21:39:03,892 - synapse.access.http.8085 - 302 - INFO - GET-11023 - 127.0.0.1 - 8085 - {None} Processed request: 0.003sec/-0.000sec (0.002sec, 0.000sec) (0.001sec/0.001sec/1) 6756B 200 \"GET /_matrix/media/r0/download/pink.packageloss.eu/b195fb40cab5095adf1551b876d99610bad24f60 HTTP/1.0\" \"mtxclient v0.3.0\" [0 dbevts]\r\n2020-04-05 21:39:31,825 - synapse.http.federation.well_known_resolver - 250 - INFO - GET-11022 - Error fetching https://pink.packageloss.eu/.well-known/matrix/server: User timeout caused connection failure.\r\n2020-04-05 21:39:31,828 - synapse.http.federation.matrix_federation_agent - 242 - INFO - GET-11022 - Connecting to pink.packageloss.eu:8448\r\n2020-04-05 21:39:32,211 - synapse.http.matrixfederationclient - 442 - INFO - GET-11022 - {GET-O-345} [pink.packageloss.eu] Got response headers: 200 OK\r\n2020-04-05 21:39:32,212 - synapse.http.matrixfederationclient - 909 - INFO - GET-11022 - {GET-O-345} [pink.packageloss.eu] Completed: 200 OK [14490 bytes]\r\n2020-04-05 21:39:32,212 - synapse.rest.media.v1.media_repository - 406 - INFO - GET-11022 - Stored remote media in file '/var/lib/synapse/media_store/remote_content/pink.packageloss.eu/td/yY/oLPpEPNArfeZksvNvGWv'\r\n2020-04-05 21:39:32,356 - synapse.access.http.8085 - 302 - INFO - GET-11022 - ::1 - 8085 - {None} Processed request: 30.857sec/-0.000sec (0.047sec, 0.001sec) (0.003sec/0.110sec/7) 14490B 200 \"GET /_matrix/media/r0/download/pink.packageloss.eu/3d1a80ed7d2b89457d96e5212f2378a958b7560c HTTP/1.0\" \"mtxclient v0.3.0\" [0 dbevts]\r\n```\r\n### Version information\r\n\r\n<!-- IMPORTANT: please answer the following questions, to help us narrow down the problem -->\r\n\r\n<!-- Was this issue identified on matrix.org or another homeserver? -->\r\n- **Homeserver**: pink.packageloss.eu (server A) and neko.dev (server B)\r\n\r\nIf not matrix.org:\r\n\r\n<!--\r\n What version of Synapse is running?\r\n\r\nYou can find the Synapse version with this command:\r\n\r\n$ curl http://localhost:8008/_synapse/admin/v1/server_version\r\n\r\n(You may need to replace `localhost:8008` if Synapse is not configured to\r\nlisten on that port.)\r\n-->\r\n- **Version**: 10.x and 12.3\r\n\r\n- **Install method**: ports/ebuild\r\n<!-- examples: package manager/git clone/pip  -->\r\n\r\n- **Platform**: FreeBSD/Gentoo\r\n<!--\r\nTell us about the environment in which your homeserver is operating\r\ndistro, hardware, if it's running in a vm/container, etc.\r\n-->\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/7231/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/7231/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

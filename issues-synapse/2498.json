@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/2498",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/2498/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/2498/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/2498/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/2498",
+  "id": 263005075,
+  "node_id": "MDU6SXNzdWUyNjMwMDUwNzU=",
+  "number": 2498,
+  "title": "Logically should not be able to leave a user who is not in the room",
+  "user": {
+    "login": "turt2live",
+    "id": 1190097,
+    "node_id": "MDQ6VXNlcjExOTAwOTc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1190097?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/turt2live",
+    "html_url": "https://github.com/turt2live",
+    "followers_url": "https://api.github.com/users/turt2live/followers",
+    "following_url": "https://api.github.com/users/turt2live/following{/other_user}",
+    "gists_url": "https://api.github.com/users/turt2live/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/turt2live/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/turt2live/subscriptions",
+    "organizations_url": "https://api.github.com/users/turt2live/orgs",
+    "repos_url": "https://api.github.com/users/turt2live/repos",
+    "events_url": "https://api.github.com/users/turt2live/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/turt2live/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137895389,
+      "node_id": "LA_kwDOAVyVwM72o0Xd",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Membership",
+      "name": "A-Membership",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 5432652643,
+      "node_id": "LA_kwDOAVyVwM8AAAABQ8-zYw",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Leave",
+      "name": "A-Leave",
+      "color": "5319E7",
+      "default": false,
+      "description": "Leaving a room"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2017-10-05T05:00:43Z",
+  "updated_at": "2023-06-15T19:21:42Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "<!-- \r\n\r\n**IF YOU HAVE SUPPORT QUESTIONS ABOUT RUNNING OR CONFIGURING YOUR OWN HOME SERVER**: \r\nYou will likely get better support more quickly if you ask in ** #matrix:matrix.org ** ;)\r\n\r\n\r\nThis is a bug report template. By following the instructions below and\r\nfilling out the sections with your information, you will help the us to get all\r\nthe necessary data to fix your issue.\r\n\r\nYou can also preview your report before submitting it. You may remove sections\r\nthat aren't relevant to your particular case.\r\n\r\nText between <!-- and --​> marks will be invisible in the report.\r\n\r\n-->\r\n\r\n### Description\r\n\r\nThis is only possible by doing something weird/manual. It shouldn't come up in normal operation, although I was surprised it was possible.\r\n\r\n### Steps to reproduce\r\n\r\n- Send a leave event for someone not in the room (and never has been)\r\n\r\nI would have expected an error, but instead the event carries through. This confuses some clients (Riot) into thinking someone left the room when in fact they were never there.\r\n\r\n### Version information\r\n\r\n<!-- IMPORTANT: please answer the following questions, to help us narrow down the problem -->\r\n\r\n- **Homeserver**: t2l.io\r\n- **Version**:        0.23.1\r\n- **Install method**: pip\r\n- **Platform**:       Ubuntu 16.04 (under an LXC container)\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/2498/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/2498/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

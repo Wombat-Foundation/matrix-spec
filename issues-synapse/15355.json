@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15355",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15355/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15355/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15355/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15355",
+  "id": 1647897436,
+  "node_id": "I_kwDOAVyVwM5iOOtc",
+  "number": 15355,
+  "title": "Deactivate user with `erase: true` does not delete user `displayname` in historical membership events as it is mentioned in the doc GDPR issue",
+  "user": {
+    "login": "AnassDriate",
+    "id": 112070976,
+    "node_id": "U_kgDOBq4RQA",
+    "avatar_url": "https://avatars.githubusercontent.com/u/112070976?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/AnassDriate",
+    "html_url": "https://github.com/AnassDriate",
+    "followers_url": "https://api.github.com/users/AnassDriate/followers",
+    "following_url": "https://api.github.com/users/AnassDriate/following{/other_user}",
+    "gists_url": "https://api.github.com/users/AnassDriate/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/AnassDriate/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/AnassDriate/subscriptions",
+    "organizations_url": "https://api.github.com/users/AnassDriate/orgs",
+    "repos_url": "https://api.github.com/users/AnassDriate/repos",
+    "events_url": "https://api.github.com/users/AnassDriate/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/AnassDriate/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 845245048,
+      "node_id": "MDU6TGFiZWw4NDUyNDUwNDg=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Docs",
+      "name": "A-Docs",
+      "color": "5319E7",
+      "default": false,
+      "description": "things relating to the documentation"
+    },
+    {
+      "id": 1554244657,
+      "node_id": "MDU6TGFiZWwxNTU0MjQ0NjU3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Moderation",
+      "name": "A-Moderation",
+      "color": "5319E7",
+      "default": false,
+      "description": "Tools for moderating HSes: event redaction, media removal, purge admin API, reports from users, ..."
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    },
+    {
+      "id": 5345655364,
+      "node_id": "LA_kwDOAVyVwM8AAAABPqA6RA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Account-Deactivation",
+      "name": "A-Account-Deactivation",
+      "color": "5319E7",
+      "default": false,
+      "description": "\"Deleting\"/\"Removing\" a user, GDPR erasure (erased)"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2023-03-30T15:57:11Z",
+  "updated_at": "2023-04-29T20:35:07Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nHello,\r\n\r\nIn the [official documentation](https://github.com/matrix-org/synapse/blob/56efa9b1672abcdf1f42bebcc3c7dd0b4fa40067/docs/admin_api/user_admin_api.md?plain=1#L360-L361), `erase : true` should delete `displayname` **BUT is not the case** \r\n\r\nI am still able to see the user display name when I query our room. \r\n\r\n<img width=\"514\" alt=\"Screenshot 2023-03-30 at 17 58 37\" src=\"https://user-images.githubusercontent.com/112070976/228895342-7b5100ff-8bfa-4d7c-8bfc-9fd0faa4c325.png\">\r\n\r\n\r\n### Steps to reproduce\r\n\r\n 1. Create a user with a `displayname`\r\n 1. Deactivate a user with `erase : true `\r\n 2. Query the room where the user was joined\r\n\r\n### Homeserver\r\n\r\nmy private server\r\n\r\n### Synapse Version\r\n\r\nsynapse version 1.79\r\n\r\n### Installation Method\r\n\r\nDebian packages from packages.matrix.org\r\n\r\n### Database\r\n\r\npostgres \r\n\r\n### Workers\r\n\r\nSingle process\r\n\r\n### Platform\r\n\r\nAll\r\n\r\n### Configuration\r\n\r\n_No response_\r\n\r\n### Relevant log output\r\n\r\n```shell\r\nPlease see the attached picture\r\n```\r\n\r\n\r\n### Anything else that would be useful to know?\r\n\r\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15355/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15355/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16214",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16214/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16214/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16214/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16214",
+  "id": 1874117537,
+  "node_id": "I_kwDOAVyVwM5vtMOh",
+  "number": 16214,
+  "title": "Update docs about Synapse from Debian's repos",
+  "user": {
+    "login": "GreenReaper",
+    "id": 383043,
+    "node_id": "MDQ6VXNlcjM4MzA0Mw==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/383043?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/GreenReaper",
+    "html_url": "https://github.com/GreenReaper",
+    "followers_url": "https://api.github.com/users/GreenReaper/followers",
+    "following_url": "https://api.github.com/users/GreenReaper/following{/other_user}",
+    "gists_url": "https://api.github.com/users/GreenReaper/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/GreenReaper/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/GreenReaper/subscriptions",
+    "organizations_url": "https://api.github.com/users/GreenReaper/orgs",
+    "repos_url": "https://api.github.com/users/GreenReaper/repos",
+    "events_url": "https://api.github.com/users/GreenReaper/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/GreenReaper/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086032,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMzI=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Help-Wanted",
+      "name": "Z-Help-Wanted",
+      "color": "006B0F",
+      "default": false,
+      "description": "We know exactly how to fix this issue, and would be grateful for any contribution"
+    },
+    {
+      "id": 845245048,
+      "node_id": "MDU6TGFiZWw4NDUyNDUwNDg=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Docs",
+      "name": "A-Docs",
+      "color": "5319E7",
+      "default": false,
+      "description": "things relating to the documentation"
+    },
+    {
+      "id": 2674406235,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MjM1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/good%20first%20issue",
+      "name": "good first issue",
+      "color": "0E8A16",
+      "default": true,
+      "description": "Good for newcomers"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2023-08-30T17:45:40Z",
+  "updated_at": "2023-09-25T17:41:08Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "[Synapse was removed from Debian bookworm at the end of May](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1036806) on the grounds that this project could not guarantee code reviews of CVE backports. There are also [open security issues in sid](https://tracker.debian.org/pkg/matrix-synapse), although it technically remains installable there.\r\n\r\nThe documentation [offering Debian's own repo as an installation option](https://matrix-org.github.io/synapse/latest/setup/installation.html#downstream-debian-packages) as \"maintained\" is therefore out of date and should be updated, perhaps merging it with the Ubuntu section below until the situation changes.\r\n\r\n(I think this situation is unfortunate because installing an additional repo is a hurdle to usage, and 1.78 could still have been a reasonable support target, but this issue is just about updating the documentation.)",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16214/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16214/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

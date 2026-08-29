@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/12862",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/12862/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/12862/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/12862/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/12862",
+  "id": 1247158308,
+  "node_id": "I_kwDOAVyVwM5KViAk",
+  "number": 12862,
+  "title": "`python3 -m synapse.config` attempts to create directories for the media store",
+  "user": {
+    "login": "richvdh",
+    "id": 1389908,
+    "node_id": "MDQ6VXNlcjEzODk5MDg=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1389908?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/richvdh",
+    "html_url": "https://github.com/richvdh",
+    "followers_url": "https://api.github.com/users/richvdh/followers",
+    "following_url": "https://api.github.com/users/richvdh/following{/other_user}",
+    "gists_url": "https://api.github.com/users/richvdh/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/richvdh/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/richvdh/subscriptions",
+    "organizations_url": "https://api.github.com/users/richvdh/orgs",
+    "repos_url": "https://api.github.com/users/richvdh/repos",
+    "events_url": "https://api.github.com/users/richvdh/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/richvdh/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045806,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDY=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Media-Repository",
+      "name": "A-Media-Repository",
+      "color": "5319E7",
+      "default": false,
+      "description": "Uploading, downloading images and video, thumbnailing"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2022-05-24T21:46:36Z",
+  "updated_at": "2022-09-20T13:18:42Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "`python3 -m synapse.config -c homeserver.yaml` should just validate the config, but it also attempts to create directories:\r\n\r\n```\r\n$ python3 -m synapse.config -c ~/src/nixpkgs/homeserver.yaml \r\nYou have set two incompatible options, expiry_time and expire_caches. Please only use the expire_caches and cache_entry_ttl options and delete the expiry_time option as it is deprecated.\r\nExpiry_time is a deprecated option, please use the expire_caches and cache_entry_ttl options instead.\r\nTraceback (most recent call last):\r\n  File \"/nix/store/wnrc4daqbd6v5ifqlxsj75ky8556zy0p-python3-3.9.12/lib/python3.9/runpy.py\", line 197, in _run_module_as_main\r\n    return _run_code(code, main_globals, None,\r\n  File \"/nix/store/wnrc4daqbd6v5ifqlxsj75ky8556zy0p-python3-3.9.12/lib/python3.9/runpy.py\", line 87, in _run_code\r\n    exec(code, run_globals)\r\n  File \"/tmp/venv/lib/python3.9/site-packages/synapse/config/__main__.py\", line 56, in <module>\r\n    main(sys.argv)\r\n  File \"/tmp/venv/lib/python3.9/site-packages/synapse/config/__main__.py\", line 30, in main\r\n    config = HomeServerConfig.load_config(\"\", load_config_args)\r\n  File \"/tmp/venv/lib/python3.9/site-packages/synapse/config/_base.py\", line 461, in load_config\r\n    obj, _ = cls.load_config_with_parser(config_parser, argv)\r\n  File \"/tmp/venv/lib/python3.9/site-packages/synapse/config/_base.py\", line 532, in load_config_with_parser\r\n    obj.parse_config_dict(\r\n  File \"/tmp/venv/lib/python3.9/site-packages/synapse/config/_base.py\", line 718, in parse_config_dict\r\n    self.invoke_all(\r\n  File \"/tmp/venv/lib/python3.9/site-packages/synapse/config/_base.py\", line 347, in invoke_all\r\n    res[config_class.section] = getattr(config, func_name)(*args, **kwargs)\r\n  File \"/tmp/venv/lib/python3.9/site-packages/synapse/config/repository.py\", line 120, in read_config\r\n    self.media_store_path = self.ensure_directory(\r\n  File \"/tmp/venv/lib/python3.9/site-packages/synapse/config/_base.py\", line 199, in ensure_directory\r\n    os.makedirs(dir_path, exist_ok=True)\r\n  File \"/nix/store/wnrc4daqbd6v5ifqlxsj75ky8556zy0p-python3-3.9.12/lib/python3.9/os.py\", line 215, in makedirs\r\n    makedirs(head, exist_ok=exist_ok)\r\n  File \"/nix/store/wnrc4daqbd6v5ifqlxsj75ky8556zy0p-python3-3.9.12/lib/python3.9/os.py\", line 225, in makedirs\r\n    mkdir(name, mode)\r\nPermissionError: [Errno 13] Permission denied: '/var/lib/matrix-synapse'\r\n```\r\n\r\nThis prevents its use on another machine or in a sandbox.\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/12862/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/12862/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

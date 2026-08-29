@@ -1,0 +1,140 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/8137",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/8137/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/8137/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/8137/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/8137",
+  "id": 682754106,
+  "node_id": "MDU6SXNzdWU2ODI3NTQxMDY=",
+  "number": 8137,
+  "title": "Creating a room with invitees from non-federated HS fails, but the room is created though.",
+  "user": {
+    "login": "bmarty",
+    "id": 3940906,
+    "node_id": "MDQ6VXNlcjM5NDA5MDY=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/3940906?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/bmarty",
+    "html_url": "https://github.com/bmarty",
+    "followers_url": "https://api.github.com/users/bmarty/followers",
+    "following_url": "https://api.github.com/users/bmarty/following{/other_user}",
+    "gists_url": "https://api.github.com/users/bmarty/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/bmarty/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/bmarty/subscriptions",
+    "organizations_url": "https://api.github.com/users/bmarty/orgs",
+    "repos_url": "https://api.github.com/users/bmarty/repos",
+    "events_url": "https://api.github.com/users/bmarty/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/bmarty/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086032,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMzI=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Help-Wanted",
+      "name": "Z-Help-Wanted",
+      "color": "006B0F",
+      "default": false,
+      "description": "We know exactly how to fix this issue, and would be grateful for any contribution"
+    },
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137743886,
+      "node_id": "LA_kwDOAVyVwM72oPYO",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Invite",
+      "name": "A-Invite",
+      "color": "5319E7",
+      "default": false,
+      "description": "Inviting users to rooms and accepting invites"
+    },
+    {
+      "id": 4137756475,
+      "node_id": "LA_kwDOAVyVwM72oSc7",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Create-Room",
+      "name": "A-Create-Room",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2020-08-20T14:16:52Z",
+  "updated_at": "2022-11-23T17:12:30Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "When a client creates a room with invite and federation is denied with the invitee HS, the client get a 403 with body\r\n```json\r\n{\"errcode\":\"M_FORBIDDEN\",\"error\":\"Federation denied with matrix.org.\"}\r\n```\r\nwhich is nice, but the room is actually created (no invitation is sent), which is a bit weird.\r\n\r\nSynapse should ensure that it will be able to send invitations before creating the room, or create the room in memory and destroy it if something went wrong when sending the invitations.\r\n\r\nRelated workaround: https://github.com/vector-im/element-android/pull/1969",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/8137/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/8137/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

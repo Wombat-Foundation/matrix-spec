@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15939",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15939/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15939/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15939/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15939",
+  "id": 1804603871,
+  "node_id": "I_kwDOAVyVwM5rkBHf",
+  "number": 15939,
+  "title": "`ruff` is currently built from source in the nix flake, slowing down dev environment creation and requiring a moving rust version",
+  "user": {
+    "login": "anoadragon453",
+    "id": 1342360,
+    "node_id": "MDQ6VXNlcjEzNDIzNjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1342360?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/anoadragon453",
+    "html_url": "https://github.com/anoadragon453",
+    "followers_url": "https://api.github.com/users/anoadragon453/followers",
+    "following_url": "https://api.github.com/users/anoadragon453/following{/other_user}",
+    "gists_url": "https://api.github.com/users/anoadragon453/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/anoadragon453/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/anoadragon453/subscriptions",
+    "organizations_url": "https://api.github.com/users/anoadragon453/orgs",
+    "repos_url": "https://api.github.com/users/anoadragon453/repos",
+    "events_url": "https://api.github.com/users/anoadragon453/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/anoadragon453/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2021736922,
+      "node_id": "MDU6TGFiZWwyMDIxNzM2OTIy",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Upstream-Bug",
+      "name": "Z-Upstream-Bug",
+      "color": "ededed",
+      "default": false,
+      "description": "This issue requires a fix in an upstream dependency."
+    },
+    {
+      "id": 2674406437,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDM3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Other",
+      "name": "T-Other",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Questions, user support, anything else."
+    },
+    {
+      "id": 4316622437,
+      "node_id": "LA_kwDOAVyVwM8AAAABAUpuZQ",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Dev-Wishlist",
+      "name": "Z-Dev-Wishlist",
+      "color": "FBCA04",
+      "default": false,
+      "description": "Makes developers' lives better, but doesn't have direct user impact"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2023-07-14T10:10:42Z",
+  "updated_at": "2023-10-04T12:02:45Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "We have a [`flake.nix`](https://github.com/matrix-org/synapse/blob/20ae617d1417f8dd52e20b3a20cb01b4c2fd87c9/flake.nix) file which can be used to create a full development environment for Synapse, including python and native dependencies and things like postgres and redis.\r\n\r\nThe development environment will automatically keep its python environment up to date with `poetry` using the versions defined in `pyproject.yaml`. One of those python package is [`ruff`](https://github.com/charliermarsh/ruff), which we use as a linter.\r\n\r\n`ruff` ships a rust binary, which is dynamically linked against either glibc or musl. As such, `ruff` expects `glibc` or `muslc` headers to exist at a certain location on your Linux box. Due to [the way NixOS works](https://nixos.wiki/wiki/Packaging/Binaries#The_Dynamic_Loader), these do not exist under the expected path, causing any `ruff` binaries we download from PyPI to fail to execute.\r\n\r\nThus, we have the following workaround in `flake.nix`, which forces `ruff` to be compiled on the local system:\r\n\r\nhttps://github.com/matrix-org/synapse/blob/20ae617d1417f8dd52e20b3a20cb01b4c2fd87c9/flake.nix#L115-L122\r\n\r\nThis works, but is slow (as you need to compile a rust binary) and forces the development environment to maintain a rust version which is high enough to compile `ruff` (which unfortunately is almost always the latest stable. I found today that while we only require rust `1.60.0` in Synapse, the version of `ruff` we have specified in our `pyproject.toml` requires rust `1.70.0`.\r\n\r\nThe ideal solution here is for `ruff` to provide statically linked binaries to download. This has been discussed in https://github.com/astral-sh/ruff/issues/1699, and they are up for it if it does not compromise performance (or alternatively they could provide a `ruff-static` PyPI package.\r\n\r\nUntil then, we can't do much on this side.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15939/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15939/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

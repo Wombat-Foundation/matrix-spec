@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/2955",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/2955/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/2955/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/2955/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/2955",
+  "id": 302844646,
+  "node_id": "MDU6SXNzdWUzMDI4NDQ2NDY=",
+  "number": 2955,
+  "title": "Files in /var/lib/matrix-synapse/ are world-readable",
+  "user": {
+    "login": "ghost",
+    "id": 10137,
+    "node_id": "MDQ6VXNlcjEwMTM3",
+    "avatar_url": "https://avatars.githubusercontent.com/u/10137?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/ghost",
+    "html_url": "https://github.com/ghost",
+    "followers_url": "https://api.github.com/users/ghost/followers",
+    "following_url": "https://api.github.com/users/ghost/following{/other_user}",
+    "gists_url": "https://api.github.com/users/ghost/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/ghost/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/ghost/subscriptions",
+    "organizations_url": "https://api.github.com/users/ghost/orgs",
+    "repos_url": "https://api.github.com/users/ghost/repos",
+    "events_url": "https://api.github.com/users/ghost/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/ghost/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 482414360,
+      "node_id": "MDU6TGFiZWw0ODI0MTQzNjA=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Packaging",
+      "name": "A-Packaging",
+      "color": "5319E7",
+      "default": false,
+      "description": "Our Debian packages, docker images; or issues relevant to downstream packagers"
+    },
+    {
+      "id": 2674406292,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mjky",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/P5",
+      "name": "P5",
+      "color": "f7f7f7",
+      "default": false,
+      "description": "(OBSOLETE: use S- labels.) Dubious backlog: will not schedule, but may consider patches"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406361,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzYx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Security",
+      "name": "Security",
+      "color": "b3e5fc",
+      "default": false,
+      "description": null
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2018-03-06T20:00:50Z",
+  "updated_at": "2023-03-28T13:10:35Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "After a fresh installation of matrix-synapse on 0.26.0-1 from the Matrix Debian repository on Debian 9, the files in /var/lib/matrix-synapse/ are world-readable!",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/2955/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/2955/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

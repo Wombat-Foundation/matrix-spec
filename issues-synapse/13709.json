@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13709",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13709/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13709/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13709/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13709",
+  "id": 1361241705,
+  "node_id": "I_kwDOAVyVwM5RIuZp",
+  "number": 13709,
+  "title": "`allow_unsafe_locale: true` still enforces the check on postgres' encoding",
+  "user": {
+    "login": "erkinalp",
+    "id": 5833034,
+    "node_id": "MDQ6VXNlcjU4MzMwMzQ=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/5833034?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/erkinalp",
+    "html_url": "https://github.com/erkinalp",
+    "followers_url": "https://api.github.com/users/erkinalp/followers",
+    "following_url": "https://api.github.com/users/erkinalp/following{/other_user}",
+    "gists_url": "https://api.github.com/users/erkinalp/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/erkinalp/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/erkinalp/subscriptions",
+    "organizations_url": "https://api.github.com/users/erkinalp/orgs",
+    "repos_url": "https://api.github.com/users/erkinalp/repos",
+    "events_url": "https://api.github.com/users/erkinalp/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/erkinalp/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4195810659,
+      "node_id": "LA_kwDOAVyVwM76Fv1j",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Database",
+      "name": "A-Database",
+      "color": "5319E7",
+      "default": false,
+      "description": "DB stuff like queries, migrations, new/remove columns, indexes, unexpected entries in the db"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2022-09-04T20:10:12Z",
+  "updated_at": "2022-09-04T22:50:50Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\n`allow_unsafe_locale` still fails to work when a non-C locale is supplied.\n\n### Steps to reproduce\n\n- Run Synapse with YugabyteDB as the database\r\n- Observe it fails to work because Yugabyte storage actually does not support `C` collation\n\n### Homeserver\n\nlocal test setup\n\n### Synapse Version\n\n1.66.0\n\n### Installation Method\n\nDocker (matrixdotorg/synapse)\n\n### Platform\n\nYugabyte is also from the latest docker.\n\n### Relevant log output\n\n```shell\nTraceback (most recent call last):\r\n  File \"/usr/local/lib/python3.9/site-packages/synapse/app/homeserver.py\", line 382, in setup\r\n    hs.setup()\r\n  File \"/usr/local/lib/python3.9/site-packages/synapse/server.py\", line 308, in setup\r\n    self.datastores = Databases(self.DATASTORE_CLASS, self)\r\n  File \"/usr/local/lib/python3.9/site-packages/synapse/storage/databases/__init__.py\", line 74, in __init__\r\n    prepare_database(\r\n  File \"/usr/local/lib/python3.9/site-packages/synapse/storage/prepare_database.py\", line 152, in prepare_database\r\n    _setup_new_database(cur, database_engine, databases=databases)\r\n  File \"/usr/local/lib/python3.9/site-packages/synapse/storage/prepare_database.py\", line 213, in _setup_new_database\r\n    database_engine.check_new_database(cur)\r\n  File \"/usr/local/lib/python3.9/site-packages/synapse/storage/engines/postgres.py\", line 137, in check_new_database\r\n    raise IncorrectDatabaseSetup(\r\nsynapse.storage.engines._base.IncorrectDatabaseSetup: Database is incorrectly configured:\r\n\r\n    - 'CTYPE' is set to 'en_US.UTF-8'. Should be 'C'\r\n\r\nSee docs/postgres.md for more information.\r\n******************************************************\r\n Error during initialisation:\r\n    Database is incorrectly configured:\r\n \r\n     - 'CTYPE' is set to 'en_US.UTF-8'. Should be 'C'\r\n \r\n See docs/postgres.md for more information.\r\n There may be more information in the logs.\r\n******************************************************\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13709/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13709/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/2370",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/2370/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/2370/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/2370/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/2370",
+  "id": 242973295,
+  "node_id": "MDU6SXNzdWUyNDI5NzMyOTU=",
+  "number": 2370,
+  "title": "complain about unbanning a user that isn't in the room and is not banned",
+  "user": {
+    "login": "t3chguy",
+    "id": 2403652,
+    "node_id": "MDQ6VXNlcjI0MDM2NTI=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/2403652?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/t3chguy",
+    "html_url": "https://github.com/t3chguy",
+    "followers_url": "https://api.github.com/users/t3chguy/followers",
+    "following_url": "https://api.github.com/users/t3chguy/following{/other_user}",
+    "gists_url": "https://api.github.com/users/t3chguy/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/t3chguy/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/t3chguy/subscriptions",
+    "organizations_url": "https://api.github.com/users/t3chguy/orgs",
+    "repos_url": "https://api.github.com/users/t3chguy/repos",
+    "events_url": "https://api.github.com/users/t3chguy/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/t3chguy/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 828678284,
+      "node_id": "MDU6TGFiZWw4Mjg2NzgyODQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spec-Compliance",
+      "name": "A-Spec-Compliance",
+      "color": "5319E7",
+      "default": false,
+      "description": "places where synapse does not conform to the spec"
+    },
+    {
+      "id": 1554244657,
+      "node_id": "MDU6TGFiZWwxNTU0MjQ0NjU3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Moderation",
+      "name": "A-Moderation",
+      "color": "5319E7",
+      "default": false,
+      "description": "Tools for moderating HSes: event redaction, media removal, purge admin API, reports from users, ..."
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4459579426,
+      "node_id": "LA_kwDOAVyVwM8AAAABCc_IIg",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-User-Experience",
+      "name": "A-User-Experience",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2017-07-14T11:36:45Z",
+  "updated_at": "2023-05-23T13:52:39Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Synapse already complains about unbanning membership=join, maybe consider similar complaint for unbanning membership=leave (or no existing membership) as this can lead to it looking as if the user has left the room in riot-web (though matrix-console and riot-android do just hide this room state change)",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/2370/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/2370/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

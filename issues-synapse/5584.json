@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/5584",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/5584/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/5584/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/5584/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/5584",
+  "id": 462638603,
+  "node_id": "MDU6SXNzdWU0NjI2Mzg2MDM=",
+  "number": 5584,
+  "title": "Document configuration option vocabulary/taxonomy and then simplify ",
+  "user": {
+    "login": "michaelkaye",
+    "id": 1917473,
+    "node_id": "MDQ6VXNlcjE5MTc0NzM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1917473?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/michaelkaye",
+    "html_url": "https://github.com/michaelkaye",
+    "followers_url": "https://api.github.com/users/michaelkaye/followers",
+    "following_url": "https://api.github.com/users/michaelkaye/following{/other_user}",
+    "gists_url": "https://api.github.com/users/michaelkaye/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/michaelkaye/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/michaelkaye/subscriptions",
+    "organizations_url": "https://api.github.com/users/michaelkaye/orgs",
+    "repos_url": "https://api.github.com/users/michaelkaye/repos",
+    "events_url": "https://api.github.com/users/michaelkaye/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/michaelkaye/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 845245048,
+      "node_id": "MDU6TGFiZWw4NDUyNDUwNDg=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Docs",
+      "name": "A-Docs",
+      "color": "5319E7",
+      "default": false,
+      "description": "things relating to the documentation"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406413,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDEz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Task",
+      "name": "T-Task",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Refactoring, removal, replacement, enabling or disabling functionality, other engineering tasks."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2019-07-01T10:34:13Z",
+  "updated_at": "2022-08-25T12:18:01Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "A document that contains the vocabulary of the synapse configuration and the expected values of those named fields would assist in keeping code consistent.\r\n\r\nA few things have popped up recently, here and in other branches, so I thought i'd start an issue to collect examples.\r\n\r\nI think we should first generate a statement on what the best naming scheme is for things, aim to apply that in future, then come back and deprecate/rename existing options to bring them into line.\r\n\r\n\r\nRelated issues:\r\n* https://github.com/matrix-org/synapse/issues/3913 (we should be clear this is used as a prefix or a template)\r\n* https://github.com/matrix-org/synapse/issues/2326 (we should be clear on what is a template and what isn't)\r\n* https://github.com/matrix-org/synapse/issues/3523 (we should be consistent in requiring and handling trailing slashes in URLs in our configuration)",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/5584/reactions",
+    "total_count": 3,
+    "+1": 3,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/5584/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

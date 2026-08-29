@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/2860",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/2860/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/2860/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/2860/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/2860",
+  "id": 295949912,
+  "node_id": "MDU6SXNzdWUyOTU5NDk5MTI=",
+  "number": 2860,
+  "title": "Upgrade to Bleach 1.5, to limit link schemes to an allowlist",
+  "user": {
+    "login": "cuibonobo",
+    "id": 391241,
+    "node_id": "MDQ6VXNlcjM5MTI0MQ==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/391241?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/cuibonobo",
+    "html_url": "https://github.com/cuibonobo",
+    "followers_url": "https://api.github.com/users/cuibonobo/followers",
+    "following_url": "https://api.github.com/users/cuibonobo/following{/other_user}",
+    "gists_url": "https://api.github.com/users/cuibonobo/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/cuibonobo/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/cuibonobo/subscriptions",
+    "organizations_url": "https://api.github.com/users/cuibonobo/orgs",
+    "repos_url": "https://api.github.com/users/cuibonobo/repos",
+    "events_url": "https://api.github.com/users/cuibonobo/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/cuibonobo/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086032,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMzI=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Help-Wanted",
+      "name": "Z-Help-Wanted",
+      "color": "006B0F",
+      "default": false,
+      "description": "We know exactly how to fix this issue, and would be grateful for any contribution"
+    },
+    {
+      "id": 2674406235,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MjM1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/good%20first%20issue",
+      "name": "good first issue",
+      "color": "0E8A16",
+      "default": true,
+      "description": "Good for newcomers"
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 3232177309,
+      "node_id": "MDU6TGFiZWwzMjMyMTc3MzA5",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/P4",
+      "name": "P4",
+      "color": "d1e5f0",
+      "default": false,
+      "description": "(OBSOLETE: use S- labels.) Okay backlog: will not schedule, will accept patches"
+    },
+    {
+      "id": 3271562136,
+      "node_id": "MDU6TGFiZWwzMjcxNTYyMTM2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Email-Push",
+      "name": "A-Email-Push",
+      "color": "5319E7",
+      "default": false,
+      "description": "Email notifications"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2018-02-09T17:33:02Z",
+  "updated_at": "2022-05-19T12:13:50Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "The [1.5 version of Bleach](https://github.com/mozilla/bleach/releases/tag/v1.5) made the allowed protocols configurable: http://bleach.readthedocs.io/en/latest/clean.html#allowed-protocols-protocols\r\n\r\nOnce the dependency is updated, the `safe_markup` function in the mailer can be updated and these lines can be uncommented: https://github.com/matrix-org/synapse/blob/42b50483be2b022735f8ae2107314d51e92e8471/synapse/push/mailer.py#L76-L77",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/2860/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/2860/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

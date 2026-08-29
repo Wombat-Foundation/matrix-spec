@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/3495",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/3495/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/3495/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/3495/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/3495",
+  "id": 339452103,
+  "node_id": "MDU6SXNzdWUzMzk0NTIxMDM=",
+  "number": 3495,
+  "title": "processing send_join on a large room is extremely inefficient",
+  "user": {
+    "login": "richvdh",
+    "id": 1389908,
+    "node_id": "MDQ6VXNlcjEzODk5MDg=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1389908?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/richvdh",
+    "html_url": "https://github.com/richvdh",
+    "followers_url": "https://api.github.com/users/richvdh/followers",
+    "following_url": "https://api.github.com/users/richvdh/following{/other_user}",
+    "gists_url": "https://api.github.com/users/richvdh/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/richvdh/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/richvdh/subscriptions",
+    "organizations_url": "https://api.github.com/users/richvdh/orgs",
+    "repos_url": "https://api.github.com/users/richvdh/repos",
+    "events_url": "https://api.github.com/users/richvdh/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/richvdh/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 600557921,
+      "node_id": "MDU6TGFiZWw2MDA1NTc5MjE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Performance",
+      "name": "A-Performance",
+      "color": "5319E7",
+      "default": false,
+      "description": "Performance, both client-facing and admin-facing"
+    },
+    {
+      "id": 1771241792,
+      "node_id": "MDU6TGFiZWwxNzcxMjQxNzky",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federated-Join",
+      "name": "A-Federated-Join",
+      "color": "5319E7",
+      "default": false,
+      "description": "joins over federation generally suck"
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 6,
+  "created_at": "2018-07-09T13:35:24Z",
+  "updated_at": "2022-10-04T09:47:17Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "We received a send_join request over federation:\r\n\r\n```\r\n2018-07-09 11:21:46,361 - synapse.access.http.8080 - 144 - INFO - PUT-16391990 - xxx.xxx.xxx.xxx - 8080 - {xxx} Processed request: 648.081sec (43.848sec, 1.580sec) (0.059sec/247.002sec/249) 0B 200 \"PUT /_matrix/federation/v1/send_join/%21jOGhaTPuvWFnrWPrzv%3Amatrix.org/%241531134658158ydvgN%3Axxx HTTP/1.1\" \"Synapse/0.32.0\" [239401 dbevts]\r\n2018-07-09 11:22:09,886 - synapse.access.http.8080 - 144 - INFO - PUT-16396650 - xxx.xxx.xxx.xxx - 8080 - {xxx} Processed request: 611.176sec (38.560sec, 1.028sec) (0.042sec/184.576sec/244) 0B 200 \"PUT /_matrix/federation/v1/send_join/%21jOGhaTPuvWFnrWPrzv%3Amatrix.org/%241531134658158ydvgN%3Axxx HTTP/1.1\" \"Synapse/0.32.0\" [239401 dbevts]\r\n2018-07-09 11:22:31,112 - synapse.access.http.8080 - 144 - INFO - PUT-16401662 - xxx.xxx.xxx.xxx - 8080 - {xxx} Processed request: 571.488sec (36.464sec, 1.072sec) (0.046sec/125.630sec/244) 0B 200 \"PUT /_matrix/federation/v1/send_join/%21jOGhaTPuvWFnrWPrzv%3Amatrix.org/%241531134658158ydvgN%3Axxx HTTP/1.1\" \"Synapse/0.32.0\" [239401 dbevts]\r\n2018-07-09 11:22:53,320 - synapse.access.http.8080 - 144 - INFO - PUT-16406605 - xxx.xxx.xxx.xxx - 8080 - {xxx} Processed request: 531.009sec (34.356sec, 0.712sec) (0.043sec/104.011sec/244) 0B 200 \"PUT /_matrix/federation/v1/send_join/%21jOGhaTPuvWFnrWPrzv%3Amatrix.org/%241531134658158ydvgN%3Axxx HTTP/1.1\" \"Synapse/0.32.0\" [239401 dbevts]\r\n```\r\n\r\nWhile processing these requests, the synapse master stopped logging anything for almost 60 seconds (twice); slave replication stopped, and request processing time went through the roof. Metrics suggest that the CPU was saturated with calls to `_get_event_from_row`. The 4x239401 (~=950000) events shown in the logs are reflected in the number of calls to `_get_event_from_row`.\r\n\r\nThere are several problems here.\r\n\r\nFirstly, could we not deduplicate these four requests at the transaction level? They all have the same event id, so we could save ourselves a bunch of effort by deduplicating.\r\n\r\nSecondly, why does each request lead to pulling 239401 events out of the database? The total room state in this room is only 120478 events: are we fetching the membership list twice, and if so, why isn't the event cache deduplicating them?\r\n\r\nThirdly, we are presumably requesting the same 239401 events for each of the four requests: can we not deduplicate these?\r\n\r\nFinally, and related to the above, when fetching events, we first check the cache, then schedule a db fetch. By the time the db fetch happens, it may be entirely or partially redundant (if other threads have already fetched the relevant events), but we plough ahead anyway.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/3495/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/3495/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

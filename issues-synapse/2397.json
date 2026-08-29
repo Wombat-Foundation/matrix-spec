@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/2397",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/2397/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/2397/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/2397/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/2397",
+  "id": 246738395,
+  "node_id": "MDU6SXNzdWUyNDY3MzgzOTU=",
+  "number": 2397,
+  "title": "Consider better error for username availability check invalid input",
+  "user": {
+    "login": "t3chguy",
+    "id": 2403652,
+    "node_id": "MDQ6VXNlcjI0MDM2NTI=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/2403652?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/t3chguy",
+    "html_url": "https://github.com/t3chguy",
+    "followers_url": "https://api.github.com/users/t3chguy/followers",
+    "following_url": "https://api.github.com/users/t3chguy/following{/other_user}",
+    "gists_url": "https://api.github.com/users/t3chguy/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/t3chguy/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/t3chguy/subscriptions",
+    "organizations_url": "https://api.github.com/users/t3chguy/orgs",
+    "repos_url": "https://api.github.com/users/t3chguy/repos",
+    "events_url": "https://api.github.com/users/t3chguy/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/t3chguy/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1920863622,
+      "node_id": "MDU6TGFiZWwxOTIwODYzNjIy",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Validation",
+      "name": "A-Validation",
+      "color": "5319E7",
+      "default": false,
+      "description": "500 (mostly) errors due to lack of event/parameter validation"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137874325,
+      "node_id": "LA_kwDOAVyVwM72ovOV",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Registration",
+      "name": "A-Registration",
+      "color": "5319E7",
+      "default": false,
+      "description": "Creating an account"
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2017-07-31T12:26:20Z",
+  "updated_at": "2023-05-23T13:53:31Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Currently querying an invalid input, such as `Wizard 𝖙3𝖈𝖍𝖌𝖚𝖞`, results in:\r\n```\r\n2017-07-23 20:24:09,231 - synapse.access.http.8008 - 59 - INFO - GET-3471131- 90.255.116.117 - 8008 - Received request: GET /_matrix/client/r0/register/available?username=Wizard%20%F0%9D%96%993%F0%9D%96%88%F0%9D%96%8D%F0%9D%96%8C%F0%9D%96%9A%F0%9D%96%9E\r\n2017-07-23 20:24:09,232 - synapse.http.server - 139 - ERROR - GET-3471131- Failed handle request synapse.http.server._async_render on <synapse.rest.ClientRestResource object at 0x7ff20d7db8d0>: <XForwardedForRequest at 0x7ff1a294b3b0 method=GET uri=/_matrix/client/r0/register/available?u\r\nsername=Wizard%20%F0%9D%96%993%F0%9D%96%88%F0%9D%96%8D%F0%9D%96%8C%F0%9D%96%9A%F0%9D%96%9E clientproto=HTTP/1.0 site=8008>\r\nTraceback (most recent call last):\r\n  File \"/usr/lib/python2.7/dist-packages/synapse/http/server.py\", line 116, in wrapped_request_handler\r\n    yield request_handler(self, request, request_metrics)\r\n  File \"/usr/lib/python2.7/dist-packages/twisted/internet/defer.py\", line 1126, in _inlineCallbacks\r\n    result = result.throwExceptionIntoGenerator(g)\r\n  File \"/usr/lib/python2.7/dist-packages/twisted/python/failure.py\", line 389, in throwExceptionIntoGenerator\r\n    return g.throw(self.type, self.value, self.tb)\r\n  File \"/usr/lib/python2.7/dist-packages/synapse/http/server.py\", line 255, in _async_render\r\n    callback_return = yield callback(request, **kwargs)\r\n  File \"/usr/lib/python2.7/dist-packages/twisted/internet/defer.py\", line 1126, in _inlineCallbacks\r\n    result = result.throwExceptionIntoGenerator(g)\r\n  File \"/usr/lib/python2.7/dist-packages/twisted/python/failure.py\", line 389, in throwExceptionIntoGenerator\r\n    return g.throw(self.type, self.value, self.tb)\r\n  File \"/usr/lib/python2.7/dist-packages/synapse/rest/client/v2_alpha/register.py\", line 152, in on_GET\r\n    yield self.registration_handler.check_username(username)\r\n  File \"/usr/lib/python2.7/dist-packages/twisted/internet/defer.py\", line 1128, in _inlineCallbacks\r\n    result = g.send(result)\r\n  File \"/usr/lib/python2.7/dist-packages/synapse/handlers/register.py\", line 50, in check_username\r\n    if urllib.quote(localpart.encode('utf-8')) != localpart:\r\nUnicodeDecodeError: 'ascii' codec can't decode byte 0xf0 in position 7: ordinal not in range(128)\r\n```\r\n\r\nvector-im/riot-web/issues/4660 works around this, but for other clients could be handy to make the error more useful than a generic 500 ISE",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/2397/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/2397/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

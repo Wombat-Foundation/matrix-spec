@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13968",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13968/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13968/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13968/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13968",
+  "id": 1391656322,
+  "node_id": "I_kwDOAVyVwM5S8v2C",
+  "number": 13968,
+  "title": "Users that knock on a room with a shared history visibility and are subsequently kicked are able to view all previous events",
+  "user": {
+    "login": "zamanzamzz",
+    "id": 39636472,
+    "node_id": "MDQ6VXNlcjM5NjM2NDcy",
+    "avatar_url": "https://avatars.githubusercontent.com/u/39636472?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/zamanzamzz",
+    "html_url": "https://github.com/zamanzamzz",
+    "followers_url": "https://api.github.com/users/zamanzamzz/followers",
+    "following_url": "https://api.github.com/users/zamanzamzz/following{/other_user}",
+    "gists_url": "https://api.github.com/users/zamanzamzz/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/zamanzamzz/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/zamanzamzz/subscriptions",
+    "organizations_url": "https://api.github.com/users/zamanzamzz/orgs",
+    "repos_url": "https://api.github.com/users/zamanzamzz/repos",
+    "events_url": "https://api.github.com/users/zamanzamzz/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/zamanzamzz/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406361,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzYx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Security",
+      "name": "Security",
+      "color": "b3e5fc",
+      "default": false,
+      "description": null
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137886492,
+      "node_id": "LA_kwDOAVyVwM72oyMc",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Messages-Endpoint",
+      "name": "A-Messages-Endpoint",
+      "color": "5319E7",
+      "default": false,
+      "description": "/messages client API endpoint (`RoomMessageListRestServlet`) (which also triggers /backfill)"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 6,
+  "created_at": "2022-09-30T00:32:23Z",
+  "updated_at": "2022-10-05T19:01:05Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nI created a room (room version 10) as a test user with the following initial state:\r\n- `history_visibility: shared`\r\n- `join_rule: knock`\r\n\r\nI'm observing that if another user knocks on the room and that admin test user kicks them, the kicked user is still able to fetch all of the previous events of the room using the ` /_matrix/client/v3/rooms/{roomId}/messages` GET endpoint.\r\n\r\nThis seems like unexpected behaviour to me and a major risk to the privacy/confidentiality of the users in the room.\r\n\r\nThe Client-Server API Spec mentions this for `shared` room history visibility:\r\n\r\n\"Previous events are always accessible to newly joined members. All events in the room are accessible, even those sent when the member was not a part of the room.\"\r\n\r\nI have a feeling that room members with `membership` set as `knock` are mistakenly being considered as newly joined members in this case.\r\n\r\n\r\n### Steps to reproduce\r\n\r\n- the following steps refer to user 1 (room creator and admin) and user 2 (knocker)\r\n- create a room as user 1 with the following properties:\r\n    - `history_visibility: shared`\r\n    - `join_rule: knock`\r\n    - `room_version: 10`\r\n- send a few test messages as user 1 in the room\r\n- knock on the room as user 2\r\n- kick user 2 as user 1\r\n- access previous events in the room as user 2 using the ` /_matrix/client/v3/rooms/{roomId}/messages` GET endpoint\r\n- observe that the test messages sent as user 1 are accessible through this endpoint by user 2\r\n\r\n\r\n### Homeserver\r\n\r\nLocal test homeserver\r\n\r\n### Synapse Version\r\n\r\n1.68.0\r\n\r\n### Installation Method\r\n\r\nDocker (matrixdotorg/synapse)\r\n\r\n### Platform\r\n\r\nOfficial Docker image running in a container on Manjaro Linux\r\n\r\n### Relevant log output\r\n\r\n[Edit 2022-09-30 11:41 UTC by dmr: redacted logs which contained sensitive information.]\r\n\r\n### Anything else that would be useful to know?\r\n\r\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13968/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13968/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

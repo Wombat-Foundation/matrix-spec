@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/12659",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/12659/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/12659/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/12659/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/12659",
+  "id": 1228284784,
+  "node_id": "I_kwDOAVyVwM5JNiNw",
+  "number": 12659,
+  "title": "Ability for admins to receive notifications when users register on their server",
+  "user": {
+    "login": "t3chguy",
+    "id": 2403652,
+    "node_id": "MDQ6VXNlcjI0MDM2NTI=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/2403652?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/t3chguy",
+    "html_url": "https://github.com/t3chguy",
+    "followers_url": "https://api.github.com/users/t3chguy/followers",
+    "following_url": "https://api.github.com/users/t3chguy/following{/other_user}",
+    "gists_url": "https://api.github.com/users/t3chguy/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/t3chguy/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/t3chguy/subscriptions",
+    "organizations_url": "https://api.github.com/users/t3chguy/orgs",
+    "repos_url": "https://api.github.com/users/t3chguy/repos",
+    "events_url": "https://api.github.com/users/t3chguy/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/t3chguy/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045805,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDU=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Push",
+      "name": "A-Push",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues related to push/notifications"
+    },
+    {
+      "id": 2674406292,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mjky",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/P5",
+      "name": "P5",
+      "color": "f7f7f7",
+      "default": false,
+      "description": "(OBSOLETE: use S- labels.) Dubious backlog: will not schedule, but may consider patches"
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4137874325,
+      "node_id": "LA_kwDOAVyVwM72ovOV",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Registration",
+      "name": "A-Registration",
+      "color": "5319E7",
+      "default": false,
+      "description": "Creating an account"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2022-05-06T18:48:04Z",
+  "updated_at": "2022-06-03T06:34:43Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Moved from https://github.com/vector-im/element-web/issues/11821",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/12659/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/12659/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15920",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15920/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15920/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15920/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15920",
+  "id": 1799485641,
+  "node_id": "I_kwDOAVyVwM5rQfjJ",
+  "number": 15920,
+  "title": "`LoggingContext.tag` being lost on metrics and traces",
+  "user": {
+    "login": "MadLittleMods",
+    "id": 558581,
+    "node_id": "MDQ6VXNlcjU1ODU4MQ==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/558581?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/MadLittleMods",
+    "html_url": "https://github.com/MadLittleMods",
+    "followers_url": "https://api.github.com/users/MadLittleMods/followers",
+    "following_url": "https://api.github.com/users/MadLittleMods/following{/other_user}",
+    "gists_url": "https://api.github.com/users/MadLittleMods/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/MadLittleMods/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/MadLittleMods/subscriptions",
+    "organizations_url": "https://api.github.com/users/MadLittleMods/orgs",
+    "repos_url": "https://api.github.com/users/MadLittleMods/repos",
+    "events_url": "https://api.github.com/users/MadLittleMods/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/MadLittleMods/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1056673481,
+      "node_id": "MDU6TGFiZWwxMDU2NjczNDgx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Logging",
+      "name": "A-Logging",
+      "color": "5319E7",
+      "default": false,
+      "description": "Synapse's logs (structured or otherwise). Not metrics."
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 3537729900,
+      "node_id": "LA_kwDOAVyVwM7S3Xls",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Metrics",
+      "name": "A-Metrics",
+      "color": "5319E7",
+      "default": false,
+      "description": "metrics, measures, stuff we put in Prometheus"
+    },
+    {
+      "id": 4316622437,
+      "node_id": "LA_kwDOAVyVwM8AAAABAUpuZQ",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Dev-Wishlist",
+      "name": "Z-Dev-Wishlist",
+      "color": "FBCA04",
+      "default": false,
+      "description": "Makes developers' lives better, but doesn't have direct user impact"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2023-07-11T18:03:53Z",
+  "updated_at": "2023-07-18T14:42:09Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "*As discovered during the discussion in https://github.com/matrix-org/synapse/pull/15708#discussion_r1259027871,*\r\n\r\n### Background\r\n\r\n`LoggingContext.tag` was introduced to differentiate what kind of sync was happening in our metrics. The only place we populate it is for this use case even though it could be used generally:\r\n\r\n\r\nhttps://github.com/matrix-org/synapse/blob/a4243183f0b500f9f30f2d24af19f30a99f65f63/synapse/handlers/sync.py#L348-L357\r\n\r\n\r\nWe also use it in the tracing with `SynapseTags.REQUEST_TAG` which says that it's [\"used to distinguish full vs incremental syncs, etc\"](https://github.com/matrix-org/synapse/blob/a4243183f0b500f9f30f2d24af19f30a99f65f63/synapse/logging/opentracing.py#L314-L315).\r\n\r\n\r\n### Problem\r\n\r\nIf I look at the [Prometheus data](https://prometheus.matrix.org/graph?g0.expr=synapse_http_server_response_time_seconds_sum%7Btag%3D%22incremental_sync%22%7D&g0.tab=1&g0.stacked=0&g0.show_exemplars=0&g0.range_input=1h), I don't see any data for `matrix.org`. I only see it for one other instance we track which is running Synapse 1.83.0. Has it broken since then?\r\n\r\nAnd if I look at the traces, `request_tag` is always set to the default empty string when I look at those `SyncRestServlet` traces (also checked `RoomInitialSyncRestServlet`).\r\n\r\nIt seems like the context is being lost somewhere.\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15920/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15920/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

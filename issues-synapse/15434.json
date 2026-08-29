@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15434",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15434/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15434/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15434/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15434",
+  "id": 1667664650,
+  "node_id": "I_kwDOAVyVwM5jZosK",
+  "number": 15434,
+  "title": "media_retention - enhancement to provide more control over deletion.",
+  "user": {
+    "login": "ajohns92a",
+    "id": 130042938,
+    "node_id": "U_kgDOB8BMOg",
+    "avatar_url": "https://avatars.githubusercontent.com/u/130042938?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/ajohns92a",
+    "html_url": "https://github.com/ajohns92a",
+    "followers_url": "https://api.github.com/users/ajohns92a/followers",
+    "following_url": "https://api.github.com/users/ajohns92a/following{/other_user}",
+    "gists_url": "https://api.github.com/users/ajohns92a/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/ajohns92a/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/ajohns92a/subscriptions",
+    "organizations_url": "https://api.github.com/users/ajohns92a/orgs",
+    "repos_url": "https://api.github.com/users/ajohns92a/repos",
+    "events_url": "https://api.github.com/users/ajohns92a/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/ajohns92a/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045806,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDY=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Media-Repository",
+      "name": "A-Media-Repository",
+      "color": "5319E7",
+      "default": false,
+      "description": "Uploading, downloading images and video, thumbnailing"
+    },
+    {
+      "id": 1018490364,
+      "node_id": "MDU6TGFiZWwxMDE4NDkwMzY0",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Disk-Space",
+      "name": "A-Disk-Space",
+      "color": "5319E7",
+      "default": false,
+      "description": "things which fill up the disk"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2023-04-14T07:16:59Z",
+  "updated_at": "2023-04-14T21:15:25Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Enhance features to purge media regardless of when it was accessed last**\r\n\r\nMedia retention limits are observed, as long as the file is not accessed. This is clearly stated here: \r\n\r\n`options control whether media will be purged if it has not been accessed in a given amount of time. Note that media is 'accessed' when loaded in a room in a client, or otherwise downloaded by a local or remote user.`\r\nhttps://matrix-org.github.io/synapse/latest/usage/configuration/config_documentation.html#media_retention\r\n\r\nThat's awesome. But as long as someone somewhere on some random federated server keeps hitting up the file, it will remain forever. Could an override be put in to delete media after a set period, regardless of when it was accessed last? \r\nOne caveat, it would need to not apply to Profile pictures and room profile pictures.\r\n\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15434/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15434/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

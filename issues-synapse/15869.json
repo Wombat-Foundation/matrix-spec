@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15869",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15869/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15869/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15869/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15869",
+  "id": 1786190044,
+  "node_id": "I_kwDOAVyVwM5qdxjc",
+  "number": 15869,
+  "title": "The `cache_invalidation_stream_by_instance` table is filled even when workers are not in use",
+  "user": {
+    "login": "reivilibre",
+    "id": 38398653,
+    "node_id": "MDQ6VXNlcjM4Mzk4NjUz",
+    "avatar_url": "https://avatars.githubusercontent.com/u/38398653?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/reivilibre",
+    "html_url": "https://github.com/reivilibre",
+    "followers_url": "https://api.github.com/users/reivilibre/followers",
+    "following_url": "https://api.github.com/users/reivilibre/following{/other_user}",
+    "gists_url": "https://api.github.com/users/reivilibre/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/reivilibre/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/reivilibre/subscriptions",
+    "organizations_url": "https://api.github.com/users/reivilibre/orgs",
+    "repos_url": "https://api.github.com/users/reivilibre/repos",
+    "events_url": "https://api.github.com/users/reivilibre/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/reivilibre/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1018490364,
+      "node_id": "MDU6TGFiZWwxMDE4NDkwMzY0",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Disk-Space",
+      "name": "A-Disk-Space",
+      "color": "5319E7",
+      "default": false,
+      "description": "things which fill up the disk"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4195810659,
+      "node_id": "LA_kwDOAVyVwM76Fv1j",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Database",
+      "name": "A-Database",
+      "color": "5319E7",
+      "default": false,
+      "description": "DB stuff like queries, migrations, new/remove columns, indexes, unexpected entries in the db"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2023-07-03T13:29:10Z",
+  "updated_at": "2023-07-05T21:14:04Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "The only precondition to having this table filled with cache invalidations is that the database engine is Postgres.\r\n\r\nIf we were interested, we could cut this down so this table is not populated when you're not using workers. (I'm not sure if we have such a flag available to be honest, but we can consider it if this is important to us!)\r\n\r\nThe benefit would be a small reduction in database I/O and CPU use for Postgres monoliths.\r\n\r\nRelated: #15868 which cleans up old rows in this table.\r\n\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15869/reactions",
+    "total_count": 1,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 1,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15869/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

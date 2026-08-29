@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13363",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13363/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13363/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13363/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13363",
+  "id": 1314941516,
+  "node_id": "I_kwDOAVyVwM5OYGpM",
+  "number": 13363,
+  "title": "archlinux installation docs are grossly outdated",
+  "user": {
+    "login": "sla-te",
+    "id": 22568014,
+    "node_id": "MDQ6VXNlcjIyNTY4MDE0",
+    "avatar_url": "https://avatars.githubusercontent.com/u/22568014?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/sla-te",
+    "html_url": "https://github.com/sla-te",
+    "followers_url": "https://api.github.com/users/sla-te/followers",
+    "following_url": "https://api.github.com/users/sla-te/following{/other_user}",
+    "gists_url": "https://api.github.com/users/sla-te/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/sla-te/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/sla-te/subscriptions",
+    "organizations_url": "https://api.github.com/users/sla-te/orgs",
+    "repos_url": "https://api.github.com/users/sla-te/repos",
+    "events_url": "https://api.github.com/users/sla-te/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/sla-te/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086032,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMzI=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Help-Wanted",
+      "name": "Z-Help-Wanted",
+      "color": "006B0F",
+      "default": false,
+      "description": "We know exactly how to fix this issue, and would be grateful for any contribution"
+    },
+    {
+      "id": 845245048,
+      "node_id": "MDU6TGFiZWw4NDUyNDUwNDg=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Docs",
+      "name": "A-Docs",
+      "color": "5319E7",
+      "default": false,
+      "description": "things relating to the documentation"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 9,
+  "created_at": "2022-07-22T12:23:38Z",
+  "updated_at": "2022-07-25T13:53:41Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\n1. Install matrix via pip on linux\r\n2. Install element client on home machine\r\n3. Try to create an account via elements UI\r\nThen the server response the following to the client:\r\n\r\n```\r\nstatus_code: 500, {\"errcode\":\"M_UNKNOWN\",\"error\":\"Internal server error\"}\r\n```\r\n\r\nLooking at the error it seems the code attempts to run decode() on a str object...\r\n\r\n### Homeserver\r\n\r\nmyurl.com\r\n\r\n### Synapse Version\r\n\r\n1.63.1\r\n\r\n### Installation Method\r\n\r\npip (from PyPI)\r\n\r\n### Platform\r\n\r\nRocky Linux 9\r\n\r\n\r\n### Relevant log output\r\n\r\n```shell\r\n2022-07-22 12:21:01,577 - synapse.http.server - 183 - ERROR - POST-78 - Failed handle request via 'RegisterRestServlet': <XForwardedForRequest at 0x7f5f586d7430 method='POST' uri='/_matrix/client/r0/register' clientproto='HTTP/1.0' site='8008'>\r\nTraceback (most recent call last):\r\n  File \"/root/synapse/venv/lib/python3.10/site-packages/twisted/internet/defer.py\", line 1660, in _inlineCallbacks\r\n    result = current_context.run(gen.send, result)\r\nStopIteration: True\r\n\r\nDuring handling of the above exception, another exception occurred:\r\n\r\nTraceback (most recent call last):\r\n  File \"/root/synapse/venv/lib/python3.10/site-packages/synapse/rest/client/register.py\", line 583, in on_POST\r\n    auth_result, params, session_id = await self.auth_handler.check_ui_auth(\r\n  File \"/root/synapse/venv/lib/python3.10/site-packages/synapse/handlers/auth.py\", line 551, in check_ui_auth\r\n    raise InteractiveAuthIncompleteError(\r\nsynapse.api.errors.InteractiveAuthIncompleteError: Interactive auth not yet complete\r\n\r\nDuring handling of the above exception, another exception occurred:\r\n\r\nTraceback (most recent call last):\r\n  File \"/root/synapse/venv/lib/python3.10/site-packages/synapse/http/server.py\", line 366, in _async_render_wrapper\r\n    callback_return = await self._async_render(request)\r\n  File \"/root/synapse/venv/lib/python3.10/site-packages/synapse/http/server.py\", line 572, in _async_render\r\n    callback_return = await raw_callback_return\r\n  File \"/root/synapse/venv/lib/python3.10/site-packages/synapse/rest/client/_base.py\", line 99, in wrapped\r\n    return await orig(*args, **kwargs)\r\n  File \"/root/synapse/venv/lib/python3.10/site-packages/synapse/rest/client/register.py\", line 600, in on_POST\r\n    password_hash = await self.auth_handler.hash(password)\r\n  File \"/root/synapse/venv/lib/python3.10/site-packages/twisted/python/threadpool.py\", line 244, in inContext\r\n    result = inContext.theWork()  # type: ignore[attr-defined]\r\n  File \"/root/synapse/venv/lib/python3.10/site-packages/twisted/python/threadpool.py\", line 260, in <lambda>\r\n    inContext.theWork = lambda: context.call(  # type: ignore[attr-defined]\r\n  File \"/root/synapse/venv/lib/python3.10/site-packages/twisted/python/context.py\", line 117, in callWithContext\r\n    return self.currentContext().callWithContext(ctx, func, *args, **kw)\r\n  File \"/root/synapse/venv/lib/python3.10/site-packages/twisted/python/context.py\", line 82, in callWithContext\r\n    return func(*args, **kw)\r\n  File \"/root/synapse/venv/lib/python3.10/site-packages/synapse/logging/context.py\", line 970, in g\r\n    return f(*args, **kwargs)\r\n  File \"/root/synapse/venv/lib/python3.10/site-packages/synapse/handlers/auth.py\", line 1566, in _do_hash\r\n    ).decode(\"ascii\")\r\nAttributeError: 'str' object has no attribute 'decode'\r\n```\r\n\r\n\r\n\r\n### Anything else that would be useful to know?\r\n\r\nRegistrations have worked fine and I have not made any changes on my end and now they stopped working, so i would assume error in synapse.\r\nI had captcha enabled but already tested with it disabled (unsafe registrations enabled) and the error persists.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13363/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13363/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

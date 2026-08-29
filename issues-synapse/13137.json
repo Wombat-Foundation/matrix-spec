@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13137",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13137/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13137/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13137/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13137",
+  "id": 1289755812,
+  "node_id": "I_kwDOAVyVwM5M4Byk",
+  "number": 13137,
+  "title": "GET `/profile/<USER_ID>/avatar_url` and `/profile/<USER_ID>/displayname` return 200 with for users lacking an displayname and avatar, contradicting the spec",
+  "user": {
+    "login": "DMRobertson",
+    "id": 8614563,
+    "node_id": "MDQ6VXNlcjg2MTQ1NjM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8614563?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/DMRobertson",
+    "html_url": "https://github.com/DMRobertson",
+    "followers_url": "https://api.github.com/users/DMRobertson/followers",
+    "following_url": "https://api.github.com/users/DMRobertson/following{/other_user}",
+    "gists_url": "https://api.github.com/users/DMRobertson/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/DMRobertson/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/DMRobertson/subscriptions",
+    "organizations_url": "https://api.github.com/users/DMRobertson/orgs",
+    "repos_url": "https://api.github.com/users/DMRobertson/repos",
+    "events_url": "https://api.github.com/users/DMRobertson/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/DMRobertson/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 828678284,
+      "node_id": "MDU6TGFiZWw4Mjg2NzgyODQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spec-Compliance",
+      "name": "A-Spec-Compliance",
+      "color": "5319E7",
+      "default": false,
+      "description": "places where synapse does not conform to the spec"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 3232177309,
+      "node_id": "MDU6TGFiZWwzMjMyMTc3MzA5",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/P4",
+      "name": "P4",
+      "color": "d1e5f0",
+      "default": false,
+      "description": "(OBSOLETE: use S- labels.) Okay backlog: will not schedule, will accept patches"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2022-06-30T08:05:35Z",
+  "updated_at": "2022-06-30T08:09:48Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "https://spec.matrix.org/v1.3/client-server-api/#get_matrixclientv3profileuseridavatar_url\r\n\r\n> <h2>Responses</h2>\r\n> \r\n> \r\n> Status | Description\r\n> -- | --\r\n> 200 | The avatar URL for this user.\r\n> 404 | There is no avatar URL for this user or this user does not exist.\r\n\r\nSynapse only returns 404 when the requested user doesn't exist.\r\n\r\nhttps://github.com/matrix-org/synapse/blob/c99b511db950bff5129e717a225de78b95b9b5ad/synapse/rest/client/profile.py#L96-L119\r\n\r\n(Note that the server-server API has [a different response shape](https://spec.matrix.org/v1.3/server-server-api/#get_matrixfederationv1queryprofile).)\r\n\r\nEasy enough to fix, but needs some thought to see if clients will be affected. We could event alter the spec to match Synapse's implementation if that's what clients and other servers are expecting and doing.\r\n\r\nNote that the /displayname endpoint exhibits similar behaviour and is also in violation of the spec.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13137/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13137/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

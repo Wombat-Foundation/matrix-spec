@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14157",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14157/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14157/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14157/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14157",
+  "id": 1406122208,
+  "node_id": "I_kwDOAVyVwM5Tz7jg",
+  "number": 14157,
+  "title": "simple_* methods handle `None` incorrectly for key values",
+  "user": {
+    "login": "clokep",
+    "id": 517124,
+    "node_id": "MDQ6VXNlcjUxNzEyNA==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/517124?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/clokep",
+    "html_url": "https://github.com/clokep",
+    "followers_url": "https://api.github.com/users/clokep/followers",
+    "following_url": "https://api.github.com/users/clokep/following{/other_user}",
+    "gists_url": "https://api.github.com/users/clokep/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/clokep/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/clokep/subscriptions",
+    "organizations_url": "https://api.github.com/users/clokep/orgs",
+    "repos_url": "https://api.github.com/users/clokep/repos",
+    "events_url": "https://api.github.com/users/clokep/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/clokep/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4195810659,
+      "node_id": "LA_kwDOAVyVwM76Fv1j",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Database",
+      "name": "A-Database",
+      "color": "5319E7",
+      "default": false,
+      "description": "DB stuff like queries, migrations, new/remove columns, indexes, unexpected entries in the db"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2022-10-12T12:25:03Z",
+  "updated_at": "2022-10-14T23:42:30Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Generally the `simple_*` methods do not handle `None` properly when used as a key-value (the exact arguments differ by method). See #14138 for real fallout from this.\r\n\r\n`simple_upsert_emulated_txn` has special handling for `null` which should likely be abstracted:\r\n\r\nhttps://github.com/matrix-org/synapse/blob/b4ec4f5e71a87d5bdc840a4220dfd9a34c54c847/synapse/storage/database.py#L1304-L1310\r\n\r\nThis is mostly a footgun that we could avoid by either:\r\n\r\n1. Raising an exception (or asserting) when a key-value is `None`.\r\n2. Automatically handling `None` and turning it into `IS NONE` (which is what `simple_upsert_emulated_txn` does).",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14157/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14157/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

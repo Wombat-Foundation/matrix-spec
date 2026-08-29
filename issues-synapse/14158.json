@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14158",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14158/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14158/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14158/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14158",
+  "id": 1406229136,
+  "node_id": "I_kwDOAVyVwM5T0VqQ",
+  "number": 14158,
+  "title": "Sync current token may be ahead of event stream cache position using workers",
+  "user": {
+    "login": "Fizzadar",
+    "id": 1026154,
+    "node_id": "MDQ6VXNlcjEwMjYxNTQ=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1026154?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Fizzadar",
+    "html_url": "https://github.com/Fizzadar",
+    "followers_url": "https://api.github.com/users/Fizzadar/followers",
+    "following_url": "https://api.github.com/users/Fizzadar/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Fizzadar/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Fizzadar/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Fizzadar/subscriptions",
+    "organizations_url": "https://api.github.com/users/Fizzadar/orgs",
+    "repos_url": "https://api.github.com/users/Fizzadar/repos",
+    "events_url": "https://api.github.com/users/Fizzadar/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Fizzadar/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1056680564,
+      "node_id": "MDU6TGFiZWwxMDU2NjgwNTY0",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Workers",
+      "name": "A-Workers",
+      "color": "5319E7",
+      "default": false,
+      "description": "Problems related to running Synapse in Worker Mode (or replication)"
+    },
+    {
+      "id": 2038475067,
+      "node_id": "MDU6TGFiZWwyMDM4NDc1MDY3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Sync",
+      "name": "A-Sync",
+      "color": "5319E7",
+      "default": false,
+      "description": "defects related to /sync"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 21,
+  "created_at": "2022-10-12T13:34:31Z",
+  "updated_at": "2023-01-27T10:42:38Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Based on my initial work investigating sync cache races in: https://github.com/matrix-org/synapse/issues/14154\r\n\r\nSync makes use of the event stream cache to determine whether a room has changed between the since & current tokens. This is then used to limit the number of rooms events are queried for in `get_room_events_stream_for_rooms`. After discovering the cache invalidation races above I added a quick log line for this: https://github.com/beeper/synapse/commit/62497db551651e2ebfb9241a3521a9410aa98706 (after https://github.com/beeper/synapse/commit/529715536c3d0783ba76093e6826c5516f934bb0).\r\n\r\nAnd it logs! Only a very small handful of occurrences over the last ~5 days and the position difference has so far been 1 every time. I suspect this may also occur against other stream caches but have not confirmed.\r\n\r\nThe worry here is if an event was sent within the gap it may be missed from an incremental sync which is especially bad because the user will never see or know about this event unless they re-init sync (or the client backfills it?).\r\n\r\nOne solution to this is to implement a waiting mechanism on `StreamCache` so a worker can wait for the cache to catch up with the current token for a given sync before fetching data. Because this is super rare and even when it happens it's a tiny position difference this would probably have negligable impact in sync performance and provide a shield against cache invalidation races over replication.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14158/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14158/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

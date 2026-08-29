@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16054",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16054/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16054/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16054/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16054",
+  "id": 1833664937,
+  "node_id": "I_kwDOAVyVwM5tS4Gp",
+  "number": 16054,
+  "title": "KeyError on recent background updates",
+  "user": {
+    "login": "Fizzadar",
+    "id": 1026154,
+    "node_id": "MDQ6VXNlcjEwMjYxNTQ=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1026154?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Fizzadar",
+    "html_url": "https://github.com/Fizzadar",
+    "followers_url": "https://api.github.com/users/Fizzadar/followers",
+    "following_url": "https://api.github.com/users/Fizzadar/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Fizzadar/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Fizzadar/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Fizzadar/subscriptions",
+    "organizations_url": "https://api.github.com/users/Fizzadar/orgs",
+    "repos_url": "https://api.github.com/users/Fizzadar/repos",
+    "events_url": "https://api.github.com/users/Fizzadar/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Fizzadar/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 2674406491,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDkx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/X-Regression",
+      "name": "X-Regression",
+      "color": "ff7979",
+      "default": false,
+      "description": "Something broke which worked on a previous release"
+    },
+    {
+      "id": 4195810659,
+      "node_id": "LA_kwDOAVyVwM76Fv1j",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Database",
+      "name": "A-Database",
+      "color": "5319E7",
+      "default": false,
+      "description": "DB stuff like queries, migrations, new/remove columns, indexes, unexpected entries in the db"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2023-08-02T18:04:04Z",
+  "updated_at": "2023-08-29T15:55:44Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nWe're seeing a `KeyError` on the recent updates introduced by https://github.com/matrix-org/synapse/commit/11e15d79b8a0af593fd9467e0cc7f8a9dfcb6c4f:\r\n\r\n```\r\nKeyError: 'current_state_events_stream_ordering_idx'\r\n  File \"synapse/storage/background_updates.py\", line 405, in run_background_updates\r\n    result = await self.do_next_background_update(sleep)\r\n  File \"synapse/storage/background_updates.py\", line 528, in do_next_background_update\r\n    update_info = self._background_update_handlers[self._current_background_update]\r\n```\r\n\r\nSpecifically appears to be missing in `BackgroundUpdates._background_update_handlers`, but adding some logging indicates it is being registered as a background update:\r\n\r\n```\r\n{\"message\":\"Registering background index update: current_state_events_stream_ordering_idx\",\"namespace\":\"synapse.storage.background_updates\",\"level\":\"info\",\"time\":1690998470.67,\"request\":\"main\",\"server_name\":\"beeper.com\"}\r\n{\"message\":\"Error doing update\",\"namespace\":\"synapse.storage.background_updates\",\"level\":\"error\",\"time\":1690998470.9,\"request\":\"background_updates-0\",\"server_name\":\"beeper.com\",\"exc_type\":\"KeyError\",\"exc_value\":\"'current_state_events_stream_ordering_idx'\"}\r\n{\"message\":\"Error doing update\",\"namespace\":\"synapse.storage.background_updates\",\"level\":\"error\",\"time\":1690998470.97,\"request\":\"background_updates-0\",\"server_name\":\"beeper.com\",\"exc_type\":\"KeyError\",\"exc_value\":\"'current_state_events_stream_ordering_idx'\"}\r\n{\"message\":\"Error doing update\",\"namespace\":\"synapse.storage.background_updates\",\"level\":\"error\",\"time\":1690998470.97,\"request\":\"background_updates-0\",\"server_name\":\"beeper.com\",\"exc_type\":\"KeyError\",\"exc_value\":\"'current_state_events_stream_ordering_idx'\"}\r\n{\"message\":\"Error doing update\",\"namespace\":\"synapse.storage.background_updates\",\"level\":\"error\",\"time\":1690998470.98,\"request\":\"background_updates-0\",\"server_name\":\"beeper.com\",\"exc_type\":\"KeyError\",\"exc_value\":\"'current_state_events_stream_ordering_idx'\"}\r\n```\r\n\r\nIf I run locally with sqlite there is no error, but I can't see any codepath that would change the behaviour for postgres 🤔 \r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16054/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16054/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

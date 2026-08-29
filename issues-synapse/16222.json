@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16222",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16222/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16222/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16222/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16222",
+  "id": 1877936401,
+  "node_id": "I_kwDOAVyVwM5v7wkR",
+  "number": 16222,
+  "title": "Metrics work through http listener when enable_metrics false",
+  "user": {
+    "login": "tcpipuk",
+    "id": 20157053,
+    "node_id": "MDQ6VXNlcjIwMTU3MDUz",
+    "avatar_url": "https://avatars.githubusercontent.com/u/20157053?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/tcpipuk",
+    "html_url": "https://github.com/tcpipuk",
+    "followers_url": "https://api.github.com/users/tcpipuk/followers",
+    "following_url": "https://api.github.com/users/tcpipuk/following{/other_user}",
+    "gists_url": "https://api.github.com/users/tcpipuk/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/tcpipuk/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/tcpipuk/subscriptions",
+    "organizations_url": "https://api.github.com/users/tcpipuk/orgs",
+    "repos_url": "https://api.github.com/users/tcpipuk/repos",
+    "events_url": "https://api.github.com/users/tcpipuk/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/tcpipuk/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1056680564,
+      "node_id": "MDU6TGFiZWwxMDU2NjgwNTY0",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Workers",
+      "name": "A-Workers",
+      "color": "5319E7",
+      "default": false,
+      "description": "Problems related to running Synapse in Worker Mode (or replication)"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 3537729900,
+      "node_id": "LA_kwDOAVyVwM7S3Xls",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Metrics",
+      "name": "A-Metrics",
+      "color": "5319E7",
+      "default": false,
+      "description": "metrics, measures, stuff we put in Prometheus"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2023-09-01T19:13:08Z",
+  "updated_at": "2023-09-05T12:58:24Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nNot a critical bug, but the \"http\" listener on generic_workers allows metrics when `enable_metrics: false` - this doesn't happen on the Synapse main process, which informs the user that metrics are disabled until `enable_metrics` is changed.\r\n\r\n### Steps to reproduce\r\n\r\n- Set `enable_metrics: false` in homeserver.yaml\r\n- Create any generic_worker\r\n- Create worker_listener of \"http\" type with `[\"metrics\"]` resource\r\n- Metrics are now served through that listener\r\n\r\n### Homeserver\r\n\r\ntcpip.uk\r\n\r\n### Synapse Version\r\n\r\n1.91.0\r\n\r\n### Installation Method\r\n\r\nDocker (matrixdotorg/synapse)\r\n\r\n### Database\r\n\r\nPostgreSQL 15.4\r\n\r\n### Workers\r\n\r\nMultiple workers\r\n\r\n### Platform\r\n\r\nUbuntu 22.04 baremetal\r\n\r\n### Configuration\r\n\r\n_No response_\r\n\r\n### Relevant log output\r\n\r\nNot sure what to put here, metrics are served (through Twisted rather than sidecar) when the Synapse main process doesn't allow it.\r\n\r\n### Anything else that would be useful to know?\r\n\r\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16222/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16222/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

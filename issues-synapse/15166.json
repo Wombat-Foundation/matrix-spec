@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15166",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15166/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15166/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15166/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15166",
+  "id": 1601748002,
+  "node_id": "I_kwDOAVyVwM5feLwi",
+  "number": 15166,
+  "title": "Current UIA grace period behaviour is probably not spec compliant",
+  "user": {
+    "login": "hughns",
+    "id": 6955675,
+    "node_id": "MDQ6VXNlcjY5NTU2NzU=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/6955675?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/hughns",
+    "html_url": "https://github.com/hughns",
+    "followers_url": "https://api.github.com/users/hughns/followers",
+    "following_url": "https://api.github.com/users/hughns/following{/other_user}",
+    "gists_url": "https://api.github.com/users/hughns/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/hughns/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/hughns/subscriptions",
+    "organizations_url": "https://api.github.com/users/hughns/orgs",
+    "repos_url": "https://api.github.com/users/hughns/repos",
+    "events_url": "https://api.github.com/users/hughns/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/hughns/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 828678284,
+      "node_id": "MDU6TGFiZWw4Mjg2NzgyODQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spec-Compliance",
+      "name": "A-Spec-Compliance",
+      "color": "5319E7",
+      "default": false,
+      "description": "places where synapse does not conform to the spec"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2023-02-27T18:42:34Z",
+  "updated_at": "2023-02-27T20:16:10Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nThe Client-Server API [spec](https://spec.matrix.org/v1.6/client-server-api/#user-interactive-api-in-the-rest-api) states:\r\n\r\n> A request to an endpoint that uses User-Interactive Authentication never succeeds without auth. Homeservers may allow requests that don’t require auth by offering a stage with only the m.login.dummy auth type, but they must still give a 401 response to requests with no auth data.\r\n\r\nHowever, if Synapse is configured with a grace period then the `auth` field of the request body is not mandated and instead the request goes straight ahead.\r\n\r\n### Steps to reproduce\r\n\r\n- sign in to matrix.org using something like Element Web\r\n- get your access token and device ID from Settings\r\n- within 15 mins of signing in do\r\n- call `DELETE /devices/{deviceId}` with empty body\r\n- you receive a `200 OK` response instead of a `401`\r\n\r\n### Homeserver\r\n\r\nmatrix.org\r\n\r\n### Synapse Version\r\n\r\n1.78.0rc1 (b=matrix-org-hotfixes,6bb4db78ce)\r\n\r\n### Installation Method\r\n\r\nI don't know\r\n\r\n### Database\r\n\r\nPostgreSQL\r\n\r\n### Workers\r\n\r\nI don't know\r\n\r\n### Platform\r\n\r\nn/a\r\n\r\n### Configuration\r\n\r\n```yaml\r\nui_auth:\r\n  session_timeout: 15m\r\n```\r\n\r\n### Relevant log output\r\n\r\n```shell\r\nn/a\r\n```\r\n\r\n\r\n### Anything else that would be useful to know?\r\n\r\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15166/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15166/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

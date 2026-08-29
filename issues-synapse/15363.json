@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15363",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15363/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15363/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15363/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15363",
+  "id": 1650294620,
+  "node_id": "I_kwDOAVyVwM5iXX9c",
+  "number": 15363,
+  "title": "Background jobs for `notify_interested_services_ephemeral` appear to stack up with MSC3202+MSC2409 enabled",
+  "user": {
+    "login": "turt2live",
+    "id": 1190097,
+    "node_id": "MDQ6VXNlcjExOTAwOTc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1190097?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/turt2live",
+    "html_url": "https://github.com/turt2live",
+    "followers_url": "https://api.github.com/users/turt2live/followers",
+    "following_url": "https://api.github.com/users/turt2live/following{/other_user}",
+    "gists_url": "https://api.github.com/users/turt2live/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/turt2live/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/turt2live/subscriptions",
+    "organizations_url": "https://api.github.com/users/turt2live/orgs",
+    "repos_url": "https://api.github.com/users/turt2live/repos",
+    "events_url": "https://api.github.com/users/turt2live/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/turt2live/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477046103,
+      "node_id": "MDU6TGFiZWw0NzcwNDYxMDM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Application-Service",
+      "name": "A-Application-Service",
+      "color": "5319E7",
+      "default": false,
+      "description": "Related to AS support"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2023-04-01T04:54:27Z",
+  "updated_at": "2023-06-21T12:30:42Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\n\r\n![image](https://user-images.githubusercontent.com/1190097/229266356-066dacaf-4d3b-43bb-86e4-0ce78f8e7aca.png)\r\n\r\n\r\n^ This doesn't seem great. The cliff towards the end is a restart, where naturally the jobs clear themselves out.\n\n### Steps to reproduce\n\n1. Run MSC3202-compatible appservice\n\n### Homeserver\n\nt2bot.io\n\n### Synapse Version\n\n{\"server_version\":\"1.80.0\",\"python_version\":\"3.8.10\"}\n\n### Installation Method\n\nDocker (matrixdotorg/synapse)\n\n### Database\n\nPostgreSQL\n\n### Workers\n\nMultiple workers\n\n### Platform\n\nUbuntu machine. Contact for specifics.\n\n### Configuration\n\n```yaml\r\nexperimental_features:\r\n  msc2409_to_device_messages_enabled: true\r\n  msc3202_device_masquerading: true\r\n  msc3202_transaction_extensions: true\r\n```\r\n\r\nthen in the appservice config (there's only one such appservice):\r\n\r\n```yaml\r\nid: rss\r\nhs_token: redacted\r\nas_token: redacted\r\nnamespaces:\r\n  users: []\r\n  aliases: []\r\n  rooms: []\r\nurl: 'redacted'\r\nsender_localpart: rss\r\nrate_limited: false\r\nprotocols: null\r\nde.sorunome.msc2409.push_ephemeral: true\r\norg.matrix.msc3202: true\r\n```\n\n### Relevant log output\n\n```shell\nN/A\n```\n\n\n### Anything else that would be useful to know?\n\nThe appservice on the receiving side has encryption enabled, so will be receiving such traffic. t2bot.io also runs with presence enabled (on a dedicated worker). Typing notifications are on a dedicated worker as well.\r\n\r\nt2bot.io also runs a custom patch in this area: https://github.com/t2bot/synapse/commit/f197757b883cb234e57fb2aff8192255ff6c41ce",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15363/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15363/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

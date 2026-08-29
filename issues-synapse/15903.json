@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15903",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15903/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15903/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15903/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15903",
+  "id": 1796055537,
+  "node_id": "I_kwDOAVyVwM5rDaHx",
+  "number": 15903,
+  "title": "500 error on invalid avatar URL",
+  "user": {
+    "login": "aceArt-GmbH",
+    "id": 33117017,
+    "node_id": "MDQ6VXNlcjMzMTE3MDE3",
+    "avatar_url": "https://avatars.githubusercontent.com/u/33117017?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/aceArt-GmbH",
+    "html_url": "https://github.com/aceArt-GmbH",
+    "followers_url": "https://api.github.com/users/aceArt-GmbH/followers",
+    "following_url": "https://api.github.com/users/aceArt-GmbH/following{/other_user}",
+    "gists_url": "https://api.github.com/users/aceArt-GmbH/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/aceArt-GmbH/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/aceArt-GmbH/subscriptions",
+    "organizations_url": "https://api.github.com/users/aceArt-GmbH/orgs",
+    "repos_url": "https://api.github.com/users/aceArt-GmbH/repos",
+    "events_url": "https://api.github.com/users/aceArt-GmbH/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/aceArt-GmbH/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1920863622,
+      "node_id": "MDU6TGFiZWwxOTIwODYzNjIy",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Validation",
+      "name": "A-Validation",
+      "color": "5319E7",
+      "default": false,
+      "description": "500 (mostly) errors due to lack of event/parameter validation"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2023-07-10T06:27:06Z",
+  "updated_at": "2023-07-10T23:00:33Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nSetting an invalid mxc URL as avatar returns a `{\"errcode\":\"M_UNKNOWN\",\"error\":\"Internal server error\"}` instead of some nice error.\r\n\r\nThis should probably be handled nicely according to spec.\r\nOr it should be possible to set different avatar urls that do not start with `mxc://`\r\n\r\n### Steps to reproduce\r\n\r\n- type `/myroomavatar example.com` or similar\r\n- press enter\r\n\r\nGet `MatrixError: [500] Internal server error (https://my.server/_matrix/client/r0/rooms/!JzIUzeKaqhabcsHQVE%3Amy.server/state/m.room.member/%40test%3Amy.server)`\r\n\r\n### Homeserver\r\n\r\nself hosted\r\n\r\n### Synapse Version\r\n\r\n{\"server_version\":\"1.87.0\",\"python_version\":\"3.11.4\"}\r\n\r\n### Installation Method\r\n\r\nDocker (matrixdotorg/synapse)\r\n\r\n### Database\r\n\r\npostgres (PostgreSQL) 15.0 (Ubuntu 15.0-1.pgdg22.04+1)\r\n\r\n### Workers\r\n\r\nMultiple workers\r\n\r\n### Platform\r\n\r\nlxc container -> docker compose\r\n\r\n### Configuration\r\n\r\n_No response_\r\n\r\n### Relevant log output\r\n\r\n```shell\r\n2023-07-10 06:21:43,528 - synapse.http.server - 133 - ERROR - PUT-13 - Failed handle request via 'RoomStateEventRestServlet': <XForwardedForRequest at 0x7fd0605a6010 method='PUT' uri='/_matrix/client/r0/rooms/!JzIUzeKaqhabcsHQVE%3Amy.server/state/m.room.member/%40test%3Amy.server' clientproto='HTTP/1.1' site='8008'>\r\nTraceback (most recent call last):\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/util/caches/descriptors.py\", line 245, in _wrapped\r\n    ret = cache.get(cache_key, callback=invalidate_callback)\r\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/util/caches/deferred_cache.py\", line 180, in get\r\n    raise KeyError()\r\nKeyError\r\n\r\nDuring handling of the above exception, another exception occurred:\r\n\r\nTraceback (most recent call last):\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/http/server.py\", line 319, in _async_render_wrapper\r\n    callback_return = await self._async_render(request)\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/http/server.py\", line 529, in _async_render\r\n    callback_return = await raw_callback_return\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/rest/client/room.py\", line 289, in on_PUT\r\n    event_id, _ = await self.room_member_handler.update_membership(\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/handlers/room_member.py\", line 642, in update_membership\r\n    result = await self.update_membership_locked(\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/handlers/room_member.py\", line 762, in update_membership_locked\r\n    if not await self.profile_handler.check_avatar_size_and_mime_type(\r\n  File \"/usr/local/lib/python3.11/site-packages/twisted/internet/defer.py\", line 1697, in _inlineCallbacks\r\n    result = context.run(gen.send, result)\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/handlers/profile.py\", line 302, in check_avatar_size_and_mime_type\r\n    host, port, media_id = parse_and_validate_mxc_uri(mxc)\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/util/stringutils.py\", line 188, in parse_and_validate_mxc_uri\r\n    raise ValueError(\"mxc URI %r did not match expected format\" % (mxc,))\r\nValueError: mxc URI 'example.com' did not match expected format\r\n```\r\n```\r\n\r\n\r\n### Anything else that would be useful to know?\r\n\r\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15903/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15903/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

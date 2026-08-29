@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/5539",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/5539/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/5539/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/5539/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/5539",
+  "id": 459923716,
+  "node_id": "MDU6SXNzdWU0NTk5MjM3MTY=",
+  "number": 5539,
+  "title": "Synapse only maintains a threepid's relationship with zero or one identity servers, but I think it is (theoretically) possible for it one threepid to be associated with many identity servers",
+  "user": {
+    "login": "lampholder",
+    "id": 1922197,
+    "node_id": "MDQ6VXNlcjE5MjIxOTc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1922197?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/lampholder",
+    "html_url": "https://github.com/lampholder",
+    "followers_url": "https://api.github.com/users/lampholder/followers",
+    "following_url": "https://api.github.com/users/lampholder/following{/other_user}",
+    "gists_url": "https://api.github.com/users/lampholder/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/lampholder/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/lampholder/subscriptions",
+    "organizations_url": "https://api.github.com/users/lampholder/orgs",
+    "repos_url": "https://api.github.com/users/lampholder/repos",
+    "events_url": "https://api.github.com/users/lampholder/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/lampholder/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2316489728,
+      "node_id": "MDU6TGFiZWwyMzE2NDg5NzI4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-3PID",
+      "name": "A-3PID",
+      "color": "5319E7",
+      "default": false,
+      "description": "3rd party identifiers: e.g. email, phone number"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2019-06-24T14:27:18Z",
+  "updated_at": "2023-05-23T15:14:47Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "`@bob:homeserver.computer` could:\r\n- fire up a Riot with the IS `alpha.im`\r\n- publish the threepid `bob@gmail.com` to `alpha.im`\r\n- fire up another Riot with the IS `beta.im`\r\n- publish `bob@gmail.com` to `beta.im`\r\n\r\nThen I expect we'd lose the assocation with `alpha.im`, meaning the HS could no longer tidy up the threepid binding on account close.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/5539/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/5539/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

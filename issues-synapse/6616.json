@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/6616",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/6616/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/6616/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/6616/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/6616",
+  "id": 544479923,
+  "node_id": "MDU6SXNzdWU1NDQ0Nzk5MjM=",
+  "number": 6616,
+  "title": "Spec compliance: Logging in multiple times with same device ID does not invalidate old access tokens",
+  "user": {
+    "login": "aaronraimist",
+    "id": 5855073,
+    "node_id": "MDQ6VXNlcjU4NTUwNzM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/5855073?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/aaronraimist",
+    "html_url": "https://github.com/aaronraimist",
+    "followers_url": "https://api.github.com/users/aaronraimist/followers",
+    "following_url": "https://api.github.com/users/aaronraimist/following{/other_user}",
+    "gists_url": "https://api.github.com/users/aaronraimist/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/aaronraimist/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/aaronraimist/subscriptions",
+    "organizations_url": "https://api.github.com/users/aaronraimist/orgs",
+    "repos_url": "https://api.github.com/users/aaronraimist/repos",
+    "events_url": "https://api.github.com/users/aaronraimist/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/aaronraimist/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086029,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMjk=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-bug",
+      "name": "z-bug",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 828678284,
+      "node_id": "MDU6TGFiZWw4Mjg2NzgyODQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spec-Compliance",
+      "name": "A-Spec-Compliance",
+      "color": "5319E7",
+      "default": false,
+      "description": "places where synapse does not conform to the spec"
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406361,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzYx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Security",
+      "name": "Security",
+      "color": "b3e5fc",
+      "default": false,
+      "description": null
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458764864,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNaQA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Frequent",
+      "name": "O-Frequent",
+      "color": "0052CC",
+      "default": false,
+      "description": "Affects or can be seen by most users regularly or impacts most users' first experience"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2020-01-02T07:56:48Z",
+  "updated_at": "2023-05-23T15:54:53Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "https://matrix.org/docs/spec/client_server/r0.6.0#relationship-between-access-tokens-and-devices says \r\n\r\n> [When logging in] If the client sets the device_id, the server will invalidate any access token previously assigned to that device. There is therefore at most one active access token assigned to each device at any one time.\r\n\r\nYou can reproduce with:\r\n\r\n```\r\ncurl -XPOST -d '{\"type\":\"m.login.password\", \"user\":\"xxx\", \"password\":\"yyy\", \"device_id\":\"MYDEVICE\"}' \"https://server.com/_matrix/client/r0/login\"\r\n\r\ncurl -XPOST -d '{\"type\":\"m.login.password\", \"user\":\"xxx\", \"password\":\"yyy\", \"device_id\":\"MYDEVICE\"}' \"https://server.com/_matrix/client/r0/login\"\r\n```\r\n\r\nTwo rows are created in the `access_tokens` table with the same device ID but different access tokens, both of which are valid.\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/6616/reactions",
+    "total_count": 4,
+    "+1": 4,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/6616/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

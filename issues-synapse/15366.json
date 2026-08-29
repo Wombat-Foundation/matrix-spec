@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15366",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15366/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15366/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15366/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15366",
+  "id": 1650725993,
+  "node_id": "I_kwDOAVyVwM5iZBRp",
+  "number": 15366,
+  "title": "synapse allows an infinite number of one-time-keys to be uploaded, leading to inefficient `/keys/claim`",
+  "user": {
+    "login": "richvdh",
+    "id": 1389908,
+    "node_id": "MDQ6VXNlcjEzODk5MDg=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1389908?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/richvdh",
+    "html_url": "https://github.com/richvdh",
+    "followers_url": "https://api.github.com/users/richvdh/followers",
+    "following_url": "https://api.github.com/users/richvdh/following{/other_user}",
+    "gists_url": "https://api.github.com/users/richvdh/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/richvdh/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/richvdh/subscriptions",
+    "organizations_url": "https://api.github.com/users/richvdh/orgs",
+    "repos_url": "https://api.github.com/users/richvdh/repos",
+    "events_url": "https://api.github.com/users/richvdh/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/richvdh/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 4459612007,
+      "node_id": "LA_kwDOAVyVwM8AAAABCdBHZw",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-E2EE",
+      "name": "A-E2EE",
+      "color": "5319E7",
+      "default": false,
+      "description": "End-to-end encryption for Matrix clients"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2023-04-01T23:14:10Z",
+  "updated_at": "2023-04-03T17:13:12Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Synapse imposes no limit on the number of one-time-keys which can be uploaded. Apart from the storage, that's a problem because `/keys/claim` isn't terribly efficient when there are lots of matching keys in the database:\r\n\r\n\r\n```\r\nexplain\r\n                        DELETE FROM e2e_one_time_keys_json\r\n                        WHERE user_id = '@richvdh:matrix.org' AND device_id = 'KUMOTFKFVU' AND algorithm = 'signed_curve25519'\r\n                            AND key_id IN (\r\n                                SELECT key_id FROM e2e_one_time_keys_json\r\n                                WHERE user_id = '@richvdh:matrix.org' AND device_id = 'KUMOTFKFVU' AND algorithm = 'signed_curve25519'\r\n                                LIMIT 1\r\n                            )\r\n                        RETURNING key_id, key_json;\r\n\r\n\r\n----------------------------------------------------------------------------------------------------------------------------------------------------------------------\r\n Delete on e2e_one_time_keys_json  (cost=1.40..9.47 rows=1 width=37)\r\n   ->  Nested Loop Semi Join  (cost=1.40..9.47 rows=1 width=37)\r\n         Join Filter: (e2e_one_time_keys_json.key_id = \"ANY_subquery\".key_id)\r\n         ->  Index Scan using e2e_one_time_keys_json_uniqueness on e2e_one_time_keys_json  (cost=0.70..4.72 rows=1 width=13)\r\n               Index Cond: ((user_id = '@richvdh:matrix.org'::text) AND (device_id = 'KUMOTFKFVU'::text) AND (algorithm = 'signed_curve25519'::text))\r\n         ->  Subquery Scan on \"ANY_subquery\"  (cost=0.70..4.73 rows=1 width=38)\r\n               ->  Limit  (cost=0.70..4.72 rows=1 width=7)\r\n                     ->  Index Only Scan using e2e_one_time_keys_json_uniqueness on e2e_one_time_keys_json e2e_one_time_keys_json_1  (cost=0.70..4.72 rows=1 width=7)\r\n                           Index Cond: ((user_id = '@richvdh:matrix.org'::text) AND (device_id = 'KUMOTFKFVU'::text) AND (algorithm = 'signed_curve25519'::text))\r\n(9 rows)\r\n\r\n```\r\n\r\nit looks like neither of those index scans use the key_id in the index.  It can take several seconds for a user with 10K one-time keys.\r\n\r\nReplacing the `IN` with `=` fixes that, but I haven't tested on sqlite.\r\n\r\nSuggest we fix the query *and* stop users uploading more than 200 or so OTKs per device.\r\n\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15366/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15366/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

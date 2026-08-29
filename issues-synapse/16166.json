@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16166",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16166/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16166/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16166/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16166",
+  "id": 1863333310,
+  "node_id": "I_kwDOAVyVwM5vEDW-",
+  "number": 16166,
+  "title": "Dependency update breaks OIDC for Lemonldap",
+  "user": {
+    "login": "hachem2001",
+    "id": 19938908,
+    "node_id": "MDQ6VXNlcjE5OTM4OTA4",
+    "avatar_url": "https://avatars.githubusercontent.com/u/19938908?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/hachem2001",
+    "html_url": "https://github.com/hachem2001",
+    "followers_url": "https://api.github.com/users/hachem2001/followers",
+    "following_url": "https://api.github.com/users/hachem2001/following{/other_user}",
+    "gists_url": "https://api.github.com/users/hachem2001/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/hachem2001/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/hachem2001/subscriptions",
+    "organizations_url": "https://api.github.com/users/hachem2001/orgs",
+    "repos_url": "https://api.github.com/users/hachem2001/repos",
+    "events_url": "https://api.github.com/users/hachem2001/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/hachem2001/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2186787706,
+      "node_id": "MDU6TGFiZWwyMTg2Nzg3NzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-SSO",
+      "name": "A-SSO",
+      "color": "5319E7",
+      "default": false,
+      "description": "Single Sign-On (maybe OIDC)"
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 2674406491,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDkx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/X-Regression",
+      "name": "X-Regression",
+      "color": "ff7979",
+      "default": false,
+      "description": "Something broke which worked on a previous release"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2023-08-23T13:24:18Z",
+  "updated_at": "2023-08-29T16:21:16Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\n### PROBLEM \r\nUpon updating from synapse v1.89.0 to synapse 1.90.0, the home server stops at startup on 504 No response error during OIDC configuration setup.\r\n\r\n\r\n### ANALYSIS\r\nWell I checked the code that changed for OIDC metadata loading since 1.89.0 : nothing absurd.\r\nThen I thought of verifying whether a certain library version update might have caused the issue, and indeed : only one single dependency change is responsible for the error, that of `service-identity` which changed from `version = \"21.1.0\"` to `version = \"23.1.0\"` in `poetry.lock`\r\n\r\n### SOLUTION\r\nRevert `service-identity` to `21.1.0`, and lock the dependency version to less than 23.x.x\r\nAnd if you're motivated enough, try to figure out why the dependency version change caused this issue.\r\n\r\n### Steps to reproduce\r\n\r\n- have docker (24.0.50), npm (9.2.0), node (18.13.0), and docker-compose (2.18.2) installed.\r\n- clone [this repository](https://github.com/jcabannes/synapse-with-oidc-crashing) (thanks @jcabannes !)\r\n- npm install\r\n- npm run start:debug\r\n- Take note of synapse's docker service logs.\r\n\r\nTo see the difference, modify synapse's version from 1.90.0 to 1.89.0 in `__test-data__/docker-compose.yml`, the error should disappear.\r\n\r\n### Homeserver\r\n\r\nlocal test\r\n\r\n### Synapse Version\r\n\r\n1.90.0\r\n\r\n### Installation Method\r\n\r\nDocker (matrixdotorg/synapse)\r\n\r\n### Database\r\n\r\nSQLite\r\n\r\n### Workers\r\n\r\nSingle process\r\n\r\n### Platform\r\n\r\nDebian 12 stable, amd64\r\n\r\n### Configuration\r\n\r\nin homeserver.yaml\r\n```\r\nserver_name: \"example.com\"\r\npublic_baseurl: \"https://matrix.example.com/\"\r\npid_file: /data/homeserver.pid\r\nlisteners:\r\n  - port: 8008\r\n    tls: false\r\n    type: http\r\n    x_forwarded: true\r\n    resources:\r\n      - names: [client, federation]\r\n        compress: false\r\ndatabase:\r\n  name: sqlite3\r\n  args:\r\n    database: /data/homeserver.db\r\nlog_config: \"/data/matrix.example.com.log.config\"\r\nmedia_store_path: /data/media_store\r\nregistration_shared_secret: \"u+Q^i6&*Y9azZ*~pID^.a=qrvd+mUIBX9SAreEPGJ=xzP&c+Sk\"\r\nreport_stats: false\r\nmacaroon_secret_key: \"=0ws-1~ztzXm&xh+As;7YL5.-U~r-T,F4zR3mW#E;6Y::Rb7&G\"\r\nform_secret: \"&YFO.XSc*2^2ZsW#hmoR+t:wf03~u#fin#O.R&erFcl9_mEayv\"\r\nsigning_key_path: \"/data/matrix.example.com.signing.key\"\r\ntrusted_key_servers:\r\n  - server_name: \"matrix.org\"\r\n    accept_keys_insecurely: true\r\naccept_keys_insecurely: true\r\napp_service_config_files:\r\n  - /data/registration.yaml\r\noidc_config:\r\n  idp_id: lemonldap\r\n  idp_name: lemonldap\r\n  enabled: true\r\n  issuer: \"https://auth.example.com/\"\r\n  client_id: \"matrix1\"\r\n  client_secret: \"matrix1*\"\r\n  scopes: [\"openid\", \"profile\"]\r\n  discover: true\r\n  user_profile_method: \"userinfo_endpoint\"\r\n  user_mapping_provider:\r\n    config:\r\n      subject_claim: \"sub\"\r\n      localpart_template: \"{{ user.preferred_username }}\"\r\n      display_name_template: \"{{ user.name }}\"\r\n```\r\n\r\n### Relevant log output\r\n\r\n```shell\r\nError during startup:\r\nTraceback (most recent call last):\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/handlers/oidc.py\", line 140, in load_metadata\r\n    await p.load_metadata()\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/handlers/oidc.py\", line 588, in load_metadata\r\n    return await self._provider_metadata.get()\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/util/caches/cached_call.py\", line 136, in get\r\n    return await self._cachedcall.get()\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/util/caches/cached_call.py\", line 106, in get\r\n    self._result.raiseException()\r\n  File \"/usr/local/lib/python3.11/site-packages/twisted/python/failure.py\", line 504, in raiseException\r\n    raise self.value.with_traceback(self.tb)\r\n  File \"/usr/local/lib/python3.11/site-packages/twisted/internet/defer.py\", line 1693, in _inlineCallbacks\r\n    result = context.run(\r\n             ^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/twisted/python/failure.py\", line 518, in throwExceptionIntoGenerator\r\n    return g.throw(self.type, self.value, self.tb)\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/util/caches/cached_call.py\", line 126, in _wrapper\r\n    return await f()\r\n           ^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/handlers/oidc.py\", line 600, in _load_metadata\r\n    metadata_response = await self._http_client.get_json(url)\r\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/http/client.py\", line 559, in get_json\r\n    body = await self.get_raw(uri, args, headers=actual_headers)\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/http/client.py\", line 644, in get_raw\r\n    response = await self.request(\"GET\", uri, headers=Headers(actual_headers))\r\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/http/client.py\", line 411, in request\r\n    response = await make_deferred_yieldable(request_deferred)\r\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/twisted/internet/defer.py\", line 892, in _runCallbacks\r\n    current.result = callback(  # type: ignore[misc]\r\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/http/client.py\", line 952, in _timeout_to_request_timed_out_error\r\n    raise RequestTimedOutError(\"Timeout waiting for response from remote server\")\r\nsynapse.http.RequestTimedOutError: 504: Timeout waiting for response from remote server\r\n\r\nThe above exception was the direct cause of the following exception:\r\n\r\nTraceback (most recent call last):\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/app/_base.py\", line 254, in wrapper\r\n    await cb(*args, **kwargs)\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/app/homeserver.py\", line 362, in start\r\n    await oidc.load_metadata()\r\n  File \"/usr/local/lib/python3.11/site-packages/synapse/handlers/oidc.py\", line 144, in load_metadata\r\n    raise Exception(\r\nException: Error while initialising OIDC provider 'oidc-lemonldap'\r\n```\r\n\r\n\r\n### Anything else that would be useful to know?\r\n\r\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16166/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16166/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

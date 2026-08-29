@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/6886",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/6886/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/6886/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/6886/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/6886",
+  "id": 562973335,
+  "node_id": "MDU6SXNzdWU1NjI5NzMzMzU=",
+  "number": 6886,
+  "title": "Send content reports to room moderators",
+  "user": {
+    "login": "aaronraimist",
+    "id": 5855073,
+    "node_id": "MDQ6VXNlcjU4NTUwNzM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/5855073?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/aaronraimist",
+    "html_url": "https://github.com/aaronraimist",
+    "followers_url": "https://api.github.com/users/aaronraimist/followers",
+    "following_url": "https://api.github.com/users/aaronraimist/following{/other_user}",
+    "gists_url": "https://api.github.com/users/aaronraimist/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/aaronraimist/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/aaronraimist/subscriptions",
+    "organizations_url": "https://api.github.com/users/aaronraimist/orgs",
+    "repos_url": "https://api.github.com/users/aaronraimist/repos",
+    "events_url": "https://api.github.com/users/aaronraimist/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/aaronraimist/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477043173,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p2",
+      "name": "z-p2",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 477043174,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-feature",
+      "name": "z-feature",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 1554244657,
+      "node_id": "MDU6TGFiZWwxNTU0MjQ0NjU3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Moderation",
+      "name": "A-Moderation",
+      "color": "5319E7",
+      "default": false,
+      "description": "Tools for moderating HSes: event redaction, media removal, purge admin API, reports from users, ..."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2020-02-11T04:35:58Z",
+  "updated_at": "2022-07-19T21:11:56Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\n\r\n[The spec says](https://matrix.org/docs/spec/client_server/r0.6.0#id150) \"Users may encounter content which they find inappropriate and should be able to report it to the server administrators **or room moderators for review**.\" but Synapse doesn't currently expose reported messages to room moderators as far as I know. I would be great if you could report a message and have the room moderators act on it without having to ping individual moderators.\r\n\r\nRelated to https://github.com/matrix-org/synapse/issues/4007 - event reports get lost in a database table\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/6886/reactions",
+    "total_count": 3,
+    "+1": 3,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/6886/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

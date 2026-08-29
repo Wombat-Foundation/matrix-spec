@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/11148",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/11148/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/11148/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/11148/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/11148",
+  "id": 1032552781,
+  "node_id": "I_kwDOAVyVwM49i4FN",
+  "number": 11148,
+  "title": "We should offer the ability to redirect abuse reports to a room.",
+  "user": {
+    "login": "Yoric",
+    "id": 10190,
+    "node_id": "MDQ6VXNlcjEwMTkw",
+    "avatar_url": "https://avatars.githubusercontent.com/u/10190?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Yoric",
+    "html_url": "https://github.com/Yoric",
+    "followers_url": "https://api.github.com/users/Yoric/followers",
+    "following_url": "https://api.github.com/users/Yoric/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Yoric/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Yoric/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Yoric/subscriptions",
+    "organizations_url": "https://api.github.com/users/Yoric/orgs",
+    "repos_url": "https://api.github.com/users/Yoric/repos",
+    "events_url": "https://api.github.com/users/Yoric/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Yoric/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1056673481,
+      "node_id": "MDU6TGFiZWwxMDU2NjczNDgx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Logging",
+      "name": "A-Logging",
+      "color": "5319E7",
+      "default": false,
+      "description": "Synapse's logs (structured or otherwise). Not metrics."
+    },
+    {
+      "id": 1554244657,
+      "node_id": "MDU6TGFiZWwxNTU0MjQ0NjU3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Moderation",
+      "name": "A-Moderation",
+      "color": "5319E7",
+      "default": false,
+      "description": "Tools for moderating HSes: event redaction, media removal, purge admin API, reports from users, ..."
+    },
+    {
+      "id": 2674406261,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MjYx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/P3",
+      "name": "P3",
+      "color": "92c5de",
+      "default": false,
+      "description": "(OBSOLETE: use S- labels.) Approved backlog: not yet scheduled, will accept patches"
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2021-10-21T14:13:35Z",
+  "updated_at": "2021-11-10T20:29:45Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "The current Admin API to fetch abuse reports is not really convenient.\r\n\r\nThis gives homeserver administrators two possibilities:\r\n\r\n1. Write a script to fetch abuse reports from the admin API and publish it somewhere readable, typically a room. It's possible but annoying to implement and deploy.\r\n2. Configure a reverse proxy to intercept calls to `/report` and publish them somewhere readable, typically a room. Mjölnir recently started offering this feature but it's still a pain to configure correctly and extends the security perimeter of homeservers that use the feature.\r\n\r\nWe should consider the following change:\r\n\r\n- publish abuse reports directly to a room, as structured messages (possibly based on [MSC3215](https://github.com/matrix-org/matrix-doc/pull/3215));\r\n- let the admin pick a user id, room id, etc. in homeserver.yaml to determine which user will publish these reports and where;\r\n- encourage admins to adopt a bot to turn these structured messages into human-readable, internationalized, abuse reports.\r\n\r\n---\r\n\r\n - log to room",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/11148/reactions",
+    "total_count": 3,
+    "+1": 3,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/11148/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

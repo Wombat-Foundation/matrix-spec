@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13361",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13361/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13361/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13361/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13361",
+  "id": 1314878451,
+  "node_id": "I_kwDOAVyVwM5OX3Pz",
+  "number": 13361,
+  "title": "Sudden CPU spike to 100% and disk space decreasing fast - history purges",
+  "user": {
+    "login": "roughnecks",
+    "id": 1666536,
+    "node_id": "MDQ6VXNlcjE2NjY1MzY=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1666536?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/roughnecks",
+    "html_url": "https://github.com/roughnecks",
+    "followers_url": "https://api.github.com/users/roughnecks/followers",
+    "following_url": "https://api.github.com/users/roughnecks/following{/other_user}",
+    "gists_url": "https://api.github.com/users/roughnecks/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/roughnecks/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/roughnecks/subscriptions",
+    "organizations_url": "https://api.github.com/users/roughnecks/orgs",
+    "repos_url": "https://api.github.com/users/roughnecks/repos",
+    "events_url": "https://api.github.com/users/roughnecks/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/roughnecks/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 600557921,
+      "node_id": "MDU6TGFiZWw2MDA1NTc5MjE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Performance",
+      "name": "A-Performance",
+      "color": "5319E7",
+      "default": false,
+      "description": "Performance, both client-facing and admin-facing"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 3607820563,
+      "node_id": "LA_kwDOAVyVwM7XCvkT",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Message-Retention-Policies",
+      "name": "A-Message-Retention-Policies",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues related to Synapse's support of MSC1763 (message retention policies)"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 10,
+  "created_at": "2022-07-22T11:18:14Z",
+  "updated_at": "2023-04-25T22:42:24Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nI have \"btop\" always running on my second monitor..\r\nUnpinned a message in a room (from Element Web) and all of the sudden (not sure if related) server's CPU went crazy to 100% for a minute or so, until when I restarted the ansible playbook.\r\n\r\nIn this minute my DB has grown by 1GB more or less but I lost more than 2GB of space and I don't know where exactly.\r\nAfter that I ran the rust-compress utility and did a FULL VACUUM and DB is back to normal now.\n\n### Steps to reproduce\n\nI don't have any step to reproduce, it happened out of the blue.\r\n\r\nThe only thing I was doing at that time was removing a pinned message from a room.\n\n### Homeserver\n\nwoodpeckersnest.space\n\n### Synapse Version\n\n1.63.1\n\n### Installation Method\n\nOther (please mention below)\n\n### Platform\n\nI'm running the matrix-docker-ansible playbook on a Debian 11 VPS with 2GB RAM and 1 vCPU.\n\n### Relevant log output\n\n```shell\nJul 21 21:42:11 matrix-synapse[1303919]: 2022-07-21 19:42:11,764 - synapse.handlers.pagination - 274 - WARNING - purge_history_for_rooms_in_range-0 - [purge] purging events not possible: No event found (ts 1655840531742 => stream_ordering 155865)\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13361/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13361/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

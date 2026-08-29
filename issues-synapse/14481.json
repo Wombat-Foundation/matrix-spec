@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14481",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14481/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14481/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14481/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14481",
+  "id": 1454235907,
+  "node_id": "I_kwDOAVyVwM5WreED",
+  "number": 14481,
+  "title": "major state reset / corruption bug impacting the main official GrapheneOS room",
+  "user": {
+    "login": "thestinger",
+    "id": 1505226,
+    "node_id": "MDQ6VXNlcjE1MDUyMjY=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1505226?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/thestinger",
+    "html_url": "https://github.com/thestinger",
+    "followers_url": "https://api.github.com/users/thestinger/followers",
+    "following_url": "https://api.github.com/users/thestinger/following{/other_user}",
+    "gists_url": "https://api.github.com/users/thestinger/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/thestinger/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/thestinger/subscriptions",
+    "organizations_url": "https://api.github.com/users/thestinger/orgs",
+    "repos_url": "https://api.github.com/users/thestinger/repos",
+    "events_url": "https://api.github.com/users/thestinger/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/thestinger/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 3722136933,
+      "node_id": "LA_kwDOAVyVwM7d201l",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-WTF",
+      "name": "z-WTF",
+      "color": "ededed",
+      "default": false,
+      "description": "Causing the user to exclaim! These issues are high impact and low effort."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 33,
+  "created_at": "2022-11-18T00:39:58Z",
+  "updated_at": "2023-12-04T23:10:48Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\n#grapheneos:grapheneos.org (!SayHlEYXdrpSerhLMC:matrix.org) which was created with room version 6 has been impacted by a major synapse / protocol bug resulting in losing around 1500 members of the room followed by users being unable to join the room. It was acting as if it was set to invite-only mode despite being public. We think we've worked around that issue by setting it to invite-only and back to public. We know little about the Matrix protocol and synapse so we're unable to determine what happened. Ideally we can also get help with restoring the room members. Users reported getting a 403 error message when trying to rejoin and were confused thinking they had been banned.\n\n### Steps to reproduce\n\nWe don't know how to reproduce the problem.\n\n### Homeserver\n\nall\n\n### Synapse Version\n\nall\n\n### Installation Method\n\n_No response_\n\n### Platform\n\nAll\n\n### Relevant log output\n\n```shell\nn/a\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14481/reactions",
+    "total_count": 3,
+    "+1": 3,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14481/timeline",
+  "performed_via_github_app": null,
+  "state_reason": "reopened",
+  "pinned_comment": null
+}

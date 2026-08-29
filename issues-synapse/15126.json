@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15126",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15126/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15126/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15126/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15126",
+  "id": 1593968040,
+  "node_id": "I_kwDOAVyVwM5fAgWo",
+  "number": 15126,
+  "title": "The configuration options for e-mail sending TLS are awful — improve them by making them clearer and in most cases default to the right option",
+  "user": {
+    "login": "reivilibre",
+    "id": 38398653,
+    "node_id": "MDQ6VXNlcjM4Mzk4NjUz",
+    "avatar_url": "https://avatars.githubusercontent.com/u/38398653?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/reivilibre",
+    "html_url": "https://github.com/reivilibre",
+    "followers_url": "https://api.github.com/users/reivilibre/followers",
+    "following_url": "https://api.github.com/users/reivilibre/following{/other_user}",
+    "gists_url": "https://api.github.com/users/reivilibre/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/reivilibre/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/reivilibre/subscriptions",
+    "organizations_url": "https://api.github.com/users/reivilibre/orgs",
+    "repos_url": "https://api.github.com/users/reivilibre/repos",
+    "events_url": "https://api.github.com/users/reivilibre/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/reivilibre/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2299781639,
+      "node_id": "MDU6TGFiZWwyMjk5NzgxNjM5",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Config",
+      "name": "A-Config",
+      "color": "5319E7",
+      "default": false,
+      "description": "Configuration, or the documentation thereof"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2023-02-21T19:03:25Z",
+  "updated_at": "2023-02-21T19:03:45Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "I've run into a lot of confused admins recently, because the way we configure TLS for our e-mail sending is awful.\r\n\r\n* `require_transport_security: true` enables Explicit TLS (STARTTLS).\r\n    * at least 'require' accurately describes that we expect the server to offer a capability and require it to be there.\r\n* `force_tls: true` enables Implicit TLS.\r\n    * `force` is such a weird word to describe Implicit TLS.\r\n\r\nI'd much rather see us adopt a single config option, `tls_mode`, with the following options:\r\n\r\n* `explicit` or `starttls`  — chosen by default if the port is 587 or 25.\r\n* `implicit`— chosen by default if the port is 465.\r\n* `off` — never chosen by default.\r\n* for other port numbers: require the admin to choose\r\n\r\nIn the best and most reasonable case, **the admin would never need to touch this option(!)** because basically everyone uses these standard ports!!!\r\n\r\nA little bit of effort would be required to support the old options transitionally, but the documentation for this option could be much clearer — such as providing a table for admins that really need to configure e-mail on a random port (rather than having options **with no obvious difference discernible from the name, even to e-mail experts**). And most people would fall right into the 'well-known port? Automatic configuration' happy path!",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15126/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15126/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

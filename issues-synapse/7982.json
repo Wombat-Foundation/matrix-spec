@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/7982",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/7982/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/7982/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/7982/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/7982",
+  "id": 668094581,
+  "node_id": "MDU6SXNzdWU2NjgwOTQ1ODE=",
+  "number": 7982,
+  "title": "Admin visibility into federation status",
+  "user": {
+    "login": "chr-1x",
+    "id": 1606822,
+    "node_id": "MDQ6VXNlcjE2MDY4MjI=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1606822?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/chr-1x",
+    "html_url": "https://github.com/chr-1x",
+    "followers_url": "https://api.github.com/users/chr-1x/followers",
+    "following_url": "https://api.github.com/users/chr-1x/following{/other_user}",
+    "gists_url": "https://api.github.com/users/chr-1x/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/chr-1x/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/chr-1x/subscriptions",
+    "organizations_url": "https://api.github.com/users/chr-1x/orgs",
+    "repos_url": "https://api.github.com/users/chr-1x/repos",
+    "events_url": "https://api.github.com/users/chr-1x/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/chr-1x/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477043173,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p2",
+      "name": "z-p2",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 1507817868,
+      "node_id": "MDU6TGFiZWwxNTA3ODE3ODY4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Admin-API",
+      "name": "A-Admin-API",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 3537729900,
+      "node_id": "LA_kwDOAVyVwM7S3Xls",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Metrics",
+      "name": "A-Metrics",
+      "color": "5319E7",
+      "default": false,
+      "description": "metrics, measures, stuff we put in Prometheus"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 7,
+  "created_at": "2020-07-29T19:39:43Z",
+  "updated_at": "2022-08-25T14:17:31Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "As admin of a large synapse server (3000 users) I frequently end up in situations where users are reporting issues sending or receiving messages from other homeservers. (Often, this is matrix.org, but sometimes it's other large homeservers such as kde.org or pine64.org). I currently have little visibility into what could be causing these issues. Is it an issue with my homeserver, or the remote? If it's on our end, where should I be looking for problems?\r\n\r\nIn particular, there are a few key questions I don't currently have a way to answer:\r\n - Is my homeserver returning errors to remote homeservers? (If so, which homeservers and in what rooms?)\r\n - Is a particular remote homeserver returning errors / even online (from the perspective of my homeserver)?\r\n - When a message arrives late, what caused the delay?\r\n\r\nI would love if this information was exposed in some kind of dashboard, but failing that an addition to the admin API would be acceptable. (Note though that I don't really have any insight into what's currently included in the admin API or how I would access it). Looking around in the docs folder of the repo, I've found an unfinished looking document on [room statistics](https://github.com/matrix-org/synapse/blob/develop/docs/room_and_user_statistics.md) and some information on [prometheus metrics](https://github.com/matrix-org/synapse/blob/develop/docs/metrics-howto.md), which is unhelpful to me as I don't use prometheus (maybe I should, but it's not mentioned anywhere in the README or setup instructions). ",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/7982/reactions",
+    "total_count": 4,
+    "+1": 4,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/7982/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

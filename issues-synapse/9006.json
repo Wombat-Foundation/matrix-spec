@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/9006",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/9006/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/9006/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/9006/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/9006",
+  "id": 777334273,
+  "node_id": "MDU6SXNzdWU3NzczMzQyNzM=",
+  "number": 9006,
+  "title": "`require_auth_for_profile_requests` not spec compliant",
+  "user": {
+    "login": "afranke",
+    "id": 117241,
+    "node_id": "MDQ6VXNlcjExNzI0MQ==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/117241?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/afranke",
+    "html_url": "https://github.com/afranke",
+    "followers_url": "https://api.github.com/users/afranke/followers",
+    "following_url": "https://api.github.com/users/afranke/following{/other_user}",
+    "gists_url": "https://api.github.com/users/afranke/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/afranke/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/afranke/subscriptions",
+    "organizations_url": "https://api.github.com/users/afranke/orgs",
+    "repos_url": "https://api.github.com/users/afranke/repos",
+    "events_url": "https://api.github.com/users/afranke/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/afranke/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 828678284,
+      "node_id": "MDU6TGFiZWw4Mjg2NzgyODQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spec-Compliance",
+      "name": "A-Spec-Compliance",
+      "color": "5319E7",
+      "default": false,
+      "description": "places where synapse does not conform to the spec"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406437,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDM3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Other",
+      "name": "T-Other",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Questions, user support, anything else."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2021-01-01T18:53:44Z",
+  "updated_at": "2022-12-13T11:53:04Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "[In the spec, `GET` on `/profile` doesn’t require auth](https://matrix.org/docs/spec/client_server/r0.6.0#get-matrix-client-r0-profile-userid-displayname).\r\n[Synapse may in some configurations](https://github.com/matrix-org/synapse/pull/5083). There are several problems with that.\r\n\r\n“Requires auth” is a binary thing in the spec, as far as I can see. That means that you should either require it or not, but you can’t depend on a server configuration option for that. Anyway I don’t see  how a client could guess whether a given server has the option enabled or not, so effectively having the option means client should consider it is enabled and auth is required in all cases, even when that’s not the case.\r\n\r\nThere is also a comment for that configuration option that states that “this setting is of limited value if federation is enabled on the server” because “profile data is also available via the federation API”.\r\n\r\nConsidering all of the above, I suggest to remove the configuration option. If the behaviour of it enabled is actually desired, and I don’t think it is, then please make it consistently behave that way and not depend on an option, and get the spec changed to match that as well.\r\n\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/9006/reactions",
+    "total_count": 2,
+    "+1": 0,
+    "-1": 2,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/9006/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/8955",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/8955/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/8955/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/8955/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/8955",
+  "id": 769128125,
+  "node_id": "MDU6SXNzdWU3NjkxMjgxMjU=",
+  "number": 8955,
+  "title": "Synchrotrons always wake up sync streams for presence updates",
+  "user": {
+    "login": "erikjohnston",
+    "id": 8428120,
+    "node_id": "MDQ6VXNlcjg0MjgxMjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8428120?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/erikjohnston",
+    "html_url": "https://github.com/erikjohnston",
+    "followers_url": "https://api.github.com/users/erikjohnston/followers",
+    "following_url": "https://api.github.com/users/erikjohnston/following{/other_user}",
+    "gists_url": "https://api.github.com/users/erikjohnston/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/erikjohnston/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/erikjohnston/subscriptions",
+    "organizations_url": "https://api.github.com/users/erikjohnston/orgs",
+    "repos_url": "https://api.github.com/users/erikjohnston/repos",
+    "events_url": "https://api.github.com/users/erikjohnston/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/erikjohnston/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045943,
+      "node_id": "MDU6TGFiZWw0NzcwNDU5NDM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Presence",
+      "name": "A-Presence",
+      "color": "5319e7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 600557921,
+      "node_id": "MDU6TGFiZWw2MDA1NTc5MjE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Performance",
+      "name": "A-Performance",
+      "color": "5319E7",
+      "default": false,
+      "description": "Performance, both client-facing and admin-facing"
+    },
+    {
+      "id": 2038475067,
+      "node_id": "MDU6TGFiZWwyMDM4NDc1MDY3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Sync",
+      "name": "A-Sync",
+      "color": "5319E7",
+      "default": false,
+      "description": "defects related to /sync"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2020-12-16T17:28:06Z",
+  "updated_at": "2023-06-28T21:07:16Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "When calculating presence changes we decide whether we should actively wake up sync streams, or if they should just be bundled up the next time we send a response for another reason. We do not appear to propagate whether to wake up sync streams across replication, and we appear to *always* notify for presence updates:\r\n\r\nhttps://github.com/matrix-org/synapse/blob/6d02eb22dfde9551c515acaf73503e2500e00eaf/synapse/app/generic_worker.py#L381-L390\r\n\r\nIt's unclear how much this will help.\r\n\r\n(Note that we batch up presence updates that we don't notify for and persist/replicate them once a minute).",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/8955/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/8955/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

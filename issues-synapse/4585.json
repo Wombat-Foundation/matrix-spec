@@ -1,0 +1,140 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/4585",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/4585/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/4585/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/4585/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/4585",
+  "id": 407837363,
+  "node_id": "MDU6SXNzdWU0MDc4MzczNjM=",
+  "number": 4585,
+  "title": "UnicodeDecodeError traceback on URL preview",
+  "user": {
+    "login": "ptman",
+    "id": 24669,
+    "node_id": "MDQ6VXNlcjI0NjY5",
+    "avatar_url": "https://avatars.githubusercontent.com/u/24669?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/ptman",
+    "html_url": "https://github.com/ptman",
+    "followers_url": "https://api.github.com/users/ptman/followers",
+    "following_url": "https://api.github.com/users/ptman/following{/other_user}",
+    "gists_url": "https://api.github.com/users/ptman/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/ptman/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/ptman/subscriptions",
+    "organizations_url": "https://api.github.com/users/ptman/orgs",
+    "repos_url": "https://api.github.com/users/ptman/repos",
+    "events_url": "https://api.github.com/users/ptman/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/ptman/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086029,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMjk=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-bug",
+      "name": "z-bug",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 121086032,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMzI=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Help-Wanted",
+      "name": "Z-Help-Wanted",
+      "color": "006B0F",
+      "default": false,
+      "description": "We know exactly how to fix this issue, and would be grateful for any contribution"
+    },
+    {
+      "id": 477043173,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p2",
+      "name": "z-p2",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 4644449862,
+      "node_id": "LA_kwDOAVyVwM8AAAABFNSuRg",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-URL-Preview",
+      "name": "A-URL-Preview",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues related to generating server-side previews of remote URLs"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2019-02-07T18:31:10Z",
+  "updated_at": "2023-03-29T16:37:54Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nUnicodeDecodeError\r\n\r\n### Steps to reproduce\r\n\r\n```\r\nsynapse.http.server - 112 - ERROR - GET-132- Failed handle request via <function PreviewUrlResource._async_render_GET at 0x7fd5271cd2f0>: <XForwardedForRequest at 0x7fd525a65da0 method='GET' uri='/_matrix/media/r0/preview_url?url=http%3A%2F%2Fwww.sirkusaikamoinen.com%2Ffutureperformances%2Fnomad-i-mariagrdens-kyrkosal-i-borg%E2%80%8B&ts=1539766933898' clientproto='HTTP/1.1' site=8008>: Traceback (most recent call last):\r\n  File \"/usr/local/lib/python3.6/site-packages/twisted/internet/defer.py\", line 1418, in _inlineCallbacks\r\n    result = g.send(result)\r\n  File \"/usr/local/lib/python3.6/site-packages/synapse/http/server.py\", line 81, in wrapped_request_handler\r\n    yield h(self, request)\r\n  File \"/usr/local/lib/python3.6/site-packages/twisted/internet/defer.py\", line 1613, in unwindGenerator\r\n    return _cancellableInlineCallbacks(gen)\r\n  File \"/usr/local/lib/python3.6/site-packages/twisted/internet/defer.py\", line 1529, in _cancellableInlineCallbacks\r\n    _inlineCallbacks(None, g, status)\r\n--- <exception caught here> ---\r\n  File \"/usr/local/lib/python3.6/site-packages/synapse/http/server.py\", line 81, in wrapped_request_handler\r\n    yield h(self, request)\r\n  File \"/usr/local/lib/python3.6/site-packages/twisted/internet/defer.py\", line 1418, in _inlineCallbacks\r\n    result = g.send(result)\r\n  File \"/usr/local/lib/python3.6/site-packages/synapse/rest/media/v1/preview_url_resource.py\", line 110, in _async_render_GET\r\n    url = parse_string(request, \"url\")\r\n  File \"/usr/local/lib/python3.6/site-packages/synapse/http/servlet.py\", line 144, in parse_string\r\n    request.args, name, default, required, allowed_values, param_type, encoding\r\n  File \"/usr/local/lib/python3.6/site-packages/synapse/http/servlet.py\", line 158, in parse_string_from_args\r\n    value = value.decode(encoding)\r\nbuiltins.UnicodeDecodeError: 'ascii' codec can't decode byte 0xe2 in position 86: ordinal not in range(128)\r\nsynapse.http.server - 112 - ERROR - GET-134- Failed handle request via <function PreviewUrlResource._async_render_GET at 0x7fd5271cd2f0>: <XForwardedForRequest at 0x7fd525e9a748 method='GET' uri='/_matrix/media/r0/preview_url?url=http%3A%2F%2Fwww.haaganpuro.fi%2Fajankohtaista%2Fr-i-p-pirkko%2F%E2%80%8B&ts=1539852446322' clientproto='HTTP/1.1' site=8008>: Traceback (most recent call last):\r\n  File \"/usr/local/lib/python3.6/site-packages/twisted/internet/defer.py\", line 1418, in _inlineCallbacks\r\n    result = g.send(result)\r\n  File \"/usr/local/lib/python3.6/site-packages/synapse/http/server.py\", line 81, in wrapped_request_handler\r\n    yield h(self, request)\r\n  File \"/usr/local/lib/python3.6/site-packages/twisted/internet/defer.py\", line 1613, in unwindGenerator\r\n    return _cancellableInlineCallbacks(gen)\r\n  File \"/usr/local/lib/python3.6/site-packages/twisted/internet/defer.py\", line 1529, in _cancellableInlineCallbacks\r\n    _inlineCallbacks(None, g, status)\r\n--- <exception caught here> ---\r\n  File \"/usr/local/lib/python3.6/site-packages/synapse/http/server.py\", line 81, in wrapped_request_handler\r\n    yield h(self, request)\r\n  File \"/usr/local/lib/python3.6/site-packages/twisted/internet/defer.py\", line 1418, in _inlineCallbacks\r\n    result = g.send(result)\r\n  File \"/usr/local/lib/python3.6/site-packages/synapse/rest/media/v1/preview_url_resource.py\", line 110, in _async_render_GET\r\n    url = parse_string(request, \"url\")\r\n  File \"/usr/local/lib/python3.6/site-packages/synapse/http/servlet.py\", line 144, in parse_string\r\n    request.args, name, default, required, allowed_values, param_type, encoding\r\n  File \"/usr/local/lib/python3.6/site-packages/synapse/http/servlet.py\", line 158, in parse_string_from_args\r\n    value = value.decode(encoding)\r\nbuiltins.UnicodeDecodeError: 'ascii' codec can't decode byte 0xe2 in position 52: ordinal not in range(128)\r\n```\r\n\r\n### Version information\r\n\r\n- **Version**:  0.99.0\r\n- **Install method**:  docker\r\n- **Platform**:  Linux",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/4585/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/4585/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

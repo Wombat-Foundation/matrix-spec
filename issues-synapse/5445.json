@@ -1,0 +1,140 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/5445",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/5445/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/5445/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/5445/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/5445",
+  "id": 455535901,
+  "node_id": "MDU6SXNzdWU0NTU1MzU5MDE=",
+  "number": 5445,
+  "title": "Device list update which takes >60s will prevent federation from working",
+  "user": {
+    "login": "turt2live",
+    "id": 1190097,
+    "node_id": "MDQ6VXNlcjExOTAwOTc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1190097?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/turt2live",
+    "html_url": "https://github.com/turt2live",
+    "followers_url": "https://api.github.com/users/turt2live/followers",
+    "following_url": "https://api.github.com/users/turt2live/following{/other_user}",
+    "gists_url": "https://api.github.com/users/turt2live/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/turt2live/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/turt2live/subscriptions",
+    "organizations_url": "https://api.github.com/users/turt2live/orgs",
+    "repos_url": "https://api.github.com/users/turt2live/repos",
+    "events_url": "https://api.github.com/users/turt2live/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/turt2live/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 600557921,
+      "node_id": "MDU6TGFiZWw2MDA1NTc5MjE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Performance",
+      "name": "A-Performance",
+      "color": "5319E7",
+      "default": false,
+      "description": "Performance, both client-facing and admin-facing"
+    },
+    {
+      "id": 1056680564,
+      "node_id": "MDU6TGFiZWwxMDU2NjgwNTY0",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Workers",
+      "name": "A-Workers",
+      "color": "5319E7",
+      "default": false,
+      "description": "Problems related to running Synapse in Worker Mode (or replication)"
+    },
+    {
+      "id": 1828464348,
+      "node_id": "MDU6TGFiZWwxODI4NDY0MzQ4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Device-List-Tracking",
+      "name": "A-Device-List-Tracking",
+      "color": "5319E7",
+      "default": false,
+      "description": "Telling clients about other devices. Often related to E2EE."
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2019-06-13T05:02:14Z",
+  "updated_at": "2022-08-25T13:53:45Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "A device list update received from matrix.org is taking a reliable 72 seconds to persist on the main process. The replication timeout is 60s, so it times out every time, failing the transaction. The transaction is then retried by matrix.org a minute or so later, which then causes the device list update to go the main process, which then takes 72s, which then times out, and the transaction fails. Repeat forever.\r\n\r\nFederation reader:\r\n```\r\nfederation_reader_3 - 2019-06-13 04:53:24,315 - synapse.access.http.6100 - 233 - INFO - PUT-44155- 94.237.61.93 - 6100 - Received request: PUT /_matrix/federation/v1/send/1560336834949/\r\nfederation_reader_3 - 2019-06-13 04:53:24,316 - synapse.federation.transport.server - 147 - INFO - PUT-44155- Request from matrix.org\r\nfederation_reader_3 - 2019-06-13 04:53:24,320 - synapse.federation.transport.server - 371 - INFO - PUT-44155- Received txn 1560336834949 from matrix.org. (PDUs: 1, Accepted EDUs: 1, Ignored EDUs: 0)\r\nfederation_reader_3 - 2019-06-13 04:53:24,324 - synapse.handlers.federation - 152 - INFO - PUT-44155-$redacted:matrix.org- [!redacted:matrix.org $redacted:matrix.org] handling received PDU: <FrozenEvent event_id='$redacted:matrix.org', type='m.room.member', state_key='@redacted:matrix.org'>\r\nfederation_reader_3 - 2019-06-13 04:53:24,328 - synapse.handlers.federation - 212 - INFO - PUT-44155-$redacted:matrix.org- [!redacted:matrix.org $redacted:matrix.org] Ignoring PDU from matrix.org as we're not in the room\r\nfederation_reader_3 - 2019-06-13 04:53:24,329 - synapse.http.client - 273 - INFO - PUT-44155- Sending request POST http://127.0.0.1:9091/_synapse/replication/fed_send_edu/m.device_list_update/RzKcjkPgVG\r\nfederation_reader_3 - 2019-06-13 04:54:24,151 - synapse.http.site - 203 - WARNING - PUT-44155- Error processing request <XForwardedForRequest at 0x7f3ec9d3d7b8 method='PUT' uri='/_matrix/federation/v1/send/1560336834949/' clientproto='HTTP/1.0' site=6100>: <class 'twisted.internet.error.ConnectionDone'> Connection was closed cleanly.\r\nfederation_reader_3 - 2019-06-13 04:54:24,333 - synapse.http.client - 308 - INFO - PUT-44155- Error sending request to  POST http://127.0.0.1:9091/_synapse/replication/fed_send_edu/m.device_list_update/RzKcjkPgVG: ResponseNeverReceived [<twisted.python.failure.Failure twisted.internet.defer.CancelledError: >]\r\nfederation_reader_3 - 2019-06-13 04:54:24,334 - synapse.federation.transport.server - 396 - ERROR - PUT-44155- on_incoming_transaction failed\r\nfederation_reader_3 - 2019-06-13 04:54:24,411 - synapse.http.server - 112 - ERROR - PUT-44155- Failed handle request via 'FederationSendServlet': <XForwardedForRequest at 0x7f3ec9d3d7b8 method='PUT' uri='/_matrix/federation/v1/send/1560336834949/' clientproto='HTTP/1.0' site=6100>\r\nfederation_reader_3 - 2019-06-13 04:54:24,415 - synapse.http.server - 415 - WARNING - PUT-44155- Not sending response to request <XForwardedForRequest at 0x7f3ec9d3d7b8 method='PUT' uri='/_matrix/federation/v1/send/1560336834949/' clientproto='HTTP/1.0' site=6100>, already disconnected.\r\nfederation_reader_3 - 2019-06-13 04:54:24,416 - synapse.access.http.6100 - 302 - INFO - PUT-44155- 94.237.61.93 - 6100 - {matrix.org} Processed request: 60.101sec/-0.265sec (0.084sec, 0.004sec) (0.001sec/0.004sec/2) 0B 200! \"PUT /_matrix/federation/v1/send/1560336834949/ HTTP/1.0\" \"Synapse/1.0.0 (b=matrix-org-hotfixes,6dbd49877)\" [1 dbevts]\r\n```\r\n\r\nMain process (correlated by the replication transaction ID then by request ID):\r\n```\r\nhomeserver_1 - 2019-06-13 04:53:24,332 - synapse.access.http.9091 - 233 - INFO - POST-29713 - 127.0.0.1 - 9091 - Received request: POST /_synapse/replication/fed_send_edu/m.device_list_update/RzKcjkPgVG\r\nhomeserver_1 - 2019-06-13 04:53:24,333 - synapse.util.caches.response_cache - 151 - INFO - POST-29713 - [repl.fed_send_edu]: no cached result for [RzKcjkPgVG], calculating new one\r\nhomeserver_1 - 2019-06-13 04:53:24,333 - synapse.replication.http.federation - 164 - INFO - POST-29713 - Got 'm.device_list_update' edu from matrix.org\r\nhomeserver_1 - 2019-06-13 04:53:24,341 - synapse.http.matrixfederationclient - 401 - INFO - POST-29713 - {GET-O-215} [matrix.org] Sending request: GET matrix://matrix.org/_matrix/federation/v1/user/devices/%40redacted%3Amatrix.org; timeout 30.000000s\r\nhomeserver_1 - 2019-06-13 04:53:24,348 - synapse.http.federation.matrix_federation_agent - 373 - INFO - POST-29713 - Connecting to matrix.org.cdn.cloudflare.net:8443\r\nhomeserver_1 - 2019-06-13 04:53:24,472 - synapse.http.matrixfederationclient - 433 - INFO - POST-29713 - {GET-O-215} [matrix.org] Got response headers: 200 OK\r\nhomeserver_1 - 2019-06-13 04:53:24,503 - synapse.http.matrixfederationclient - 160 - INFO - POST-29713 - {GET-O-215} [matrix.org] Completed: 200 OK\r\nhomeserver_1 - 2019-06-13 04:54:24,419 - synapse.http.site - 203 - WARNING - POST-29713 - Error processing request <SynapseRequest at 0x7f838c3cbc50 method='POST' uri='/_synapse/replication/fed_send_edu/m.device_list_update/RzKcjkPgVG' clientproto='HTTP/1.1' site=9091>: <class 'twisted.internet.error.ConnectionLost'> Connection to the other side was lost in a non-clean fashion.\r\nhomeserver_1 - 2019-06-13 04:54:37,235 - synapse.http.server - 415 - WARNING - POST-29713 - Not sending response to request <SynapseRequest at 0x7f838c3cbc50 method='POST' uri='/_synapse/replication/fed_send_edu/m.device_list_update/RzKcjkPgVG' clientproto='HTTP/1.1' site=9091>, already disconnected.\r\nhomeserver_1 - 2019-06-13 04:54:37,236 - synapse.access.http.9091 - 302 - INFO - POST-29713 - 127.0.0.1 - 9091 - {None} Processed request: 72.904sec/-12.817sec (0.164sec, 0.064sec) (0.003sec/72.726sec/4) 0B 200! \"POST /_synapse/replication/fed_send_edu/m.device_list_update/RzKcjkPgVG HTTP/1.1\" \"Synapse/1.0.0\" [0 dbevts]\r\n```\r\n\r\n**Edit**: The user in question has 409 devices.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/5445/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/5445/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

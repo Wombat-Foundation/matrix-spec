@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16472",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16472/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16472/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16472/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16472",
+  "id": 1939784275,
+  "node_id": "I_kwDOAVyVwM5znsJT",
+  "number": 16472,
+  "title": "User Directory search does not return user from public room with limit parameter",
+  "user": {
+    "login": "weeman1337",
+    "id": 6216686,
+    "node_id": "MDQ6VXNlcjYyMTY2ODY=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/6216686?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/weeman1337",
+    "html_url": "https://github.com/weeman1337",
+    "followers_url": "https://api.github.com/users/weeman1337/followers",
+    "following_url": "https://api.github.com/users/weeman1337/following{/other_user}",
+    "gists_url": "https://api.github.com/users/weeman1337/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/weeman1337/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/weeman1337/subscriptions",
+    "organizations_url": "https://api.github.com/users/weeman1337/orgs",
+    "repos_url": "https://api.github.com/users/weeman1337/repos",
+    "events_url": "https://api.github.com/users/weeman1337/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/weeman1337/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2028961502,
+      "node_id": "MDU6TGFiZWwyMDI4OTYxNTAy",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-User-Directory",
+      "name": "A-User-Directory",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 2674406462,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDYy",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/X-Needs-Info",
+      "name": "X-Needs-Info",
+      "color": "ff7979",
+      "default": false,
+      "description": "This issue is blocked awaiting information from the reporter"
+    },
+    {
+      "id": 5380188518,
+      "node_id": "LA_kwDOAVyVwM8AAAABQK8pZg",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Search",
+      "name": "A-Search",
+      "color": "5319E7",
+      "default": false,
+      "description": "Related to textual search of something, be it rooms, users or messages."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 6,
+  "created_at": "2023-10-12T11:26:58Z",
+  "updated_at": "2023-10-27T16:51:45Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\n`/_matrix/client/v3/user_directory/search` with a limit does not return users that are in a public room and I don't share a room with\r\n\r\n### Steps to reproduce\r\n\r\n- Create some users\r\n- Let one of the users join a public room\r\n- Query a user from the public room with another user, that does not share a room with the other users\r\n- Be sure the in addition to the query term there is also a limit of 50 set\r\n\r\nExpected:\r\nOther user with no shared room, but in a public room should be returned\r\n\r\n[spec](https://spec.matrix.org/v1.8/client-server-api/#post_matrixclientv3user_directorysearch) „the homeserver MUST at a minimum consider the users the requesting user shares a room with and those who reside in public rooms“\r\n\r\nWhat happens:\r\nDirectory search does not return the user\r\n\r\n![search](https://github.com/matrix-org/synapse/assets/6216686/2267cfa1-5043-4e0c-afa7-6c766d0205f6)\r\n\r\n\r\n### Homeserver\r\n\r\nlocalhost\r\n\r\n### Synapse Version\r\n\r\nd6b7d49a61ca4c6f87d93ff9eb6a9fa6faef443c\r\n\r\n### Installation Method\r\n\r\nDocker (matrixdotorg/synapse)\r\n\r\n### Database\r\n\r\nSQLite\r\n\r\n### Workers\r\n\r\nSingle process\r\n\r\n### Platform\r\n\r\n- Podman locally\r\n- Docker for Element Web CI\r\n\r\n### Configuration\r\n\r\n_No response_\r\n\r\n### Relevant log output\r\n\r\n```shell\r\n2023-10-12 11:22:10,546 - synapse.access.http.8008 - 465 - INFO - POST-159 - ::ffff:10.0.2.100 - 8008 - {@user_3:localhost} Processed request: 0.001sec/0.000sec (0.000sec, 0.000sec) (0.000sec/0.001sec/1) 30B 200 \"POST /_matrix/client/v3/user_directory/search HTTP/1.1\" \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/12.17.3 Chrome/106.0.5249.51 Electron/21.0.0 Safari/537.36\" [0 dbevts]\r\n2023-10-12 11:22:11,293 - synapse.access.http.8008 - 420 - DEBUG - POST-160 - ::ffff:10.0.2.100 - 8008 - Received request: POST /_matrix/client/v3/user_directory/search\r\n2023-10-12 11:22:11,294 - synapse.storage.txn - 742 - DEBUG - POST-160 - [TXN START] {search_user_dir-59a}\r\n2023-10-12 11:22:11,294 - synapse.storage.SQL - 453 - DEBUG - POST-160 - [SQL] {search_user_dir-59a} SELECT d.user_id AS user_id, display_name, avatar_url FROM user_directory_search as t INNER JOIN user_directory AS d USING (user_id) LEFT JOIN users AS u ON t.user_id = u.name WHERE ( EXISTS (select 1 from users_in_public_rooms WHERE user_id = t.user_id) OR EXISTS ( SELECT 1 FROM users_who_share_private_rooms WHERE user_id = ? AND other_user_id = t.user_id ) ) AND (u.locked IS NULL OR u.locked = FALSE) AND value MATCH ? ORDER BY rank(matchinfo(user_directory_search)) DESC, display_name IS NULL, avatar_url IS NULL LIMIT ?\r\n2023-10-12 11:22:11,294 - synapse.storage.SQL - 458 - DEBUG - POST-160 - [SQL values] {search_user_dir-59a} ('@user_3:localhost', '(bytebot* OR bytebot)', 51)\r\n2023-10-12 11:22:11,294 - synapse.storage.SQL - 479 - DEBUG - POST-160 - [SQL time] {search_user_dir-59a} 0.000075 sec\r\n2023-10-12 11:22:11,294 - synapse.storage.txn - 846 - DEBUG - POST-160 - [TXN END] {search_user_dir-59a} 0.000268 sec\r\n2023-10-12 11:22:11,295 - synapse.access.http.8008 - 465 - INFO - POST-160 - ::ffff:10.0.2.100 - 8008 - {@user_3:localhost} Processed request: 0.001sec/0.000sec (0.001sec, 0.000sec) (0.000sec/0.000sec/1) 30B 200 \"POST /_matrix/client/v3/user_directory/search HTTP/1.1\" \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/12.17.3 Chrome/106.0.5249.51 Electron/21.0.0 Safari/537.36\" [0 dbevts]\r\n```\r\n\r\n### Anything else that would be useful to know?\r\n\r\nFound with one of the [Element Web end-to-end tests flaking](https://github.com/vector-im/element-web/issues/26138). With the test this occurs quite often.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16472/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16472/timeline",
+  "performed_via_github_app": null,
+  "state_reason": "reopened",
+  "pinned_comment": null
+}

@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14401",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14401/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14401/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14401/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14401",
+  "id": 1442029893,
+  "node_id": "I_kwDOAVyVwM5V86FF",
+  "number": 14401,
+  "title": "Long running schema deltas are killed by systemd and lead to bootlooping",
+  "user": {
+    "login": "squahtx",
+    "id": 8349537,
+    "node_id": "MDQ6VXNlcjgzNDk1Mzc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8349537?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/squahtx",
+    "html_url": "https://github.com/squahtx",
+    "followers_url": "https://api.github.com/users/squahtx/followers",
+    "following_url": "https://api.github.com/users/squahtx/following{/other_user}",
+    "gists_url": "https://api.github.com/users/squahtx/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/squahtx/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/squahtx/subscriptions",
+    "organizations_url": "https://api.github.com/users/squahtx/orgs",
+    "repos_url": "https://api.github.com/users/squahtx/repos",
+    "events_url": "https://api.github.com/users/squahtx/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/squahtx/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4195810659,
+      "node_id": "LA_kwDOAVyVwM76Fv1j",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Database",
+      "name": "A-Database",
+      "color": "5319E7",
+      "default": false,
+      "description": "DB stuff like queries, migrations, new/remove columns, indexes, unexpected entries in the db"
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 13,
+  "created_at": "2022-11-09T12:42:49Z",
+  "updated_at": "2023-09-27T08:47:43Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "When a schema delta takes too long, Synapse will get restarted by systemd, possibly repeatedly.\r\n\r\n~~When using postgres, schema deltas are transactional. Synapse will run the schema delta and time out again. ~~\r\n~~When using sqlite, schema deltas are not fully transactional (see docstring [here](https://github.com/matrix-org/synapse/blob/8c94dd3a277d4e11192f98a9ca32cb6638606b66/synapse/storage/engines/sqlite.py#L127-L144)). The schema delta will end up being half applied and the database will end up in an inconsistent state. Depending on the nature of the schema delta, the next run may fail.~~ Tracked in #14909.\r\n\r\nThis manifested as:\r\n* #13193\r\n* #14100\r\n* #14333\r\n\r\nThings we may consider doing:\r\n* Write some docs?\r\n* Increase the timeout?\r\n* Pretend to be alive while running schema deltas?\r\n* ~~dmr: Make sqlite schema deltas transactional too?~~ Tracked in #14909.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14401/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14401/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

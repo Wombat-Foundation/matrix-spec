@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14540",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14540/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14540/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14540/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14540",
+  "id": 1462380276,
+  "node_id": "I_kwDOAVyVwM5XKib0",
+  "number": 14540,
+  "title": "Ability to mark users as a server admin based on SSO claim",
+  "user": {
+    "login": "anoosa1",
+    "id": 77907877,
+    "node_id": "MDQ6VXNlcjc3OTA3ODc3",
+    "avatar_url": "https://avatars.githubusercontent.com/u/77907877?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/anoosa1",
+    "html_url": "https://github.com/anoosa1",
+    "followers_url": "https://api.github.com/users/anoosa1/followers",
+    "following_url": "https://api.github.com/users/anoosa1/following{/other_user}",
+    "gists_url": "https://api.github.com/users/anoosa1/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/anoosa1/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/anoosa1/subscriptions",
+    "organizations_url": "https://api.github.com/users/anoosa1/orgs",
+    "repos_url": "https://api.github.com/users/anoosa1/repos",
+    "events_url": "https://api.github.com/users/anoosa1/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/anoosa1/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2186787706,
+      "node_id": "MDU6TGFiZWwyMTg2Nzg3NzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-SSO",
+      "name": "A-SSO",
+      "color": "5319E7",
+      "default": false,
+      "description": "Single Sign-On (maybe OIDC)"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2022-11-23T20:39:09Z",
+  "updated_at": "2022-11-28T14:51:30Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\nMake it possible to make users admins automatically if they are in a certain group.\r\n<!-- Describe here the feature you are requesting. -->\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14540/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14540/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

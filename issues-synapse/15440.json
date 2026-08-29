@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15440",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15440/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15440/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15440/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15440",
+  "id": 1670038228,
+  "node_id": "I_kwDOAVyVwM5jisLU",
+  "number": 15440,
+  "title": "Media worker accumulates over 1000 connections to mega.nz",
+  "user": {
+    "login": "syldrathecat",
+    "id": 13056379,
+    "node_id": "MDQ6VXNlcjEzMDU2Mzc5",
+    "avatar_url": "https://avatars.githubusercontent.com/u/13056379?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/syldrathecat",
+    "html_url": "https://github.com/syldrathecat",
+    "followers_url": "https://api.github.com/users/syldrathecat/followers",
+    "following_url": "https://api.github.com/users/syldrathecat/following{/other_user}",
+    "gists_url": "https://api.github.com/users/syldrathecat/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/syldrathecat/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/syldrathecat/subscriptions",
+    "organizations_url": "https://api.github.com/users/syldrathecat/orgs",
+    "repos_url": "https://api.github.com/users/syldrathecat/repos",
+    "events_url": "https://api.github.com/users/syldrathecat/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/syldrathecat/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045806,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDY=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Media-Repository",
+      "name": "A-Media-Repository",
+      "color": "5319E7",
+      "default": false,
+      "description": "Uploading, downloading images and video, thumbnailing"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    },
+    {
+      "id": 4644449862,
+      "node_id": "LA_kwDOAVyVwM8AAAABFNSuRg",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-URL-Preview",
+      "name": "A-URL-Preview",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues related to generating server-side previews of remote URLs"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 9,
+  "created_at": "2023-04-16T16:33:58Z",
+  "updated_at": "2023-07-27T17:04:54Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nOur homeserver is accumulating connections to mega.nz (31.216.145.5) at a rate of approximately 2 per hour, most likely corresponding to URL preview requests for mega.nz. The largest amount I've seen is 1025 connections, spanning two media_worker instances.\r\n\r\n### Steps to reproduce\r\n\r\n- Request a moderate amount of mega.nz url previews over a long period of time\r\n- Observe the effect on the server via e.g. `netstat -an | grep 31.216.145.5`\r\n\r\nI am observing the same https connections being open from 10 hours ago, as well as additional new ones opening.\r\n\r\nThe URL preview requests complete as expected, but the https connections are never closed, and new ones are slowly added over time.\r\n\r\nI would expect that at some point the connections would be closed, rather than being staying open indefinitely.\r\n\r\n### Homeserver\r\n\r\nanother homeserver\r\n\r\n### Synapse Version\r\n\r\n1.81\r\n\r\n### Installation Method\r\n\r\nDebian packages from packages.matrix.org\r\n\r\n### Database\r\n\r\nPostgreSQL\r\n\r\n### Workers\r\n\r\nMultiple workers\r\n\r\n### Platform\r\n\r\nlxc container with no outgoing http proxy configured for url previews\r\n\r\n### Configuration\r\n\r\n_No response_\r\n\r\n### Relevant log output\r\n\r\n```shell\r\n-\r\n```\r\n\r\n\r\n### Anything else that would be useful to know?\r\n\r\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15440/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15440/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15722",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15722/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15722/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15722/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15722",
+  "id": 1742528722,
+  "node_id": "I_kwDOAVyVwM5n3ODS",
+  "number": 15722,
+  "title": "Disallow randos to spam room directory by default",
+  "user": {
+    "login": "xaur",
+    "id": 24484727,
+    "node_id": "MDQ6VXNlcjI0NDg0NzI3",
+    "avatar_url": "https://avatars.githubusercontent.com/u/24484727?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/xaur",
+    "html_url": "https://github.com/xaur",
+    "followers_url": "https://api.github.com/users/xaur/followers",
+    "following_url": "https://api.github.com/users/xaur/following{/other_user}",
+    "gists_url": "https://api.github.com/users/xaur/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/xaur/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/xaur/subscriptions",
+    "organizations_url": "https://api.github.com/users/xaur/orgs",
+    "repos_url": "https://api.github.com/users/xaur/repos",
+    "events_url": "https://api.github.com/users/xaur/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/xaur/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406413,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDEz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Task",
+      "name": "T-Task",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Refactoring, removal, replacement, enabling or disabling functionality, other engineering tasks."
+    },
+    {
+      "id": 3559903857,
+      "node_id": "LA_kwDOAVyVwM7UL9Jx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Room-Directory",
+      "name": "A-Room-Directory",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2023-06-05T20:06:11Z",
+  "updated_at": "2023-10-23T22:00:12Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Someone has published a bunch of political spam to our room directory and we discovered that this is allowed by default. I suggest to disable it by default.\r\n\r\nLooks like the \"allow anyone to publish to room directory\" behavior comes from here: https://github.com/matrix-org/synapse/blob/ca8906be2cb821a0fb49ad1adf8440e79e64a398/synapse/config/room_directory.py\r\n\r\n[Config documentation](https://matrix-org.github.io/synapse/develop/usage/configuration/config_documentation.html#alias_creation_rules) for `alias_creation_rules` and `room_list_publication_rules` says:\r\n\r\n> If no rules match the request is denied. An empty list means no one can create aliases.\r\n\r\nThis is good, but the above rule is ignored if `alias_creation_rules` and `room_list_publication_rules` are missing from Synapse config.\r\n\r\n[Moderating the room directory](https://matrix.org/docs/guides/moderation/#moderating-the-room-directory) admits it is an abuse vector:\r\n\r\n> Each Matrix server maintains a publicly viewable directory of rooms. By default, any user can publish rooms to the directory, which can be an abuse vector.\r\n\r\n> By default, any user can create room aliases, which can be an abuse vector - particularly given the risk of alias squatting, or creating publishing abusive aliases to point at existing rooms.\r\n\r\nSo how about disable it by default before any abuse happens? Thanks.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15722/reactions",
+    "total_count": 2,
+    "+1": 2,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15722/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

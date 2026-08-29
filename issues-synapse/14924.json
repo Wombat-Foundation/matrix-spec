@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14924",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14924/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14924/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14924/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14924",
+  "id": 1558383854,
+  "node_id": "I_kwDOAVyVwM5c4wzu",
+  "number": 14924,
+  "title": "Federation workers continue accepting events after the event persister crashes, losing them",
+  "user": {
+    "login": "turt2live",
+    "id": 1190097,
+    "node_id": "MDQ6VXNlcjExOTAwOTc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1190097?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/turt2live",
+    "html_url": "https://github.com/turt2live",
+    "followers_url": "https://api.github.com/users/turt2live/followers",
+    "following_url": "https://api.github.com/users/turt2live/following{/other_user}",
+    "gists_url": "https://api.github.com/users/turt2live/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/turt2live/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/turt2live/subscriptions",
+    "organizations_url": "https://api.github.com/users/turt2live/orgs",
+    "repos_url": "https://api.github.com/users/turt2live/repos",
+    "events_url": "https://api.github.com/users/turt2live/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/turt2live/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2023-01-26T16:04:22Z",
+  "updated_at": "2023-01-27T17:34:45Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nMy event persister crashes at inopportune times like 2am, but the federation worker (a combined reader and inbound worker in my setup) continues to accept transactions, 200 OKing them. My guess is the worker thinks the persister is online, sees events in the transaction, queues the events, 200 OK's the transaction, persister ends up not being online so the replication calls fail. \r\n\r\nThis has the effect where your server only sees the last 10 events in a room *when someone else sends an event* (as the server is now backfilling the `prev_events`). For rooms where your server is not likely to receive another event (DMs), your only option is to go around asking people to \"resend\" or otherwise send a message in the room.\n\n### Steps to reproduce\n\n* Set up at least a federation inbound worker and event persister\r\n* Kill your event persister\r\n* Receive events over federation\r\n* Restart Synapse to recover your event persister\r\n* :( \n\n### Homeserver\n\nt2l.io\n\n### Synapse Version\n\n{\"server_version\":\"1.75.0\",\"python_version\":\"3.10.6\"}\n\n### Installation Method\n\nOther (please mention below)\n\n### Database\n\npostgresql - no split db, restored from sqlite an eternity ago\n\n### Workers\n\nMultiple workers\n\n### Platform\n\nUbuntu droplet on digital ocean\n\n### Configuration\n\nNot applicable.\n\n### Relevant log output\n\n```shell\n[federation_reader_1] 2023-01-26 13:59:31,155 - synapse.federation.federation_server - 1221 - INFO - _process_incoming_pdus_in_room_inner-5846- handling received PDU in room !fLeHeojWgBGJlLNdLC:matrix.org: <FrozenEventV3 event_id=$weVjhE57ZCE4mT7MieAEZMP92esMet55ZTy0yhv1OBI, type=m.room.message, state_key=None, outlier=False>\r\n[federation_reader_1] 2023-01-26 13:59:31,234 - synapse.handlers.federation_event - 266 - INFO - _process_incoming_pdus_in_room_inner-5846-$weVjhE57ZCE4mT7MieAEZMP92esMet55ZTy0yhv1OBI- Acquiring room lock to fetch 1 missing prev_events: ['$2fWcbKbztz66GHmXPQf3whytBpwKA1DsLGx656tRuEs']\r\n[federation_reader_1] 2023-01-26 13:59:31,234 - synapse.handlers.federation_event - 272 - INFO - _process_incoming_pdus_in_room_inner-5846-$weVjhE57ZCE4mT7MieAEZMP92esMet55ZTy0yhv1OBI- Acquired room lock to fetch 1 missing prev_events\r\n[federation_reader_1] 2023-01-26 13:59:31,262 - synapse.handlers.federation_event - 689 - INFO - _process_incoming_pdus_in_room_inner-5846-$weVjhE57ZCE4mT7MieAEZMP92esMet55ZTy0yhv1OBI- Requesting missing events between ['$Bm3Fvkhvl8T65KNEmMVVbzgMn7POhmXjvzgrU8QfwIU'] and $weVjhE57ZCE4mT7MieAEZMP92esMet55ZTy0yhv1OBI\r\n[federation_reader_1] 2023-01-26 13:59:31,384 - synapse.http.matrixfederationclient - 299 - INFO - _process_incoming_pdus_in_room_inner-5846-$weVjhE57ZCE4mT7MieAEZMP92esMet55ZTy0yhv1OBI- {POST-O-20667} [matrix.org] Completed request: 200 OK in 0.12 secs, got 8003 bytes - POST matrix://matrix.org/_matrix/federation/v1/get_missing_events/%21fLeHeojWgBGJlLNdLC%3Amatrix.org\r\n[federation_reader_1] 2023-01-26 13:59:31,392 - synapse.handlers.federation_event - 760 - INFO - _process_incoming_pdus_in_room_inner-5846-$weVjhE57ZCE4mT7MieAEZMP92esMet55ZTy0yhv1OBI- Got 10 prev_events\r\n[federation_reader_1] 2023-01-26 13:59:31,426 - synapse.handlers.federation_event - 868 - INFO - _process_incoming_pdus_in_room_inner-5846-$weVjhE57ZCE4mT7MieAEZMP92esMet55ZTy0yhv1OBI-$gIjhjD3MhzlotyC3LeBk-MNoNfxQ2xFItdiUaHJ182c- Processing pulled event <FrozenEventV3 event_id=$gIjhjD3MhzlotyC3LeBk-MNoNfxQ2xFItdiUaHJ182c, type=m.room.member, state_key=@moritzr:element.io, outlier=False>\r\n[federation_reader_1] 2023-01-26 13:59:31,453 - synapse.handlers.federation_event - 1018 - INFO - _process_incoming_pdus_in_room_inner-5846-$weVjhE57ZCE4mT7MieAEZMP92esMet55ZTy0yhv1OBI-$gIjhjD3MhzlotyC3LeBk-MNoNfxQ2xFItdiUaHJ182c- Event $gIjhjD3MhzlotyC3LeBk-MNoNfxQ2xFItdiUaHJ182c is missing prev_events ['$bPUqYUaxmqufnN9eckAUwuOjbhKGNBxncVFqmTJgU64']: calculating state for a backwards extremity\r\n[federation_reader_1] 2023-01-26 13:59:31,453 - synapse.handlers.federation_event - 1048 - INFO - _process_incoming_pdus_in_room_inner-5846-$weVjhE57ZCE4mT7MieAEZMP92esMet55ZTy0yhv1OBI-$gIjhjD3MhzlotyC3LeBk-MNoNfxQ2xFItdiUaHJ182c- Requesting state after missing prev_event $bPUqYUaxmqufnN9eckAUwuOjbhKGNBxncVFqmTJgU64\r\n[federation_reader_1] 2023-01-26 13:59:31,990 - synapse.http.matrixfederationclient - 299 - INFO - _process_incoming_pdus_in_room_inner-5846-$weVjhE57ZCE4mT7MieAEZMP92esMet55ZTy0yhv1OBI-$gIjhjD3MhzlotyC3LeBk-MNoNfxQ2xFItdiUaHJ182c-$bPUqYUaxmqufnN9eckAUwuOjbhKGNBxncVFqmTJgU64- {GET-O-20668} [matrix.org] Completed request: 200 OK in 0.54 secs, got 77629 bytes - GET matrix://matrix.org/_matrix/federation/v1/state_ids/%21fLeHeojWgBGJlLNdLC%3Amatrix.org?event_id=%24bPUqYUaxmqufnN9eckAUwuOjbhKGNBxncVFqmTJgU64\r\n[federation_reader_1] 2023-01-26 13:59:32,959 - synapse.http.matrixfederationclient - 299 - INFO - _process_incoming_pdus_in_room_inner-5846-$weVjhE57ZCE4mT7MieAEZMP92esMet55ZTy0yhv1OBI-$gIjhjD3MhzlotyC3LeBk-MNoNfxQ2xFItdiUaHJ182c-$bPUqYUaxmqufnN9eckAUwuOjbhKGNBxncVFqmTJgU64-$bPUqYUaxmqufnN9eckAUwuOjbhKGNBxncVFqmTJgU64- {GET-O-20672} [matrix.org] Completed request: 200 OK in 0.11 secs, got 935 bytes - GET matrix://matrix.org/_matrix/federation/v1/event/%24bPUqYUaxmqufnN9eckAUwuOjbhKGNBxncVFqmTJgU64\r\n[federation_reader_1] 2023-01-26 13:59:32,963 - synapse.handlers.federation_event - 1609 - INFO - _process_incoming_pdus_in_room_inner-5846-$weVjhE57ZCE4mT7MieAEZMP92esMet55ZTy0yhv1OBI-$gIjhjD3MhzlotyC3LeBk-MNoNfxQ2xFItdiUaHJ182c-$bPUqYUaxmqufnN9eckAUwuOjbhKGNBxncVFqmTJgU64- Fetched 1 events of 1 requested\r\n[federation_reader_1] 2023-01-26 13:59:32,964 - synapse.handlers.federation_event - 1673 - INFO - _process_incoming_pdus_in_room_inner-5846-$weVjhE57ZCE4mT7MieAEZMP92esMet55ZTy0yhv1OBI-$gIjhjD3MhzlotyC3LeBk-MNoNfxQ2xFItdiUaHJ182c-$bPUqYUaxmqufnN9eckAUwuOjbhKGNBxncVFqmTJgU64- Persisting 1 of 1 remaining outliers: ['$bPUqYUaxmqufnN9eckAUwuOjbhKGNBxncVFqmTJgU64']\r\n[federation_reader_1] 2023-01-26 13:59:33,307 - synapse.http.client - 469 - INFO - _process_incoming_pdus_in_room_inner-5846-$weVjhE57ZCE4mT7MieAEZMP92esMet55ZTy0yhv1OBI-$gIjhjD3MhzlotyC3LeBk-MNoNfxQ2xFItdiUaHJ182c-$bPUqYUaxmqufnN9eckAUwuOjbhKGNBxncVFqmTJgU64- Error sending request to  POST http://127.0.0.1:9070/_synapse/replication/fed_send_events/GHqwAIrARt: ConnectionRefusedError Connection refused\n```\n\n\n### Anything else that would be useful to know?\n\nIt appears the federation worker is aware that it's unable to persist events, and is pulling prev_events for events it's receiving.\r\n\r\nMy server is installed from git tags with pip, and although is currently on a faster joins RC this problem has been happening for >1 year.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14924/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14924/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

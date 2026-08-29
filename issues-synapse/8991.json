@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/8991",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/8991/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/8991/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/8991/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/8991",
+  "id": 774921629,
+  "node_id": "MDU6SXNzdWU3NzQ5MjE2Mjk=",
+  "number": 8991,
+  "title": "not all punycode-encoded domains work",
+  "user": {
+    "login": "Sorunome",
+    "id": 2433620,
+    "node_id": "MDQ6VXNlcjI0MzM2MjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/2433620?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Sorunome",
+    "html_url": "https://github.com/Sorunome",
+    "followers_url": "https://api.github.com/users/Sorunome/followers",
+    "following_url": "https://api.github.com/users/Sorunome/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Sorunome/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Sorunome/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Sorunome/subscriptions",
+    "organizations_url": "https://api.github.com/users/Sorunome/orgs",
+    "repos_url": "https://api.github.com/users/Sorunome/repos",
+    "events_url": "https://api.github.com/users/Sorunome/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Sorunome/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2021736922,
+      "node_id": "MDU6TGFiZWwyMDIxNzM2OTIy",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Upstream-Bug",
+      "name": "Z-Upstream-Bug",
+      "color": "ededed",
+      "default": false,
+      "description": "This issue requires a fix in an upstream dependency."
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 10,
+  "created_at": "2020-12-26T19:24:33Z",
+  "updated_at": "2022-11-17T17:09:15Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\nIf you have a domain with only emoji and want to set your server_name to the punycode-encoded versoin of it (e.g. `xn--9s9hnf.ws`) the server is not able to federate.\r\n\r\nThis is because twisted.web.client uses the python package idna over [here](https://github.com/twisted/twisted/blob/c8064075a207af1fc9ce19d8f885a986bc5ab00c/src/twisted/internet/_idna.py#L51) to check if a domain is valid. Editing that to use `text.encode(\"idna\")` and `text.decode(\"idna\")` fixes this issue.\r\n\r\nSaid idna package has an issue [here](https://github.com/kjd/idna/issues/18) about not supporting emoji domains, and from the sounds of it they do not plan to add it.\r\n\r\nSoru would open this issue with the twisted package, but she couldn't find any way to open non-security-critical bug reports with them. This issue also affects synapse as, well, that does not allow you to have all punycode-encoded domains as your server_name, even though they are valid according to the spec etc.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/8991/reactions",
+    "total_count": 2,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 1,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/8991/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

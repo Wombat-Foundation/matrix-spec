@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/6352",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/6352/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/6352/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/6352/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/6352",
+  "id": 521079295,
+  "node_id": "MDU6SXNzdWU1MjEwNzkyOTU=",
+  "number": 6352,
+  "title": "Synapse's v2 invites implementation doesn't fallback to v1 on M_UNRECOGNIZED error codes",
+  "user": {
+    "login": "babolivier",
+    "id": 5547783,
+    "node_id": "MDQ6VXNlcjU1NDc3ODM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/5547783?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/babolivier",
+    "html_url": "https://github.com/babolivier",
+    "followers_url": "https://api.github.com/users/babolivier/followers",
+    "following_url": "https://api.github.com/users/babolivier/following{/other_user}",
+    "gists_url": "https://api.github.com/users/babolivier/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/babolivier/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/babolivier/subscriptions",
+    "organizations_url": "https://api.github.com/users/babolivier/orgs",
+    "repos_url": "https://api.github.com/users/babolivier/repos",
+    "events_url": "https://api.github.com/users/babolivier/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/babolivier/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137743886,
+      "node_id": "LA_kwDOAVyVwM72oPYO",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Invite",
+      "name": "A-Invite",
+      "color": "5319E7",
+      "default": false,
+      "description": "Inviting users to rooms and accepting invites"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2019-11-11T17:04:19Z",
+  "updated_at": "2022-11-15T15:22:45Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "If Synapse receives a 404 or 400 response on `/_matrix/federation/v2/invite/...`, it only falls back to the v1 API if the error code is `M_UNKNOWN`:\r\n\r\nhttps://github.com/matrix-org/synapse/blob/ace947e8da30c37ead3357abe34adee8a1528296/synapse/federation/federation_client.py#L793-L797\r\n\r\nHowever, `M_UNRECOGNIZED` is another valid code that the server can use if queried on an endpoint it doesn't know about, and in fact that's what Synapse does (i.e. if Synapse gets hit on an endpoint it doesn't implement it'll respond with a 400 status code and the `M_UNRECOGNIZED` error code). It would be compliant with [MSC1794](https://github.com/matrix-org/matrix-doc/blob/master/proposals/1794-federation-v2-invites.md#msc-1794---federation-v2-invite-api) which states that the fallback should happen \"If a call to v2 /invite results in an unrecognised request exception AND the room version is 1 or 2\" (the check on the room version happens a few lines below the bit of code linked above).",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/6352/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/6352/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

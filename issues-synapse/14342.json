@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14342",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14342/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14342/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14342/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14342",
+  "id": 1431629959,
+  "node_id": "I_kwDOAVyVwM5VVPCH",
+  "number": 14342,
+  "title": "It is difficult to install modules for use with our debian packages",
+  "user": {
+    "login": "mackiexx",
+    "id": 90462268,
+    "node_id": "MDQ6VXNlcjkwNDYyMjY4",
+    "avatar_url": "https://avatars.githubusercontent.com/u/90462268?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/mackiexx",
+    "html_url": "https://github.com/mackiexx",
+    "followers_url": "https://api.github.com/users/mackiexx/followers",
+    "following_url": "https://api.github.com/users/mackiexx/following{/other_user}",
+    "gists_url": "https://api.github.com/users/mackiexx/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/mackiexx/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/mackiexx/subscriptions",
+    "organizations_url": "https://api.github.com/users/mackiexx/orgs",
+    "repos_url": "https://api.github.com/users/mackiexx/repos",
+    "events_url": "https://api.github.com/users/mackiexx/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/mackiexx/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 482414360,
+      "node_id": "MDU6TGFiZWw0ODI0MTQzNjA=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Packaging",
+      "name": "A-Packaging",
+      "color": "5319E7",
+      "default": false,
+      "description": "Our Debian packages, docker images; or issues relevant to downstream packagers"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 3537596628,
+      "node_id": "LA_kwDOAVyVwM7S23DU",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Modules",
+      "name": "A-Modules",
+      "color": "5319E7",
+      "default": false,
+      "description": "Module API: https://matrix-org.github.io/synapse/latest/modules/index.html"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2022-11-01T15:31:26Z",
+  "updated_at": "2022-11-02T10:22:04Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nI installed pip for mjolnir module and it said nomodule error for mjolnir and i had to move the synapse-antispam files to my mjolnir path and now i am getting this error \"ModuleNotFoundError: No module named 'synapse.module_api'\"\n\n### Steps to reproduce\n\n- list the steps\r\n- that reproduce the bug\r\n- using hyphens as bullet points\r\ninstall \r\npip install -e \"git+https://github.com/matrix-org/mjolnir.git#egg=mjolnir&subdirectory=synapse_antispam\"\r\n \r\nadd the conf file to homeserver.yaml\r\ntry to restart homeserver and it throws the error nomodulefound\r\n\n\n### Homeserver\n\nAnother homeserver\n\n### Synapse Version\n\n1.70.1\n\n### Installation Method\n\nOther (please mention below)\n\n### Platform\n\nI followed the instructions on this link https://www.natrius.eu/dokuwiki/doku.php?id=digital:server:matrixsynapse and i am using ubutun 22 lts\n\n### Relevant log output\n\n```shell\nFile \"/opt/venvs/matrix-synapse/lib/python3.10/site-packages/synapse/util/modu>\r\nNov 01 15:30:06 FansxCliq matrix-synapse[10414]:     module = importlib.import_module(module_name)\r\nNov 01 15:30:06 FansxCliq matrix-synapse[10414]:   File \"/usr/lib/python3.10/importlib/__init__.py\", line 126, in import_module\r\nreturn _bootstrap._gcd_import(name[level:], File \"<frozen importlib._bootstrap>\", line 1050, in _gcd_import\r\nFile \"<frozen importlib._bootstrap>\", line 1027, in _find_and_load\r\nfrozen importlib._bootstrap>\", line 1004, in _find_and_load_unlocked\r\nmatrix-synapse[10414]: ModuleNotFoundError: No module named 'mjolnir'\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14342/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14342/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/5149",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/5149/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/5149/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/5149/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/5149",
+  "id": 441286861,
+  "node_id": "MDU6SXNzdWU0NDEyODY4NjE=",
+  "number": 5149,
+  "title": "Add a mechanism for modules to implement alternative SSO flows",
+  "user": {
+    "login": "menturion",
+    "id": 41576848,
+    "node_id": "MDQ6VXNlcjQxNTc2ODQ4",
+    "avatar_url": "https://avatars.githubusercontent.com/u/41576848?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/menturion",
+    "html_url": "https://github.com/menturion",
+    "followers_url": "https://api.github.com/users/menturion/followers",
+    "following_url": "https://api.github.com/users/menturion/following{/other_user}",
+    "gists_url": "https://api.github.com/users/menturion/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/menturion/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/menturion/subscriptions",
+    "organizations_url": "https://api.github.com/users/menturion/orgs",
+    "repos_url": "https://api.github.com/users/menturion/repos",
+    "events_url": "https://api.github.com/users/menturion/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/menturion/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477043174,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-feature",
+      "name": "z-feature",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 2186787706,
+      "node_id": "MDU6TGFiZWwyMTg2Nzg3NzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-SSO",
+      "name": "A-SSO",
+      "color": "5319E7",
+      "default": false,
+      "description": "Single Sign-On (maybe OIDC)"
+    },
+    {
+      "id": 2674406292,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mjky",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/P5",
+      "name": "P5",
+      "color": "f7f7f7",
+      "default": false,
+      "description": "(OBSOLETE: use S- labels.) Dubious backlog: will not schedule, but may consider patches"
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 3537596628,
+      "node_id": "LA_kwDOAVyVwM7S23DU",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Modules",
+      "name": "A-Modules",
+      "color": "5319E7",
+      "default": false,
+      "description": "Module API: https://matrix-org.github.io/synapse/latest/modules/index.html"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2019-05-07T15:09:16Z",
+  "updated_at": "2023-03-14T05:52:10Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "There might exist setups where CAS and SAML are not the best option to perform a SSO login. \r\n\r\nTherefore, I would like to suggest to provide a \"check_sso_auth\" (callback) function (like \"check_password\" \"check_3pid_auth\") that would allow the implementation of a custom SSO authentication.\r\n\r\nAre there any CONS?",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/5149/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/5149/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

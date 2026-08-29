@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16230",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16230/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16230/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16230/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16230",
+  "id": 1878973225,
+  "node_id": "I_kwDOAVyVwM5v_tsp",
+  "number": 16230,
+  "title": "Handling media in case of illegal content",
+  "user": {
+    "login": "CaptainMalu",
+    "id": 99020924,
+    "node_id": "U_kgDOBebwfA",
+    "avatar_url": "https://avatars.githubusercontent.com/u/99020924?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/CaptainMalu",
+    "html_url": "https://github.com/CaptainMalu",
+    "followers_url": "https://api.github.com/users/CaptainMalu/followers",
+    "following_url": "https://api.github.com/users/CaptainMalu/following{/other_user}",
+    "gists_url": "https://api.github.com/users/CaptainMalu/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/CaptainMalu/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/CaptainMalu/subscriptions",
+    "organizations_url": "https://api.github.com/users/CaptainMalu/orgs",
+    "repos_url": "https://api.github.com/users/CaptainMalu/repos",
+    "events_url": "https://api.github.com/users/CaptainMalu/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/CaptainMalu/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045806,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDY=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Media-Repository",
+      "name": "A-Media-Repository",
+      "color": "5319E7",
+      "default": false,
+      "description": "Uploading, downloading images and video, thumbnailing"
+    },
+    {
+      "id": 1554244657,
+      "node_id": "MDU6TGFiZWwxNTU0MjQ0NjU3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Moderation",
+      "name": "A-Moderation",
+      "color": "5319E7",
+      "default": false,
+      "description": "Tools for moderating HSes: event redaction, media removal, purge admin API, reports from users, ..."
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2023-09-03T07:23:10Z",
+  "updated_at": "2023-09-05T14:49:11Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\n\r\nIn Germany we have some \"nice\" laws against CP.\r\nhttps://www.gesetze-im-internet.de/englisch_stgb/englisch_stgb.html#p1813\r\n\r\nWhich lead to the following problem: https://www.lawblog.de/archives/2023/05/12/lustiger-gruppenchat-mit-bitterem-ende/\r\n\r\nIf the user (recipient) is in a group chat and someone (sender) posts CP, the user (recipient) could go to jail if he doesn't delete the file immediately.\r\n\r\nAs far as I understand synapse and matrix media works as follows.\r\nA evil user uploads a file to his homeserver. This HS creates a media id. If the user posts this file into a room there will be an event with a link to this specific file.\r\nNow all remote HS (running synapse) in this room will download this file (only when viewed?).\r\nSo far so normal.\r\nBut if this content is problematic a room admin will most likely delete the event.\r\nSo the users in this room can't see the file anymore.\r\nBut as media can only be deleted from server admins the file will stay on the remote servers in the remote media repo.\r\nAs most server admins are only normal users in big federated rooms they'll most likely not know there was a problematic file in the deleted event and they wouldn't know the media id to delete it manually.\r\nAnd most of us have some other users on the server to which could be also part of federated rooms, where the server admin wouldn't even noticed that there was an event deleted.\r\n\r\nSo it would be nice to have a system which helps to delete such files.\r\nMaybe a notification with (a list of) media IDs which have to be checked?\r\nA more automatic deletion would be nice but technically not possible?\r\n\r\nEdited to make clear that I'm looking from the point where someone would unwillingly get into the position to possess CP.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16230/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16230/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

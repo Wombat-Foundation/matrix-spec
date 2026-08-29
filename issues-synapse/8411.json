@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/8411",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/8411/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/8411/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/8411/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/8411",
+  "id": 710047040,
+  "node_id": "MDU6SXNzdWU3MTAwNDcwNDA=",
+  "number": 8411,
+  "title": "Unable to deactivate users when identity server is disabled",
+  "user": {
+    "login": "kovalroma",
+    "id": 20167720,
+    "node_id": "MDQ6VXNlcjIwMTY3NzIw",
+    "avatar_url": "https://avatars.githubusercontent.com/u/20167720?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/kovalroma",
+    "html_url": "https://github.com/kovalroma",
+    "followers_url": "https://api.github.com/users/kovalroma/followers",
+    "following_url": "https://api.github.com/users/kovalroma/following{/other_user}",
+    "gists_url": "https://api.github.com/users/kovalroma/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/kovalroma/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/kovalroma/subscriptions",
+    "organizations_url": "https://api.github.com/users/kovalroma/orgs",
+    "repos_url": "https://api.github.com/users/kovalroma/repos",
+    "events_url": "https://api.github.com/users/kovalroma/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/kovalroma/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406361,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzYx",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Security",
+      "name": "Security",
+      "color": "b3e5fc",
+      "default": false,
+      "description": null
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    },
+    {
+      "id": 5345655364,
+      "node_id": "LA_kwDOAVyVwM8AAAABPqA6RA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Account-Deactivation",
+      "name": "A-Account-Deactivation",
+      "color": "5319E7",
+      "default": false,
+      "description": "\"Deleting\"/\"Removing\" a user, GDPR erasure (erased)"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2020-09-28T08:10:42Z",
+  "updated_at": "2023-04-03T17:07:25Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Unable to deactivate users when identity server is disable\r\nI have selfhosted Synapse server.\r\nSome of them used ` vector.im ` identity server.\r\n![Screenshot_279](https://user-images.githubusercontent.com/20167720/94406475-5f32db00-0172-11eb-90b3-176b3a892773.png)\r\n\r\nWhen I tried to deactivate users I've got an error\r\n\r\n```\r\n{\r\n    \"errcode\": \"M_UNKNOWN\",\r\n    \"error\": \"Failed to remove threepid from ID server\"\r\n}\r\n```\r\n \r\nAs I understand it is impossible to deactivate user from selfhosted Synapse if identity server is disable or not working.\r\n\r\nOther users who not connected to ` vector.im ` were successfully removed. \r\n\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/8411/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/8411/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

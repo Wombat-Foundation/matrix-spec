@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15273",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15273/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15273/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15273/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15273",
+  "id": 1626194292,
+  "node_id": "I_kwDOAVyVwM5g7cF0",
+  "number": 15273,
+  "title": "Remove the unspec'd Account Validity feature from Synapse",
+  "user": {
+    "login": "anoadragon453",
+    "id": 1342360,
+    "node_id": "MDQ6VXNlcjEzNDIzNjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1342360?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/anoadragon453",
+    "html_url": "https://github.com/anoadragon453",
+    "followers_url": "https://api.github.com/users/anoadragon453/followers",
+    "following_url": "https://api.github.com/users/anoadragon453/following{/other_user}",
+    "gists_url": "https://api.github.com/users/anoadragon453/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/anoadragon453/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/anoadragon453/subscriptions",
+    "organizations_url": "https://api.github.com/users/anoadragon453/orgs",
+    "repos_url": "https://api.github.com/users/anoadragon453/repos",
+    "events_url": "https://api.github.com/users/anoadragon453/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/anoadragon453/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 828678284,
+      "node_id": "MDU6TGFiZWw4Mjg2NzgyODQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spec-Compliance",
+      "name": "A-Spec-Compliance",
+      "color": "5319E7",
+      "default": false,
+      "description": "places where synapse does not conform to the spec"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406413,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDEz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Task",
+      "name": "T-Task",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Refactoring, removal, replacement, enabling or disabling functionality, other engineering tasks."
+    },
+    {
+      "id": 4316622437,
+      "node_id": "LA_kwDOAVyVwM8AAAABAUpuZQ",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Dev-Wishlist",
+      "name": "Z-Dev-Wishlist",
+      "color": "FBCA04",
+      "default": false,
+      "description": "Makes developers' lives better, but doesn't have direct user impact"
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2023-03-15T19:55:52Z",
+  "updated_at": "2023-03-22T18:16:39Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "We have an undocumented and unspec'd Account Validity feature currently implemented in Synapse. This was originally written for DINUM. Since then, all of the functionality has been moved into the module API (https://github.com/matrix-org/synapse/pull/9884). https://github.com/matrix-org/synapse-email-account-validity is the only known implementation of this API.\r\n\r\nSynapse still has an internal implementation of account validity however, gated behind an undocumented [account_validity config option](https://github.com/matrix-org/synapse/blob/b71b41c7bd0dd7510182621ab4bc8267388c0cce/synapse/config/account_validity.py#L31). This implementation was originally written for DINUM, and at this point I don't think they make use of Synapse's internal implementation anymore; instead relying on the module instead. I think we should remove it.\r\n\r\nHowever, even after removing Synapse's internal implementation of this feature and leaving behind the account validity module API, we're still left with unspec'd functionality.\r\n\r\n* Part of the feature works by returning an unspec'd `ORG_MATRIX_EXPIRED_ACCOUNT` error code to clients when their account expires. Modules shouldn't be returning undocumented error codes to clients on spec'd C-S endpoints.\r\n* In addition, MSC3720 ([Synapse implementation](https://github.com/matrix-org/synapse/pull/12001)) defines a new endpoint to allow clients to query certain metadata about other local and remote users. Part of that implementation included returning a `org.matrix.expired` field in the response, which lets clients know whether another user's account is no longer valid. MSC3720 does not mention this field.\r\n\r\nThis is clearly a feature that people want; but I think more spec work is needed to allow this functionality in mainline Synapse, even in module form.\r\n\r\n---\r\n\r\nThis issue is really two in one, and latter probably belongs in [matrix-spec](https://github.com/matrix-org/matrix-spec/issues):\r\n\r\n- [ ] Remove the internal account validity implementation gated behind the undocumented `account_validity` config option.\r\n- [ ] Spec account validity (or something like it) so that we can comfortably have modules that implement it without breaking spec compliance.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15273/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15273/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

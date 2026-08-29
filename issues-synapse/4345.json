@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/4345",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/4345/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/4345/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/4345/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/4345",
+  "id": 395229457,
+  "node_id": "MDU6SXNzdWUzOTUyMjk0NTc=",
+  "number": 4345,
+  "title": "First invitation over federation to a room fails with a 403, second works",
+  "user": {
+    "login": "lampholder",
+    "id": 1922197,
+    "node_id": "MDQ6VXNlcjE5MjIxOTc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1922197?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/lampholder",
+    "html_url": "https://github.com/lampholder",
+    "followers_url": "https://api.github.com/users/lampholder/followers",
+    "following_url": "https://api.github.com/users/lampholder/following{/other_user}",
+    "gists_url": "https://api.github.com/users/lampholder/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/lampholder/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/lampholder/subscriptions",
+    "organizations_url": "https://api.github.com/users/lampholder/orgs",
+    "repos_url": "https://api.github.com/users/lampholder/repos",
+    "events_url": "https://api.github.com/users/lampholder/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/lampholder/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1281928350,
+      "node_id": "MDU6TGFiZWwxMjgxOTI4MzUw",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Room-Upgrades",
+      "name": "A-Room-Upgrades",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137743886,
+      "node_id": "LA_kwDOAVyVwM72oPYO",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Invite",
+      "name": "A-Invite",
+      "color": "5319E7",
+      "default": false,
+      "description": "Inviting users to rooms and accepting invites"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2019-01-02T12:10:47Z",
+  "updated_at": "2022-11-15T09:31:35Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Both servers on Synapse 0.33.9.\r\n\r\n@babolivier invited a test account on lant.uk to a direct chat on abolivier.bzh. The first invite failed - from the lant.uk logs:\r\n\r\n```\r\n2019-01-02 11:53:09,249 - synapse.http.matrixfederationclient - 384 - INFO - POST-3321894- {GET-O-13088713} [abolivier.bzh] Got response headers: 403 Forbidden\r\n2019-01-02 11:53:09,250 - synapse.util.async_helpers - 218 - INFO - POST-3321894- Releasing linearizer lock 'member' for key (u'!zRkrJLyVJlGMRvPdkK:abolivier.bzh',)\r\n2019-01-02 11:53:09,250 - synapse.http.server - 85 - INFO - POST-3321894- <SynapseRequest at 0x7f18782e3c20 method=u'POST' uri=u'/_matrix/client/r0/join/%21zRkrJLyVJlGMRvPdkK%3Aabolivier.bzh?access_token=<redacted>' clientprot\r\no=u'HTTP/1.1' site=443> SynapseError: 403 - You are not invited to this room.\r\n2019-01-02 11:53:09,251 - synapse.access.https.443 - 302 - INFO - POST-3321894- 80.250.101.234 - 443 - {@devbot:lant.uk} Processed request: 0.122sec/0.000sec (0.006sec, 0.000sec) (0.000sec/0.002sec/4) 85B 403 \"POST /_matrix/cl\r\nient/r0/join/%21zRkrJLyVJlGMRvPdkK%3Aabolivier.bzh?access_token=<redacted> HTTP/1.1\" \"python-requests/2.19.1\" [0 dbevts]\r\n```\r\n\r\nThe second invite (to a new dm in a new room) worked.\r\n\r\nThis actually happened twice - once as described on an invite from abolivier.bzh to lant.uk, once on an invite to a bot running on matrix.org from abolivier.bzh.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/4345/reactions",
+    "total_count": 2,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 1
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/4345/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

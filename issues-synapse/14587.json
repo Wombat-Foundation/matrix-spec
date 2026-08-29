@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14587",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14587/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14587/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14587/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14587",
+  "id": 1469678291,
+  "node_id": "I_kwDOAVyVwM5XmYLT",
+  "number": 14587,
+  "title": "Faster remote room joins: add an error code to `/members` when in partial state",
+  "user": {
+    "login": "MatMaul",
+    "id": 1643573,
+    "node_id": "MDQ6VXNlcjE2NDM1NzM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1643573?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/MatMaul",
+    "html_url": "https://github.com/MatMaul",
+    "followers_url": "https://api.github.com/users/MatMaul/followers",
+    "following_url": "https://api.github.com/users/MatMaul/following{/other_user}",
+    "gists_url": "https://api.github.com/users/MatMaul/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/MatMaul/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/MatMaul/subscriptions",
+    "organizations_url": "https://api.github.com/users/MatMaul/orgs",
+    "repos_url": "https://api.github.com/users/MatMaul/repos",
+    "events_url": "https://api.github.com/users/MatMaul/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/MatMaul/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1771241792,
+      "node_id": "MDU6TGFiZWwxNzcxMjQxNzky",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federated-Join",
+      "name": "A-Federated-Join",
+      "color": "5319E7",
+      "default": false,
+      "description": "joins over federation generally suck"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2022-11-30T13:56:19Z",
+  "updated_at": "2023-01-19T09:53:44Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "For now the request is just stalled until the join completes, which is not ideal since clients are not aware of what is happening.\r\n\r\nThis requires a MSC to define the error code.\r\nFor backward compatibility we also probably need to add a parameter to `/members` so that the client can opt-in to the specific error code.\r\nOr perhaps returning a 5xx is enough ? https://stackoverflow.com/questions/9794696/which-http-status-code-means-not-ready-yet-try-again-later has several suggestions on that subject.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14587/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14587/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

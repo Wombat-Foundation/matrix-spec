@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/1622",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/1622/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/1622/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/1622/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/1622",
+  "id": 188589531,
+  "node_id": "MDU6SXNzdWUxODg1ODk1MzE=",
+  "number": 1622,
+  "title": "Some rooms stay unread after using Purge History API",
+  "user": {
+    "login": "4nd3r",
+    "id": 7166727,
+    "node_id": "MDQ6VXNlcjcxNjY3Mjc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/7166727?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/4nd3r",
+    "html_url": "https://github.com/4nd3r",
+    "followers_url": "https://api.github.com/users/4nd3r/followers",
+    "following_url": "https://api.github.com/users/4nd3r/following{/other_user}",
+    "gists_url": "https://api.github.com/users/4nd3r/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/4nd3r/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/4nd3r/subscriptions",
+    "organizations_url": "https://api.github.com/users/4nd3r/orgs",
+    "repos_url": "https://api.github.com/users/4nd3r/repos",
+    "events_url": "https://api.github.com/users/4nd3r/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/4nd3r/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1554244657,
+      "node_id": "MDU6TGFiZWwxNTU0MjQ0NjU3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Moderation",
+      "name": "A-Moderation",
+      "color": "5319E7",
+      "default": false,
+      "description": "Tools for moderating HSes: event redaction, media removal, purge admin API, reports from users, ..."
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 3607820563,
+      "node_id": "LA_kwDOAVyVwM7XCvkT",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Message-Retention-Policies",
+      "name": "A-Message-Retention-Policies",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues related to Synapse's support of MSC1763 (message retention policies)"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2016-11-10T18:57:41Z",
+  "updated_at": "2023-05-23T13:36:58Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "sometimes it gets marked as read after sending message, sometimes after discarding first message.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/1622/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/1622/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

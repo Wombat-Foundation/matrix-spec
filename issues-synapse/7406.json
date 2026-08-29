@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/7406",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/7406/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/7406/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/7406/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/7406",
+  "id": 611849404,
+  "node_id": "MDU6SXNzdWU2MTE4NDk0MDQ=",
+  "number": 7406,
+  "title": "Invites are not always included in sync",
+  "user": {
+    "login": "schmop",
+    "id": 1284227,
+    "node_id": "MDQ6VXNlcjEyODQyMjc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1284227?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/schmop",
+    "html_url": "https://github.com/schmop",
+    "followers_url": "https://api.github.com/users/schmop/followers",
+    "following_url": "https://api.github.com/users/schmop/following{/other_user}",
+    "gists_url": "https://api.github.com/users/schmop/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/schmop/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/schmop/subscriptions",
+    "organizations_url": "https://api.github.com/users/schmop/orgs",
+    "repos_url": "https://api.github.com/users/schmop/repos",
+    "events_url": "https://api.github.com/users/schmop/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/schmop/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2038475067,
+      "node_id": "MDU6TGFiZWwyMDM4NDc1MDY3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Sync",
+      "name": "A-Sync",
+      "color": "5319E7",
+      "default": false,
+      "description": "defects related to /sync"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137743886,
+      "node_id": "LA_kwDOAVyVwM72oPYO",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Invite",
+      "name": "A-Invite",
+      "color": "5319E7",
+      "default": false,
+      "description": "Inviting users to rooms and accepting invites"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2020-05-04T12:48:05Z",
+  "updated_at": "2023-06-15T19:21:56Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nOn fast changing membership states the sync will not reliably include rooms a user was invited to.\r\nIt might be related to issues\r\n https://github.com/matrix-org/synapse/issues/4533 and\r\n https://github.com/matrix-org/synapse/issues/4422\r\n\r\n### Reproduction\r\n\r\nThis is not easily reproducable, an attempt should look as follows:\r\n\r\n- Roomadmin a invites user b into rooms r_a and r_b\r\n- a kicks b  from r_a before he accepts the invite\r\n- a changes room_state of r_b multiple times\r\n- b retrieves current rooms via (initial)sync, r_b  doesn't show\r\n\r\n### Version information\r\n\r\nWe used the synapse version v1.12.0.\r\nInstalled per git clone\r\nAnd is operating in a debian stretch docker container.\r\n\r\n### Hotfix\r\n\r\nA possibility to fix it temporarly is to restart the server or invalidate the caches.\r\n\r\nWe debugged this issue for quite some time and are using a hotfix, that stops caching from\r\n`get_forgotten_rooms_for_user` in roommember.py by removing following line:\r\nhttps://github.com/matrix-org/synapse/blob/9c1b83b0078aa9cc1bb902e14d3f7302625ba099/synapse/storage/data_stores/main/roommember.py#L797\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/7406/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/7406/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

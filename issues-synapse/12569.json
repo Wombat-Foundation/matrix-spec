@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/12569",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/12569/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/12569/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/12569/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/12569",
+  "id": 1217620901,
+  "node_id": "I_kwDOAVyVwM5Ik2ul",
+  "number": 12569,
+  "title": "leave events do not correctly propagate over federation, if there are missing events",
+  "user": {
+    "login": "richvdh",
+    "id": 1389908,
+    "node_id": "MDQ6VXNlcjEzODk5MDg=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1389908?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/richvdh",
+    "html_url": "https://github.com/richvdh",
+    "followers_url": "https://api.github.com/users/richvdh/followers",
+    "following_url": "https://api.github.com/users/richvdh/following{/other_user}",
+    "gists_url": "https://api.github.com/users/richvdh/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/richvdh/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/richvdh/subscriptions",
+    "organizations_url": "https://api.github.com/users/richvdh/orgs",
+    "repos_url": "https://api.github.com/users/richvdh/repos",
+    "events_url": "https://api.github.com/users/richvdh/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/richvdh/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 5432652643,
+      "node_id": "LA_kwDOAVyVwM8AAAABQ8-zYw",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Leave",
+      "name": "A-Leave",
+      "color": "5319E7",
+      "default": false,
+      "description": "Leaving a room"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2022-04-27T16:49:30Z",
+  "updated_at": "2023-04-25T23:02:05Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Suppose Alice is the only user in a room on her server.\r\n\r\nShe decides to leave that room, and creates a leave event, which refers to whatever the current backwards extremities are. That event gets sent out over federation.\r\n\r\nA recipient server happens not to have one of those backwards extremities, so asks Alice's server for it via `get_missing_events`. However, Alice's server now believes that there are *no* servers in the room, so responds with a 403 [here](https://github.com/matrix-org/synapse/blob/v1.58.0rc2/synapse/handlers/federation.py#L1125).\r\n\r\nThe recipient server therefore ignores the leave event:\r\n\r\n```\r\n2022-04-27 16:29:38,149 - synapse.federation.federation_server - 1085 - INFO - _process_incoming_pdus_in_room_inner-382277 - handling received PDU in room !haTBqoGqvUMbmwFMVO:matrix.org: <FrozenEvent event_id=$165107697748XNotI:sw1v.org, type=m.room.member, state_key=@richvdh:sw1v.org, outlier=False>\r\n2022-04-27 16:29:38,179 - synapse.handlers.federation_event - 225 - INFO - _process_incoming_pdus_in_room_inner-382277-$165107697748XNotI:sw1v.org - Acquiring room lock to fetch 2 missing prev_events: ['$16429186801QHjzY:synapse-performance-test.lab.element.dev', '$16429403111NlIkb:synapse-performance-test.lab.element.dev']\r\n2022-04-27 16:29:38,179 - synapse.handlers.federation_event - 230 - INFO - _process_incoming_pdus_in_room_inner-382277-$165107697748XNotI:sw1v.org - Acquired room lock to fetch 2 missing prev_events\r\n2022-04-27 16:29:38,198 - synapse.handlers.federation_event - 593 - INFO - _process_incoming_pdus_in_room_inner-382277-$165107697748XNotI:sw1v.org - Requesting missing events between ['$16509745141ITCkh:synapse-performance-test.lab.element.dev', '$16509744290GBXbE:synapse-performance-test.lab.element.dev'] and $165107697748XNotI:sw1v.org\r\n2022-04-27 16:29:38,645 - synapse.http.matrixfederationclient - 600 - INFO - _process_incoming_pdus_in_room_inner-382277-$165107697748XNotI:sw1v.org- - {POST-O-30109} [sw1v.org] Got response headers: 403 Forbidden\r\n2022-04-27 16:29:38,646 - synapse.http.matrixfederationclient - 679 - WARNING - _process_incoming_pdus_in_room_inner-382277-$165107697748XNotI:sw1v.org- - {POST-O-30109} [sw1v.org] Request failed: POST matrix://sw1v.org/_matrix/federation/v1/get_missing_events/%21haTBqoGqvUMbmwFMVO%3Amatrix.org: HttpResponseException('403: Forbidden')\r\n2022-04-27 16:29:38,646 - synapse.handlers.federation_event - 658 - WARNING - _process_incoming_pdus_in_room_inner-382277-$165107697748XNotI:sw1v.org - Failed to get prev_events: 403: Forbidden\r\n2022-04-27 16:29:38,671 - synapse.handlers.federation_event - 263 - WARNING - _process_incoming_pdus_in_room_inner-382277-$165107697748XNotI:sw1v.org - Rejecting: failed to fetch 2 prev events: ['$16429186801QHjzY:synapse-performance-test.lab.element.dev', '$16429403111NlIkb:synapse-performance-test.lab.element.dev']\r\n2022-04-27 16:29:38,671 - synapse.federation.federation_server - 1095 - WARNING - _process_incoming_pdus_in_room_inner-382277 - Error handling PDU $165107697748XNotI:sw1v.org: ERROR 403: Your server isn't divulging details about prev_events referenced in this event.\r\n```",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/12569/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/12569/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

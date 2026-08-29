@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15130",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15130/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15130/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15130/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15130",
+  "id": 1594168594,
+  "node_id": "I_kwDOAVyVwM5fBRUS",
+  "number": 15130,
+  "title": "`/createRoom` overly restricts appservices when creating an alias for the room",
+  "user": {
+    "login": "turt2live",
+    "id": 1190097,
+    "node_id": "MDQ6VXNlcjExOTAwOTc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1190097?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/turt2live",
+    "html_url": "https://github.com/turt2live",
+    "followers_url": "https://api.github.com/users/turt2live/followers",
+    "following_url": "https://api.github.com/users/turt2live/following{/other_user}",
+    "gists_url": "https://api.github.com/users/turt2live/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/turt2live/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/turt2live/subscriptions",
+    "organizations_url": "https://api.github.com/users/turt2live/orgs",
+    "repos_url": "https://api.github.com/users/turt2live/repos",
+    "events_url": "https://api.github.com/users/turt2live/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/turt2live/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 828678284,
+      "node_id": "MDU6TGFiZWw4Mjg2NzgyODQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spec-Compliance",
+      "name": "A-Spec-Compliance",
+      "color": "5319E7",
+      "default": false,
+      "description": "places where synapse does not conform to the spec"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2023-02-21T22:17:50Z",
+  "updated_at": "2023-02-24T19:31:07Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nSee logs below - an appservice on my local machine tried to create a room with `room_alias_name` specified, but the request failed because \"This application service has not reserved this kind of alias\". \r\n\r\nWhen the very same appservice calls `PUT /directory/room/%23the_alias:localhost` though, it is not prevented from doing so.\n\n### Steps to reproduce\n\nSee description.\n\n### Homeserver\n\nlocalhost\n\n### Synapse Version\n\nmatrixdotorg/synapse:v1.76.0\n\n### Installation Method\n\nDocker (matrixdotorg/synapse)\n\n### Database\n\npostgresql, in a docker container\n\n### Workers\n\nSingle process\n\n### Platform\n\nN/A\n\n### Configuration\n\nN/A\n\n### Relevant log output\n\n```shell\nelement-dev-stack-eledev-synapse-1      | 2023-02-21 22:12:23,673 - synapse.http.server - 108 - INFO - POST-22 - <XForwardedForRequest at 0x7f03b5f0da90 method='POST' uri='/_matrix/client/v3/createRoom?user_id=@example_user_1676066190192:localhost' clientproto='HTTP/1.0' site='8008'> SynapseError: 400 - This application service has not reserved this kind of alias.\r\nelement-dev-stack-eledev-synapse-1      | 2023-02-21 22:12:23,673 - synapse.access.http.8008 - 460 - INFO - POST-22 - 172.26.0.5 - 8008 - {@example_user_1676066190192:localhost} Processed request: 0.026sec/0.000sec (0.001sec, 0.001sec) (0.001sec/0.018sec/4) 97B 400 \"POST /_matrix/client/v3/createRoom?user_id=@example_user_1676066190192:localhost HTTP/1.0\" \"okhttp/4.10.0\" [0 dbevts]\n```\n\n\n### Anything else that would be useful to know?\n\nThe spec does not enforce this restriction anywhere: the `/createRoom` request should not be failing.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15130/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15130/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/11271",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/11271/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/11271/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/11271/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/11271",
+  "id": 1047252933,
+  "node_id": "I_kwDOAVyVwM4-a8_F",
+  "number": 11271,
+  "title": "Get synapse/ to pass mypy",
+  "user": {
+    "login": "callahad",
+    "id": 24193,
+    "node_id": "MDQ6VXNlcjI0MTkz",
+    "avatar_url": "https://avatars.githubusercontent.com/u/24193?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/callahad",
+    "html_url": "https://github.com/callahad",
+    "followers_url": "https://api.github.com/users/callahad/followers",
+    "following_url": "https://api.github.com/users/callahad/following{/other_user}",
+    "gists_url": "https://api.github.com/users/callahad/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/callahad/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/callahad/subscriptions",
+    "organizations_url": "https://api.github.com/users/callahad/orgs",
+    "repos_url": "https://api.github.com/users/callahad/repos",
+    "events_url": "https://api.github.com/users/callahad/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/callahad/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406413,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDEz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Task",
+      "name": "T-Task",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Refactoring, removal, replacement, enabling or disabling functionality, other engineering tasks."
+    },
+    {
+      "id": 4316622437,
+      "node_id": "LA_kwDOAVyVwM8AAAABAUpuZQ",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Dev-Wishlist",
+      "name": "Z-Dev-Wishlist",
+      "color": "FBCA04",
+      "default": false,
+      "description": "Makes developers' lives better, but doesn't have direct user impact"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2021-11-08T10:08:26Z",
+  "updated_at": "2022-08-30T17:28:45Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Our mypy configuration currently includes an explicit [enumeration](https://github.com/matrix-org/synapse/blob/4249082eed54a0fe6412ab303409511ea759dd76/mypy.ini#L28-L30) of files to check. That list covers 409 of the 491 Python files in the `synapse/` directory.\r\n\r\nWe should:\r\n\r\n- Get as many of those to pass as possible\r\n- Invert the selection criteria so that all files in `synapse/` are checked by default, while failing files are explicitly excluded.\r\n\r\nAs of 4249082eed54a0fe6412ab303409511ea759dd76, the omitted files are:\r\n\r\n- `storage/databases/__init__.py`\r\n- `storage/databases/main/cache.py`\r\n- `storage/schema/*` (25 files)\r\n\r\nWe should probably start with switching from inclusion to exclusion, and burn down from there. Note that the next release of mypy will have [significantly better](https://github.com/python/mypy/pull/11329) syntax for multiple exclusions, but it's not out yet, so we'll have to get by with gnarlier regex-based syntax.\r\n\r\n(Edited 2022-08-30 by dmr to reflect the status quo.)",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/11271/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/11271/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/11694",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/11694/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/11694/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/11694/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/11694",
+  "id": 1095174857,
+  "node_id": "I_kwDOAVyVwM5BRwrJ",
+  "number": 11694,
+  "title": "Viewing room list in a Space / Searching for rooms in a Space is very slow",
+  "user": {
+    "login": "reivilibre",
+    "id": 38398653,
+    "node_id": "MDQ6VXNlcjM4Mzk4NjUz",
+    "avatar_url": "https://avatars.githubusercontent.com/u/38398653?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/reivilibre",
+    "html_url": "https://github.com/reivilibre",
+    "followers_url": "https://api.github.com/users/reivilibre/followers",
+    "following_url": "https://api.github.com/users/reivilibre/following{/other_user}",
+    "gists_url": "https://api.github.com/users/reivilibre/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/reivilibre/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/reivilibre/subscriptions",
+    "organizations_url": "https://api.github.com/users/reivilibre/orgs",
+    "repos_url": "https://api.github.com/users/reivilibre/repos",
+    "events_url": "https://api.github.com/users/reivilibre/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/reivilibre/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 2754675394,
+      "node_id": "MDU6TGFiZWwyNzU0Njc1Mzk0",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spaces",
+      "name": "A-Spaces",
+      "color": "5319E7",
+      "default": false,
+      "description": "Hierarchical organization of rooms"
+    },
+    {
+      "id": 4458764864,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNaQA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Frequent",
+      "name": "O-Frequent",
+      "color": "0052CC",
+      "default": false,
+      "description": "Affects or can be seen by most users regularly or impacts most users' first experience"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 7,
+  "created_at": "2022-01-06T10:24:15Z",
+  "updated_at": "2022-12-16T15:20:26Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Still need to find out what's going on here or even what the related requests are, but can't see an issue about it and this is surely something we ought to resolve if we want people to enjoy using spaces.\r\n\r\n### Description\r\n\r\nThe 'Explore Space' screen in Element is very slow, even if typing in a search term.\r\n\r\n### Steps to reproduce\r\n\r\n- go to a (decent size?) space: my example is Element's space\r\n    - I suspect this issue may not be visible from the matrix.org homeserver since I expect someone would have said something by now!\r\n- open the 'Explore rooms' view in Element\r\n- type in a *keyword*\r\n- watch spinner for 2 minutes (in my case; probably varies depending upon how far down the room is in the tree?)\r\n- a result appears (spinner is still going, so it's probably not a complete result set. However this was the room I wanted in my situation so I could finish here.)\r\n\r\nI would expect searching to be much faster than that; let's say 10 seconds or less to be generous given that I suppose I can understand that it may be making a few round trips to remote homeservers.\r\n\r\n### Version information\r\n\r\n- **Homeserver**: librepush.net\r\n- **Version**: 1.49.0, but this issue has been here for as long as I can remember the feature existing\r\n- **Install method**: pip from PyPI\r\n- **Platform**: amd64 VPS\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/11694/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/11694/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

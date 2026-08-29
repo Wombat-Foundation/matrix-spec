@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14686",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14686/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14686/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14686/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14686",
+  "id": 1500616314,
+  "node_id": "I_kwDOAVyVwM5ZcZZ6",
+  "number": 14686,
+  "title": "Documentation for `only_for_reauth` is wrong",
+  "user": {
+    "login": "remram44",
+    "id": 426784,
+    "node_id": "MDQ6VXNlcjQyNjc4NA==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/426784?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/remram44",
+    "html_url": "https://github.com/remram44",
+    "followers_url": "https://api.github.com/users/remram44/followers",
+    "following_url": "https://api.github.com/users/remram44/following{/other_user}",
+    "gists_url": "https://api.github.com/users/remram44/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/remram44/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/remram44/subscriptions",
+    "organizations_url": "https://api.github.com/users/remram44/orgs",
+    "repos_url": "https://api.github.com/users/remram44/repos",
+    "events_url": "https://api.github.com/users/remram44/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/remram44/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 845245048,
+      "node_id": "MDU6TGFiZWw4NDUyNDUwNDg=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Docs",
+      "name": "A-Docs",
+      "color": "5319E7",
+      "default": false,
+      "description": "things relating to the documentation"
+    },
+    {
+      "id": 2299781639,
+      "node_id": "MDU6TGFiZWwyMjk5NzgxNjM5",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Config",
+      "name": "A-Config",
+      "color": "5319E7",
+      "default": false,
+      "description": "Configuration, or the documentation thereof"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406413,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDEz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Task",
+      "name": "T-Task",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Refactoring, removal, replacement, enabling or disabling functionality, other engineering tasks."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 12,
+  "created_at": "2022-12-16T17:40:00Z",
+  "updated_at": "2023-12-07T18:53:45Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nThe [documentation](https://matrix-org.github.io/synapse/latest/usage/configuration/config_documentation.html#password_config) for `password_config.enabled` says:\r\n\r\n> Set to only_for_reauth to allow users with existing passwords to use them to log in and reauthenticate, whilst preventing new users from setting passwords.\r\n\r\nIn reality it seems that this settings only allows reauthentication, not log in.\r\n\r\nThe documentation should be fixed, but in addition **the feature that is advertised in the documentation should also be made available**, for example with a separate mode `password_config.enabled = \"hidden\"`, that allows users with existing passwords to use them to log in. The use case is system accounts (e.g. admin, bots) which don't exist in SSO (for example in Nextcloud, when enabling SSO and disabling passwords, [you can add `?direct=1` to the URL](https://github.com/nextcloud/user_oidc#disable-other-login-methods) to use username+password anyway).\n\n### Steps to reproduce\n\n- Set `password_config.enabled = \"only_for_reauth\"`\r\n- Notice that Synapse doesn't advertise `m.login.password` as an authentication flow\r\n- Try to log in with a username and password (you can't do this from unpatched Element), you will get `M_UNKNOWN: MatrixError: [400] Password login has been disabled`\n\n### Homeserver\n\nmy own\n\n### Synapse Version\n\n1.73.0\n\n### Installation Method\n\nDocker (matrixdotorg/synapse)\n\n### Database\n\nPostgreSQL\n\n### Workers\n\nSingle process\n\n### Platform\n\nKubernetes\n\n### Configuration\n\n`password_config.enabled = \"only_for_reauth\"`\n\n### Relevant log output\n\n```shell\n{\"errcode\":\"M_UNKNOWN\",\"error\":\"Password login has been disabled.\"}\r\n```\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14686/reactions",
+    "total_count": 5,
+    "+1": 5,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14686/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

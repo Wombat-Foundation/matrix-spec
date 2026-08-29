@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/7306",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/7306/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/7306/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/7306/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/7306",
+  "id": 602802343,
+  "node_id": "MDU6SXNzdWU2MDI4MDIzNDM=",
+  "number": 7306,
+  "title": "The `limit` set for a filter in a room's `StateFilter` is ignored",
+  "user": {
+    "login": "flaki",
+    "id": 2089432,
+    "node_id": "MDQ6VXNlcjIwODk0MzI=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/2089432?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/flaki",
+    "html_url": "https://github.com/flaki",
+    "followers_url": "https://api.github.com/users/flaki/followers",
+    "following_url": "https://api.github.com/users/flaki/following{/other_user}",
+    "gists_url": "https://api.github.com/users/flaki/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/flaki/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/flaki/subscriptions",
+    "organizations_url": "https://api.github.com/users/flaki/orgs",
+    "repos_url": "https://api.github.com/users/flaki/repos",
+    "events_url": "https://api.github.com/users/flaki/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/flaki/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 828678284,
+      "node_id": "MDU6TGFiZWw4Mjg2NzgyODQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spec-Compliance",
+      "name": "A-Spec-Compliance",
+      "color": "5319E7",
+      "default": false,
+      "description": "places where synapse does not conform to the spec"
+    },
+    {
+      "id": 2038475067,
+      "node_id": "MDU6TGFiZWwyMDM4NDc1MDY3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Sync",
+      "name": "A-Sync",
+      "color": "5319E7",
+      "default": false,
+      "description": "defects related to /sync"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2020-04-19T19:38:19Z",
+  "updated_at": "2022-11-07T11:43:54Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "<!--\r\n\r\n**IF YOU HAVE SUPPORT QUESTIONS ABOUT RUNNING OR CONFIGURING YOUR OWN HOME SERVER**:\r\nYou will likely get better support more quickly if you ask in ** #synapse:matrix.org ** ;)\r\n\r\n\r\nThis is a bug report template. By following the instructions below and\r\nfilling out the sections with your information, you will help the us to get all\r\nthe necessary data to fix your issue.\r\n\r\nYou can also preview your report before submitting it. You may remove sections\r\nthat aren't relevant to your particular case.\r\n\r\nText between <!-- and --​> marks will be invisible in the report.\r\n\r\n-->\r\n\r\n### Description\r\n\r\nI'm using the below filter in a `sync`:\r\n\r\n```json\r\n{\r\n  \"room\": {\r\n    \"state\": {\r\n      \"types\": [\r\n        \"m.room.member\",\r\n        \"m.room.name\"\r\n      ],\r\n      \"limit\": 10\r\n    },\r\n    \"timeline\": {\r\n      \"limit\": 10\r\n    },\r\n    \"ephemeral\": {\r\n      \"not_types\": [ \"*\" ]\r\n    }\r\n  }\r\n}\r\n```\r\n\r\nPlease note that both room `state` and `timeline` limits are set to 10. In the resulting JSON I see my limit applied in timeline events (also `limited: true`), but not in room state events (one room in `join` has 4000+ events listed). According to the client-server [API docs](https://matrix.org/docs/spec/client_server/r0.6.0#post-matrix-client-r0-user-userid-filter) a `limit` clause should apply to `StateFilter`\r\n\r\n### Steps to reproduce\r\n\r\n- perform a `sync` without `since`\r\n- include a filter in the query that requests `room.state.limit = 10`\r\n\r\nThe limit should apply in e.g. `rooms.join.<roomId>.state.events`, but it doesn't seem to do so.\r\n\r\n<!-- IMPORTANT: please answer the following questions, to help us narrow down the problem -->\r\n\r\n<!-- Was this issue identified on matrix.org or another homeserver? -->\r\n- **Homeserver**: `mozilla.modular.im`\r\n\r\nIf not matrix.org:\r\n\r\n<!--\r\n What version of Synapse is running?\r\n\r\nYou can find the Synapse version with this command:\r\n\r\n$ curl http://localhost:8008/_synapse/admin/v1/server_version\r\n\r\n(You may need to replace `localhost:8008` if Synapse is not configured to\r\nlisten on that port.)\r\n-->\r\n- **Version**: `{\"server_version\": \"1.12.3\", \"python_version\": \"3.7.7\"}`\r\n\r\n- **Install method**:\r\n<!-- examples: package manager/git clone/pip  -->\r\n\r\n- **Platform**:\r\n<!--\r\nTell us about the environment in which your homeserver is operating\r\ndistro, hardware, if it's running in a vm/container, etc.\r\n-->\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/7306/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/7306/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

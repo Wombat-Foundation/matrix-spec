@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14512",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14512/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14512/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14512/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14512",
+  "id": 1458653289,
+  "node_id": "I_kwDOAVyVwM5W8Uhp",
+  "number": 14512,
+  "title": "Read config variables from files (e.g. docker secrets) and environment variables.",
+  "user": {
+    "login": "RandomExplosion",
+    "id": 42421984,
+    "node_id": "MDQ6VXNlcjQyNDIxOTg0",
+    "avatar_url": "https://avatars.githubusercontent.com/u/42421984?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/RandomExplosion",
+    "html_url": "https://github.com/RandomExplosion",
+    "followers_url": "https://api.github.com/users/RandomExplosion/followers",
+    "following_url": "https://api.github.com/users/RandomExplosion/following{/other_user}",
+    "gists_url": "https://api.github.com/users/RandomExplosion/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/RandomExplosion/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/RandomExplosion/subscriptions",
+    "organizations_url": "https://api.github.com/users/RandomExplosion/orgs",
+    "repos_url": "https://api.github.com/users/RandomExplosion/repos",
+    "events_url": "https://api.github.com/users/RandomExplosion/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/RandomExplosion/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2299781639,
+      "node_id": "MDU6TGFiZWwyMjk5NzgxNjM5",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Config",
+      "name": "A-Config",
+      "color": "5319E7",
+      "default": false,
+      "description": "Configuration, or the documentation thereof"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 7,
+  "created_at": "2022-11-21T22:05:57Z",
+  "updated_at": "2022-12-02T00:04:39Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Hi All, I've been setting up my own homeserver recently and I've come across an issue that many seem to have raised before me;\r\nFor the purpose of storing and backing up configuration it is not ideal to have secrets embedded within the config files themselves e.g. private keys, database passwords etc.\r\n\r\n**Description:**\r\nI would like to propose that support be added for reading particular config variables (and perhaps any config variable) from a file or environment variable by adding a suffix to the config option such as \"_file\" or \"_env\". Similar to how authelia handles the same problem (see [here](https://www.authelia.com/configuration/methods/secrets/))\r\n\r\n**Suggested Implementation**\r\nAs for how this would be implemented, the easiest (albeit least efficient) approach I can think of would be to check all the attributes in a given config object (using something like `.vars()`) for a suffix such as `\"_file\"` or `\"_env\"` suffix (using something like python's string `endswith()` method)\r\nThen whenever a match is found it could just attempt to read the file or environment variable into a new attribute with the suffix removed  the contents of the file or environment variable.\r\n\r\nThe recursive nature of that approach is definitely slower but I figure since afaik it will only be happening at server startup it shouldn't be that bad as a first implementation. (The search could also be disabled by default as to not affect those who aren't going to use the feature.) \r\n\r\nI'm be more than happy to implement this and make a PR myself. I just want to confirm that such a feature would be accepted.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14512/reactions",
+    "total_count": 2,
+    "+1": 2,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14512/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/6782",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/6782/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/6782/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/6782/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/6782",
+  "id": 555104304,
+  "node_id": "MDU6SXNzdWU1NTUxMDQzMDQ=",
+  "number": 6782,
+  "title": "Recurring too large event from matrix.kiwifarms.net",
+  "user": {
+    "login": "anoadragon453",
+    "id": 1342360,
+    "node_id": "MDQ6VXNlcjEzNDIzNjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1342360?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/anoadragon453",
+    "html_url": "https://github.com/anoadragon453",
+    "followers_url": "https://api.github.com/users/anoadragon453/followers",
+    "following_url": "https://api.github.com/users/anoadragon453/following{/other_user}",
+    "gists_url": "https://api.github.com/users/anoadragon453/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/anoadragon453/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/anoadragon453/subscriptions",
+    "organizations_url": "https://api.github.com/users/anoadragon453/orgs",
+    "repos_url": "https://api.github.com/users/anoadragon453/repos",
+    "events_url": "https://api.github.com/users/anoadragon453/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/anoadragon453/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2020-01-25T16:22:44Z",
+  "updated_at": "2023-05-23T15:39:50Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "\r\n### Description\r\n\r\nI've been getting the following in my logs for the past few hours repeatedly:\r\n\r\n```\r\n2020-01-25 16:43:56,039 - synapse.http.matrixfederationclient - 164 - INFO - PUT-804886-$157996629879666qwvGV:matrix.kiwifarms.net-$157996628879662OVzrF:matrix.kiwifarms.net-$157996628479661YFIAM:matrix.kiwifarms.net- {GET-O-120740} [matrix.kiwifarms.net] Completed: 200 OK\r\n2020-01-25 16:43:56,113 - synapse.handlers.federation - 2249 - INFO - PUT-804886-$157996629879666qwvGV:matrix.kiwifarms.net-$157996628879662OVzrF:matrix.kiwifarms.net-$157996628479661YFIAM:matrix.kiwifarms.net-$15799662694FdIUz:calamari.space- Skipping auth_event fetch for outlier\r\n2020-01-25 16:43:56,114 - synapse.handlers.federation - 2249 - INFO - PUT-804886-$157996629879666qwvGV:matrix.kiwifarms.net-$157996628879662OVzrF:matrix.kiwifarms.net-$157996628479661YFIAM:matrix.kiwifarms.net-$157996628079659VsCoS:matrix.kiwifarms.net- Skipping auth_event fetch for outlier\r\n2020-01-25 16:43:56,115 - synapse.handlers.federation - 2249 - INFO - PUT-804886-$157996629879666qwvGV:matrix.kiwifarms.net-$157996628879662OVzrF:matrix.kiwifarms.net-$157996628479661YFIAM:matrix.kiwifarms.net-$157996627879658ekygD:matrix.kiwifarms.net- Skipping auth_event fetch for outlier\r\n2020-01-25 16:43:56,116 - synapse.handlers.federation - 2249 - INFO - PUT-804886-$157996629879666qwvGV:matrix.kiwifarms.net-$157996628879662OVzrF:matrix.kiwifarms.net-$157996628479661YFIAM:matrix.kiwifarms.net-$157996622079636ipUVL:matrix.kiwifarms.net- Skipping auth_event fetch for outlier\r\n2020-01-25 16:43:56,117 - synapse.handlers.federation - 2249 - INFO - PUT-804886-$157996629879666qwvGV:matrix.kiwifarms.net-$157996628879662OVzrF:matrix.kiwifarms.net-$157996628479661YFIAM:matrix.kiwifarms.net-$157996627579656cgFdh:matrix.kiwifarms.net- Skipping auth_event fetch for outlier\r\n2020-01-25 16:43:56,117 - synapse.handlers.federation - 2249 - INFO - PUT-804886-$157996629879666qwvGV:matrix.kiwifarms.net-$157996628879662OVzrF:matrix.kiwifarms.net-$157996628479661YFIAM:matrix.kiwifarms.net-$157996628479661YFIAM:matrix.kiwifarms.net- Skipping auth_event fetch for outlier\r\n2020-01-25 16:43:56,118 - synapse.handlers.federation - 2249 - INFO - PUT-804886-$157996629879666qwvGV:matrix.kiwifarms.net-$157996628879662OVzrF:matrix.kiwifarms.net-$157996628479661YFIAM:matrix.kiwifarms.net-$157996628179660apjeR:matrix.kiwifarms.net- Skipping auth_event fetch for outlier\r\n2020-01-25 16:43:56,121 - synapse.handlers.federation - 2249 - INFO - PUT-804886-$157996629879666qwvGV:matrix.kiwifarms.net-$157996628879662OVzrF:matrix.kiwifarms.net-$157996628479661YFIAM:matrix.kiwifarms.net-$157996626879651nsxTJ:matrix.kiwifarms.net- Skipping auth_event fetch for outlier\r\n2020-01-25 16:43:56,121 - synapse.handlers.federation - 411 - WARNING - PUT-804886-$157996629879666qwvGV:matrix.kiwifarms.net-$157996628879662OVzrF:matrix.kiwifarms.net- [!PvQGNjiCNulFZsMPud:matrix.org $157996628879662OVzrF:matrix.kiwifarms.net] Error attempting to resolve state at missing prev_events\r\n...\r\nTraceback (most recent call last):\r\n  File \"/home/synapse/synapse/env/lib/python3.7/site-packages/synapse/handlers/federation.py\", line 372, in on_receive_pdu\r\n    origin, room_id, p, include_event_in_state=True\r\n  File \"/home/synapse/synapse/env/lib/python3.7/site-packages/synapse/handlers/federation.py\", line 587, in _get_state_for_room\r\n    destination, room_id, desired_events\r\n  File \"/home/synapse/synapse/env/lib/python3.7/site-packages/synapse/handlers/federation.py\", line 640, in _get_events_from_store_or_dest\r\n    destination=destination, room_id=room_id, events=missing_events\r\n  File \"/home/synapse/synapse/env/lib/python3.7/site-packages/synapse/handlers/federation.py\", line 1106, in _get_events_and_persist\r\n    destination, event_infos,\r\n  File \"/home/synapse/synapse/env/lib/python3.7/site-packages/twisted/internet/defer.py\", line 749, in send\r\n    raise result.value\r\ntwisted.internet.defer.FirstError: FirstError[#6, [Failure instance: Traceback: <class 'synapse.api.errors.EventSizeError'>: 413: event too large\r\n/home/synapse/synapse/env/lib/python3.7/site-packages/twisted/internet/defer.py:1418:_inlineCallbacks\r\n/home/synapse/synapse/env/lib/python3.7/site-packages/synapse/handlers/federation.py:1948:_prep_event\r\n/home/synapse/synapse/env/lib/python3.7/site-packages/twisted/internet/defer.py:1613:unwindGenerator\r\n/home/synapse/synapse/env/lib/python3.7/site-packages/twisted/internet/defer.py:1529:_cancellableInlineCallbacks\r\n--- <exception caught here> ---\r\n/home/synapse/synapse/env/lib/python3.7/site-packages/synapse/handlers/federation.py:1793:prep\r\n/home/synapse/synapse/env/lib/python3.7/site-packages/synapse/handlers/federation.py:1948:_prep_event\r\n/home/synapse/synapse/env/lib/python3.7/site-packages/twisted/internet/defer.py:1418:_inlineCallbacks\r\n/home/synapse/synapse/env/lib/python3.7/site-packages/synapse/handlers/federation.py:2140:do_auth\r\n/home/synapse/synapse/env/lib/python3.7/site-packages/synapse/event_auth.py:49:check\r\n/home/synapse/synapse/env/lib/python3.7/site-packages/synapse/event_auth.py:183:_check_size_limits\r\n/home/synapse/synapse/env/lib/python3.7/site-packages/synapse/event_auth.py:170:too_big\r\n]]\r\n```\r\n\r\nIt seems to be affecting the performance of my server a bit.\r\n\r\nSynapse v1.9.0",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/6782/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/6782/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

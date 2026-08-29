@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/1248",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/1248/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/1248/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/1248/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/1248",
+  "id": 187782527,
+  "node_id": "MDU6SXNzdWUxODc3ODI1Mjc=",
+  "number": 1248,
+  "title": "Report image transparency (SYN-170)",
+  "user": {
+    "login": "matrixbot",
+    "id": 10127976,
+    "node_id": "MDQ6VXNlcjEwMTI3OTc2",
+    "avatar_url": "https://avatars.githubusercontent.com/u/10127976?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/matrixbot",
+    "html_url": "https://github.com/matrixbot",
+    "followers_url": "https://api.github.com/users/matrixbot/followers",
+    "following_url": "https://api.github.com/users/matrixbot/following{/other_user}",
+    "gists_url": "https://api.github.com/users/matrixbot/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/matrixbot/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/matrixbot/subscriptions",
+    "organizations_url": "https://api.github.com/users/matrixbot/orgs",
+    "repos_url": "https://api.github.com/users/matrixbot/repos",
+    "events_url": "https://api.github.com/users/matrixbot/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/matrixbot/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045806,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDY=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Media-Repository",
+      "name": "A-Media-Repository",
+      "color": "5319E7",
+      "default": false,
+      "description": "Uploading, downloading images and video, thumbnailing"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2014-11-25T22:05:28Z",
+  "updated_at": "2022-08-25T11:15:24Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "In the metadata for images served up it'd be lovely to say how many colour channels they have (especially if they have alpha) alongside the width & height etc.  This would let us assume that if an image has an alpha channel already, we shouldn't be putting a dropshadow on it in the webclient.\n\n(Imported from https://matrix.org/jira/browse/SYN-170)\n\n(Reported by @ara4n)",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/1248/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/1248/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

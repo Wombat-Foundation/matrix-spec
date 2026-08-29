@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/7918",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/7918/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/7918/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/7918/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/7918",
+  "id": 662769819,
+  "node_id": "MDU6SXNzdWU2NjI3Njk4MTk=",
+  "number": 7918,
+  "title": "Transfer invites/rooms/etc. when a guest account is upgraded",
+  "user": {
+    "login": "eiclu",
+    "id": 6774795,
+    "node_id": "MDQ6VXNlcjY3NzQ3OTU=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/6774795?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/eiclu",
+    "html_url": "https://github.com/eiclu",
+    "followers_url": "https://api.github.com/users/eiclu/followers",
+    "following_url": "https://api.github.com/users/eiclu/following{/other_user}",
+    "gists_url": "https://api.github.com/users/eiclu/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/eiclu/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/eiclu/subscriptions",
+    "organizations_url": "https://api.github.com/users/eiclu/orgs",
+    "repos_url": "https://api.github.com/users/eiclu/repos",
+    "events_url": "https://api.github.com/users/eiclu/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/eiclu/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137743886,
+      "node_id": "LA_kwDOAVyVwM72oPYO",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Invite",
+      "name": "A-Invite",
+      "color": "5319E7",
+      "default": false,
+      "description": "Inviting users to rooms and accepting invites"
+    },
+    {
+      "id": 4137798466,
+      "node_id": "LA_kwDOAVyVwM72octC",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Guests",
+      "name": "A-Guests",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2020-07-21T08:58:37Z",
+  "updated_at": "2022-11-23T14:27:13Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\n\r\nRight now, when I want to PM a guest account as a registered user, I can initiate the conversation, but the guest can't accept the invitation, getting prompted to create an account instead. But after creating an account, the invite is no longer valid, since the name changed.\r\n\r\nAlso, the other way around, when I want to PM another user as a guest, it prompts me to create an account.\r\n\r\nI think it would make sense to allow guests to participate in Private Message Rooms. If there are spam concerns, it could be realized by simply allowing guest accounts to accept invites to PM rooms by registered users",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/7918/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/7918/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

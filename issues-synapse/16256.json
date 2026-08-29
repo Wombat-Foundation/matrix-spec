@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16256",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16256/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16256/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16256/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16256",
+  "id": 1882178731,
+  "node_id": "I_kwDOAVyVwM5wL8Sr",
+  "number": 16256,
+  "title": "Using SSO to sign up for an account bypasses some of the information that needs to be filled out",
+  "user": {
+    "login": "MomentQYC",
+    "id": 62551256,
+    "node_id": "MDQ6VXNlcjYyNTUxMjU2",
+    "avatar_url": "https://avatars.githubusercontent.com/u/62551256?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/MomentQYC",
+    "html_url": "https://github.com/MomentQYC",
+    "followers_url": "https://api.github.com/users/MomentQYC/followers",
+    "following_url": "https://api.github.com/users/MomentQYC/following{/other_user}",
+    "gists_url": "https://api.github.com/users/MomentQYC/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/MomentQYC/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/MomentQYC/subscriptions",
+    "organizations_url": "https://api.github.com/users/MomentQYC/orgs",
+    "repos_url": "https://api.github.com/users/MomentQYC/repos",
+    "events_url": "https://api.github.com/users/MomentQYC/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/MomentQYC/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2186787706,
+      "node_id": "MDU6TGFiZWwyMTg2Nzg3NzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-SSO",
+      "name": "A-SSO",
+      "color": "5319E7",
+      "default": false,
+      "description": "Single Sign-On (maybe OIDC)"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2023-09-05T15:11:50Z",
+  "updated_at": "2023-09-11T13:13:52Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nFor example, assuming that the server is set up to require an email address to register in order to avoid spam as much as possible, when I use GitHub OAuth for authorization to sign up for an account, I can sign up for an account without filling in my email address.\n\n### Steps to reproduce\n\n- Set Synapse to have to verify email address to register\r\n- Setting up to allow third-party authorization registration, such as GitHub OAuth\r\n- Sign up for an account using GitHub OAuth without verifying your email address\r\n\n\n### Homeserver\n\nMatrix.org can reproduce this situation\n\n### Synapse Version\n\nSynapse 1.91.1\n\n### Installation Method\n\nDebian packages from packages.matrix.org\n\n### Database\n\nIDK\n\n### Workers\n\nI don't know\n\n### Platform\n\nMatrix.org\n\n### Configuration\n\nIDK\n\n### Relevant log output\n\n```shell\nIDK\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16256/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16256/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

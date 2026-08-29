@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/4659",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/4659/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/4659/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/4659/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/4659",
+  "id": 411177711,
+  "node_id": "MDU6SXNzdWU0MTExNzc3MTE=",
+  "number": 4659,
+  "title": "Gathering performance data of synapse deployments",
+  "user": {
+    "login": "targodan",
+    "id": 6468902,
+    "node_id": "MDQ6VXNlcjY0Njg5MDI=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/6468902?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/targodan",
+    "html_url": "https://github.com/targodan",
+    "followers_url": "https://api.github.com/users/targodan/followers",
+    "following_url": "https://api.github.com/users/targodan/following{/other_user}",
+    "gists_url": "https://api.github.com/users/targodan/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/targodan/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/targodan/subscriptions",
+    "organizations_url": "https://api.github.com/users/targodan/orgs",
+    "repos_url": "https://api.github.com/users/targodan/repos",
+    "events_url": "https://api.github.com/users/targodan/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/targodan/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086032,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMzI=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Help-Wanted",
+      "name": "Z-Help-Wanted",
+      "color": "006B0F",
+      "default": false,
+      "description": "We know exactly how to fix this issue, and would be grateful for any contribution"
+    },
+    {
+      "id": 477050471,
+      "node_id": "MDU6TGFiZWw0NzcwNTA0NzE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p3",
+      "name": "z-p3",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 600557921,
+      "node_id": "MDU6TGFiZWw2MDA1NTc5MjE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Performance",
+      "name": "A-Performance",
+      "color": "5319E7",
+      "default": false,
+      "description": "Performance, both client-facing and admin-facing"
+    },
+    {
+      "id": 2674406437,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDM3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Other",
+      "name": "T-Other",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Questions, user support, anything else."
+    },
+    {
+      "id": 3537729900,
+      "node_id": "LA_kwDOAVyVwM7S3Xls",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Metrics",
+      "name": "A-Metrics",
+      "color": "5319E7",
+      "default": false,
+      "description": "metrics, measures, stuff we put in Prometheus"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2019-02-17T11:33:45Z",
+  "updated_at": "2022-12-09T10:34:03Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\n\r\nIt would be nice if we could gather some performance information about synapse deployments.\r\n\r\n**Short-Term:**\r\n\r\nUse a google doc or something similar to allow admins that are willing to contribute the data of their deployments. This data is mostly subjective and depends on a lot of unknowns (like how many users are in which federated channels) but it might still give people who are thinking about setting up a HS a starting point for what to expect. I am hoping these unknowns will, at least somewhat, average out with enough contributions.\r\n\r\nAlso new admins might not even know how many users they can expect to use federated channels, so having these unknowns in the averages might even be a good thing.\r\n\r\nI have drafted up a quick google doc to show you what I mean. It is public so any synapse admin can already contribute. Just keep in mind that this document might be changed, hosted somewhere else or just flat out discontinued entirely at any point.\r\nhttps://docs.google.com/spreadsheets/d/1hOOh_GK3cvzVFprfP_rWwhNe8ChBqFfJBqIz-36Hhac/edit?usp=sharing\r\n\r\nThe measurement type \"Official Script\" is meant for some sort of official script that may gather performance information over say 24 hours or so and average the data as well as detect peaks and so on. I think especially interesting is the column \"CPU-Time per Hour\" which is almost impossible to do by hand.\r\n\r\n**Long-Term:**\r\n\r\nMaybe add a diagnostics API to synapse that can be used to make the aforementioned unknowns known in order to give a more accurate performance reading.\r\n\r\nMaybe even some opt-**in** anonymous analytics that would be transmitted to a matrix.org hosted server.\r\n\r\n**Long-long-Term:**\r\n\r\nMaybe even add this API to the matrix specs so people can properly compare different HS implementations.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/4659/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/4659/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14254",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14254/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14254/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14254/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14254",
+  "id": 1418232630,
+  "node_id": "I_kwDOAVyVwM5UiIM2",
+  "number": 14254,
+  "title": "Slow query performance(?) in list users API due to naive join to profiles table",
+  "user": {
+    "login": "DMRobertson",
+    "id": 8614563,
+    "node_id": "MDQ6VXNlcjg2MTQ1NjM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8614563?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/DMRobertson",
+    "html_url": "https://github.com/DMRobertson",
+    "followers_url": "https://api.github.com/users/DMRobertson/followers",
+    "following_url": "https://api.github.com/users/DMRobertson/following{/other_user}",
+    "gists_url": "https://api.github.com/users/DMRobertson/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/DMRobertson/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/DMRobertson/subscriptions",
+    "organizations_url": "https://api.github.com/users/DMRobertson/orgs",
+    "repos_url": "https://api.github.com/users/DMRobertson/repos",
+    "events_url": "https://api.github.com/users/DMRobertson/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/DMRobertson/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 600557921,
+      "node_id": "MDU6TGFiZWw2MDA1NTc5MjE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Performance",
+      "name": "A-Performance",
+      "color": "5319E7",
+      "default": false,
+      "description": "Performance, both client-facing and admin-facing"
+    },
+    {
+      "id": 1507817868,
+      "node_id": "MDU6TGFiZWwxNTA3ODE3ODY4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Admin-API",
+      "name": "A-Admin-API",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4195810659,
+      "node_id": "LA_kwDOAVyVwM76Fv1j",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Database",
+      "name": "A-Database",
+      "color": "5319E7",
+      "default": false,
+      "description": "DB stuff like queries, migrations, new/remove columns, indexes, unexpected entries in the db"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2022-10-21T12:01:07Z",
+  "updated_at": "2023-04-06T16:24:49Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Noticed in https://github.com/matrix-org/synapse/pull/14205/files#r1001678137\r\n\r\nThe join condition is `users.name = '@' || profiles.user_id || ':' || 'matrix.example.com'`. This isn't of the form `profiles.user_id = X`, and so postgres can't use the index on `profiles.user_id` to to lookup a profiles row.\r\n\r\nI think the condition\r\n\r\n```\r\n    LEFT JOIN profiles AS p ON p.user_id = substring(u.name from ('[^@:]+'))\r\n```\r\n\r\nmight work here. It seems to be standard sql (though I haven't been able to find a reference for exactly how that regex is matched). In my testing, the proposed query performs/is planned much better:\r\n\r\n```\r\nmatrix=> EXPLAIN ANALYZE SELECT\r\n    name, user_type, is_guest, admin, deactivated, shadow_banned,\r\n    displayname, avatar_url, creation_ts * 1000 as creation_ts, approved\r\nFROM users as u\r\n    LEFT JOIN profiles AS p ON p.user_id = substring(u.name from ('[^@:]+'))\r\n    LEFT JOIN erased_users AS eu ON u.name = eu.user_id\r\nORDER BY u.name ASC\r\nLIMIT 1000;\r\n                                                                     QUERY PLAN                                                               \r\n       \r\n══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\r\n═══════\r\n Limit  (cost=1.13..668.34 rows=1000 width=148) (actual time=0.068..11.325 rows=1000 loops=1)\r\n   ->  Nested Loop Left Join  (cost=1.13..25417598.82 rows=38095570 width=148) (actual time=0.067..11.150 rows=1000 loops=1)\r\n         ->  Index Scan using users_name_key on users u  (cost=0.56..2012173.49 rows=38095570 width=72) (actual time=0.023..1.248 rows=1000 lo\r\nops=1)\r\n         ->  Index Scan using profiles_user_id_key on profiles p  (cost=0.57..0.61 rows=1 width=64) (actual time=0.006..0.006 rows=1 loops=100\r\n0)\r\n               Index Cond: (user_id = \"substring\"(u.name, '[^@:]+'::text))\r\n Planning time: 0.327 ms\r\n Execution time: 11.543 ms\r\n(7 rows)\r\n```\r\n\r\n\r\nCompared to the old one:\r\n\r\n```\r\nmatrix=> EXPLAIN ANALYZE SELECT\r\nmatrix->     name, user_type, is_guest, admin, deactivated, shadow_banned,\r\nmatrix->     displayname, avatar_url, creation_ts * 1000 as creation_ts, approved\r\nmatrix-> FROM users as u\r\nmatrix->     LEFT JOIN profiles AS p ON u.name = '@' || p.user_id || ':' || 'matrix.org'\r\nmatrix->     LEFT JOIN erased_users AS eu ON u.name = eu.user_id\r\nmatrix-> ORDER BY u.name ASC\r\nmatrix-> LIMIT 1000;\r\n                                                                   QUERY PLAN                                                                 \r\n  \r\n══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\r\n══\r\n Limit  (cost=5884726.81..5884729.31 rows=1000 width=148) (actual time=48806.860..48806.961 rows=1000 loops=1)\r\n   ->  Sort  (cost=5884726.81..5979965.74 rows=38095570 width=148) (actual time=48806.858..48806.913 rows=1000 loops=1)\r\n         Sort Key: u.name\r\n         Sort Method: top-N heapsort  Memory: 334kB\r\n         ->  Hash Right Join  (cost=1693293.32..3795987.80 rows=38095570 width=148) (actual time=13079.431..42453.234 rows=37895655 loops=1)\r\n               Hash Cond: (((('@'::text || p.user_id) || ':'::text) || 'matrix.org'::text) = u.name)\r\n               ->  Seq Scan on profiles p  (cost=0.00..632205.41 rows=37935041 width=64) (actual time=0.009..4309.116 rows=37895652 loops=1)\r\n               ->  Hash  (cost=770665.70..770665.70 rows=38095570 width=72) (actual time=13075.223..13075.223 rows=37895655 loops=1)\r\n                     Buckets: 262144  Batches: 512  Memory Usage: 7337kB\r\n                     ->  Seq Scan on users u  (cost=0.00..770665.70 rows=38095570 width=72) (actual time=0.015..5704.975 rows=37895655 loops=1\r\n)\r\n Planning time: 0.278 ms\r\n Execution time: 48807.123 ms\r\n(12 rows)\r\n\r\nTime: 48808.020 ms (00:48.808)\r\n```\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14254/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14254/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

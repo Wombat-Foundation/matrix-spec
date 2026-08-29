@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/5581",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/5581/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/5581/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/5581/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/5581",
+  "id": 462169608,
+  "node_id": "MDU6SXNzdWU0NjIxNjk2MDg=",
+  "number": 5581,
+  "title": "JpegImagePlugin.py is not very robust",
+  "user": {
+    "login": "grinapo",
+    "id": 1056054,
+    "node_id": "MDQ6VXNlcjEwNTYwNTQ=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1056054?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/grinapo",
+    "html_url": "https://github.com/grinapo",
+    "followers_url": "https://api.github.com/users/grinapo/followers",
+    "following_url": "https://api.github.com/users/grinapo/following{/other_user}",
+    "gists_url": "https://api.github.com/users/grinapo/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/grinapo/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/grinapo/subscriptions",
+    "organizations_url": "https://api.github.com/users/grinapo/orgs",
+    "repos_url": "https://api.github.com/users/grinapo/repos",
+    "events_url": "https://api.github.com/users/grinapo/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/grinapo/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086029,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMjk=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-bug",
+      "name": "z-bug",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 477043173,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p2",
+      "name": "z-p2",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 477045806,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDY=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Media-Repository",
+      "name": "A-Media-Repository",
+      "color": "5319E7",
+      "default": false,
+      "description": "Uploading, downloading images and video, thumbnailing"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2019-06-28T19:04:12Z",
+  "updated_at": "2023-05-23T15:13:52Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nA bit similar to #3763, a \"prefectly valid\" \"jpeg\" (actually a `png` with a .jpg extension):\r\n```\r\n2019-06-28 20:59:56,704 - synapse.http.server - 112 - ERROR - POST-110550- Failed handle request via 'UploadResource': <XForwardedForRequest at 0x7fad31da9f28 method='POST' uri='/_matrix/media/v1/upload?filename=9745.jpg' clientproto='HTTP/1.1' site=8008>\r\nTraceback (most recent call last):\r\n  File \"/usr/lib/python3/dist-packages/PIL/JpegImagePlugin.py\", line 620, in _save\r\n    rawmode = RAWMODE[im.mode]\r\nKeyError: 'RGBA'\r\n```\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/5581/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/5581/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

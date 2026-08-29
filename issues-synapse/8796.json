@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/8796",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/8796/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/8796/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/8796/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/8796",
+  "id": 748309548,
+  "node_id": "MDU6SXNzdWU3NDgzMDk1NDg=",
+  "number": 8796,
+  "title": "User is unable to accept an invite to rejoin a room",
+  "user": {
+    "login": "richvdh",
+    "id": 1389908,
+    "node_id": "MDQ6VXNlcjEzODk5MDg=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1389908?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/richvdh",
+    "html_url": "https://github.com/richvdh",
+    "followers_url": "https://api.github.com/users/richvdh/followers",
+    "following_url": "https://api.github.com/users/richvdh/following{/other_user}",
+    "gists_url": "https://api.github.com/users/richvdh/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/richvdh/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/richvdh/subscriptions",
+    "organizations_url": "https://api.github.com/users/richvdh/orgs",
+    "repos_url": "https://api.github.com/users/richvdh/repos",
+    "events_url": "https://api.github.com/users/richvdh/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/richvdh/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 597215764,
+      "node_id": "MDU6TGFiZWw1OTcyMTU3NjQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Stuck-Invite",
+      "name": "A-Stuck-Invite",
+      "color": "5319E7",
+      "default": false,
+      "description": "Incoming invitations that won't go away"
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137743886,
+      "node_id": "LA_kwDOAVyVwM72oPYO",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Invite",
+      "name": "A-Invite",
+      "color": "5319E7",
+      "default": false,
+      "description": "Inviting users to rooms and accepting invites"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2020-11-22T18:20:31Z",
+  "updated_at": "2022-11-23T15:14:10Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "`@ji-ef:matrix.org` reports they are unable to join invite-only room for which they have received an invite. The request fails with\r\n\r\n> \"The person who invited you already left the room, or their server is offline.\"\r\n\r\nHowever, this does not appear to be the case.\r\n\r\nevent-creator logs:\r\n\r\n```\r\n2020-11-22 18:08:24,580 - synapse.http.client - 381 - INFO - POST-1274557- - Received response to POST http://10.103.0.2:9092/_synapse/replication/remote_join/%21xAvaEUXjMaaZjJCvmr%3Amatrix.nikel.me/%40ji-ef%3Amatrix.org/AzNFisDvFw: 404\r\n2020-11-22 18:08:24,581 - synapse.http.server - 74 - INFO - POST-1274557 - <XForwardedForRequest at 0x7f7889189eb8 method='POST' uri='/_matrix/client/r0/join/!xAvaEUXjMaaZjJCvmr%3Amatrix.nikel.me' clientproto='HTTP/1.1' site=8095> SynapseError: 404 - Unknown room !xAvaEUXjMaaZjJCvmr:matrix.nikel.me\r\n2020-11-22 18:08:24,582 - synapse.access.http.8095 - 331 - INFO - POST-1274557 - 2001:41d0:fe21:d200:226:18ff:fe9c:b2c9 - 8095 - {@ji-ef:matrix.org} Processed request: 0.785sec/-0.000sec (0.007sec, 0.001sec) (0.002sec/0.022sec/6) 84B 404 \"POST /_matrix/client/r0/join/!xAvaEUXjMaaZjJCvmr%3Amatrix.nikel.me HTTP/1.1\" \"Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0\" [1 dbevts]\r\n```\r\n\r\nmain process logs:\r\n\r\n```\r\n2020-11-22 18:08:23,836 - synapse.replication.http.membership - 82 - INFO - POST-7542229 - remote_join: @ji-ef:matrix.org into room: !xAvaEUXjMaaZjJCvmr:matrix.nikel.me\r\n2020-11-22 18:08:23,841 - synapse.http.federation.well_known_resolver - 246 - INFO - POST-7542229- - Fetching https://matrix.nikel.me/.well-known/matrix/server\r\n2020-11-22 18:08:23,931 - synapse.http.federation.well_known_resolver - 193 - INFO - POST-7542229- - Error parsing well-known for b'matrix.nikel.me': Non-200 response 404\r\n2020-11-22 18:08:24,108 - synapse.http.matrixfederationclient - 204 - INFO - POST-7542229 - {GET-O-4167477} [matrix.nikel.me] Completed request: 200 OK in 0.27 secs - GET matrix://matrix.nikel.me/_matrix/federation/v1/make_join/%21xAvaEUXjMaaZjJCvmr%3Amatrix.nikel.me/%40ji-ef%3Amatrix.org?ver=1&ver=2&ver=3&ver=4&ver=5&ver=6\r\n2020-11-22 18:08:24,319 - synapse.http.matrixfederationclient - 204 - INFO - POST-7542229 - {PUT-O-4167478} [matrix.nikel.me] Completed request: 200 OK in 0.20 secs - PUT matrix://matrix.nikel.me/_matrix/federation/v2/send_join/%21xAvaEUXjMaaZjJCvmr%3Amatrix.nikel.me/%24LXmL86UJTmtCapBclYu5U5rcqYqaaEj4XA6S928aI6w\r\n2020-11-22 18:08:24,414 - synapse.http.client - 381 - INFO - POST-7542229- - Received response to POST http://10.103.0.2:8110/_synapse/replication/fed_send_events/dWRDWBpNZG: 200\r\n2020-11-22 18:08:24,562 - synapse.http.client - 381 - INFO - POST-7542229- - Received response to POST http://10.103.0.2:8110/_synapse/replication/fed_send_events/ajIqzGfNuo: 200\r\n2020-11-22 18:08:24,563 - synapse.replication.tcp.client - 236 - INFO - POST-7542229 - Waiting for repl stream 'events' to reach 1658357933\r\n2020-11-22 18:08:24,572 - synapse.replication.tcp.client - 239 - INFO - POST-7542229 - Finished waiting for repl stream 'events' to reach 1658357933\r\n2020-11-22 18:08:24,577 - synapse.http.server - 74 - INFO - POST-7542229 - <SynapseRequest at 0x7f17bf59ba20 method='POST' uri='/_synapse/replication/remote_join/%21xAvaEUXjMaaZjJCvmr%3Amatrix.nikel.me/%40ji-ef%3Amatrix.org/AzNFisDvFw' clientproto='HTTP/1.1' site=9092> SynapseError: 404 - Unknown room !xAvaEUXjMaaZjJCvmr:matrix.nikel.me\r\n2020-11-22 18:08:24,578 - synapse.access.http.9092 - 331 - INFO - POST-7542229 - ::ffff:10.103.0.2 - 9092 - {@ji-ef:matrix.org} Processed request: 0.743sec/-0.000sec (0.049sec, 0.002sec) (0.007sec/0.034sec/6) 84B 404 \"POST /_synapse/replication/remote_join/%21xAvaEUXjMaaZjJCvmr%3Amatrix.nikel.me/%40ji-ef%3Amatrix.org/AzNFisDvFw HTTP/1.1\" \"Synapse/1.22.1 (b=matrix-org-hotfixes,52984e9e6)\" [0 dbevts]\r\n```\r\n\r\nIt looks like the main process is complaining that it can't find a `create` event in `current_state_events` for that room, and indeed `current_state_events` contains no entries for that room at all. I've not looked for reasons this might happen (though I suspect it's getting confused by the previous state in that room)",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/8796/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/8796/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

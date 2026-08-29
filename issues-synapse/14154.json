@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14154",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14154/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14154/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14154/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14154",
+  "id": 1406025471,
+  "node_id": "I_kwDOAVyVwM5Tzj7_",
+  "number": 14154,
+  "title": "Sync race with get rooms for user cache invalidation over replication",
+  "user": {
+    "login": "Fizzadar",
+    "id": 1026154,
+    "node_id": "MDQ6VXNlcjEwMjYxNTQ=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1026154?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Fizzadar",
+    "html_url": "https://github.com/Fizzadar",
+    "followers_url": "https://api.github.com/users/Fizzadar/followers",
+    "following_url": "https://api.github.com/users/Fizzadar/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Fizzadar/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Fizzadar/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Fizzadar/subscriptions",
+    "organizations_url": "https://api.github.com/users/Fizzadar/orgs",
+    "repos_url": "https://api.github.com/users/Fizzadar/repos",
+    "events_url": "https://api.github.com/users/Fizzadar/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Fizzadar/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1056680564,
+      "node_id": "MDU6TGFiZWwxMDU2NjgwNTY0",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Workers",
+      "name": "A-Workers",
+      "color": "5319E7",
+      "default": false,
+      "description": "Problems related to running Synapse in Worker Mode (or replication)"
+    },
+    {
+      "id": 2038475067,
+      "node_id": "MDU6TGFiZWwyMDM4NDc1MDY3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Sync",
+      "name": "A-Sync",
+      "color": "5319E7",
+      "default": false,
+      "description": "defects related to /sync"
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2022-10-12T11:13:47Z",
+  "updated_at": "2022-10-18T12:54:37Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Over the last few weeks we have started seeing syncs with missing just-joined rooms. This led me to dive deep into how sync works and ended up with identifying a few cache invalidation race conditions, my understanding of things is as follows:\r\n\r\n- [sync calls `notifier.wait_for_events`](https://github.com/matrix-org/synapse/blob/8074430d257c27e5a4d0f6ff38a908e3a7ee91ef/synapse/handlers/sync.py#L368)\r\n- the notifier waits for events relevant to the users rooms (it gets the room list, this maybe cached!)\r\n- [this is handled as events come in over replication](https://github.com/matrix-org/synapse/blob/efd108b45d1706526416bc9a6f89463b5ff4506a/synapse/replication/tcp/client.py#L195-L237)\r\n- [before that handler, `process_replication_rows` is called](https://github.com/matrix-org/synapse/blob/efd108b45d1706526416bc9a6f89463b5ff4506a/synapse/replication/tcp/client.py#L147)\r\n- which the cache database [processes here](https://github.com/matrix-org/synapse/blob/efd108b45d1706526416bc9a6f89463b5ff4506a/synapse/storage/databases/main/cache.py#L151-L153) then for [the event here](https://github.com/matrix-org/synapse/blob/efd108b45d1706526416bc9a6f89463b5ff4506a/synapse/storage/databases/main/cache.py#L188-L199)\r\n- the `_invalidate_caches_for_event` call does NOT invalidate rooms for user, that is left to the [state invalidations over replication](https://github.com/matrix-org/synapse/blob/efd108b45d1706526416bc9a6f89463b5ff4506a/synapse/storage/databases/main/cache.py#L200-L207)\r\n- but these are:\r\n    1. sent after the event over replication\r\n    2. nothing to do with the sync handling/notifier process, which is just the events\r\n- so thus this means between event replication and state, there is a window when a sync may get notified about events whilst the get rooms for user cache remains invalid\r\n\r\nI then confirmed my suspicious by adding a log line: https://github.com/beeper/synapse/commit/1346af1360e50d5db1a33b8faee7a26ba64fa621 which successfully identified the occurrences of this. I will now submit two different PRs to address this specific issue:\r\n\r\n+ https://github.com/matrix-org/synapse/pull/14155\r\n+ https://github.com/matrix-org/synapse/pull/14156",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14154/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14154/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

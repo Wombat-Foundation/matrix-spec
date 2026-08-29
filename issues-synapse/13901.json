@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13901",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13901/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13901/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13901/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13901",
+  "id": 1385573683,
+  "node_id": "I_kwDOAVyVwM5Sli0z",
+  "number": 13901,
+  "title": "Initial and incremental syncs with presence enabled eat up RAM until an OOM hits",
+  "user": {
+    "login": "fsa",
+    "id": 1696211,
+    "node_id": "MDQ6VXNlcjE2OTYyMTE=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1696211?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/fsa",
+    "html_url": "https://github.com/fsa",
+    "followers_url": "https://api.github.com/users/fsa/followers",
+    "following_url": "https://api.github.com/users/fsa/following{/other_user}",
+    "gists_url": "https://api.github.com/users/fsa/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/fsa/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/fsa/subscriptions",
+    "organizations_url": "https://api.github.com/users/fsa/orgs",
+    "repos_url": "https://api.github.com/users/fsa/repos",
+    "events_url": "https://api.github.com/users/fsa/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/fsa/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045943,
+      "node_id": "MDU6TGFiZWw0NzcwNDU5NDM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Presence",
+      "name": "A-Presence",
+      "color": "5319e7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 4482661320,
+      "node_id": "LA_kwDOAVyVwM8AAAABCy_7yA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Memory-Usage",
+      "name": "A-Memory-Usage",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 21,
+  "created_at": "2022-09-26T07:30:30Z",
+  "updated_at": "2022-10-03T12:06:38Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nSynapse eat all ram (8GB) and swap until OOM hits.\n\n### Steps to reproduce\n\nThere are 3 accounts on the server. This happens when one of the users connects (my account is an administrator). Did not connect to other rooms with a large number of connections before the problem occurred.\n\n### Homeserver\n\ntavda.org\n\n### Synapse Version\n\n{\"server_version\":\"1.67.0\",\"python_version\":\"3.10.6\"}\n\n### Installation Method\n\nDebian packages from packages.matrix.org\n\n### Platform\n\nUbuntu 22.04 LTS\n\n### Relevant log output\n\n```shell\nSep 26 14:27:29 nether2.network systemd[1]: matrix-synapse.service: A process of this unit has been killed by the OOM killer.\r\nSep 26 14:27:30 nether2.network systemd[1]: matrix-synapse.service: Main process exited, code=killed, status=9/KILL\r\nSep 26 14:27:30 nether2.network systemd[1]: matrix-synapse.service: Failed with result 'oom-kill'.\r\nSep 26 14:27:30 nether2.network systemd[1]: matrix-synapse.service: Consumed 29.476s CPU time.\r\nSep 26 14:27:33 nether2.network systemd[1]: matrix-synapse.service: Scheduled restart job, restart counter is at 15.\r\nSep 26 14:27:33 nether2.network systemd[1]: Stopped Synapse Matrix homeserver.\r\nSep 26 14:27:33 nether2.network systemd[1]: matrix-synapse.service: Consumed 29.476s CPU time.\r\nSep 26 14:27:33 nether2.network systemd[1]: Starting Synapse Matrix homeserver...\r\nSep 26 14:27:39 nether2.network synapse[8680]: root: [main] ***** STARTING SERVER *****\r\nSep 26 14:27:39 nether2.network synapse[8680]: root: [main] Server /opt/venvs/matrix-synapse/lib/python3.10/site-packages/synapse/app/homeserver.py version 1.67.0\r\nSep 26 14:27:39 nether2.network synapse[8680]: root: [main] Server hostname: tavda.org\r\nSep 26 14:27:39 nether2.network synapse[8680]: root: [main] Instance name: master\r\nSep 26 14:27:39 nether2.network synapse[8680]: synapse.app.homeserver: [main] Setting up server\r\nSep 26 14:27:39 nether2.network synapse[8680]: synapse.server: [main] Setting up.\r\nSep 26 14:27:39 nether2.network synapse[8680]: synapse.storage.databases: [main] [database config 'master']: Checking database server\r\nSep 26 14:27:39 nether2.network synapse[8680]: synapse.storage.databases: [main] [database config 'master']: Preparing for databases ['main', 'state']\r\nSep 26 14:27:39 nether2.network synapse[8680]: synapse.storage.prepare_database: [main] ['main', 'state']: Checking existing schema version\r\nSep 26 14:27:39 nether2.network synapse[8680]: synapse.storage.prepare_database: [main] ['main', 'state']: Existing schema is 72 (+8 deltas)\r\nSep 26 14:27:39 nether2.network synapse[8680]: synapse.storage.databases.main: [main] Checking database for consistency with configuration...\r\nSep 26 14:27:39 nether2.network synapse[8680]: synapse.storage.prepare_database: [main] Applying schema deltas for v72\r\nSep 26 14:27:39 nether2.network synapse[8680]: synapse.storage.prepare_database: [main] Schema now up to date\r\nSep 26 14:27:39 nether2.network synapse[8680]: synapse.storage.databases: [main] [database config 'master']: Starting 'main' database\n```\n\n\n### Anything else that would be useful to know?\n\nDuring normal server operation, the top shows 7.5GB of free memory. The other two users can communicate with each other.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13901/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13901/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

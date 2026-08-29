@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15718",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15718/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15718/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15718/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15718",
+  "id": 1741252636,
+  "node_id": "I_kwDOAVyVwM5nyWgc",
+  "number": 15718,
+  "title": "Support database read-replicas",
+  "user": {
+    "login": "albertschwarzkopf",
+    "id": 35684914,
+    "node_id": "MDQ6VXNlcjM1Njg0OTE0",
+    "avatar_url": "https://avatars.githubusercontent.com/u/35684914?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/albertschwarzkopf",
+    "html_url": "https://github.com/albertschwarzkopf",
+    "followers_url": "https://api.github.com/users/albertschwarzkopf/followers",
+    "following_url": "https://api.github.com/users/albertschwarzkopf/following{/other_user}",
+    "gists_url": "https://api.github.com/users/albertschwarzkopf/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/albertschwarzkopf/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/albertschwarzkopf/subscriptions",
+    "organizations_url": "https://api.github.com/users/albertschwarzkopf/orgs",
+    "repos_url": "https://api.github.com/users/albertschwarzkopf/repos",
+    "events_url": "https://api.github.com/users/albertschwarzkopf/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/albertschwarzkopf/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4195810659,
+      "node_id": "LA_kwDOAVyVwM76Fv1j",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Database",
+      "name": "A-Database",
+      "color": "5319E7",
+      "default": false,
+      "description": "DB stuff like queries, migrations, new/remove columns, indexes, unexpected entries in the db"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2023-06-05T08:24:07Z",
+  "updated_at": "2023-06-15T00:10:22Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Hi,\r\n\r\nIt would be nice to have an option to split databases for writing and reading tasks.\r\n\r\nFor example we are running a Synapse installation on AWS where we can create \"Writer\" and \"Reader\" endpoints for the database in RDS. This appears like it would improve the scalability since we are ran some load tests on our Synapse homeserver and we see that the database is under load and the most operations are `select` statements.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15718/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15718/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/7925",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/7925/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/7925/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/7925/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/7925",
+  "id": 663281312,
+  "node_id": "MDU6SXNzdWU2NjMyODEzMTI=",
+  "number": 7925,
+  "title": "event properties in API responses and AS API duplicated as top-level field",
+  "user": {
+    "login": "joepie91",
+    "id": 1663259,
+    "node_id": "MDQ6VXNlcjE2NjMyNTk=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1663259?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/joepie91",
+    "html_url": "https://github.com/joepie91",
+    "followers_url": "https://api.github.com/users/joepie91/followers",
+    "following_url": "https://api.github.com/users/joepie91/following{/other_user}",
+    "gists_url": "https://api.github.com/users/joepie91/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/joepie91/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/joepie91/subscriptions",
+    "organizations_url": "https://api.github.com/users/joepie91/orgs",
+    "repos_url": "https://api.github.com/users/joepie91/repos",
+    "events_url": "https://api.github.com/users/joepie91/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/joepie91/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 828678284,
+      "node_id": "MDU6TGFiZWw4Mjg2NzgyODQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spec-Compliance",
+      "name": "A-Spec-Compliance",
+      "color": "5319E7",
+      "default": false,
+      "description": "places where synapse does not conform to the spec"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458764864,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNaQA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Frequent",
+      "name": "O-Frequent",
+      "color": "0052CC",
+      "default": false,
+      "description": "Affects or can be seen by most users regularly or impacts most users' first experience"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 11,
+  "created_at": "2020-07-21T20:16:53Z",
+  "updated_at": "2022-08-26T09:41:27Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "When calling the `/messages` endpoint (also `/search`, `/context`, etc) each event in the `chunk` will have a number of top-level properties that duplicate those within `unsigned`:\r\n\r\n * `age` (see also: #8429)\r\n * `redacted_because`\r\n * `replaces_state`\r\n * `invite_room_state`\r\n * `knock_room_state`.\r\n * `prev_content` (though this one was specced until [MSC3442](https://github.com/matrix-org/matrix-doc/blob/main/proposals/3442-move-prev-content.md))\r\n * `user_id` (duplicates `sender`)\r\n\r\nThese top-level properties are not a part of the spec.\r\n\r\n(Edited by @richvdh to make the list of affected properties clear)\r\n\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/7925/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/7925/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

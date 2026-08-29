@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16072",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16072/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16072/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16072/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16072",
+  "id": 1838461240,
+  "node_id": "I_kwDOAVyVwM5tlLE4",
+  "number": 16072,
+  "title": "Add media remove admin API for remote media to remove it from disk",
+  "user": {
+    "login": "Zocker1999NET",
+    "id": 1645646,
+    "node_id": "MDQ6VXNlcjE2NDU2NDY=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1645646?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Zocker1999NET",
+    "html_url": "https://github.com/Zocker1999NET",
+    "followers_url": "https://api.github.com/users/Zocker1999NET/followers",
+    "following_url": "https://api.github.com/users/Zocker1999NET/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Zocker1999NET/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Zocker1999NET/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Zocker1999NET/subscriptions",
+    "organizations_url": "https://api.github.com/users/Zocker1999NET/orgs",
+    "repos_url": "https://api.github.com/users/Zocker1999NET/repos",
+    "events_url": "https://api.github.com/users/Zocker1999NET/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Zocker1999NET/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045806,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDY=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Media-Repository",
+      "name": "A-Media-Repository",
+      "color": "5319E7",
+      "default": false,
+      "description": "Uploading, downloading images and video, thumbnailing"
+    },
+    {
+      "id": 1507817868,
+      "node_id": "MDU6TGFiZWwxNTA3ODE3ODY4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Admin-API",
+      "name": "A-Admin-API",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2023-08-06T23:32:08Z",
+  "updated_at": "2023-08-10T10:20:23Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\n\r\nGiven an user of mine receives media from a remote user over federation with illegal content and reports it to me, I need to be able to remove it from my server. Putting the file in quarantine is good, but for most illegal content not good enough, as it may still be illegal to keep such files.\r\n\r\nSo I request an API (or it may become an option of quarantine), which allows admins to remove such files, if identified from the server. Together with the kept entry for quarantine, following my tests, this effectively blocks my server from downloading the file again, making it inaccessible to my users & to the federation via my server.\r\n\r\nThis can be achieved by hand by logging in to the server, navigating to the media repository, checking the filesystem id of the remote media in the database, and then deleting the files. But that takes way more time & requires more privileges & might create inconsistencies for Synapse. A builtin API can make this process way faster while Synapse can (ideally) prevent & handle such inconsistencies.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16072/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16072/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

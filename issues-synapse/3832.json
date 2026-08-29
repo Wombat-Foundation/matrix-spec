@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/3832",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/3832/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/3832/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/3832/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/3832",
+  "id": 358415291,
+  "node_id": "MDU6SXNzdWUzNTg0MTUyOTE=",
+  "number": 3832,
+  "title": "Prototype an implementation of MSC1597 (Better spec for matrix identifiers)",
+  "user": {
+    "login": "neilisfragile",
+    "id": 451032,
+    "node_id": "MDQ6VXNlcjQ1MTAzMg==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/451032?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/neilisfragile",
+    "html_url": "https://github.com/neilisfragile",
+    "followers_url": "https://api.github.com/users/neilisfragile/followers",
+    "following_url": "https://api.github.com/users/neilisfragile/following{/other_user}",
+    "gists_url": "https://api.github.com/users/neilisfragile/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/neilisfragile/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/neilisfragile/subscriptions",
+    "organizations_url": "https://api.github.com/users/neilisfragile/orgs",
+    "repos_url": "https://api.github.com/users/neilisfragile/repos",
+    "events_url": "https://api.github.com/users/neilisfragile/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/neilisfragile/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 828678284,
+      "node_id": "MDU6TGFiZWw4Mjg2NzgyODQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spec-Compliance",
+      "name": "A-Spec-Compliance",
+      "color": "5319E7",
+      "default": false,
+      "description": "places where synapse does not conform to the spec"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4137874325,
+      "node_id": "LA_kwDOAVyVwM72ovOV",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Registration",
+      "name": "A-Registration",
+      "color": "5319E7",
+      "default": false,
+      "description": "Creating an account"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2018-09-09T21:42:08Z",
+  "updated_at": "2022-08-25T12:09:03Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Implementation of https://github.com/matrix-org/matrix-doc/issues/1597",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/3832/reactions",
+    "total_count": 2,
+    "+1": 2,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/3832/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

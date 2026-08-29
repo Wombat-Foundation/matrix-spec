@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/8293",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/8293/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/8293/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/8293/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/8293",
+  "id": 699122842,
+  "node_id": "MDU6SXNzdWU2OTkxMjI4NDI=",
+  "number": 8293,
+  "title": "Server wide anti-spam and moderation tools and documentation",
+  "user": {
+    "login": "erikjohnston",
+    "id": 8428120,
+    "node_id": "MDQ6VXNlcjg0MjgxMjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8428120?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/erikjohnston",
+    "html_url": "https://github.com/erikjohnston",
+    "followers_url": "https://api.github.com/users/erikjohnston/followers",
+    "following_url": "https://api.github.com/users/erikjohnston/following{/other_user}",
+    "gists_url": "https://api.github.com/users/erikjohnston/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/erikjohnston/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/erikjohnston/subscriptions",
+    "organizations_url": "https://api.github.com/users/erikjohnston/orgs",
+    "repos_url": "https://api.github.com/users/erikjohnston/repos",
+    "events_url": "https://api.github.com/users/erikjohnston/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/erikjohnston/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477043173,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p2",
+      "name": "z-p2",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 477043174,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-feature",
+      "name": "z-feature",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 845245048,
+      "node_id": "MDU6TGFiZWw4NDUyNDUwNDg=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Docs",
+      "name": "A-Docs",
+      "color": "5319E7",
+      "default": false,
+      "description": "things relating to the documentation"
+    },
+    {
+      "id": 1554244657,
+      "node_id": "MDU6TGFiZWwxNTU0MjQ0NjU3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Moderation",
+      "name": "A-Moderation",
+      "color": "5319E7",
+      "default": false,
+      "description": "Tools for moderating HSes: event redaction, media removal, purge admin API, reports from users, ..."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2020-09-11T10:08:46Z",
+  "updated_at": "2021-05-20T11:37:12Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Administrating a public Synapse instance with registration turned on can be quite labour intensive if spammers decide to try and attack it. We have some tooling for this, but it's a) quite immature and b) relatively undocumented. \r\n\r\nIdeally, we'd have a document that lays out best practice for running an open Synapse instance with a play book with what to do if spammers strike.\r\n\r\nThis could include:\r\n- consider using a captcha\r\n- consider requiring an email, and potentially ban known temporary email providers.\r\n- adding support for https://github.com/matrix-org/synapse/issues/7731, where permissions are lowered for new users\r\n- adding better tooling around the new (and undocumented) shadow banning functionality\r\n- adding registration approval that can be temporarily (or permanently turned on) #6911\r\n- ... and more",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/8293/reactions",
+    "total_count": 4,
+    "+1": 4,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/8293/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

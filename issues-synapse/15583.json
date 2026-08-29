@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15583",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15583/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15583/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15583/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15583",
+  "id": 1707737651,
+  "node_id": "I_kwDOAVyVwM5lygIz",
+  "number": 15583,
+  "title": "PostgreSQL database schema incompatible with AWS DMS",
+  "user": {
+    "login": "jaywink",
+    "id": 1174866,
+    "node_id": "MDQ6VXNlcjExNzQ4NjY=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1174866?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/jaywink",
+    "html_url": "https://github.com/jaywink",
+    "followers_url": "https://api.github.com/users/jaywink/followers",
+    "following_url": "https://api.github.com/users/jaywink/following{/other_user}",
+    "gists_url": "https://api.github.com/users/jaywink/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/jaywink/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/jaywink/subscriptions",
+    "organizations_url": "https://api.github.com/users/jaywink/orgs",
+    "repos_url": "https://api.github.com/users/jaywink/repos",
+    "events_url": "https://api.github.com/users/jaywink/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/jaywink/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406413,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDEz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Task",
+      "name": "T-Task",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Refactoring, removal, replacement, enabling or disabling functionality, other engineering tasks."
+    },
+    {
+      "id": 4195810659,
+      "node_id": "LA_kwDOAVyVwM76Fv1j",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Database",
+      "name": "A-Database",
+      "color": "5319E7",
+      "default": false,
+      "description": "DB stuff like queries, migrations, new/remove columns, indexes, unexpected entries in the db"
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2023-05-12T14:29:44Z",
+  "updated_at": "2023-05-16T17:00:21Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\n\r\nAWS DMS (Data Migration Service) is a tool to migrate databases around. It looks like Synapse is incompatible with using it due to some tables with LOB columns which don't have a primary key as per [DMS docs](https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Troubleshooting.html#CHAP_Troubleshooting.Oracle.LOBChanges).\r\n\r\nIt may be a good idea to add the primary keys to the relevant tables to become compatible with AWS DMS, unless there is a technical reason not to do so. The problematic tables are:\r\n\r\n![image](https://github.com/matrix-org/synapse/assets/1174866/d588253e-7942-4aec-ad9b-c8a221384d42)\r\n\r\nExample DMS log lines for `event_auth`:\r\n\r\n>2023-05-11T13:46:37 [SOURCE_UNLOAD   ]W:  Column 'event_id' was removed from table definition 'public.event_auth': the column data type is LOB and the table has no primary key or unique index  (metadatamanager.c:2492)\r\n2023-05-11T13:46:37 [SOURCE_UNLOAD   ]W:  Column 'auth_id' was removed from table definition 'public.event_auth': the column data type is LOB and the table has no primary key or unique index  (metadatamanager.c:2492)\r\n2023-05-11T13:46:37 [SOURCE_UNLOAD   ]W:  Column 'room_id' was removed from table definition 'public.event_auth': the column data type is LOB and the table has no primary key or unique index  (metadatamanager.c:2492)\r\n\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15583/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15583/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

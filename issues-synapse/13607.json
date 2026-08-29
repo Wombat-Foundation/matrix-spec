@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13607",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13607/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13607/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13607/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13607",
+  "id": 1348535293,
+  "node_id": "I_kwDOAVyVwM5QYQP9",
+  "number": 13607,
+  "title": "webp images don't appear to thumbnail correctly, sometimes",
+  "user": {
+    "login": "turt2live",
+    "id": 1190097,
+    "node_id": "MDQ6VXNlcjExOTAwOTc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1190097?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/turt2live",
+    "html_url": "https://github.com/turt2live",
+    "followers_url": "https://api.github.com/users/turt2live/followers",
+    "following_url": "https://api.github.com/users/turt2live/following{/other_user}",
+    "gists_url": "https://api.github.com/users/turt2live/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/turt2live/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/turt2live/subscriptions",
+    "organizations_url": "https://api.github.com/users/turt2live/orgs",
+    "repos_url": "https://api.github.com/users/turt2live/repos",
+    "events_url": "https://api.github.com/users/turt2live/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/turt2live/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045806,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDY=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Media-Repository",
+      "name": "A-Media-Repository",
+      "color": "5319E7",
+      "default": false,
+      "description": "Uploading, downloading images and video, thumbnailing"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2022-08-23T20:55:45Z",
+  "updated_at": "2023-05-15T23:13:10Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Tested with image: https://matrix-client.matrix.org/_matrix/media/r0/thumbnail/matrix.org/NhXqgLrnxWBLDijZfPdkebex?width=800&height=600&method=scale\r\n\r\nThe event:\r\n```json\r\n{\r\n  \"content\": {\r\n    \"body\": \"1.sm.webp\",\r\n    \"info\": {\r\n      \"h\": 214,\r\n      \"mimetype\": \"image/webp\",\r\n      \"size\": 10474,\r\n      \"thumbnail_info\": {\r\n        \"h\": 214,\r\n        \"mimetype\": \"image/png\",\r\n        \"size\": 111399,\r\n        \"w\": 320\r\n      },\r\n      \"thumbnail_url\": \"mxc://matrix.org/IERMYhtRkHBmQPJAQvPkKjSM\",\r\n      \"w\": 320,\r\n      \"xyz.amorgan.blurhash\": \"L:CHWyR-RPae.TRkR*oM.8WYR.f6\"\r\n    },\r\n    \"msgtype\": \"m.image\",\r\n    \"url\": \"mxc://matrix.org/NhXqgLrnxWBLDijZfPdkebex\"\r\n  },\r\n  \"origin_server_ts\": 1661287579310,\r\n  \"sender\": \"@travisr_github:matrix.org\",\r\n  \"type\": \"m.room.message\",\r\n  \"unsigned\": {\r\n    \"age\": 16824,\r\n    \"transaction_id\": \"m1661287578061.1\"\r\n  },\r\n  \"event_id\": \"$szqt1kDU19np2xfg7l0vStUF-tr6wHyrYcYUtFo8_jo\",\r\n  \"room_id\": \"!GGEAWumnYnZnKVDuDO:matrix.org\"\r\n}\r\n```\r\n\r\nThe image: https://www.gstatic.com/webp/gallery/1.webp\r\n\r\nFor matrix.org users, it looks something like this because of the 400 HTTP error code:\r\n![image](https://user-images.githubusercontent.com/1190097/186262783-bf35d8f4-8367-4f62-b846-6d3c0fe73f00.png)\r\n\r\non alternative (😇) media repos it appears to work fine:\r\n![image](https://user-images.githubusercontent.com/1190097/186262860-3d33ac32-794a-4c0f-8290-5db581bafa4f.png)\r\n\r\n----\r\n\r\nNote: I don't know what the error could be on matrix.org's side. Some people report being able to see the thumbnail correctly, so presumably it's something to do with sizing/method combination from different devices and/or client decisions?\r\n\r\nAlso tested with `mxc://t2l.io/21fb55d639cc38839f3e1b6eb3846487aa1dfcc3` (thumbnailed as `mxc://t2l.io/f624dc59738478bab082190fe1234b194b7e63c9`) with similar results.\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13607/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13607/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

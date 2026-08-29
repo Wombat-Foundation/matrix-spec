@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/7690",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/7690/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/7690/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/7690/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/7690",
+  "id": 637887669,
+  "node_id": "MDU6SXNzdWU2Mzc4ODc2Njk=",
+  "number": 7690,
+  "title": "Media store can leave many empty directories, leading to large disk space usage",
+  "user": {
+    "login": "Twi1ightSparkle",
+    "id": 19155609,
+    "node_id": "MDQ6VXNlcjE5MTU1NjA5",
+    "avatar_url": "https://avatars.githubusercontent.com/u/19155609?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Twi1ightSparkle",
+    "html_url": "https://github.com/Twi1ightSparkle",
+    "followers_url": "https://api.github.com/users/Twi1ightSparkle/followers",
+    "following_url": "https://api.github.com/users/Twi1ightSparkle/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Twi1ightSparkle/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Twi1ightSparkle/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Twi1ightSparkle/subscriptions",
+    "organizations_url": "https://api.github.com/users/Twi1ightSparkle/orgs",
+    "repos_url": "https://api.github.com/users/Twi1ightSparkle/repos",
+    "events_url": "https://api.github.com/users/Twi1ightSparkle/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Twi1ightSparkle/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477050471,
+      "node_id": "MDU6TGFiZWw0NzcwNTA0NzE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p3",
+      "name": "z-p3",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 1018490364,
+      "node_id": "MDU6TGFiZWwxMDE4NDkwMzY0",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Disk-Space",
+      "name": "A-Disk-Space",
+      "color": "5319E7",
+      "default": false,
+      "description": "things which fill up the disk"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 9,
+  "created_at": "2020-06-12T16:56:51Z",
+  "updated_at": "2022-07-01T12:07:14Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "\r\n### Description\r\n\r\n<!-- Describe here the problem that you are experiencing -->\r\nOn my server, the directory media_store/remote_content currently has 567 746 empty sub directories (takes about 2.5 GB of disk space)\r\n\r\nHappy to share logs in a non-public channel or give access to my server for debugging.\r\n\r\nSome homeservers seems more affected than others.\r\n\r\n![2020-06-12-16-07-16](https://user-images.githubusercontent.com/19155609/84517260-f3ae2600-acc6-11ea-9b92-0852d89eb679.png)\r\n![2020-06-12-16-07-25](https://user-images.githubusercontent.com/19155609/84517279-fb6dca80-acc6-11ea-9de5-cf3fc0278568.png)\r\n![2020-06-12-16-07-31](https://user-images.githubusercontent.com/19155609/84517283-fe68bb00-acc6-11ea-85d5-cb6bb444aa5b.png)\r\n![2020-06-12-16-07-38](https://user-images.githubusercontent.com/19155609/84517294-00cb1500-acc7-11ea-89b7-bb2a467c4407.png)\r\n\r\n\r\n### Steps to reproduce\r\n\r\n- uh, have a Synapse running for six months\r\n\r\n### Version information\r\n\r\n<!-- IMPORTANT: please answer the following questions, to help us narrow down the problem -->\r\n\r\n<!-- Was this issue identified on matrix.org or another homeserver? -->\r\n- **Homeserver**: twilightsparkle.dev\r\n\r\nIf not matrix.org:\r\n\r\n- **Version**: 1.15.0\r\n\r\n- **Install method**: pip\r\n<!-- examples: package manager/git clone/pip  -->\r\n\r\n- **Platform**: Ubuntu Server 18.04.4 LTS (4.15.0-106-generic x86_64)\r\n<!--\r\nTell us about the environment in which your homeserver is operating\r\ndistro, hardware, if it's running in a vm/container, etc.\r\n-->\r\nVPS (running on KVM I believe)\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/7690/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/7690/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

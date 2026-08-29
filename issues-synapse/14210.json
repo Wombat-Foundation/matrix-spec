@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14210",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14210/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14210/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14210/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14210",
+  "id": 1412143985,
+  "node_id": "I_kwDOAVyVwM5UK5tx",
+  "number": 14210,
+  "title": "Race condition with replication means that publishing room aliases lacks read-after-write consistency between workers",
+  "user": {
+    "login": "DMRobertson",
+    "id": 8614563,
+    "node_id": "MDQ6VXNlcjg2MTQ1NjM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8614563?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/DMRobertson",
+    "html_url": "https://github.com/DMRobertson",
+    "followers_url": "https://api.github.com/users/DMRobertson/followers",
+    "following_url": "https://api.github.com/users/DMRobertson/following{/other_user}",
+    "gists_url": "https://api.github.com/users/DMRobertson/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/DMRobertson/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/DMRobertson/subscriptions",
+    "organizations_url": "https://api.github.com/users/DMRobertson/orgs",
+    "repos_url": "https://api.github.com/users/DMRobertson/repos",
+    "events_url": "https://api.github.com/users/DMRobertson/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/DMRobertson/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1056680564,
+      "node_id": "MDU6TGFiZWwxMDU2NjgwNTY0",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Workers",
+      "name": "A-Workers",
+      "color": "5319E7",
+      "default": false,
+      "description": "Problems related to running Synapse in Worker Mode (or replication)"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 4459600960,
+      "node_id": "LA_kwDOAVyVwM8AAAABCdAcQA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Testing",
+      "name": "A-Testing",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues related to testing in complement, synapse, etc"
+    },
+    {
+      "id": 4683012001,
+      "node_id": "LA_kwDOAVyVwM8AAAABFyEXoQ",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Read-After-Write",
+      "name": "Z-Read-After-Write",
+      "color": "BFD4F2",
+      "default": false,
+      "description": "A lack of read-after-write consistency, usually due to cache invalidation races with workers"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2022-10-17T20:03:02Z",
+  "updated_at": "2022-10-17T20:11:12Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Consider the following sequence of events:\r\n\r\n1. Alice creates a room without any aliases.\r\n2. Alice lists aliases for that room.\r\n3. Alice sets an alias for that room.\r\n4. Alice lists aliases for that room.\r\n\r\nIf the alias writes occur on a separate worker to the reads, this is vulnerable to a classic worker cache invalidation race:\r\n\r\n- (2) succeeds because the reader has no cached alias information for the room. It queries the database (which is written before (1) completes) and caches the result.\r\n- (3) succeeds on the writer, which fires off a message telling readers to invalidate their caches.\r\n- :warning: If request (4) arrives before the reader has received and processed the invalidation, the reader will return the (now stale) data in its cache. This means Alice has failed to read her own write.\r\n\r\nI don't think actual humans edit and then immediately list aliases that often, so I suggest we don't worry about fixing this. (i.e. I think this only manifests as test flakes). But I wanted to write this up as a reference. (It would be nice to have a catalogue of known races like this).\r\n\r\n### History:\r\n\r\nSee issues labeled with https://github.com/matrix-org/synapse/labels/Z-Read-After-Write\r\n\r\nAnd previous related history specifically around aliases:\r\n\r\n- https://github.com/matrix-org/sytest/pull/1053 moved requests off the main worker in sytest\r\n- https://github.com/matrix-org/sytest/issues/1055 this causes a broken/flakey test\r\n- https://github.com/matrix-org/sytest/pull/1056 introduces retry logic to work around this\r\n- https://github.com/matrix-org/complement/pull/266 sytest ported to complement\r\n- https://github.com/matrix-org/synapse/issues/12638 We start testing complement with workers\r\n- Unknown: something happens to cause that test to start failing in worker mode on complement. Possibly https://github.com/matrix-org/synapse/pull/14165? Unconfirmed.\r\n- https://github.com/matrix-org/synapse/issues/14183 we notice the failures.\r\n- https://github.com/matrix-org/complement/pull/521 readds the retry logic",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14210/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14210/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

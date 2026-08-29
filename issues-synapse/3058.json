@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/3058",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/3058/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/3058/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/3058/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/3058",
+  "id": 310865736,
+  "node_id": "MDU6SXNzdWUzMTA4NjU3MzY=",
+  "number": 3058,
+  "title": "Follow the spec regarding /client/r0/keys/changes",
+  "user": {
+    "login": "mujx",
+    "id": 6430350,
+    "node_id": "MDQ6VXNlcjY0MzAzNTA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/6430350?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/mujx",
+    "html_url": "https://github.com/mujx",
+    "followers_url": "https://api.github.com/users/mujx/followers",
+    "following_url": "https://api.github.com/users/mujx/following{/other_user}",
+    "gists_url": "https://api.github.com/users/mujx/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/mujx/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/mujx/subscriptions",
+    "organizations_url": "https://api.github.com/users/mujx/orgs",
+    "repos_url": "https://api.github.com/users/mujx/repos",
+    "events_url": "https://api.github.com/users/mujx/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/mujx/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 828678284,
+      "node_id": "MDU6TGFiZWw4Mjg2NzgyODQ=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Spec-Compliance",
+      "name": "A-Spec-Compliance",
+      "color": "5319E7",
+      "default": false,
+      "description": "places where synapse does not conform to the spec"
+    },
+    {
+      "id": 2674406235,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MjM1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/good%20first%20issue",
+      "name": "good first issue",
+      "color": "0E8A16",
+      "default": true,
+      "description": "Good for newcomers"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2018-04-03T14:40:36Z",
+  "updated_at": "2022-02-28T21:43:18Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nMoving the discussion from the spec repo (https://github.com/matrix-org/matrix-doc/issues/1170).\r\n\r\nA request to the endpoint will succeed even if it's missing the `to` query parameter which is marked as mandatory.\r\n\r\n### Steps to reproduce\r\n\r\n```bash\r\ncurl -XGET \"https://matrix.org/_matrix/client/r0/keys/changes?access_token=${TOKEN}&from=${NEXT_BATCH}\"\r\n```\r\nReplacing `TOKEN` and `NEXT_BATCH` with a valid access token and a next_batch token returned by sync, respectively.\r\n\r\n### Expected behavior.\r\n\r\nThe endpoint should throw an error.\r\n\r\n### Version information\r\n\r\nTested with synapse v0.26 & with matrix.org\r\n\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/3058/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/3058/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

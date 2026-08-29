@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16055",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16055/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16055/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16055/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16055",
+  "id": 1833725352,
+  "node_id": "I_kwDOAVyVwM5tTG2o",
+  "number": 16055,
+  "title": "Long running user deactivations via admin API are not deduplicated and can starve DB connections",
+  "user": {
+    "login": "Half-Shot",
+    "id": 2072976,
+    "node_id": "MDQ6VXNlcjIwNzI5NzY=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/2072976?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Half-Shot",
+    "html_url": "https://github.com/Half-Shot",
+    "followers_url": "https://api.github.com/users/Half-Shot/followers",
+    "following_url": "https://api.github.com/users/Half-Shot/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Half-Shot/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Half-Shot/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Half-Shot/subscriptions",
+    "organizations_url": "https://api.github.com/users/Half-Shot/orgs",
+    "repos_url": "https://api.github.com/users/Half-Shot/repos",
+    "events_url": "https://api.github.com/users/Half-Shot/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Half-Shot/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1507817868,
+      "node_id": "MDU6TGFiZWwxNTA3ODE3ODY4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Admin-API",
+      "name": "A-Admin-API",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 5345655364,
+      "node_id": "LA_kwDOAVyVwM8AAAABPqA6RA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Account-Deactivation",
+      "name": "A-Account-Deactivation",
+      "color": "5319E7",
+      "default": false,
+      "description": "\"Deleting\"/\"Removing\" a user, GDPR erasure (erased)"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2023-08-02T18:43:11Z",
+  "updated_at": "2023-09-14T13:42:41Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "COLLABORATOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "https://matrix-org.github.io/synapse/latest/admin_api/user_admin_api.html#deactivate-account can be used to deactivate a users session. However, because it does (potentially) expensive things like deleting devices it can take a long time to run. For serious device hoarders, this can cause the request to time out.\r\n\r\nThe HTTP request will time out but the DB query does not, leading to the case where it's an easy footgun to retry a \"failed\" user deactivation and end up having multiple concurreent slow queries jamming up the database connection pool. Do it enough times, or to enough users and the main process will be starved out of connections.\r\n\r\nSeparately, it's probably not good that deactivations are taking minutes to run.\r\n\r\nExample output:\r\n\r\nSELECT left(query, 90) as query, state FROM pg_stat_activity WHERE state IS NOT NULL AND query LIKE 'DELETE%';\r\n```\r\n                                           query                                            | state\r\n--------------------------------------------------------------------------------------------+--------\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE1','DEVICE2','DEVICE3','YI | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE44','DEVICE5','DEVICE6','IA | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE7','DEVICE8','DEVICE9','OD | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE1','DEVICE2','DEVICE3','YI | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE7','DEVICE8','DEVICE9','OD | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE1','DEVICE2','DEVICE3','YI | active\r\n DELETE FROM device_inbox WHERE device_id = ANY(ARRAY['DEVICE1','DEVICE2','DEVICE3 | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE1','DEVICE2','DEVICE3','YI | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE7','DEVICE8','DEVICE9','OD | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE1','DEVICE2','DEVICE3','YI | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE7','DEVICE8','DEVICE9','OD | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE44','DEVICE5','DEVICE6','IA | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE44','DEVICE5','DEVICE6','IA | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE7','DEVICE8','DEVICE9','OD | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE44','DEVICE5','DEVICE6','IA | active\r\n DELETE FROM device_inbox WHERE device_id = ANY(ARRAY['DEVICE7','DEVICE8','DEVICE9 | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE1','DEVICE2','DEVICE3','YI | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE44','DEVICE5','DEVICE6','IA | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE1','DEVICE2','DEVICE3','YI | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE7','DEVICE8','DEVICE9','OD | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE44','DEVICE5','DEVICE6','IA | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE44','DEVICE5','DEVICE6','IA | active\r\n DELETE FROM device_inbox WHERE device_id = ANY(ARRAY['DEVICE44','DEVICE5','DEVICE6 | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE44','DEVICE5','DEVICE6','IA | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE44','DEVICE5','DEVICE6','IA | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE7','DEVICE8','DEVICE9','OD | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE44','DEVICE5','DEVICE6','IA | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE1','DEVICE2','DEVICE3','YI | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE1','DEVICE2','DEVICE3','YI | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE7','DEVICE8','DEVICE9','OD | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE7','DEVICE8','DEVICE9','OD | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE1','DEVICE2','DEVICE3','YI | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE44','DEVICE5','DEVICE6','IA | active\r\n DELETE FROM devices WHERE device_id = ANY(ARRAY['DEVICE7','DEVICE8','DEVICE9','OD | active\r\n\r\n```",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16055/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16055/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

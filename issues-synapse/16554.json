@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16554",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16554/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16554/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16554/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16554",
+  "id": 1963378380,
+  "node_id": "I_kwDOAVyVwM51BsbM",
+  "number": 16554,
+  "title": "`/keys/claim` is surprisingly slow",
+  "user": {
+    "login": "richvdh",
+    "id": 1389908,
+    "node_id": "MDQ6VXNlcjEzODk5MDg=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1389908?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/richvdh",
+    "html_url": "https://github.com/richvdh",
+    "followers_url": "https://api.github.com/users/richvdh/followers",
+    "following_url": "https://api.github.com/users/richvdh/following{/other_user}",
+    "gists_url": "https://api.github.com/users/richvdh/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/richvdh/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/richvdh/subscriptions",
+    "organizations_url": "https://api.github.com/users/richvdh/orgs",
+    "repos_url": "https://api.github.com/users/richvdh/repos",
+    "events_url": "https://api.github.com/users/richvdh/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/richvdh/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 600557921,
+      "node_id": "MDU6TGFiZWw2MDA1NTc5MjE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Performance",
+      "name": "A-Performance",
+      "color": "5319E7",
+      "default": false,
+      "description": "Performance, both client-facing and admin-facing"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458764864,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNaQA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Frequent",
+      "name": "O-Frequent",
+      "color": "0052CC",
+      "default": false,
+      "description": "Affects or can be seen by most users regularly or impacts most users' first experience"
+    },
+    {
+      "id": 4459612007,
+      "node_id": "LA_kwDOAVyVwM8AAAABCdBHZw",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-E2EE",
+      "name": "A-E2EE",
+      "color": "5319E7",
+      "default": false,
+      "description": "End-to-end encryption for Matrix clients"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 7,
+  "created_at": "2023-10-26T11:56:28Z",
+  "updated_at": "2023-11-09T18:16:58Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "`/keys/claim` requests often take multiple seconds when requesting keys for hundreds of devices.\r\n\r\nOut of interest I looked at the anatomy of a slow `/keys/claim` request (https://jaeger.proxy.matrix.org/trace/62603ae20c639720).   The request took 6.2 seconds altogether.\r\n\r\nIn this case, we were just attempting to claim keys for devices which we had previously failed to get one. (Due to https://github.com/matrix-org/matrix-rust-sdk/issues/281, we do this a bit too often). Anyway the point is pretty much all of the devices in this request have run out of OTKs - but I think it is still instructive.\r\n\r\nWhat I see is:\r\n\r\n * 321 calls to `db.claim_e2e_one_time_keys`. This is presumably one for each device for `matrix.org` users. These take us to about 1.8 seconds.\r\n * 321 calls to `db._get_fallback_key`. Again one for each `matrix.org` device. Another 2.1 seconds, bringing us to 4.0 seconds.\r\n * 21 calls to `claim_client_keys`. One per federated destination. These all happen in parallel, so the critical path is the slowest homeserver to respond. The pathological case here is servers that respond within the timeout (so don't get backed off from) but *slowly* - and then the device doesn't have any keys so we have to do it again. In this case the slowest server was 2.1 seconds.\r\n\r\nWhat I see here is some easy performance improvements. In particular:\r\n * Doing remote and local claims in parallel would roughly halve the time.\r\n   * [ ] up for grabs!\r\n * Doing more than one local device per db request would mean much less DB scheduling overhead.\r\n    * [x] #16565\r\n    * [x] #16570",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16554/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16554/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

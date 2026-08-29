@@ -1,0 +1,131 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15279",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15279/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15279/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15279/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15279",
+  "id": 1628514567,
+  "node_id": "I_kwDOAVyVwM5hESkH",
+  "number": 15279,
+  "title": "Better handling of (reverse) connection issues in federation requests",
+  "user": {
+    "login": "lukas2511",
+    "id": 85965,
+    "node_id": "MDQ6VXNlcjg1OTY1",
+    "avatar_url": "https://avatars.githubusercontent.com/u/85965?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/lukas2511",
+    "html_url": "https://github.com/lukas2511",
+    "followers_url": "https://api.github.com/users/lukas2511/followers",
+    "following_url": "https://api.github.com/users/lukas2511/following{/other_user}",
+    "gists_url": "https://api.github.com/users/lukas2511/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/lukas2511/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/lukas2511/subscriptions",
+    "organizations_url": "https://api.github.com/users/lukas2511/orgs",
+    "repos_url": "https://api.github.com/users/lukas2511/repos",
+    "events_url": "https://api.github.com/users/lukas2511/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/lukas2511/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086032,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMzI=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Help-Wanted",
+      "name": "Z-Help-Wanted",
+      "color": "006B0F",
+      "default": false,
+      "description": "We know exactly how to fix this issue, and would be grateful for any contribution"
+    },
+    {
+      "id": 477045123,
+      "node_id": "MDU6TGFiZWw0NzcwNDUxMjM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Federation",
+      "name": "A-Federation",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406413,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDEz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Task",
+      "name": "T-Task",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Refactoring, removal, replacement, enabling or disabling functionality, other engineering tasks."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    },
+    {
+      "id": 4459612007,
+      "node_id": "LA_kwDOAVyVwM8AAAABCdBHZw",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-E2EE",
+      "name": "A-E2EE",
+      "color": "5319E7",
+      "default": false,
+      "description": "End-to-end encryption for Matrix clients"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2023-03-17T00:50:54Z",
+  "updated_at": "2023-05-25T05:10:36Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "# Scenario\r\n\r\nTo start this of I'll just describe the scenario I just went through:\r\n\r\nIn an encrypted group chat the messages of a few people, all with matrix.org accounts, were suddenly not able to be decrypted.\r\n\r\nThe client lets it seem like it's a local issue, and maybe another client still needs to push the keys, but since all my clients showed the same message it was clear that this is not the case.\r\n\r\nLooking at the server log I found a lot of lines similar to this:\r\n\r\n```\r\n2023-03-17 00:33:04,249 - synapse.http.matrixfederationclient - 630 - INFO - federation_transaction_transmission_loop-711 - {PUT-O-763} [matrix.org] Got response headers: 401 Unauthorized\r\n2023-03-17 00:33:04,249 - synapse.http.matrixfederationclient - 710 - WARNING - federation_transaction_transmission_loop-711 - {PUT-O-763} [matrix.org] Request failed: PUT matrix://matrix.org/_matrix/federation/v1/send/1679006060366: HttpResponseException('401: Unauthorized')\r\n```\r\n\r\nNo further information is given. Just a `401 Unauthorized`, even with DEBUG logging enabled.\r\n\r\nI went ahead and figured out the parameters of the request to send it myself, but that only got me to another unclear error message:\r\n\r\n```\r\n{\"errcode\":\"M_UNAUTHORIZED\",\"error\":\"Failed to find any key to satisfy: _FetchKeyRequest( etc etc etc\r\n```\r\n\r\nFrom a few other issues I found that people were having similar issues when their TLS certificates weren't valid, but that wasn't the case here.\r\n\r\nBut that got me to think that perhaps there actually is some type of connection issue, and yea, after some digging with tcpdump I found that the incoming TCP session from the matrix.org server wasn't fully established. It seemed to be a routing issue in this case, where the connectivity between Mythic Beasts and one of my transit providers was somehow broken, and after disabling those routes everything worked perfectly.\r\n\r\nI probably spent a few hours debugging this, because there was absolutely no indication of what was actually going wrong. That was really annoying.\r\n\r\n# Suggestion\r\n\r\nWhen federation requests are sent out and a key lookup in the reverse direction fails it would be great to have additional information delivered with that error.\r\n\r\nSomething like...\r\n\r\n```\r\n{\r\n  \"errcode\":\"M_UNAUTHORIZED\",\r\n  \"error\":\"Failed to find any key to satisfy: _FetchKeyRequest( etc etc etc\",\r\n  \"details\": \"Unable to connect to $servername:$port: Connection timed out\"\r\n}\r\n```\r\n\r\n...which then also gets printed to the server logs instead of the simple \"401 Unauthorized\" would be great.\r\n\r\nThe error messages could be really helpful, here are some more examples:\r\n\r\n- DNS lookup failed\r\n- Connection refused\r\n- Connection closed without receiving data\r\n- TLS certificate invalid\r\n- TLS certificate expired\r\n\r\nThat would make debugging those kind of issues a lot easier. With $servername:$port given in the details you would also see if it connects to the right server, which sometimes seems to be an issue with people hosting their servers on a subdomain.\r\n\r\nI really hope this gets implemented as this seems like a very important debugging feature in a federated system.\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15279/reactions",
+    "total_count": 3,
+    "+1": 3,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15279/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

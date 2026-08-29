@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14764",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14764/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14764/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14764/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14764",
+  "id": 1516045868,
+  "node_id": "I_kwDOAVyVwM5aXQYs",
+  "number": 14764,
+  "title": "Verify email after solving CAPTCHA",
+  "user": {
+    "login": "charlespick",
+    "id": 17918019,
+    "node_id": "MDQ6VXNlcjE3OTE4MDE5",
+    "avatar_url": "https://avatars.githubusercontent.com/u/17918019?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/charlespick",
+    "html_url": "https://github.com/charlespick",
+    "followers_url": "https://api.github.com/users/charlespick/followers",
+    "following_url": "https://api.github.com/users/charlespick/following{/other_user}",
+    "gists_url": "https://api.github.com/users/charlespick/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/charlespick/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/charlespick/subscriptions",
+    "organizations_url": "https://api.github.com/users/charlespick/orgs",
+    "repos_url": "https://api.github.com/users/charlespick/repos",
+    "events_url": "https://api.github.com/users/charlespick/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/charlespick/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 3271562136,
+      "node_id": "MDU6TGFiZWwzMjcxNTYyMTM2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Email-Push",
+      "name": "A-Email-Push",
+      "color": "5319E7",
+      "default": false,
+      "description": "Email notifications"
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2023-01-02T05:27:57Z",
+  "updated_at": "2023-01-09T16:37:07Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\nWhen a new user registers through a client like Element with 3pid email and recaptcha turned on, the email verification gets sent immediately, before the user (or bot) has solved the captcha. This opens up the email infrastructure backing the synapse instance to abuse. Lots of smtp relays have monthly limits as well as monitoring of bounced emails and complaints. If you run your own mail system then you can get your ip blocked or a nasty email from your ISP. There is no reason to send the verification email before verifying that the user is a human and presenting both of these tasks to the user at the same time is a sloppy user experience too. \r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14764/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14764/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

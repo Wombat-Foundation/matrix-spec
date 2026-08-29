@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15147",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15147/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15147/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15147/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15147",
+  "id": 1597597789,
+  "node_id": "I_kwDOAVyVwM5fOWhd",
+  "number": 15147,
+  "title": "Forgetting a room doesn't clear sync cache",
+  "user": {
+    "login": "turt2live",
+    "id": 1190097,
+    "node_id": "MDQ6VXNlcjExOTAwOTc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1190097?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/turt2live",
+    "html_url": "https://github.com/turt2live",
+    "followers_url": "https://api.github.com/users/turt2live/followers",
+    "following_url": "https://api.github.com/users/turt2live/following{/other_user}",
+    "gists_url": "https://api.github.com/users/turt2live/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/turt2live/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/turt2live/subscriptions",
+    "organizations_url": "https://api.github.com/users/turt2live/orgs",
+    "repos_url": "https://api.github.com/users/turt2live/repos",
+    "events_url": "https://api.github.com/users/turt2live/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/turt2live/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2038475067,
+      "node_id": "MDU6TGFiZWwyMDM4NDc1MDY3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Sync",
+      "name": "A-Sync",
+      "color": "5319E7",
+      "default": false,
+      "description": "defects related to /sync"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2023-02-23T22:11:41Z",
+  "updated_at": "2023-02-24T20:02:28Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nI left a room, `/forget` it, and it was still appearing under \"historical\" after refreshing my client. In another client, the room was still appearing in the initial sync.\r\n\r\n### Steps to reproduce\r\n\r\n1. Create a room\r\n2. Initial sync a device\r\n3. Leave the room\r\n4. Forget the room\r\n5. Re-initial sync the device from step 2\r\n\r\n### Homeserver\r\n\r\nlocalhost\r\n\r\n### Synapse Version\r\n\r\n1.77.0\r\n\r\n### Installation Method\r\n\r\nDocker (matrixdotorg/synapse)\r\n\r\n### Database\r\n\r\npostgres 13\r\n\r\n### Workers\r\n\r\nSingle process\r\n\r\n### Platform\r\n\r\ndocker\r\n\r\n### Configuration\r\n\r\n_No response_\r\n\r\n### Relevant log output\r\n\r\n```shell\r\nelement-dev-stack-eledev-synapse-1      | 2023-02-23 22:07:54,122 - synapse.util.caches.response_cache - 260 - INFO - GET-212 - [sync]: using completed cached result for [(@demo:localhost, 10000, None, '2', False, 'WMHLYEWEDG')]\r\nelement-dev-stack-eledev-synapse-1      | 2023-02-23 22:07:54,123 - synapse.access.http.8008 - 460 - INFO - GET-212 - 172.26.0.5 - 8008 - {@demo:localhost} Processed request: 0.001sec/0.000sec (0.001sec, 0.000sec) (0.000sec/0.000sec/0) 3129B 200 \"GET /_matrix/client/v3/sync?filter=2&timeout=10000& HTTP/1.0\" \"okhttp/4.10.0\" [0 dbevts]\r\n```\r\n\r\n\r\n### Anything else that would be useful to know?\r\n\r\nrestarting synapse works",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15147/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15147/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

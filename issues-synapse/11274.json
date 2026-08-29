@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/11274",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/11274/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/11274/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/11274/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/11274",
+  "id": 1047345795,
+  "node_id": "I_kwDOAVyVwM4-bTqD",
+  "number": 11274,
+  "title": "Synapse's documentation source files are split into two organisational systems and is confusing",
+  "user": {
+    "login": "anoadragon453",
+    "id": 1342360,
+    "node_id": "MDQ6VXNlcjEzNDIzNjA=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1342360?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/anoadragon453",
+    "html_url": "https://github.com/anoadragon453",
+    "followers_url": "https://api.github.com/users/anoadragon453/followers",
+    "following_url": "https://api.github.com/users/anoadragon453/following{/other_user}",
+    "gists_url": "https://api.github.com/users/anoadragon453/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/anoadragon453/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/anoadragon453/subscriptions",
+    "organizations_url": "https://api.github.com/users/anoadragon453/orgs",
+    "repos_url": "https://api.github.com/users/anoadragon453/repos",
+    "events_url": "https://api.github.com/users/anoadragon453/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/anoadragon453/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 845245048,
+      "node_id": "MDU6TGFiZWw4NDUyNDUwNDg=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Docs",
+      "name": "A-Docs",
+      "color": "5319E7",
+      "default": false,
+      "description": "things relating to the documentation"
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406413,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDEz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Task",
+      "name": "T-Task",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Refactoring, removal, replacement, enabling or disabling functionality, other engineering tasks."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    },
+    {
+      "id": 4462968272,
+      "node_id": "LA_kwDOAVyVwM8AAAABCgN90A",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Cleanup",
+      "name": "Z-Cleanup",
+      "color": "FBCA04",
+      "default": false,
+      "description": "Things we want to get rid of, but aren't actively causing pain"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2021-11-08T11:40:44Z",
+  "updated_at": "2022-10-28T13:56:00Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "As noted in https://github.com/matrix-org/synapse/pull/10086, part of the transition to the new documentation website was figuring out a structure for the existing documentation pages. These ended up being organised into what is now the layout configured by [SUMMARY.md](https://github.com/matrix-org/synapse/blob/a55e1ec9afc45a36f962e1e552128aeab5b1ee3c/docs/SUMMARY.md).\r\n\r\nThis allowed us to organise the documentation on the website, yet the source files were still left [in a pile](https://github.com/matrix-org/synapse/tree/9799c569bb481622b5882b2008a24e6c4658c431/docs) in the `docs/` directory. The decision was made to not move them into directories that mirror those in SUMMARY.md, as doing so would break existing (non-permanent) links to documentation files on GitHub.\r\n\r\nThis has currently left us in a state where our documentation is split into two organisational systems, as can be seen with the documentation for the Admin API. Docs exist in\r\n\r\n1. https://github.com/matrix-org/synapse/tree/9799c569bb481622b5882b2008a24e6c4658c431/docs/admin_api and\r\n2. https://github.com/matrix-org/synapse/tree/9799c569bb481622b5882b2008a24e6c4658c431/docs/usage/administration/admin_api\r\n\r\nEnough time has now passed that links to Synapse's documentation should now be pointing to the documentation website instead of the source files. Thus, it is proposed to now shuffle the documentation files such that they mirror the directory structure of SUMMARY.md/the website. Perma-links (though referencing a specific commit) to the source files will continue to work, but all other links to documentation source files (in comments, not code) throughout the codebase should be updated to point to the website instead.\r\n\r\n- [ ] Update existing links to documentation source files throughout the codebase to point at the website instead.\r\n- [ ] Organise files in the `docs/` folder to match that of the website.\r\n- [ ] Add a warning that several documentation source files has been moved to the changelog, to encourage external links to be updated.\r\n\r\nAfterwards we'll only have a single system of organisation for the `docs/` folder, and it'll be obvious where to look for a file when coming from the documentation website.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/11274/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/11274/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

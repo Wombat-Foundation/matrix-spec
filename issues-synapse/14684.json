@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14684",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14684/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14684/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14684/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14684",
+  "id": 1500054692,
+  "node_id": "I_kwDOAVyVwM5ZaQSk",
+  "number": 14684,
+  "title": "Emails sent from Synapse should include headers that enable automated bounce and complaint handling",
+  "user": {
+    "login": "benbz",
+    "id": 1325121,
+    "node_id": "MDQ6VXNlcjEzMjUxMjE=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1325121?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/benbz",
+    "html_url": "https://github.com/benbz",
+    "followers_url": "https://api.github.com/users/benbz/followers",
+    "following_url": "https://api.github.com/users/benbz/following{/other_user}",
+    "gists_url": "https://api.github.com/users/benbz/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/benbz/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/benbz/subscriptions",
+    "organizations_url": "https://api.github.com/users/benbz/orgs",
+    "repos_url": "https://api.github.com/users/benbz/repos",
+    "events_url": "https://api.github.com/users/benbz/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/benbz/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2316489728,
+      "node_id": "MDU6TGFiZWwyMzE2NDg5NzI4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-3PID",
+      "name": "A-3PID",
+      "color": "5319E7",
+      "default": false,
+      "description": "3rd party identifiers: e.g. email, phone number"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2022-12-16T11:34:31Z",
+  "updated_at": "2022-12-19T15:51:59Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\n\r\nVarious email providers require you to keep your bounce & complaints rates low to keep being able to sending through them. Various providers also provide reports or feedback on which emails have bounced or been complained about. For low traffic homeservers it maybe possible to handle these reports manually, but it is less feasible for high traffic homeservers so there should be automation.\r\n\r\nProposal:\r\n* Each and every email sent via Synapse includes 2 emails headers: 1 with a URL to an API indicating that this email bounced, 1 with a URL to an API indicating that this email was complained about\r\n  * The URL should include enough parameters to provide the context (e.g. sender MXID, email type) that would allow Synapse to handle the bounce / complaint report\r\n  * Alternatively at sending time, Synapse could store the context against message-id in the email and the API provides that message-id back\r\n* Homeserver administrators could setup a system that automatically processes bounce / complaint reports from the email provider and call the appropriate API\r\n* On the API being called Synapse performs appropriate actions. The appropriate actions likely differ per report type and per email type and would require discussion, e.g.:\r\n  * For repeated bounces to \"You have new messages\" emails we probably want to remove the pusher\r\n  * For complaints about being invited to a room we may want to block further attempts to that email address for that room\r\n  * For complaints about email address verification emails we may either not want to block at all or just block for a short period of time",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14684/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14684/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

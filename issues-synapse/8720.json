@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/8720",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/8720/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/8720/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/8720/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/8720",
+  "id": 736361862,
+  "node_id": "MDU6SXNzdWU3MzYzNjE4NjI=",
+  "number": 8720,
+  "title": "SAML: last RequestedAttribute is always set to isRequired=\"false\"",
+  "user": {
+    "login": "localguru",
+    "id": 8544984,
+    "node_id": "MDQ6VXNlcjg1NDQ5ODQ=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/8544984?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/localguru",
+    "html_url": "https://github.com/localguru",
+    "followers_url": "https://api.github.com/users/localguru/followers",
+    "following_url": "https://api.github.com/users/localguru/following{/other_user}",
+    "gists_url": "https://api.github.com/users/localguru/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/localguru/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/localguru/subscriptions",
+    "organizations_url": "https://api.github.com/users/localguru/orgs",
+    "repos_url": "https://api.github.com/users/localguru/repos",
+    "events_url": "https://api.github.com/users/localguru/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/localguru/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 121086032,
+      "node_id": "MDU6TGFiZWwxMjEwODYwMzI=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Help-Wanted",
+      "name": "Z-Help-Wanted",
+      "color": "006B0F",
+      "default": false,
+      "description": "We know exactly how to fix this issue, and would be grateful for any contribution"
+    },
+    {
+      "id": 2186787706,
+      "node_id": "MDU6TGFiZWwyMTg2Nzg3NzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-SSO",
+      "name": "A-SSO",
+      "color": "5319E7",
+      "default": false,
+      "description": "Single Sign-On (maybe OIDC)"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2020-11-04T19:17:08Z",
+  "updated_at": "2021-10-14T16:24:11Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "<!--\r\n\r\n**THIS IS NOT A SUPPORT CHANNEL!**\r\n**IF YOU HAVE SUPPORT QUESTIONS ABOUT RUNNING OR CONFIGURING YOUR OWN HOME SERVER**,\r\nplease ask in **#synapse:matrix.org** (using a matrix.org account if necessary)\r\n\r\nIf you want to report a security issue, please see https://matrix.org/security-disclosure-policy/\r\n\r\nThis is a bug report template. By following the instructions below and\r\nfilling out the sections with your information, you will help the us to get all\r\nthe necessary data to fix your issue.\r\n\r\nYou can also preview your report before submitting it. You may remove sections\r\nthat aren't relevant to your particular case.\r\n\r\nText between <!-- and --​> marks will be invisible in the report.\r\n\r\n-->\r\n\r\n### Description\r\n\r\nIn the SAML metadata generated under URL `/_matrix/saml2/metadata.xml` for the last `requestedAttribut` `isRequired` is always set to `false`.  If `isRequired` is evaluated by the IDP, this results in the attribute not being passed from the IDP to the SP.\r\n\r\n```\r\n<ns0:AttributeConsumingService index=\"1\">\r\n <ns0:ServiceName xml:lang=\"en\">Matrix</ns0:ServiceName>\r\n <ns0:ServiceDescription xml:lang=\"en\">Matrix</ns0:ServiceDescription>\r\n <ns0:RequestedAttribute FriendlyName=\"uid\" Name=\"urn:oid:0.9.2342.19200300.100.1.1\" NameFormat=\"urn:oasis:names:tc:SAML:2.0:attrname-format:uri\" isRequired=\"true\"/>\r\n <ns0:RequestedAttribute FriendlyName=\"email\" Name=\"urn:oid:0.9.2342.19200300.100.1.3\" NameFormat=\"urn:oasis:names:tc:SAML:2.0:attrname-format:uri\" isRequired=\"true\"/>\r\n <ns0:RequestedAttribute FriendlyName=\"displayName\" Name=\"urn:oid:2.16.840.1.113730.3.1.241\" NameFormat=\"urn:oasis:names:tc:SAML:2.0:attrname-format:uri\" isRequired=\"false\"/>\r\n</ns0:AttributeConsumingService>\r\n```\r\n\r\n### Steps to reproduce\r\n\r\n- configure `saml2_config` in homeserver.yaml\r\n```\r\nsaml2_config:\r\n  [...]\r\n   service:\r\n       sp:\r\n         required_attributes: [\"uid\", \"email\", \"displayName\"]\r\n  ```\r\n- configure `saml2-attribute-maps/map.py`:\r\n\r\n```\r\nMAP = {\r\n    \"identifier\": \"urn:oasis:names:tc:SAML:2.0:attrname-format:uri\",\r\n    \"fro\": {\r\n        'urn:oid:0.9.2342.19200300.100.1.1': 'uid',\r\n        'urn:oid:0.9.2342.19200300.100.1.3': 'email',\r\n        'urn:oid:2.16.840.1.113730.3.1.241': 'displayName',\r\n    },\r\n    \"to\": {\r\n        'uid': 'urn:oid:0.9.2342.19200300.100.1.1',\r\n        'email': 'urn:oid:0.9.2342.19200300.100.1.3',\r\n        'displayName': 'urn:oid:2.16.840.1.113730.3.1.241',\r\n    },\r\n}\r\n```\r\n- check your metadata URL `/_matrix/saml2/metadata.xml`. The last `RequestedAttribute`, in this example `displayName`, is set to `isRequired=\"false\"`. I would expect `isRequired=\"true\"` for all `required_attributes`.\r\n```\r\n<ns0:RequestedAttribute FriendlyName=\"displayName\" Name=\"urn:oid:2.16.840.1.113730.3.1.241\" NameFormat=\"urn:oasis:names:tc:SAML:2.0:attrname-format:uri\" isRequired=\"false\"/>\r\n```\r\n###  Workaround\r\n\r\nAs a workaround I have added an optional attribute in the homeserver.yaml. This means that the optional attribute is the last attribute and this one is set to false. I'm not really sure if this is a bug or if my configuration is incorrect. \r\n\r\n```\r\nrequired_attributes: [\"uid\", \"email\", \"displayName\"]\r\noptional_attributes: [\"eduPersonPrincipalName\"]\r\n```         \r\ngenerated metadata URL `/_matrix/saml2/metadata.xml`:\r\n\r\n```\r\n<ns0:AttributeConsumingService index=\"1\">\r\n <ns0:ServiceName xml:lang=\"en\">Matrix</ns0:ServiceName>\r\n <ns0:ServiceDescription xml:lang=\"en\">Matrix</ns0:ServiceDescription>\r\n <ns0:RequestedAttribute FriendlyName=\"uid\" Name=\"urn:oid:0.9.2342.19200300.100.1.1\" NameFormat=\"urn:oasis:names:tc:SAML:2.0:attrname-format:uri\" isRequired=\"true\"/>\r\n <ns0:RequestedAttribute FriendlyName=\"email\" Name=\"urn:oid:0.9.2342.19200300.100.1.3\" NameFormat=\"urn:oasis:names:tc:SAML:2.0:attrname-format:uri\" isRequired=\"true\"/>\r\n <ns0:RequestedAttribute FriendlyName=\"displayName\" Name=\"urn:oid:2.16.840.1.113730.3.1.241\" NameFormat=\"urn:oasis:names:tc:SAML:2.0:attrname-format:uri\" isRequired=\"true\"/>\r\n <ns0:RequestedAttribute Name=\"eduPersonPrincipalName\" NameFormat=\"urn:oasis:names:tc:SAML:2.0:attrname-format:uri\" isRequired=\"false\"/>\r\n</ns0:AttributeConsumingService>\r\n```\r\n\r\n### Version information\r\n\r\n- synapse 1.22.1 on Ubuntu 18.04 LTS, deb pakage from `https://packages.matrix.org/debian/ bionic main`\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/8720/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/8720/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

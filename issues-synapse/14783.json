@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14783",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14783/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14783/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14783/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14783",
+  "id": 1522268978,
+  "node_id": "I_kwDOAVyVwM5au_sy",
+  "number": 14783,
+  "title": "Logout SSO Session if Matrix Synapse User Session gets logged out.",
+  "user": {
+    "login": "akoyaxd",
+    "id": 22196236,
+    "node_id": "MDQ6VXNlcjIyMTk2MjM2",
+    "avatar_url": "https://avatars.githubusercontent.com/u/22196236?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/akoyaxd",
+    "html_url": "https://github.com/akoyaxd",
+    "followers_url": "https://api.github.com/users/akoyaxd/followers",
+    "following_url": "https://api.github.com/users/akoyaxd/following{/other_user}",
+    "gists_url": "https://api.github.com/users/akoyaxd/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/akoyaxd/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/akoyaxd/subscriptions",
+    "organizations_url": "https://api.github.com/users/akoyaxd/orgs",
+    "repos_url": "https://api.github.com/users/akoyaxd/repos",
+    "events_url": "https://api.github.com/users/akoyaxd/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/akoyaxd/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2186787706,
+      "node_id": "MDU6TGFiZWwyMTg2Nzg3NzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-SSO",
+      "name": "A-SSO",
+      "color": "5319E7",
+      "default": false,
+      "description": "Single Sign-On (maybe OIDC)"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2023-01-06T09:38:25Z",
+  "updated_at": "2023-01-30T08:05:15Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Currently there is OIDC Backchannel Logout support to logout Matrix User Sessions if the Session Logout of the IDP is triggered. \r\n\r\nAdditionally to this there should be an option to Logout the IDP Session if the Session in Matrix gets logged out.\r\n\r\n<!-- Describe here the feature you are requesting. -->\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14783/reactions",
+    "total_count": 3,
+    "+1": 3,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14783/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

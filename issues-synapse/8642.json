@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/8642",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/8642/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/8642/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/8642/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/8642",
+  "id": 728764582,
+  "node_id": "MDU6SXNzdWU3Mjg3NjQ1ODI=",
+  "number": 8642,
+  "title": "Consider using asyncioreactor",
+  "user": {
+    "login": "ShadowJonathan",
+    "id": 22740616,
+    "node_id": "MDQ6VXNlcjIyNzQwNjE2",
+    "avatar_url": "https://avatars.githubusercontent.com/u/22740616?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/ShadowJonathan",
+    "html_url": "https://github.com/ShadowJonathan",
+    "followers_url": "https://api.github.com/users/ShadowJonathan/followers",
+    "following_url": "https://api.github.com/users/ShadowJonathan/following{/other_user}",
+    "gists_url": "https://api.github.com/users/ShadowJonathan/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/ShadowJonathan/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/ShadowJonathan/subscriptions",
+    "organizations_url": "https://api.github.com/users/ShadowJonathan/orgs",
+    "repos_url": "https://api.github.com/users/ShadowJonathan/repos",
+    "events_url": "https://api.github.com/users/ShadowJonathan/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/ShadowJonathan/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 600557921,
+      "node_id": "MDU6TGFiZWw2MDA1NTc5MjE=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Performance",
+      "name": "A-Performance",
+      "color": "5319E7",
+      "default": false,
+      "description": "Performance, both client-facing and admin-facing"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406413,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDEz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Task",
+      "name": "T-Task",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Refactoring, removal, replacement, enabling or disabling functionality, other engineering tasks."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 7,
+  "created_at": "2020-10-24T10:57:14Z",
+  "updated_at": "2022-08-25T13:49:34Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Idea\r\n\r\nUse `twisted.internet.asyncioreactor` for synapse's twisted reactor.\r\n\r\n### Description\r\n\r\nThis is part of my idea that synapse should consider moving forward, beyond, or at least *next* to twisted, to also use `asyncio`'s economy of libraries and functions. With the `asyncioreactor`, it's possible to mix `twisted` and `asyncio` functionality with eachother.\r\n\r\nIt's also possible to use [`uvloop`](https://github.com/MagicStack/uvloop) in addition to this, allowing a big IO performance boost.\r\n\r\nSome links:\r\n\r\n`asyncioreactor`: https://twistedmatrix.com/documents/current/api/twisted.internet.asyncioreactor.html\r\n\r\n`asyncio`/`twisted` intermixing: https://gist.github.com/ldjebran/4febf298232a6fd86871df25d4dc00dd\r\n\r\n`Deferred.asFuture()`: https://twistedmatrix.com/documents/current/api/twisted.internet.defer.Deferred.html#asFuture\r\n\r\nTwisted and Asyncio (blog post): https://meejah.ca/blog/python3-twisted-and-asyncio\r\n\r\n### Considerations\r\n\r\nI have two concerns with doing this:\r\n\r\n1. Will the existing twisted-based code be stable on a new reactor based out of `asyncio`?\r\n\r\n2. Will the reactor impact performance (negatively)?\r\n\r\nFor 1, I want to run a server along my existing one, only joining some channels, and watch out for any crashes and the like, and/or perform test benches with `asyncioreactor` selected.\r\n\r\nFor 2, I'd want to know what the best way is for me to collect such statistics and/or how to compare them with a normal server.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/8642/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/8642/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/11785",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/11785/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/11785/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/11785/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/11785",
+  "id": 1109516827,
+  "node_id": "I_kwDOAVyVwM5CIeIb",
+  "number": 11785,
+  "title": "Admin API Override ratelimiting for users should allow overriding more than the equivalent of `rc_message`",
+  "user": {
+    "login": "Gnuxie",
+    "id": 50846879,
+    "node_id": "MDQ6VXNlcjUwODQ2ODc5",
+    "avatar_url": "https://avatars.githubusercontent.com/u/50846879?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Gnuxie",
+    "html_url": "https://github.com/Gnuxie",
+    "followers_url": "https://api.github.com/users/Gnuxie/followers",
+    "following_url": "https://api.github.com/users/Gnuxie/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Gnuxie/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Gnuxie/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Gnuxie/subscriptions",
+    "organizations_url": "https://api.github.com/users/Gnuxie/orgs",
+    "repos_url": "https://api.github.com/users/Gnuxie/repos",
+    "events_url": "https://api.github.com/users/Gnuxie/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Gnuxie/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 1507817868,
+      "node_id": "MDU6TGFiZWwxNTA3ODE3ODY4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Admin-API",
+      "name": "A-Admin-API",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 1554244657,
+      "node_id": "MDU6TGFiZWwxNTU0MjQ0NjU3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Moderation",
+      "name": "A-Moderation",
+      "color": "5319E7",
+      "default": false,
+      "description": "Tools for moderating HSes: event redaction, media removal, purge admin API, reports from users, ..."
+    },
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2022-01-20T16:31:13Z",
+  "updated_at": "2022-12-08T20:47:54Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "**Description:**\r\n\r\nhttps://matrix-org.github.io/synapse/latest/admin_api/user_admin_api.html#override-ratelimiting-for-users\r\n\r\nThis API seems to only allow overriding limits consistent with `rc_message` and none of the other options that are available in homeserver,yaml.\r\n\r\nCrucially though this excludes at least:\r\n\r\n* sending state events \r\n* creating rooms\r\n\r\nI'm not sure of the rate limits in homeserver.yaml they apply to.\r\n\r\nOther things that would be nice to disable selectively (for integration tests and have less justification than the above) are:\r\n\r\n* logging in and out (`rc_login`)\r\n* joining and leaving rooms (`rc_joins`)",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/11785/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/11785/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

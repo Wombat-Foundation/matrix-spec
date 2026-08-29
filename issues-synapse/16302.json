@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16302",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16302/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16302/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16302/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16302",
+  "id": 1891193479,
+  "node_id": "I_kwDOAVyVwM5wuVKH",
+  "number": 16302,
+  "title": "Mode parameter for listeners only supports decimal",
+  "user": {
+    "login": "deepbluev7",
+    "id": 16312324,
+    "node_id": "MDQ6VXNlcjE2MzEyMzI0",
+    "avatar_url": "https://avatars.githubusercontent.com/u/16312324?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/deepbluev7",
+    "html_url": "https://github.com/deepbluev7",
+    "followers_url": "https://api.github.com/users/deepbluev7/followers",
+    "following_url": "https://api.github.com/users/deepbluev7/following{/other_user}",
+    "gists_url": "https://api.github.com/users/deepbluev7/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/deepbluev7/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/deepbluev7/subscriptions",
+    "organizations_url": "https://api.github.com/users/deepbluev7/orgs",
+    "repos_url": "https://api.github.com/users/deepbluev7/repos",
+    "events_url": "https://api.github.com/users/deepbluev7/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/deepbluev7/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 845245048,
+      "node_id": "MDU6TGFiZWw4NDUyNDUwNDg=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Docs",
+      "name": "A-Docs",
+      "color": "5319E7",
+      "default": false,
+      "description": "things relating to the documentation"
+    },
+    {
+      "id": 2299781639,
+      "node_id": "MDU6TGFiZWwyMjk5NzgxNjM5",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Config",
+      "name": "A-Config",
+      "color": "5319E7",
+      "default": false,
+      "description": "Configuration, or the documentation thereof"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 5,
+  "created_at": "2023-09-11T20:14:17Z",
+  "updated_at": "2023-09-12T11:36:14Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nWhen setting a mode in the listener config when listening on a unix domain socket, the mode needs to be specified in decimal. That isn't very obvious from the documentation: https://matrix-org.github.io/synapse/latest/usage/configuration/config_documentation.html#listeners\r\n\r\nThe documentation says it defaults to 666, however it actually defaults to 0o666 or rather 438. This leads the reader to believe they can specify a different mode like 660, however they would need to specify 432. Specifying octal does not work with the yaml parser synapse uses (0o660 is parsed as a string).\r\n\r\nIt would be good if the documentation mentioned that or required the mode to be passed as a string.\n\n### Steps to reproduce\n\n- setup a listener on a unix domain socket with a non-default mode. It will have the wrong values when checking the permissions of the created socket, if the value is passed as a decimal number, but is actually octal.\n\n### Homeserver\n\nneko.dev\n\n### Synapse Version\n\n1.92.0_rc1\n\n### Installation Method\n\nOther (please mention below)\n\n### Database\n\npostgres, one db\n\n### Workers\n\nMultiple workers\n\n### Platform\n\nGentoo\n\n### Configuration\n\n_No response_\n\n### Relevant log output\n\n```shell\ns-w--w-r-T 1 synapse synapse 0 Sep 11 16:56 /run/synapse/event_creator.replication.sock\r\n```\r\n\r\nwhen mode 660 is specified.\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16302/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16302/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/13846",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/13846/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/13846/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/13846/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/13846",
+  "id": 1379174394,
+  "node_id": "I_kwDOAVyVwM5SNIf6",
+  "number": 13846,
+  "title": "Speed up push actions/unread counting",
+  "user": {
+    "login": "Fizzadar",
+    "id": 1026154,
+    "node_id": "MDQ6VXNlcjEwMjYxNTQ=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1026154?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Fizzadar",
+    "html_url": "https://github.com/Fizzadar",
+    "followers_url": "https://api.github.com/users/Fizzadar/followers",
+    "following_url": "https://api.github.com/users/Fizzadar/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Fizzadar/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Fizzadar/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Fizzadar/subscriptions",
+    "organizations_url": "https://api.github.com/users/Fizzadar/orgs",
+    "repos_url": "https://api.github.com/users/Fizzadar/repos",
+    "events_url": "https://api.github.com/users/Fizzadar/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Fizzadar/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 2674406413,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2NDEz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Task",
+      "name": "T-Task",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Refactoring, removal, replacement, enabling or disabling functionality, other engineering tasks."
+    },
+    {
+      "id": 4195810659,
+      "node_id": "LA_kwDOAVyVwM76Fv1j",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Database",
+      "name": "A-Database",
+      "color": "5319E7",
+      "default": false,
+      "description": "DB stuff like queries, migrations, new/remove columns, indexes, unexpected entries in the db"
+    },
+    {
+      "id": 4458764864,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNaQA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Frequent",
+      "name": "O-Frequent",
+      "color": "0052CC",
+      "default": false,
+      "description": "Affects or can be seen by most users regularly or impacts most users' first experience"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 7,
+  "created_at": "2022-09-20T10:20:54Z",
+  "updated_at": "2023-02-21T20:55:20Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "I've been spending a bunch of time looking into push action processing & badge counting and I think there'd be a real benefit to separating out push actions from summaries (notification/unread/highlight counts). There is a lot of code and complexity introduced in the mechanism of rolling event push actions into summaries, and the push actions table conflates push notifications and push counters. Suggestions:\r\n\r\n### Push actions\r\n\r\nFirstly push actions stay as is using `event_push_actions`, this [gets deleted on receipt](https://github.com/matrix-org/synapse/pull/13834) and read/deleted by the pusher instances, no need for any background work. No longer used for any badge counting.\r\n\r\n### Badge counts\r\n\r\nFor badge counts we add a new table, `event_push_counts`, that looks roughly like (pseudo-SQL):\r\n\r\n```sql\r\nCREATE TABLE event_push_counts (\r\n    user_id text,\r\n    room_id text,\r\n    thread_id text,\r\n    event_stream_ordering bigint,\r\n    notifs bigint,\r\n    unreads bigint,\r\n    highlights bigint,\r\n)\r\nALTER TABLE `event_push_counts` ADD CONSTRAINT uniq (user_id, room_id, thread_id, event_stream_ordering);\r\n```\r\n\r\nThe key here is that this is not unique per user/room/thread but also event stream ordering. This means that as events come in new rows simply get appended according to the push actions per user. This prevents any contention issues during the critical event insertion path.\r\n\r\nThis makes counting a users total unreads very simple - instead of the [current loop & count per room](https://github.com/matrix-org/synapse/blob/develop/synapse/push/push_tools.py#L31-L39), simply:\r\n\r\n```sql\r\n# Counting all events for push badges\r\nSELECT SUM(unreads)\r\nFROM event_push_counts\r\nWHERE user_id = '@blah:matrix.org'\r\n\r\n# Counting unread rooms for push badges\r\nSELECT COUNT(room_id)\r\nFROM event_push_counts\r\nWHERE user_id = '@blah:matrix.org'\r\nGROUP BY room_id\r\n\r\n# Separated room/thread counts for sync responses\r\nSELECT SUM(unreads), SUM(notifs), SUM(highlights), room_id, thread_id\r\nFROM event_push_counts\r\nWHERE user_id = '@blah:matrix.org'\r\nAND room_id IN ('!abc:matrix.org', '!def:beeper.com')\r\nGROUP BY room_id, thread_id\r\n```\r\n\r\nThe same applies to counting unreads for rooms in sync responses.\r\n\r\nIt is still possible to summarise these by merging rows into a higher stream ordering. Like the current system this doesn't account for receipts not at the latest stream ordering, but the summarisaton could be delayed to provide a window of support for this if desired. The table is leaner than the push actions table so this shouldn't be such an issue (but still important to do to keep the table fast).\r\n\r\nFinally, rows could be cleaned out either on receipt on as a background job processing receipts. If there was sufficient (24h?) delay before any summarisation phase, deleting on receipt shouldn't result in much contention on the table.\r\n\r\n---\r\n\r\n(If this seems sensible, I can invest time to implement over the next few weeks)",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/13846/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/13846/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/7838",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/7838/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/7838/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/7838/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/7838",
+  "id": 656121939,
+  "node_id": "MDU6SXNzdWU2NTYxMjE5Mzk=",
+  "number": 7838,
+  "title": "Registering a 3pid can cause you to be kicked out of a room",
+  "user": {
+    "login": "richvdh",
+    "id": 1389908,
+    "node_id": "MDQ6VXNlcjEzODk5MDg=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1389908?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/richvdh",
+    "html_url": "https://github.com/richvdh",
+    "followers_url": "https://api.github.com/users/richvdh/followers",
+    "following_url": "https://api.github.com/users/richvdh/following{/other_user}",
+    "gists_url": "https://api.github.com/users/richvdh/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/richvdh/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/richvdh/subscriptions",
+    "organizations_url": "https://api.github.com/users/richvdh/orgs",
+    "repos_url": "https://api.github.com/users/richvdh/repos",
+    "events_url": "https://api.github.com/users/richvdh/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/richvdh/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2316489728,
+      "node_id": "MDU6TGFiZWwyMzE2NDg5NzI4",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-3PID",
+      "name": "A-3PID",
+      "color": "5319E7",
+      "default": false,
+      "description": "3rd party identifiers: e.g. email, phone number"
+    },
+    {
+      "id": 2674406306,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzA2",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Major",
+      "name": "S-Major",
+      "color": "fc4e2a",
+      "default": false,
+      "description": "Major functionality / product severely impaired, no satisfactory workaround."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 3722136933,
+      "node_id": "LA_kwDOAVyVwM7d201l",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-WTF",
+      "name": "z-WTF",
+      "color": "ededed",
+      "default": false,
+      "description": "Causing the user to exclaim! These issues are high impact and low effort."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2020-07-13T20:35:35Z",
+  "updated_at": "2022-11-23T14:24:36Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "And worse, if you were the only one in the room, you will be unable to rejoin.\r\n\r\nSteps to repeat:\r\n\r\n1. Be the only user in a room.\r\n2. Send a 3pid invite to the room, to an unregistered 3pid.\r\n3. Register the 3pid yourself.\r\n4. Observe that you are no longer a member of the room; rather you have an invite to that room which you cannot accept (\"no known servers\", or, if the room's extremities get cleared by `delete_old_current_state_events`, \"No create event in auth_events\").\r\n\r\nUntil #7804 landed, you wouldn't have been able to reject it, either. That much at least seems to work now.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/7838/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/7838/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

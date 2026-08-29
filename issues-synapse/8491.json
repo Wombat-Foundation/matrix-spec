@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/8491",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/8491/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/8491/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/8491/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/8491",
+  "id": 716760894,
+  "node_id": "MDU6SXNzdWU3MTY3NjA4OTQ=",
+  "number": 8491,
+  "title": "/_matrix/client/r0/search: limit affects total number of results returned",
+  "user": {
+    "login": "Pestdoktor",
+    "id": 6042489,
+    "node_id": "MDQ6VXNlcjYwNDI0ODk=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/6042489?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Pestdoktor",
+    "html_url": "https://github.com/Pestdoktor",
+    "followers_url": "https://api.github.com/users/Pestdoktor/followers",
+    "following_url": "https://api.github.com/users/Pestdoktor/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Pestdoktor/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Pestdoktor/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Pestdoktor/subscriptions",
+    "organizations_url": "https://api.github.com/users/Pestdoktor/orgs",
+    "repos_url": "https://api.github.com/users/Pestdoktor/repos",
+    "events_url": "https://api.github.com/users/Pestdoktor/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Pestdoktor/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    },
+    {
+      "id": 5380188518,
+      "node_id": "LA_kwDOAVyVwM8AAAABQK8pZg",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Search",
+      "name": "A-Search",
+      "color": "5319E7",
+      "default": false,
+      "description": "Related to textual search of something, be it rooms, users or messages."
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2020-10-07T18:33:36Z",
+  "updated_at": "2023-07-27T12:48:38Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Synapse 1.20.0rc5\r\n\r\n```\r\n~> curl -XPOST -H 'Authorization: Bearer '$access_token -d '{\r\n     \"search_categories\":{\r\n       \"room_events\":{\r\n         \"filter\":{\r\n           \"senders\":[\"@tulir:maunium.net\"],\r\n           \"limit\":10\r\n         },\r\n         \"order_by\":\"recent\",\r\n         \"search_term\":\"foo\"\r\n       }\r\n     }\r\n   }' \"https://matrix.fentker.eu:8448/_matrix/client/r0/search\" 2>/dev/null\r\n{\r\n    \"search_categories\": {\r\n        \"room_events\": {\r\n            \"count\": 2678,\r\n            \"highlights\": [\r\n                \"footage\",\r\n                \"food\",\r\n                \"footprint\",\r\n                \"foot\",\r\n                \"foo.jpg\",\r\n                \"fools\",\r\n                \"footsteps\",\r\n                \"foolproof\",\r\n                \"foo\",\r\n                \"foodb\",\r\n                \"foobar\",\r\n                \"foo.tmp341025624588\",\r\n                \"football\",\r\n                \"fool\",\r\n                \"fooled\",\r\n                \"foo.uniquecol\",\r\n                \"footer\",\r\n                \"footnotes\",\r\n                \"foo.bar\"\r\n            ],\r\n            \"results\": []\r\n        }\r\n    }\r\n}\r\n```\r\n```\r\n~> curl -XPOST -H 'Authorization: Bearer '$access_token -d '{\r\n     \"search_categories\":{\r\n       \"room_events\":{\r\n         \"filter\":{\r\n           \"senders\":[\"@tulir:maunium.net\"],\r\n           \"limit\":500\r\n         },\r\n         \"order_by\":\"recent\",\r\n         \"search_term\":\"foo\"\r\n       }\r\n     }\r\n   }' \"https://matrix.fentker.eu:8448/_matrix/client/r0/search\" 2>/dev/null\r\n{\r\n    \"search_categories\": {\r\n        \"room_events\": {\r\n            \"count\": 2678,\r\n            \"highlights\": [\r\n                \"foo.example.com\",\r\n                \"foodbuser\",\r\n                \"fooevent\",\r\n                \"foolish\",\r\n                \"foosinn\",\r\n                \"foods\",\r\n                \"foodb\",\r\n                \"foo.avg\",\r\n                \"footlocker\",\r\n                \"foo.is\",\r\n                \"foo.ovpn\",\r\n                \"foo.srt\",\r\n                \"foo.jar\",\r\n                \"footstep\",\r\n                \"foo.png\",\r\n                \"fooken\",\r\n                \"foobar\",\r\n                \"foo.tablename\",\r\n                \"footguns\",\r\n                \"foo2\",\r\n                \"foor\",\r\n                \"foolishly\",\r\n                \"foothold\",\r\n                \"foousers\",\r\n                \"footnote\",\r\n                \"fooled\",\r\n                \"foo.tld\",\r\n                \"foo.bar\",\r\n                \"foo.csv\",\r\n                \"footers\",\r\n                \"footwear\",\r\n                \"footage\",\r\n                \"foobarbaz\",\r\n                \"foot\",\r\n                \"fooden\",\r\n                \"foo.jpg\",\r\n                \"fools\",\r\n                \"footsteps\",\r\n                \"foonetic\",\r\n                \"foobarurl\",\r\n                \"footime\",\r\n                \"footgun\",\r\n                \"foo.txt\",\r\n                \"foolproof\",\r\n                \"foo\",\r\n                \"footprints\",\r\n                \"foo.tmp341025624588\",\r\n                \"football\",\r\n                \"footer\",\r\n                \"footclient\",\r\n                \"footnotes\",\r\n                \"foodbpass\",\r\n                \"foo.mp4\",\r\n                \"food\",\r\n                \"footprint\",\r\n                \"foodchain\",\r\n                \"foos\",\r\n                \"footmanpepe\",\r\n                \"foooood\",\r\n                \"foo.schemaname\",\r\n                \"foo.into\",\r\n                \"footwork\",\r\n                \"foo.count\",\r\n                \"fool\",\r\n                \"foo.c\",\r\n                \"foo2zjs\",\r\n                \"foo.uniquecol\",\r\n                \"foo.id\",\r\n                \"foods/milks\",\r\n                \"foo.a\"\r\n            ],\r\n            \"results\": [\r\n                {\r\n                    \"context\": {},\r\n                    \"rank\": 0.1,\r\n                    \"result\": {\r\n                        \"age\": 2330046478,\r\n                        \"content\": {\r\n                            \"body\": \"`'{\\\"foo\\\": \\\"!'$1'\\\"}`\",\r\n                            \"format\": \"org.matrix.custom.html\",\r\n                            \"formatted_body\": \"<code>'{&quot;foo&quot;: &quot;!'$1'&quot;}</code>\",\r\n                            \"msgtype\": \"m.text\"\r\n                        },\r\n                        \"event_id\": \"$WWdy-eiCGjAOfpsHjU-ncDfwydvSq3lPufa8p0ROwyc\",\r\n                        \"origin_server_ts\": 1599765145421,\r\n                        \"room_id\": \"!OGEhHVWSdvArJzumhm:matrix.org\",\r\n                        \"sender\": \"@tulir:maunium.net\",\r\n                        \"type\": \"m.room.message\",\r\n                        \"unsigned\": {\r\n                            \"age\": 2330046478\r\n                        },\r\n                        \"user_id\": \"@tulir:maunium.net\"\r\n                    }\r\n                },\r\n                {\r\n                    \"context\": {},\r\n                    \"rank\": 0.1,\r\n                    \"result\": {\r\n                        \"age\": 3044675707,\r\n                        \"content\": {\r\n                            \"body\": \"the only way I know of is to add it in the url bar: after `/#/room/!foo:bar`, add `?via=server.name`. It'll disappear immediately, but the join button will work after that\",\r\n                            \"format\": \"org.matrix.custom.html\",\r\n                            \"formatted_body\": \"the only way I know of is to add it in the url bar: after <code>/#/room/!foo:bar</code>, add <code>?via=server.name</code>. It'll disappear immediately, but the join button will work after that\",\r\n                            \"msgtype\": \"m.text\"\r\n                        },\r\n                        \"event_id\": \"$8j4j3L4Dq4lQXzEUTY7V2Qi2rKw-L0VwyIe6Y_qHFKk\",\r\n                        \"origin_server_ts\": 1599050516192,\r\n                        \"room_id\": \"!mjbDjyNsRXndKLkHIe:matrix.org\",\r\n                        \"sender\": \"@tulir:maunium.net\",\r\n                        \"type\": \"m.room.message\",\r\n                        \"unsigned\": {\r\n                            \"age\": 3044675707\r\n                        },\r\n                        \"user_id\": \"@tulir:maunium.net\"\r\n                    }\r\n                },\r\n                {\r\n                    \"context\": {},\r\n                    \"rank\": 0.1,\r\n                    \"result\": {\r\n                        \"age\": 5442219350,\r\n                        \"content\": {\r\n                            \"body\": \"in the future it'll be `matrix:roomid/roomid:foo?via=server1.com&via=server2.org`\",\r\n                            \"format\": \"org.matrix.custom.html\",\r\n                            \"formatted_body\": \"in the future it'll be <code>matrix:roomid/roomid:foo?via=server1.com&amp;via=server2.org</code>\",\r\n                            \"msgtype\": \"m.text\"\r\n                        },\r\n                        \"event_id\": \"$eEekn1xkjg8JUHJRuRYH31VEDtiUXS2i00kR_-i2aWU\",\r\n                        \"origin_server_ts\": 1596652972549,\r\n                        \"room_id\": \"!mjbDjyNsRXndKLkHIe:matrix.org\",\r\n                        \"sender\": \"@tulir:maunium.net\",\r\n                        \"type\": \"m.room.message\",\r\n                        \"unsigned\": {\r\n                            \"age\": 5442219350\r\n                        },\r\n                        \"user_id\": \"@tulir:maunium.net\"\r\n                    }\r\n                }\r\n            ]\r\n        }\r\n    }\r\n}\r\n```",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/8491/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/8491/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

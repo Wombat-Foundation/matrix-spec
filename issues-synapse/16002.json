@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/16002",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/16002/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/16002/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/16002/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/16002",
+  "id": 1820866019,
+  "node_id": "I_kwDOAVyVwM5siDXj",
+  "number": 16002,
+  "title": "rc_joins rate limits dont function",
+  "user": {
+    "login": "wuast94",
+    "id": 16965460,
+    "node_id": "MDQ6VXNlcjE2OTY1NDYw",
+    "avatar_url": "https://avatars.githubusercontent.com/u/16965460?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/wuast94",
+    "html_url": "https://github.com/wuast94",
+    "followers_url": "https://api.github.com/users/wuast94/followers",
+    "following_url": "https://api.github.com/users/wuast94/following{/other_user}",
+    "gists_url": "https://api.github.com/users/wuast94/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/wuast94/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/wuast94/subscriptions",
+    "organizations_url": "https://api.github.com/users/wuast94/orgs",
+    "repos_url": "https://api.github.com/users/wuast94/repos",
+    "events_url": "https://api.github.com/users/wuast94/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/wuast94/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    },
+    {
+      "id": 5432641392,
+      "node_id": "LA_kwDOAVyVwM8AAAABQ8-HcA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Join",
+      "name": "A-Join",
+      "color": "5319E7",
+      "default": false,
+      "description": "Joining a room (there is another label for federated joins)"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2023-07-25T18:05:26Z",
+  "updated_at": "2023-08-23T21:52:03Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\n\nFor test purposes i added this to my homeserver yaml: \r\n```\r\n\r\nrc_joins:\r\n  local:\r\n    per_second: 1000\r\n    burst_count: 2000\r\n  remote:\r\n    per_second: 1000\r\n    burst_count: 2000\r\n```\r\n\r\nbut i still can just join 10 rooms and then get the rate limit error\n\n### Steps to reproduce\n\nchange config and try to join a bunch of rooms at once\n\n### Homeserver\n\nmy own\n\n### Synapse Version\n\n1.88.0\n\n### Installation Method\n\nDocker (matrixdotorg/synapse)\n\n### Database\n\nPostgres 15\n\n### Workers\n\nSingle process\n\n### Platform\n\nDocker\n\n### Configuration\n\nsee discription \n\n### Relevant log output\n\n```shell\nMatrixError: [429] Too Many Requests\n```\n\n\n### Anything else that would be useful to know?\n\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/16002/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/16002/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

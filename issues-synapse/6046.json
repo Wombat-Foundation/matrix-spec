@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/6046",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/6046/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/6046/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/6046/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/6046",
+  "id": 495042101,
+  "node_id": "MDU6SXNzdWU0OTUwNDIxMDE=",
+  "number": 6046,
+  "title": "\"Squashed\" thumbnails with EXIF rotation metadata",
+  "user": {
+    "login": "Ezwen",
+    "id": 1388961,
+    "node_id": "MDQ6VXNlcjEzODg5NjE=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1388961?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Ezwen",
+    "html_url": "https://github.com/Ezwen",
+    "followers_url": "https://api.github.com/users/Ezwen/followers",
+    "following_url": "https://api.github.com/users/Ezwen/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Ezwen/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Ezwen/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Ezwen/subscriptions",
+    "organizations_url": "https://api.github.com/users/Ezwen/orgs",
+    "repos_url": "https://api.github.com/users/Ezwen/repos",
+    "events_url": "https://api.github.com/users/Ezwen/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Ezwen/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477045806,
+      "node_id": "MDU6TGFiZWw0NzcwNDU4MDY=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Media-Repository",
+      "name": "A-Media-Repository",
+      "color": "5319E7",
+      "default": false,
+      "description": "Uploading, downloading images and video, thumbnailing"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2019-09-18T07:33:04Z",
+  "updated_at": "2022-11-15T15:19:10Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\n(I originally submitted a bug for riot-web here: https://github.com/vector-im/riot-web/issues/10903)\r\n\r\n\r\nConsider a picture with EXIF rotation metadata (eg. a photo taken with a phone that was not turned 90° on the side), such as:\r\n\r\n![IMG_20190915_082630](https://user-images.githubusercontent.com/1388961/65116530-3289a680-d9e9-11e9-9327-05e61c983ae8.jpg)\r\n\r\nWhen opened in an application that takes into account EXIF rotation metadata, we see this:\r\n\r\n![Capture d’écran du 2019-09-18 07-53-18](https://user-images.githubusercontent.com/1388961/65116718-6cf34380-d9e9-11e9-80b6-2ffe149de3d2.png)\r\n\r\n**However** when we upload this picture in Riot, the thumbnail shows this:\r\n\r\n![Capture d’écran du 2019-09-18 07-54-38](https://user-images.githubusercontent.com/1388961/65116842-93b17a00-d9e9-11e9-8a07-fa6220147f47.png)\r\n\r\n<!-- Describe here the problem that you are experiencing -->\r\n\r\n### Steps to reproduce\r\n\r\n- Take a picture with your phone and without rotating your phone on the side.\r\n- Upload the picture in a matrix room using Riot-web : the thumbnail appears, and while the photo was rotated by taking into account the EXIF metadata, it appears \"squashed\".\r\n\r\n<!--\r\nDescribe how what happens differs from what you expected.\r\n\r\nIf you can identify any relevant log snippets from _homeserver.log_, please include\r\nthose (please be careful to remove any personal or private data). Please surround them with\r\n``` (three backticks, on a line on their own), so that they are formatted legibly.\r\n-->\r\n\r\n### Version information\r\n\r\n<!-- Was this issue identified on matrix.org or another homeserver? -->\r\n- **Homeserver**: my own private homeserver\r\n\r\n<!--\r\nWhat version of Synapse is running?\r\nYou can find the Synapse version by inspecting the server headers (replace matrix.org with\r\nyour own homeserver domain):\r\n$ curl -v https://matrix.org/_matrix/client/versions 2>&1 | grep \"Server:\"\r\n-->\r\n- **Version**: 1.3.1\r\n\r\n- **Install method**: official docker image\r\n<!-- examples: package manager/git clone/pip  -->\r\n\r\n- **Platform**: Debian 9\r\n<!--\r\nTell us about the environment in which your homeserver is operating\r\ndistro, hardware, if it's running in a vm/container, etc.\r\n-->\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/6046/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/6046/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

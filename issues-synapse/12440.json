@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/12440",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/12440/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/12440/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/12440/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/12440",
+  "id": 1200438663,
+  "node_id": "I_kwDOAVyVwM5HjT2H",
+  "number": 12440,
+  "title": "Enabling `session_lifetime` in the configuration prevents registration of guest users",
+  "user": {
+    "login": "JacksonChen666",
+    "id": 50755746,
+    "node_id": "MDQ6VXNlcjUwNzU1NzQ2",
+    "avatar_url": "https://avatars.githubusercontent.com/u/50755746?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/JacksonChen666",
+    "html_url": "https://github.com/JacksonChen666",
+    "followers_url": "https://api.github.com/users/JacksonChen666/followers",
+    "following_url": "https://api.github.com/users/JacksonChen666/following{/other_user}",
+    "gists_url": "https://api.github.com/users/JacksonChen666/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/JacksonChen666/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/JacksonChen666/subscriptions",
+    "organizations_url": "https://api.github.com/users/JacksonChen666/orgs",
+    "repos_url": "https://api.github.com/users/JacksonChen666/repos",
+    "events_url": "https://api.github.com/users/JacksonChen666/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/JacksonChen666/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2299781639,
+      "node_id": "MDU6TGFiZWwyMjk5NzgxNjM5",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Config",
+      "name": "A-Config",
+      "color": "5319E7",
+      "default": false,
+      "description": "Configuration, or the documentation thereof"
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137798466,
+      "node_id": "LA_kwDOAVyVwM72octC",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Guests",
+      "name": "A-Guests",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2022-04-11T19:31:20Z",
+  "updated_at": "2023-04-25T23:03:42Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nWhen the configuration option `session_lifetime` (used to log out users after sign in after a certain amount of time) is used, attempts to register as a guest user will fail due to a `500 Internal Server Error` because of a python exception.\r\n\r\n### Steps to reproduce\r\n\r\n- Enable configuration option `session_lifetime` to something like `30d`\r\n- Host the [Element](https://matrix.org/docs/projects/client/element) client which points to the homeserver by default (set within `config.json` for Element)\r\n- Observe the 'Explore Rooms' button not showing under the `Sign In` and `Create Account` button, and the `POST` request Element makes to register a Guest account fail with a response code of `500 Internal Server Error`\r\n\r\nI was trying to get the `Explore Room` button to work in [Element](https://matrix.org/docs/projects/client/element).\r\nAfter lots of digging around to, well, not much useful. I then found that the `POST` request to `/_matrix/client/r0/register?kind=guest` responds with a `500 Internal Server Error` status code, shows an exception in `homeserver.log`, and which prevented the button from showing up.\r\n\r\n**Expectation:** Even with the `session_lifetime` option, guest users can be registered (what happens with `session_lifetime` really depends)\r\n\r\n`homeserver.log`:\r\n\r\n```\r\n2022-04-11 20:57:46,503 - synapse.access.http.8008 - 427 - INFO - GET-71697 - ***.***.***.*** - 8008 - {None} Processed request: 0.001sec/0.001sec (0.001sec, 0.000sec) (0.000sec/0.000sec/0) 558B 200 \"GET /_matrix/client/versions HTTP/1.0\" \"***********************************************************************************************************\" [0 dbevts]\r\n2022-04-11 20:57:46,786 - synapse.handlers.register - 358 - INFO - POST-71699 - Skipping auto-join for @113:jacksonchen666.com because auto-join for guests is disabled\r\n2022-04-11 20:57:46,787 - synapse.http.server - 100 - ERROR - POST-71699 - Failed handle request via 'RegisterRestServlet': <XForwardedForRequest at 0x7f81c6432350 method='POST' uri='/_matrix/client/r0/register?kind=guest' clientproto='HTTP/1.0' site='8008'>\r\nTraceback (most recent call last):\r\n  File \"/home/matrix-synapse/synapse/env/lib/python3.10/site-packages/synapse/http/server.py\", line 268, in _async_render_wrapper\r\n    callback_return = await self._async_render(request)\r\n  File \"/home/matrix-synapse/synapse/env/lib/python3.10/site-packages/synapse/http/server.py\", line 470, in _async_render\r\n    callback_return = await raw_callback_return\r\n  File \"/home/matrix-synapse/synapse/env/lib/python3.10/site-packages/synapse/rest/client/_base.py\", line 99, in wrapped\r\n    return await orig(*args, **kwargs)\r\n  File \"/home/matrix-synapse/synapse/env/lib/python3.10/site-packages/synapse/rest/client/register.py\", line 451, in on_POST\r\n    ret = await self._do_guest_registration(body, address=client_addr)\r\n  File \"/home/matrix-synapse/synapse/env/lib/python3.10/site-packages/synapse/rest/client/register.py\", line 849, in _do_guest_registration\r\n    ) = await self.registration_handler.register_device(\r\n  File \"/home/matrix-synapse/synapse/env/lib/python3.10/site-packages/synapse/handlers/register.py\", line 768, in register_device\r\n    res = await self._register_device_client(\r\n  File \"/home/matrix-synapse/synapse/env/lib/python3.10/site-packages/synapse/handlers/register.py\", line 812, in register_device_inner\r\n    raise Exception(\r\nException: session_lifetime is not currently implemented for guest access\r\n2022-04-11 20:57:46,790 - synapse.access.http.8008 - 427 - INFO - POST-71699 - ***.***.***.*** - 8008 - {None} Processed request: 0.023sec/0.001sec (0.007sec, 0.000sec) (0.001sec/0.016sec/2) 55B 500 \"POST /_matrix/client/r0/register?kind=guest HTTP/1.0\" \"*************************************************************************************************\" [0 dbevts]\r\n```\r\n\r\n### Version information\r\n\r\n<!-- IMPORTANT: please answer the following questions, to help us narrow down the problem -->\r\n\r\n<!-- Was this issue identified on matrix.org or another homeserver? -->\r\n- **Homeserver**: https://matrix.jacksonchen666.com\r\n\r\nIf not matrix.org:\r\n\r\n<!--\r\n What version of Synapse is running?\r\n\r\nYou can find the Synapse version with this command:\r\n\r\n$ curl http://localhost:8008/_synapse/admin/v1/server_version\r\n\r\n(You may need to replace `localhost:8008` if Synapse is not configured to\r\nlisten on that port.)\r\n-->\r\n- **Version**: ~~1.55.2~~ updated to 1.56.0 since then (tested, issue persists)\r\n\r\n- **Install method**: `pip install matrix-synapse[postgres]` (with the python virtual environment located at `/home/matrix-synapse/synapse/env/`, with a [nginx reverse proxy](https://matrix-org.github.io/synapse/latest/reverse_proxy.html#nginx) & [delegation](https://matrix-org.github.io/synapse/latest/delegate.html))\r\n<!-- examples: package manager/git clone/pip  -->\r\n\r\n- **Platform**: Linux, Fedora 35, Not within a container or VM\r\n<!--\r\nTell us about the environment in which your homeserver is operating\r\ndistro, hardware, if it's running in a vm/container, etc.\r\n-->\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/12440/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/12440/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/8686",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/8686/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/8686/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/8686/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/8686",
+  "id": 732426393,
+  "node_id": "MDU6SXNzdWU3MzI0MjYzOTM=",
+  "number": 8686,
+  "title": "Synapse is a bit confused when searching for messages which have been edited",
+  "user": {
+    "login": "bmarty",
+    "id": 3940906,
+    "node_id": "MDQ6VXNlcjM5NDA5MDY=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/3940906?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/bmarty",
+    "html_url": "https://github.com/bmarty",
+    "followers_url": "https://api.github.com/users/bmarty/followers",
+    "following_url": "https://api.github.com/users/bmarty/following{/other_user}",
+    "gists_url": "https://api.github.com/users/bmarty/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/bmarty/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/bmarty/subscriptions",
+    "organizations_url": "https://api.github.com/users/bmarty/orgs",
+    "repos_url": "https://api.github.com/users/bmarty/repos",
+    "events_url": "https://api.github.com/users/bmarty/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/bmarty/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 3537568940,
+      "node_id": "LA_kwDOAVyVwM7S2wSs",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Message-Search",
+      "name": "A-Message-Search",
+      "color": "5319E7",
+      "default": false,
+      "description": "Searching messages"
+    },
+    {
+      "id": 3722136933,
+      "node_id": "LA_kwDOAVyVwM7d201l",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-WTF",
+      "name": "z-WTF",
+      "color": "ededed",
+      "default": false,
+      "description": "Causing the user to exclaim! These issues are high impact and low effort."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2020-10-29T15:39:03Z",
+  "updated_at": "2022-11-23T15:12:59Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "- Create an unencrypted room\r\n- Send a message `foo`\r\n- Search for `foo` (POST https://matrix-client.matrix.org/_matrix/client/r0/search) -> 1 result OK\r\n- Edit the message from `foo` to `bar`\r\n- Search for `bar` -> 1 result (`bar`) -> OK\r\n- Search for `foo` -> 1 result (`bar`) -> KO\r\n\r\nIn Element Web:\r\n\r\n<img width=\"601\" alt=\"image\" src=\"https://user-images.githubusercontent.com/3940906/97673971-f9957f80-1a8c-11eb-9c04-706e1671d3cf.png\">\r\n\r\nAnother scenario:\r\n- Send a message `foo test`\r\n- Search for `test` (POST https://matrix-client.matrix.org/_matrix/client/r0/search) -> 1 result OK\r\n- Edit the message from `foo test` to `bar test`\r\n- Search for `test` -> 2 results -> KO\r\n\r\nI'm not sure about what is the proper fix, but I guess Synapse should only return the latest version of a message, and only if it contains the searched terms.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/8686/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/8686/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

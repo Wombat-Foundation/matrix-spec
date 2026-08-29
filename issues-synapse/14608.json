@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14608",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14608/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14608/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14608/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14608",
+  "id": 1473271871,
+  "node_id": "I_kwDOAVyVwM5X0Fg_",
+  "number": 14608,
+  "title": "Support Elasticsearch/OpenSearch for user search",
+  "user": {
+    "login": "babolivier",
+    "id": 5547783,
+    "node_id": "MDQ6VXNlcjU1NDc3ODM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/5547783?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/babolivier",
+    "html_url": "https://github.com/babolivier",
+    "followers_url": "https://api.github.com/users/babolivier/followers",
+    "following_url": "https://api.github.com/users/babolivier/following{/other_user}",
+    "gists_url": "https://api.github.com/users/babolivier/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/babolivier/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/babolivier/subscriptions",
+    "organizations_url": "https://api.github.com/users/babolivier/orgs",
+    "repos_url": "https://api.github.com/users/babolivier/repos",
+    "events_url": "https://api.github.com/users/babolivier/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/babolivier/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2028961502,
+      "node_id": "MDU6TGFiZWwyMDI4OTYxNTAy",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-User-Directory",
+      "name": "A-User-Directory",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 2,
+  "created_at": "2022-12-02T18:19:36Z",
+  "updated_at": "2022-12-06T11:57:06Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "## Preamble\r\n\r\nSynapse's user search feature has a few long-standing known shortcomings when searching for display names, namely:\r\n\r\n* It's diacritic (accents) sensitive (https://github.com/matrix-org/synapse/issues/1523)\r\n* It works badly with foreign languages (https://github.com/matrix-org/synapse/issues/13655)\r\n* It's case sensitive in non-latin languages (https://github.com/matrix-org/synapse/issues/14630)\r\n\r\nAddressing these issues is non-trivial with PostgreSQL's full text search capabilities. In this writeup I am exploring integrating [Elasticsearch](https://www.elastic.co/), which is a full text search engine backed by [Apache Lucene](https://lucene.apache.org/), into Synapse.\r\n\r\nNote that mentions of Elasticsearch in this writeup also include [OpenSearch](https://opensearch.org/), which is AWS's fork of Elasticsearch and has, as far as I can tell, compatible APIs with Elasticsearch (at least regarding the features that are relevant to us).\r\n\r\nAlso note that I am focusing specifically on user search, and am not including message search to avoid scope creep.\r\n\r\n## Indexing\r\n\r\nElasticsearch's equivalent of an SQL table is called an _index_. An index contains a number of _documents_, which are freeform JSON blobs. In the context of user search, this is where we would store user profiles. This is an example of a document in an Elasticsearch index:\r\n\r\n```json\r\n{\r\n    \"_index\": \"synapse_user_search_4\",\r\n    \"_id\": \"@foo:bar.baz\",\r\n    \"_version\": 1,\r\n    \"_seq_no\": 5,\r\n    \"_primary_term\": 5,\r\n    \"found\": true,\r\n    \"_source\": {\r\n        \"user_id\": \"@foo:bar.baz\",\r\n        \"display_name\": \"Léonard Foo\",\r\n        \"avatar_url\": null\r\n    }\r\n}\r\n```\r\n\r\nHere, we're mostly interested in two properties:\r\n\r\n* `_id`: the document's identifier. A document can be created without identifiers, in which case Elasticsearch automatically generates one for it.\r\n* `_source`: the document's data.\r\n\r\nIn this example, I've used the user's MXID as the document's ID (so that we can easily update it in the future), and the structure of profiles as they are returned by the [`/user_directory/search`](https://spec.matrix.org/latest/client-server-api/#post_matrixclientv3user_directorysearch) endpoint. In practice we'll probably want to remove the `user_directory` from the document's source, in order to avoid duplicating data.\r\n\r\n### Analysis\r\n\r\nWe want our greatly improved user search to be:\r\n\r\n* case insensitive\r\n* diacritics insensitive\r\n\r\nFor this, we need to create the Elasticsearch index and configure it with an _analyzer_. The analyzer is in charge of looking at all new piece of data and tokenise (while also retaining the document's source) it so it's easily searchable later on.\r\n\r\nWe create our index with a custom analyzer that is both case- and diacritics-insensitive:\r\n\r\n```json\r\nPUT /synapse_user_directory_search\r\n\r\n{\r\n  \"settings\": {\r\n    \"analysis\": {\r\n      \"analyzer\": {\r\n        \"std_asciifolding\": {\r\n          \"tokenizer\": \"standard\",\r\n          \"filter\": [ \"asciifolding\", \"lowercase\" ]\r\n        }\r\n      }\r\n    }\r\n  },\r\n  \"mappings\": {\r\n    \"properties\": {\r\n      \"display_name\": {\r\n        \"type\": \"text\",\r\n        \"analyzer\": \"std_asciifolding\"\r\n      }\r\n    }\r\n  }\r\n}\r\n```\r\n\r\nThere are a few things happening here:\r\n\r\n* in `settings.analysis.analyzer`, we define a custom analyzer on the index. This analyzer includes two token filters: [`asciifolding`](https://www.elastic.co/guide/en/elasticsearch/reference/8.5/analysis-asciifolding-tokenfilter.html), which folds non-ASCII characters in tokens to an equivalent ASCII character (thus eliminating accents), and [`lowercase`](https://www.elastic.co/guide/en/elasticsearch/reference/8.5/analysis-lowercase-tokenfilter.html) which forces tokens into lower case.\r\n* in `mappings.properties`, we assign our custom analyzer to the `display_name`, since this is where we might have diacritics and case variations.\r\n\r\n### Document insertion and update\r\n\r\nWhen the index is created, we can start adding documents to it:\r\n\r\n```json\r\nPUT /synapse_user_directory_search/_doc/@foo:bar.baz\r\n\r\n{\r\n    \"user_id\": \"@foo:bar.baz\",\r\n    \"display_name\": \"Léo Foo\",\r\n    \"avatar_url\": null\r\n}\r\n```\r\n\r\nNote that the request for updating an existing document is identical to the one above. When a document is updated, its `_version` property is automatically incremented.\r\n\r\n### Search\r\n\r\nNow we can search for users:\r\n\r\n\r\n```json\r\nGET /synapse_user_directory_search/_search\r\n\r\n{\r\n    \"query\": {\r\n        \"match_phrase_prefix\": {\r\n            \"display_name\": {\r\n                \"query\": \"leo\"\r\n            }\r\n        }\r\n    }\r\n}\r\n```\r\n\r\n(yes, this is a `GET` request with a body)\r\n\r\nWe use a [`match_phrase_prefix`](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query-phrase-prefix.html) query to ensure we start matching at the start of a sequence of tokens, instead of starting matching in the middle of a token.\r\n\r\nResults are then provided in the following format:\r\n\r\n```json\r\n{\r\n    \"took\": 4,\r\n    \"timed_out\": false,\r\n    \"_shards\": {\r\n        \"total\": 1,\r\n        \"successful\": 1,\r\n        \"skipped\": 0,\r\n        \"failed\": 0\r\n    },\r\n    \"hits\": {\r\n        \"total\": {\r\n            \"value\": 1,\r\n            \"relation\": \"eq\"\r\n        },\r\n        \"max_score\": 0.2876821,\r\n        \"hits\": [\r\n            {\r\n                \"_index\": \"synapse_user_search_5\",\r\n                \"_id\": \"@foo:bar.baz\",\r\n                \"_score\": 0.2876821,\r\n                \"_source\": {\r\n                    \"user_id\": \"@foo:bar.baz\",\r\n                    \"display_name\": \"Léo Foo\",\r\n                    \"avatar_url\": null\r\n                }\r\n            }\r\n        ]\r\n    }\r\n}\r\n```\r\n\r\nOn each hit, a score is associated in the `_score` property to help sort results.\r\n\r\nWith the query previously mentioned, the same score will be attributed to every result. We will probably want to use a more elaborate query, such as a boolean compound query, which would allow attributing a higher score to exact matches (see an example [here](https://stackoverflow.com/a/53001213)). We will also probably want to tweak the query so that it also matches on MXIDs.\r\n\r\n## Integration\r\n\r\nFirst off, we will probably want to make this integration optional. While there are valid use cases for requiring better user search results than the ones provided by PostgreSQL's full text search support, PostgreSQL is also good enough for most servers catering to a community that mostly uses latin-based languages. Mandating those servers to support Elasticsearch for user search would be an unnecessary burden, both in terms of resources and, if the Elasticsearch cluster is self-hosted, in maintenance.\r\n\r\nTechnically, integrating Elasticsearch into Synapse would mean writing our own interaction layer. Elastic does provide an [official Python module](https://github.com/elastic/elasticsearch-py), which even has [async support](https://elasticsearch-py.readthedocs.io/en/latest/async.html), however this async support uses [aiohttp](https://github.com/aio-libs/aiohttp) for transport. I don't know if aiohttp is even compatible with Twisted, and I assume we will probably want to use Twisted agents to perform requests. There have been efforts in the past to write an Elasticsearch module for Twisted-based applications ([txes2](https://github.com/lextoumbourou/txes2)), but it looks widely out of date and unmaintained (and is still incompatible with Python 3).\r\n\r\nWriting our own integration for Elasticsearch should not be very complex, however, since as demonstrated above we would only need to perform a couple of types of HTTP requests (creating/updating documents, and searching).\r\n\r\n### Migration\r\n\r\nHow to migrate user search data from PostgreSQL to Elasticsearch and back is an area which needs further research. It will likely need a script ran manually by the server admin, similar to the existing SQLite -> PostgreSQL migration script we currently have. There might be a way to make this migration incremental to ease the pain on servers with a very large number of users, but I'm not entirely sure.\r\n\r\n## Conclusion\r\n\r\nSupporting Elasticsearch in Synapse looks like a pretty big amount of work, but I think it's also work that is worth putting in to enable more communities around the world to adopt Matrix. In my manual testing, most issues with user search that are caused by PostgreSQL's full text search engine seem to be resolved with Elasticsearch, apart from [one edge case](https://discuss.elastic.co/t/match-queries-and-ascii-folding/319544) which I believe to be acceptable.\r\n\r\nIt is also worth considering that, once in place, we might also want to use Elasticsearch to handle message search, which has similar issues to user search.\r\n\r\nTo be clear, I am not claiming this work should be the team's highest priority by opening this issue - I mostly wanted to compile and share the findings from spending a limited amount of time researching options to improve user search.",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14608/reactions",
+    "total_count": 4,
+    "+1": 4,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14608/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/4092",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/4092/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/4092/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/4092/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/4092",
+  "id": 374141044,
+  "node_id": "MDU6SXNzdWUzNzQxNDEwNDQ=",
+  "number": 4092,
+  "title": "Synapse fails to talk to appservices that listen on an IPv6 address.",
+  "user": {
+    "login": "jcgruenhage",
+    "id": 6861958,
+    "node_id": "MDQ6VXNlcjY4NjE5NTg=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/6861958?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/jcgruenhage",
+    "html_url": "https://github.com/jcgruenhage",
+    "followers_url": "https://api.github.com/users/jcgruenhage/followers",
+    "following_url": "https://api.github.com/users/jcgruenhage/following{/other_user}",
+    "gists_url": "https://api.github.com/users/jcgruenhage/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/jcgruenhage/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/jcgruenhage/subscriptions",
+    "organizations_url": "https://api.github.com/users/jcgruenhage/orgs",
+    "repos_url": "https://api.github.com/users/jcgruenhage/repos",
+    "events_url": "https://api.github.com/users/jcgruenhage/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/jcgruenhage/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477046103,
+      "node_id": "MDU6TGFiZWw0NzcwNDYxMDM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Application-Service",
+      "name": "A-Application-Service",
+      "color": "5319E7",
+      "default": false,
+      "description": "Related to AS support"
+    },
+    {
+      "id": 2021736922,
+      "node_id": "MDU6TGFiZWwyMDIxNzM2OTIy",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/Z-Upstream-Bug",
+      "name": "Z-Upstream-Bug",
+      "color": "ededed",
+      "default": false,
+      "description": "This issue requires a fix in an upstream dependency."
+    },
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 3,
+  "created_at": "2018-10-25T21:31:31Z",
+  "updated_at": "2022-12-23T23:17:41Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nSynapse fails to talk to appservices that listen on an IPv6 address.\r\n\r\n### Steps to reproduce\r\n\r\n- Set up some appservice\r\n- Use the IPv4 address to verify it's working\r\n- Now change the registration file pointing to the appservice's IPv6\r\n- The logs will now contain errors like this:\r\n\r\n```\r\n2018-10-24 16:44:23,723 - synapse.appservice.scheduler - 240 - INFO - - Retrying transaction 338847 for AS ID telegram                                                              \r\n2018-10-24 16:44:23,725 - synapse.http.client - 96 - INFO - - Sending request PUT http://[::1]:8187/transactions/338847?access_token=<redacted>\r\n2018-10-24 16:44:23,726 - synapse.http.client - 118 - INFO - - Error sending request to  PUT http://[::1]:8187/transactions/338847?access_token=<redacted>: IDNAError The label b'::1' is not a valid A-label\r\n2018-10-24 16:44:23,727 - synapse.appservice.api - 249 - WARNING - - push_bulk to http://[::1]:8187/transactions/338847 threw exception The label b'::1' is not a valid A-label\r\n```\r\n\r\nMaybe there is more info on this [here](https://matrix.to/#/!HsxjoYRFsDtWBgDQPh:matrix.org/$1540399349358CjNSh:sw1v.org), but I tried to get all the relevant things into this issue.\r\n\r\n### Version information\r\n\r\n- **Homeserver**: jcg.re\r\n- **Version**: v0.33.7\r\n- **Install method**: docker      \r\n- **Platform**: Fedora Host, official docker image, running with network_mode=host in docker-compose\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/4092/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/4092/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

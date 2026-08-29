@@ -1,0 +1,122 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15005",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15005/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15005/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15005/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15005",
+  "id": 1573419175,
+  "node_id": "I_kwDOAVyVwM5dyHin",
+  "number": 15005,
+  "title": "Rooms created without any membership (only `m.room.create` event)",
+  "user": {
+    "login": "MadLittleMods",
+    "id": 558581,
+    "node_id": "MDQ6VXNlcjU1ODU4MQ==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/558581?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/MadLittleMods",
+    "html_url": "https://github.com/MadLittleMods",
+    "followers_url": "https://api.github.com/users/MadLittleMods/followers",
+    "following_url": "https://api.github.com/users/MadLittleMods/following{/other_user}",
+    "gists_url": "https://api.github.com/users/MadLittleMods/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/MadLittleMods/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/MadLittleMods/subscriptions",
+    "organizations_url": "https://api.github.com/users/MadLittleMods/orgs",
+    "repos_url": "https://api.github.com/users/MadLittleMods/repos",
+    "events_url": "https://api.github.com/users/MadLittleMods/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/MadLittleMods/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406347,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzQ3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Tolerable",
+      "name": "S-Tolerable",
+      "color": "ffeda0",
+      "default": false,
+      "description": "Minor significance, cosmetic issues, low or no impact to users."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4137716511,
+      "node_id": "LA_kwDOAVyVwM72oIsf",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-DAG",
+      "name": "A-DAG",
+      "color": "5319E7",
+      "default": false,
+      "description": "Directed acyclic graph of events (events connected by prev_events)"
+    },
+    {
+      "id": 4137756475,
+      "node_id": "LA_kwDOAVyVwM72oSc7",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Create-Room",
+      "name": "A-Create-Room",
+      "color": "5319E7",
+      "default": false,
+      "description": ""
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 9,
+  "created_at": "2023-02-06T22:58:42Z",
+  "updated_at": "2023-04-06T14:51:23Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nTrying to tie up any loose-ends with the Gitter import as part of the [Gitter migration process](https://github.com/vector-im/roadmap/issues/26) and noticing that we have some Matrix rooms recorded that seem to broken on the Synapse side. Some of these rooms only have a `m.room.create` event in it while others have no events which means we can't interact with it at all since permission denied errors everywhere (no membership or power-level events).\r\n\r\n~~The only way we recorded this room on the Gitter side is if we got a 200-response from Synapse originally when it was created. If Synapse is returning with a error-free response, there should be much better guarantees on the room being created successfully (atomic transaction). Of course it's possible this could have been corrupted after the fact though.~~ What most likely happened was the rooms were attempted to be created but timed out. Then we introduced code to reconcile the case where a Matrix room alias exists but we don't have the bridged Matrix room entry recorded, see https://github.com/matrix-org/synapse/issues/15005#issuecomment-1421481395\r\n\r\nThey all seem to be created on January 10th, 2023 which is probably in the middle of importing messages and the import scripts.\r\n\r\nHere is the list of affected rooms that I know of:\r\n\r\n - `!gHbYoGxiEuXmahoYeh:gitter.im` (only `m.room.create`)\r\n - `!OpjflmXuauidodzmJH:gitter.im` (only `m.room.create`)\r\n - `!QCVddUkjrHLjEqeXQd:gitter.im` (no events)\r\n - `!wJBkwhqwLssHVjKErI:gitter.im` (only `m.room.create`)\r\n - `!kkjacXiigblOffltrw:gitter.im` (only `m.room.create`)\r\n - `!etJKlYVRXEtkkMdEOJ:gitter.im` (no events)\r\n - `!VeVZEnGasXJXpAYECh:gitter.im` (only `m.room.create`)\r\n - `!iJIbqcgSzsAFnwjVBI:gitter.im` (no events)\r\n - `!koFtykttKGRpjbzflq:gitter.im` (no events)\r\n - `!mxfIojpZcyQDBbmmoY:gitter.im` (only `m.room.create`)\r\n - `!ezxePTXYHMSIkpGOiy:gitter.im` (only `m.room.create`)\r\n - `!QlEqqNHuTSIHswllOX:gitter.im` (only `m.room.create`)\r\n - `!XInKHVcDAmmyGBEUwr:gitter.im` (no events)\r\n - `!KIKPFcoDnhBeZhLNUr:gitter.im` (only `m.room.create`)\r\n - `!BcBAOZpxjTAvMDfSHf:gitter.im` (only `m.room.create`)\r\n - `!DuyTBdNdlhfXoBFNqr:gitter.im` (only `m.room.create`)\r\n - `!qgfkmcpByUudrFHTMX:gitter.im` (no events)\r\n - `!tFwVYIoUNZQhRhjFNO:gitter.im` (no events)\r\n - `!qoZZIEjvblGKIkqEdj:gitter.im` (no events)\r\n\r\n---\r\n\r\nIn terms of moving Gitter forward, I think we can safely reconcile this by removing the bridged room entry in the Gitter database and the Matrix room alias and have them re-created (tracked by https://gitlab.com/gitterHQ/webapp/-/issues/2858#note_1267698515). But I'm unable to remove the Matrix room alias from the old room (`M_FORBIDDEN`) 😬\r\n\r\nAnd it would still be good to fix the Synapse bugs that allow this to happen. \r\n\r\n\r\n### Steps to reproduce\r\n\r\n1. Not sure how this happened but it's all Gitter appservice interactions against Synapse\r\n\r\n### Homeserver\r\n\r\ngitter.im\r\n\r\n### Synapse Version\r\n\r\n1.74.0\r\n\r\n### Installation Method\r\n\r\nI don't know\r\n\r\n### Database\r\n\r\nPostgreSQL\r\n\r\n### Workers\r\n\r\nMultiple workers\r\n\r\n### Platform\r\n\r\n`gitter.im` (`gitter.ems.host`) runs on EMS but I don't know the details\r\n\r\nPython version: `3.11.1`\r\n\r\n### Configuration\r\n\r\n_No response_\r\n\r\n### Relevant log output\r\n\r\nThe only relevant logs for this room from the time of creation is this message:\r\n\r\nhttps://modular-euwest2-kibana.proxy.matrix.org/app/kibana#/discover?_g=(refreshInterval:(pause:!t,value:0),time:(from:now-8w,to:now-3w))&_a=(columns:!(_source),index:'67745970-aa2d-11ea-96a7-efc84863d0ea',interval:auto,query:(language:kuery,query:'kubernetes.pod.labels.hostname:%22gitter.ems.host%22%20AND%20message:%22!!gHbYoGxiEuXmahoYeh:gitter.im%22'),sort:!(!('@timestamp',desc)))\r\n\r\n```\r\n2023-01-09 17:33:53,203 - synapse.replication.http.send_events - 149 - INFO - POST-4249- Got batch of events to send, last ID of batch is: $JeDmcg6bYb0s-d6pxIbgmfPaJoChH-qWlnTZ3n8xGdU, sending into room: !gHbYoGxiEuXmahoYeh:gitter.im\r\n```\r\n\r\n---\r\n\r\nDatabase information:\r\n\r\n```\r\n# Connect to the database: https://gitlab.matrix.org/new-vector/internal/-/wikis/EMS-postgres#connecting-to-an-ems-database\r\n$ ems-db-debug gitter.im\r\n\r\nselect * FROM rooms WHERE room_id = '!gHbYoGxiEuXmahoYeh:gitter.im';\r\n            room_id            | is_public |         creator          | room_version | has_auth_chain_index\r\n-------------------------------+-----------+--------------------------+--------------+----------------------\r\n !gHbYoGxiEuXmahoYeh:gitter.im | t         | @gitter-badger:gitter.im | 9            | t\r\n\r\nselect * FROM room_memberships WHERE room_id = '!gHbYoGxiEuXmahoYeh:gitter.im';\r\n event_id | user_id | sender | room_id | membership | forgotten | display_name | avatar_url\r\n----------+---------+--------+---------+------------+-----------+--------------+------------\r\n(0 rows)\r\n\r\nselect * FROM events WHERE room_id = '!gHbYoGxiEuXmahoYeh:gitter.im';\r\n topological_ordering |                   event_id                   |     type      |            room_id            | content | unrecognized_keys | processed | outlier | depth | origin_server_ts |  received_ts  |\r\n   sender          | contains_url |       instance_name       | stream_ordering | state_key | rejection_reason\r\n----------------------+----------------------------------------------+---------------+-------------------------------+---------+-------------------+-----------+---------+-------+------------------+---------------+-------\r\n-------------------+--------------+---------------------------+-----------------+-----------+------------------\r\n                    1 | $JeDmcg6bYb0s-d6pxIbgmfPaJoChH-qWlnTZ3n8xGdU | m.room.create | !gHbYoGxiEuXmahoYeh:gitter.im |         |                   | t         | f       |     1 |    1673285632772 | 1673285633224 | @gitte\r\nr-badger:gitter.im | f            | synapse-event-persister-3 |        94262741 |           |\r\n(1 row)\r\n\r\nselect * FROM room_aliases WHERE room_id = '!gHbYoGxiEuXmahoYeh:gitter.im';\r\n            room_alias            |            room_id            |         creator\r\n----------------------------------+-------------------------------+--------------------------\r\n #GreenShoeGarage_Lobby:gitter.im | !gHbYoGxiEuXmahoYeh:gitter.im | @gitter-badger:gitter.im\r\n(1 row)\r\n```\r\n\r\n\r\n\r\n### Anything else that would be useful to know?\r\n\r\n_No response_",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15005/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15005/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

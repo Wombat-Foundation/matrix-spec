@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/14100",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/14100/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/14100/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/14100/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/14100",
+  "id": 1400889468,
+  "node_id": "I_kwDOAVyVwM5Tf-B8",
+  "number": 14100,
+  "title": "[sqlite] Upgrade to 1.68 leads to bootlooping Synapse systemd service",
+  "user": {
+    "login": "axelsimon",
+    "id": 1172256,
+    "node_id": "MDQ6VXNlcjExNzIyNTY=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1172256?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/axelsimon",
+    "html_url": "https://github.com/axelsimon",
+    "followers_url": "https://api.github.com/users/axelsimon/followers",
+    "following_url": "https://api.github.com/users/axelsimon/following{/other_user}",
+    "gists_url": "https://api.github.com/users/axelsimon/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/axelsimon/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/axelsimon/subscriptions",
+    "organizations_url": "https://api.github.com/users/axelsimon/orgs",
+    "repos_url": "https://api.github.com/users/axelsimon/repos",
+    "events_url": "https://api.github.com/users/axelsimon/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/axelsimon/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4195810659,
+      "node_id": "LA_kwDOAVyVwM76Fv1j",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Database",
+      "name": "A-Database",
+      "color": "5319E7",
+      "default": false,
+      "description": "DB stuff like queries, migrations, new/remove columns, indexes, unexpected entries in the db"
+    },
+    {
+      "id": 4458765668,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNdZA",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Occasional",
+      "name": "O-Occasional",
+      "color": "1D76DB",
+      "default": false,
+      "description": "Affects or can be seen by some users regularly or most users rarely"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 6,
+  "created_at": "2022-10-07T09:30:51Z",
+  "updated_at": "2022-10-10T08:30:12Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "CONTRIBUTOR",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Description\r\n\r\nAfter upgrading Debian packages for `matrix-synapse-py3` (from 1.61.1 to 1.68.0 in this case), Synapse fails to run.\r\n\r\nUpon further inspection, it appears that on startup Synapse tries to run a database schema update but doesn't finish and then restarts or gets restarted:\r\n\r\n```\r\nsynapse.storage.prepare_database - 527 - INFO - main - Applying engine-specific schema 71/01rebuild_event_edges.sql.sqlite\r\n```\r\n\r\nSynapse gets killed before being able to finish the db migration.\r\n\r\n### Steps to reproduce\r\n\r\n- `apt upgrade`\r\n\r\nrestarting the matrix-synapse service makes no difference and leads to the same result\r\n\r\n\r\n### Solution\r\n\r\nThe fix is very simple, tanks to @reivilibre for suggesting it: systemd kills the matrix-synapse service unit for taking too long to report it has started ok (a combination of `Type=notify` and long execution time for that task).\r\n\r\nSimply `systemctl edit matrix-synapse.service` and add the following override to increase the timeout and give enough time for the database upgrade to finish:\r\n```\r\n[Service]\r\nTimeoutStartSec=300\r\n```\r\n\r\n\r\n<br>\r\n<br>\r\n\r\n\r\n### Homeserver\r\n\r\npersonal homeserver\r\n\r\n### Synapse Version\r\n\r\n1.68.0\r\n\r\n### Installation Method\r\n\r\nDebian packages from packages.matrix.org\r\n\r\n### Platform\r\n\r\nDebian 11.5\r\n\r\n### Relevant log output\r\n\r\n```shell\r\n405072-2022-10-06 14:38:09,765 - synapse.storage.prepare_database - 119 - INFO - main - ['main', 'state']: Existing schema is 71 (+0 deltas)\r\n405073-2022-10-06 14:38:09,765 - synapse.storage.databases.main - 304 - INFO - main - Checking database for consistency with configuration...\r\n405074-2022-10-06 14:38:09,767 - synapse.storage.prepare_database - 411 - INFO - main - Applying schema deltas for v71\r\n405075:2022-10-06 14:38:09,767 - synapse.storage.prepare_database - 527 - INFO - main - Applying engine-specific schema 71/01rebuild_event_edges.sql.sqlite\r\n405076-2022-10-06 17:28:44,945 - root - 343 - WARNING - main - ***** STARTING SERVER *****\r\n```\r\n\r\n\r\n### Anything else that would be useful to know?\r\n\r\nSee Solution above\r\n\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/14100/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/14100/timeline",
+  "performed_via_github_app": null,
+  "state_reason": "reopened",
+  "pinned_comment": null
+}

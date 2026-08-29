@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/6007",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/6007/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/6007/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/6007/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/6007",
+  "id": 491561900,
+  "node_id": "MDU6SXNzdWU0OTE1NjE5MDA=",
+  "number": 6007,
+  "title": "Implement simple homeserver users activity statistics (outgoing event count per hour/day)",
+  "user": {
+    "login": "MurzNN",
+    "id": 336662,
+    "node_id": "MDQ6VXNlcjMzNjY2Mg==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/336662?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/MurzNN",
+    "html_url": "https://github.com/MurzNN",
+    "followers_url": "https://api.github.com/users/MurzNN/followers",
+    "following_url": "https://api.github.com/users/MurzNN/following{/other_user}",
+    "gists_url": "https://api.github.com/users/MurzNN/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/MurzNN/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/MurzNN/subscriptions",
+    "organizations_url": "https://api.github.com/users/MurzNN/orgs",
+    "repos_url": "https://api.github.com/users/MurzNN/repos",
+    "events_url": "https://api.github.com/users/MurzNN/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/MurzNN/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 477043173,
+      "node_id": "MDU6TGFiZWw0NzcwNDMxNzM=",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/z-p2",
+      "name": "z-p2",
+      "color": "ededed",
+      "default": false,
+      "description": "(Deprecated Label)"
+    },
+    {
+      "id": 1554244657,
+      "node_id": "MDU6TGFiZWwxNTU0MjQ0NjU3",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Moderation",
+      "name": "A-Moderation",
+      "color": "5319E7",
+      "default": false,
+      "description": "Tools for moderating HSes: event redaction, media removal, purge admin API, reports from users, ..."
+    },
+    {
+      "id": 2674406393,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzkz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Enhancement",
+      "name": "T-Enhancement",
+      "color": "98e6ae",
+      "default": false,
+      "description": "New features, changes in functionality, improvements in performance, or user-facing enhancements."
+    },
+    {
+      "id": 3537729900,
+      "node_id": "LA_kwDOAVyVwM7S3Xls",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-Metrics",
+      "name": "A-Metrics",
+      "color": "5319E7",
+      "default": false,
+      "description": "metrics, measures, stuff we put in Prometheus"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2019-09-10T09:38:45Z",
+  "updated_at": "2021-11-10T22:42:35Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "On our public ru-matrix.org homeserver \"Glowers club\" spammers goes to register new accounts, when I block manually affected account, they register new. So I searching the way to automate detection of spamming accounts, via some metrics, for example - outgoing event count per hour/day.\r\n\r\nAt now all events are stored in one large `event_json` sql table, but this have no separate indexed field for event author (user_id), so filtering user-owned events from whole table will be too expensive.  And I can't see some other table, where can I get events, filtered by mxid.\r\n\r\nMaybe some other Synapse tables exists, in which I can simply do something like `SELECT COUNT(event_id) FROM xxx WHERE timestamp > 12345 AND server = 'myhomeserver.org' GROUP BY user_id`?\r\n\r\nOr maybe already exists some Synapse module, that will fill `users_stat` sql table with right info (now it have 0 records)?\r\n\r\nIf not, can you implement some easy-to-use statistic reports of homeserver users, for quickly detecting too active ~spammers~ users for automate alarming and blocking?",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/6007/reactions",
+    "total_count": 1,
+    "+1": 1,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/6007/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

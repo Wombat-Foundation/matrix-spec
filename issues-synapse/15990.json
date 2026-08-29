@@ -1,0 +1,113 @@
+{
+  "url": "https://api.github.com/repos/matrix-org/synapse/issues/15990",
+  "repository_url": "https://api.github.com/repos/matrix-org/synapse",
+  "labels_url": "https://api.github.com/repos/matrix-org/synapse/issues/15990/labels{/name}",
+  "comments_url": "https://api.github.com/repos/matrix-org/synapse/issues/15990/comments",
+  "events_url": "https://api.github.com/repos/matrix-org/synapse/issues/15990/events",
+  "html_url": "https://github.com/matrix-org/synapse/issues/15990",
+  "id": 1818422800,
+  "node_id": "I_kwDOAVyVwM5sYu4Q",
+  "number": 15990,
+  "title": "Preview of uploaded BMP image doesn't work (image opens fine)",
+  "user": {
+    "login": "clokep",
+    "id": 517124,
+    "node_id": "MDQ6VXNlcjUxNzEyNA==",
+    "avatar_url": "https://avatars.githubusercontent.com/u/517124?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/clokep",
+    "html_url": "https://github.com/clokep",
+    "followers_url": "https://api.github.com/users/clokep/followers",
+    "following_url": "https://api.github.com/users/clokep/following{/other_user}",
+    "gists_url": "https://api.github.com/users/clokep/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/clokep/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/clokep/subscriptions",
+    "organizations_url": "https://api.github.com/users/clokep/orgs",
+    "repos_url": "https://api.github.com/users/clokep/repos",
+    "events_url": "https://api.github.com/users/clokep/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/clokep/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 2674406325,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2MzI1",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/S-Minor",
+      "name": "S-Minor",
+      "color": "feb24c",
+      "default": false,
+      "description": "Blocks non-critical functionality, workarounds exist."
+    },
+    {
+      "id": 2674406383,
+      "node_id": "MDU6TGFiZWwyNjc0NDA2Mzgz",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/T-Defect",
+      "name": "T-Defect",
+      "color": "98e6ae",
+      "default": false,
+      "description": "Bugs, crashes, hangs, security vulnerabilities, or other reported issues."
+    },
+    {
+      "id": 4458766755,
+      "node_id": "LA_kwDOAVyVwM8AAAABCcNhow",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/O-Uncommon",
+      "name": "O-Uncommon",
+      "color": "C5DEF5",
+      "default": false,
+      "description": "Most users are unlikely to come across this or unexpected workflow"
+    },
+    {
+      "id": 4644449862,
+      "node_id": "LA_kwDOAVyVwM8AAAABFNSuRg",
+      "url": "https://api.github.com/repos/matrix-org/synapse/labels/A-URL-Preview",
+      "name": "A-URL-Preview",
+      "color": "5319E7",
+      "default": false,
+      "description": "Issues related to generating server-side previews of remote URLs"
+    }
+  ],
+  "state": "open",
+  "locked": true,
+  "assignees": [],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2023-07-24T13:24:10Z",
+  "updated_at": "2023-07-24T13:24:10Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "MEMBER",
+  "issue_field_values": [],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "Originally reported at vector-im/element-meta#1916, but this seems to be a server issue.\r\n\r\nExample image: https://people.math.sc.edu/Burkardt/data/bmp/blackbuck.bmp\r\n\r\nAn encrypted room just shows an empty box:\r\n<img width=\"675\" src=\"https://user-images.githubusercontent.com/5855073/159129163-bbee9600-f30f-4f76-9e5d-1882378be798.png\">\r\n\r\nThe `/thumbnail` endpoint returns (https://matrix-client.matrix.org/_matrix/media/r0/thumbnail/matrix.org/UOupUIqZCoSRCUJTmNLthUgX?width=800&height=600&method=scale):\r\n\r\n```json\r\n{\r\n    \"errcode\":\"M_UNKNOWN\",\r\n    \"error\":\"Cannot find any thumbnails for the requested media ([b'matrix.org', b'UOupUIqZCoSRCUJTmNLthUgX']). This might mean the media is not a supported_media_format=(image/jpeg, image/jpg, image/webp, image/gif, image/png) or that thumbnailing failed for some other reason. (Dynamic thumbnails are disabled on this server.)\"\r\n}\r\n```\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/matrix-org/synapse/issues/15990/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/matrix-org/synapse/issues/15990/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}
